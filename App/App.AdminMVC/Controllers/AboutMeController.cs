@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using App.AdminMVC.Models.AboutMeViewModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 public class AboutMeController : Controller
@@ -16,7 +17,7 @@ public class AboutMeController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddAboutMe([FromForm] object addAboutMeModel)
+    public async Task<IActionResult> AddAboutMe([FromForm] AddAboutMeViewModel addAboutMeModel)
     {
         return View();
     }
