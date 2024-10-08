@@ -1,5 +1,6 @@
 ﻿using App.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace App.Data.DbContexts;
 public class AuthApiDbContext : DbContext
@@ -13,7 +14,7 @@ public class AuthApiDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
 }
