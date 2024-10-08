@@ -5,7 +5,7 @@ using System.Reflection;
 namespace App.Data.DbContexts;
 public class AuthApiDbContext : DbContext
 {
-    public  AuthApiDbContext(DbContextOptions options) : base(options)
+    public  AuthApiDbContext(DbContextOptions<AuthApiDbContext> options) : base(options)
     {
 
     }
