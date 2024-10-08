@@ -44,4 +44,18 @@ public class ExperiencesController : Controller
     {
         return View();
     }
+
+
+    [HttpGet]
+    public async Task<IActionResult> MakeExperienceVisible()
+    {
+        return View();
+    }
+
+
+    [HttpGet]
+    public async Task<IActionResult> MakeExperienceInVisible()
+    {
+        return View();
+    }
 }
