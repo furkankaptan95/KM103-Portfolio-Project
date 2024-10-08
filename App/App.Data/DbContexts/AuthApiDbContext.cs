@@ -15,6 +15,21 @@ public class AuthApiDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        modelBuilder.Entity<UserEntity>().HasData(
+
+            new UserEntity
+            {
+                Id = 1,
+                Username = "FurkanKaptan",
+                Email = "iamfurkan86@gmail.com",
+                IsActive = true,
+                ImageUrl = string.Empty,
+                Role = "admin",
+
+            }
+
+            );
     }
 
 }
