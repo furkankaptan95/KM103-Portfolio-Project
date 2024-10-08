@@ -1,4 +1,5 @@
-﻿using App.Data.Entities;
+﻿using App.Core.Helpers;
+using App.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -16,6 +17,10 @@ public class AuthApiDbContext : DbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+        byte[] passwordHash, passwordSalt;
+
+        HashingHelper.CreatePasswordHash("123Fk768", out passwordHash, out passwordSalt);
+
         modelBuilder.Entity<UserEntity>().HasData(
 
             new UserEntity
@@ -23,6 +28,8 @@ public class AuthApiDbContext : DbContext
                 Id = 1,
                 Username = "FurkanKaptan",
                 Email = "iamfurkan86@gmail.com",
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
                 IsActive = true,
                 ImageUrl = string.Empty,
                 Role = "admin",
