@@ -5,7 +5,7 @@ using System.Reflection;
 namespace App.Data.DbContexts;
 public class DataApiDbContext : DbContext
 {
-    public DataApiDbContext(DbContextOptions options) : base(options)
+    public DataApiDbContext(DbContextOptions<DataApiDbContext> options) : base(options)
     {
 
     }
