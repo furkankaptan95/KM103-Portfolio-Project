@@ -1,9 +1,10 @@
-﻿using App.AdminMVC.Models.AboutMeViewModels;
+﻿using App.ViewModels.AdminMvc.AboutMeViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 public class AboutMeController : Controller
 {
+  
     [HttpGet]
     public async Task<IActionResult> AboutMe()
     {
@@ -17,8 +18,15 @@ public class AboutMeController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddAboutMe([FromForm] AddAboutMeViewModel addAboutMeModel)
+    [ValidateAntiForgeryToken]
+    public IActionResult AddAboutMe(AddAboutMeViewModel model)
     {
+        if(!ModelState.IsValid)
+        {
+            // Model geçersiz ise view'a geri dön
+            return View(model);
+        }
+
         return View();
     }
 
