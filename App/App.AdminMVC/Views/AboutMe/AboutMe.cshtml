@@ -1,1 +1,52 @@
-﻿
+﻿@model AboutMeViewModel
+
+<div class="container my-5">
+    <div class="about-me-container">
+        <h1 class="text-center">Hakkımda</h1>
+        <p class="text-center">@Model.Introduction</p>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <img src="~/assets/img/@Model.ImageUrl1" class="card-img-top" alt="Görsel 1">
+                    <div class="card-body">
+                        <h5 class="card-title">Görsel 1</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <img src="~/assets/img/@Model.ImageUrl2" class="card-img-top" alt="Görsel 2">
+                    <div class="card-body">
+                        <h5 class="card-title">Görsel 2</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .about-me-container {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card {
+            border: none;
+        }
+
+        .card-img-top {
+            border-radius: 10px 10px 0 0;
+            height: 200px;
+            object-fit: cover;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+}
