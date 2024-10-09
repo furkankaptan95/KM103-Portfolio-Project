@@ -69,9 +69,15 @@ public class PersonalInfoController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> UpdatePersonalInfo([FromForm] object updatePersonalInfoModel)
+    [Route("update-personal-info")]
+    public async Task<IActionResult> UpdatePersonalInfo([FromForm] UpdatePersonalInfoViewModel updatePersonalInfoModel)
     {
-        return View();
+        personalInfoEntity.Name = updatePersonalInfoModel.Name;
+        personalInfoEntity.Surname = updatePersonalInfoModel.Surname;
+        personalInfoEntity.About = updatePersonalInfoModel.About;
+        personalInfoEntity.BirthDate = updatePersonalInfoModel.BirthDate;
+
+        return Redirect("/personal-info");
     }
  
 }
