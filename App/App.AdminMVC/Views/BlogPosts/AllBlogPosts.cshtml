@@ -36,11 +36,11 @@
                     <td class="text-right">
                         @if (post.IsVisible)
                         {
-                            <a href="/toggle-visibility/@post.Id?status=hidden" class="btn btn-sm btn-secondary">Gizle</a>
+                            <a href="/make-blog-post-invisible-@post.Id" class="btn btn-sm btn-secondary">Gizle</a>
                         }
                         else
                         {
-                            <a href="/toggle-visibility/@post.Id?status=visible" class="btn btn-sm btn-success">Görünür Yap</a>
+                            <a href="/make-blog-post-visible-@post.Id" class="btn btn-sm btn-success">Görünür Yap</a>
                         }
                     </td>
                 </tr>
