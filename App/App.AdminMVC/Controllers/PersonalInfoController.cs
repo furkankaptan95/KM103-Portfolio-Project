@@ -17,7 +17,15 @@ public class PersonalInfoController : Controller
             return Redirect("/add-personal-info");
         }
 
-        return View();
+        var model = new PersonalInfoViewModel
+        {
+            Name = personalInfoEntity.Name,
+            Surname = personalInfoEntity.Surname,
+            BirthDate = personalInfoEntity.BirthDate,
+            About = personalInfoEntity.About,
+        };
+
+        return View(model);
     }
 
     [HttpGet]
