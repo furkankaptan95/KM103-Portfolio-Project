@@ -52,6 +52,11 @@ public class BlogPostsController : Controller
     [Route("add-blog-post")]
     public async Task<IActionResult> AddBlogPost([FromForm] AddBlogPostViewModel addBlogPostModel)
     {
+        if (!ModelState.IsValid)
+        {
+            return View(addBlogPostModel);
+        }
+
         return View();
     }
 
@@ -82,6 +87,11 @@ public class BlogPostsController : Controller
     [Route("update-blog-post")]
     public async Task<IActionResult> UpdateBlogPost([FromForm] UpdateBlogPostViewModel updateBlogPostModel)
     {
+        if (!ModelState.IsValid)
+        {
+            return View(updateBlogPostModel);
+        }
+
         return View();
     }
 
