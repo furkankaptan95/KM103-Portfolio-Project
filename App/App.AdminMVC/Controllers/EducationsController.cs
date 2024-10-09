@@ -101,7 +101,18 @@ public class EducationsController : Controller
     [Route("update-education-{id:int}")]
     public async Task<IActionResult> UpdateEducation([FromRoute] int id)
     {
-        return View();
+        var entity = educations.FirstOrDefault(e => e.Id == id);
+
+        var educationToUpdate = new UpdateEducationViewModel
+        {
+            Id = id,
+            School = entity.School,
+            Degree = entity.Degree,
+            EndDate = entity.EndDate,
+            StartDate = entity.StartDate,
+        };
+
+        return View(educationToUpdate);
     }
 
     [HttpPost]
