@@ -26,6 +26,7 @@ public class BlogPostsController : Controller
     }
 
     [HttpPost]
+    [Route("add-blog-post")]
     public async Task<IActionResult> AddBlogPost([FromForm] AddBlogPostViewModel addBlogPostModel)
     {
         return View();
