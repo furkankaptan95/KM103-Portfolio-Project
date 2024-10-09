@@ -38,15 +38,6 @@ public class EducationsController : Controller
         },
     };
 
-
-
-    [HttpGet]
-    [Route("education-{id:int}")]
-    public async Task<IActionResult> Education([FromRoute] int id)
-    {
-        return View();
-    }
-
     [HttpGet]
     [Route("all-educations")]
     public async Task<IActionResult> AllEducations()
@@ -151,7 +142,11 @@ public class EducationsController : Controller
     [Route("make-education-visible-{id:int}")]
     public async Task<IActionResult> MakeEducationVisible([FromRoute] int id)
     {
-        return View();
+        var entity = educations.FirstOrDefault(e => e.Id == id);
+
+        entity.IsVisible = true;
+
+        return Redirect("/all-educations");
     }
 
 
@@ -159,6 +154,10 @@ public class EducationsController : Controller
     [Route("make-education-invisible-{id:int}")]
     public async Task<IActionResult> MakeEducationInVisible([FromRoute] int id)
     {
-        return View();
+        var entity = educations.FirstOrDefault(e => e.Id == id);
+
+        entity.IsVisible = false;
+
+        return Redirect("/all-educations");
     }
 }
