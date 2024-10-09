@@ -74,9 +74,15 @@ public class EducationsController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddEducation([FromForm] object addEducationModel)
+    [Route("add-education")]
+    public async Task<IActionResult> AddEducation([FromForm] AddEducationViewModel addEducationModel)
     {
-        return View();
+        if (!ModelState.IsValid)
+        {
+            return View(addEducationModel);
+        }
+
+        return Redirect("/all-educations");
     }
 
     [HttpGet]
