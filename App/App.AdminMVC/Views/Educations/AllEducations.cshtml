@@ -1,5 +1,79 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model List<AllEducationsViewModel>
+
+<div class="container mt-4">
+    <h2 class="text-center">Eğitimler</h2>
+    <table class="table table-bordered table-striped table-responsive-md">
+        <thead class="thead-dark">
+            <tr>
+                <th>Okul</th>
+                <th>Derece</th>
+                <th>Başlangıç Tarihi</th>
+                <th>Bitiş Tarihi</th>
+                <th class="text-right">İşlemler</th>
+                <th class="text-right">Görünürlük</th>
+                <th class="text-right">Görünür Yap / Gizle</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var education in Model)
+            {
+                <tr>
+                    <td>@education.School</td>
+                    <td>@education.Degree</td>
+                    <td>@education.StartDate.ToString("dd MMM yyyy")</td>
+                    <td>@education.EndDate.ToString("dd MMM yyyy")</td>
+                    <td class="text-right">
+                        <a href="/update-education-@education.Id" class="btn btn-sm btn-primary">Düzenle</a>
+                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal-@education.Id">Sil</button>
+                    </td>
+                    <td class="text-right">
+                        @if (education.IsVisible)
+                        {
+                            <span>Görünür ✅</span>
+                        }
+                        else
+                        {
+                            <span>Gizli ❌</span>
+                        }
+                    </td>
+                    <td class="text-right">
+                        @if (education.IsVisible)
+                        {
+                            <a href="/make-education-invisible-@education.Id" class="btn btn-sm btn-secondary">Gizle</a>
+                        }
+                        else
+                        {
+                            <a href="/make-education-visible-@education.Id" class="btn btn-sm btn-success">Görünür Yap</a>
+                        }
+                    </td>
+                </tr>
+
+                <!-- Silme Onay Modalı -->
+                <div class="modal fade" id="deleteModal-@education.Id" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel-@education.Id" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel-@education.Id">Silme Onayı</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <b>@education.School</b> kurumundaki eğitimi silmek istediğinize emin misiniz?
+                            </div>
+                            <div class="modal-footer">
+                                <form action="/delete-education-@education.Id" method="get">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                                    <button type="submit" class="btn btn-danger">Sil</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+

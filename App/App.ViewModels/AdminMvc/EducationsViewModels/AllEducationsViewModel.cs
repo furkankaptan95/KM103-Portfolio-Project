@@ -1,7 +1,7 @@
-﻿using App.Core.Entities;
-namespace App.Data.Entities;
-public class EducationEntity : BaseEntity<int>
+﻿namespace App.ViewModels.AdminMvc.EducationsViewModels;
+public class AllEducationsViewModel
 {
+    public int Id { get; set; }
     public string Degree { get; set; } = string.Empty;
     public string School { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }

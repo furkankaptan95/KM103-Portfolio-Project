@@ -1,8 +1,45 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using App.Data.Entities;
+using App.ViewModels.AdminMvc.EducationsViewModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 public class EducationsController : Controller
 {
+    private static readonly int index = 0;
+
+    private static readonly List<EducationEntity> educations = new List<EducationEntity>
+    {
+        new EducationEntity
+        {
+            Id = ++index,
+            Degree = "Lisans",
+            School = "İTÜ",
+            StartDate = DateTime.Now.AddYears(-10),
+            EndDate = DateTime.Now,
+            IsVisible = true,
+        },
+         new EducationEntity
+        {
+            Id = ++index,
+            Degree = "Hazırlık Sınıfı",
+            School = "İTÜ",
+            StartDate = DateTime.Now.AddYears(-10),
+            EndDate = DateTime.Now.AddYears(-9),
+            IsVisible = true,
+        },
+          new EducationEntity
+        {
+            Id = ++index,
+            Degree = "Temel Programlama Eğitimi",
+            School = "Siliconmade Academy",
+            StartDate = DateTime.Now.AddMonths(-8),
+            EndDate = DateTime.Now.AddMonths(-3),
+            IsVisible = true,
+        },
+    };
+
+
+
     [HttpGet]
     [Route("education-{id:int}")]
     public async Task<IActionResult> Education([FromRoute] int id)
@@ -14,7 +51,19 @@ public class EducationsController : Controller
     [Route("all-educations")]
     public async Task<IActionResult> AllEducations()
     {
-        return View();
+        List<AllEducationsViewModel> models = educations
+       .Select(item => new AllEducationsViewModel
+       {
+           Id = item.Id,
+           School = item.School,
+           Degree = item.Degree,
+           StartDate = item.StartDate,
+           EndDate = item.EndDate,
+           IsVisible = item.IsVisible
+       })
+       .ToList();
+
+        return View(models);
     }
 
     [HttpGet]
