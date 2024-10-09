@@ -19,12 +19,12 @@
                     <td>@post.Title</td>
                     <td>@post.PublishDate.ToString("dd MMM yyyy")</td>
                     <td class="text-right">
-                        <a href="/blog-post-@post.Id" class="btn btn-sm btn-info">İçeriği Görüntüle</a>
+                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@post.Id" aria-haspopup="true" aria-expanded="false">İçeriği Görüntüle</button>
                         <a href="/update-blog-post-@post.Id" class="btn btn-sm btn-primary">Düzenle</a>
                         <a href="/delete-blog-post-@post.Id" class="btn btn-sm btn-danger">Sil</a>
                     </td>
                     <td class="text-right">
-                       @if(post.IsVisible)
+                        @if (post.IsVisible)
                         {
                             <span>Görünür ✅</span>
                         }
@@ -42,11 +42,32 @@
                         {
                             <a href="/toggle-visibility/@post.Id?status=visible" class="btn btn-sm btn-success">Görünür Yap</a>
                         }
-                        
-                        
                     </td>
                 </tr>
+
+                <!-- Modal -->
+                <div class="modal fade" id="modal-@post.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabel-@post.Id" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel-@post.Id">@post.Title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>@post.Content</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             }
         </tbody>
     </table>
 </div>
+
+
+
