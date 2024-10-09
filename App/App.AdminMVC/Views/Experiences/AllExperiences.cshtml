@@ -1,1 +1,99 @@
-﻿
+﻿@model List<AllExperiencesViewModel>
+
+<div class="container mt-4">
+    <h2 class="text-center">Deneyimler</h2>
+    <table class="table table-bordered table-striped table-responsive-md">
+        <thead class="thead-dark">
+            <tr>
+                <th>Başlık</th>
+                <th>Firma</th>
+                <th>Başlangıç Tarihi</th>
+                <th>Bitiş Tarihi</th>
+                <th class="text-right">İşlemler</th>
+                <th class="text-right">Görünürlük</th>
+                <th class="text-right">Görünür Yap / Gizle</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var experience in Model)
+            {
+                <tr>
+                    <td>@experience.Title</td>
+                    <td>@experience.Company</td>
+                    <td>@experience.StartDate.ToString("dd MMM yyyy")</td>
+                    <td>@experience.EndDate.ToString("dd MMM yyyy")</td>
+                    <td class="text-right">
+                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@experience.Id" aria-haspopup="true" aria-expanded="false">Açıklamayı Görüntüle</button>
+                        <a href="/update-experience-@experience.Id" class="btn btn-sm btn-primary">Düzenle</a>
+                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal-@experience.Id">Sil</button>
+                    </td>
+                    <td class="text-right">
+                        @if (experience.IsVisible)
+                        {
+                            <span>Görünür ✅</span>
+                        }
+                        else
+                        {
+                            <span>Gizli ❌</span>
+                        }
+                    </td>
+                    <td class="text-right">
+                        @if (experience.IsVisible)
+                        {
+                            <a href="/make-experience-invisible-@experience.Id" class="btn btn-sm btn-secondary">Gizle</a>
+                        }
+                        else
+                        {
+                            <a href="/make-experience-visible-@experience.Id" class="btn btn-sm btn-success">Görünür Yap</a>
+                        }
+                    </td>
+                </tr>
+
+                <div class="modal fade" id="modal-@experience.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabel-@experience.Id" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel-@experience.Id">@experience.Title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>@experience.Description</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Silme Onay Modalı -->
+                <div class="modal fade" id="deleteModal-@experience.Id" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel-@experience.Id" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel-@experience.Id">Silme Onayı</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <b>@experience.Title</b> başlıklı tecrübeyi silmek istediğinize emin misiniz?
+                            </div>
+                            <div class="modal-footer">
+                                <form action="/delete-experience-@experience.Id" method="get">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                                    <button type="submit" class="btn btn-danger">Sil</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+

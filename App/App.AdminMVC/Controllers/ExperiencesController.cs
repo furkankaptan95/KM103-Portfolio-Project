@@ -1,4 +1,6 @@
 ﻿using App.Data.Entities;
+using App.ViewModels.AdminMvc.EducationsViewModels;
+using App.ViewModels.AdminMvc.ExperiencesViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
@@ -45,7 +47,20 @@ public class ExperiencesController : Controller
     [Route("all-experiences")]
     public async Task<IActionResult> AllExperiences()
     {
-        return View();
+        List<AllExperiencesViewModel> models = experiences
+      .Select(item => new AllExperiencesViewModel
+      {
+          Id = item.Id,
+          Title = item.Title,
+          Company = item.Company,
+          Description = item.Description,
+          StartDate = item.StartDate,
+          EndDate = item.EndDate,
+          IsVisible = item.IsVisible
+      })
+      .ToList();
+
+        return View(models);
     }
 
     [HttpGet]
