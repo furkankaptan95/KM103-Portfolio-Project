@@ -144,13 +144,21 @@ public class ExperiencesController : Controller
     [Route("make-experience-visible-{id:int}")]
     public async Task<IActionResult> MakeExperienceVisible([FromRoute] int id)
     {
-        return View();
+        var entity = experiences.FirstOrDefault(e=>e.Id == id);
+
+        entity.IsVisible = true;
+
+        return Redirect("/all-experiences");
     }
 
     [HttpGet]
     [Route("make-experience-invisible-{id:int}")]
     public async Task<IActionResult> MakeExperienceInVisible([FromRoute] int id)
     {
-        return View();
+        var entity = experiences.FirstOrDefault(e => e.Id == id);
+
+        entity.IsVisible = false;
+
+        return Redirect("/all-experiences");
     }
 }
