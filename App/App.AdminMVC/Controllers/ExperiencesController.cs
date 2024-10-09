@@ -1,14 +1,45 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using App.Data.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 public class ExperiencesController : Controller
 {
-    [HttpGet]
-    [Route("experience-{id:int}")]
-    public async Task<IActionResult> Experience([FromRoute] int id)
+    private static int index = 0;
+
+    private static readonly List<ExperienceEntity> experiences = new List<ExperienceEntity>
     {
-        return View();
-    }
+        new ExperienceEntity
+        {
+            Id = ++index,
+            Title = "Deneyim 1",
+            Company = "Firma 1",
+            StartDate = DateTime.Now.AddYears(-10),
+            Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at justo nec risus malesuada condimentum id condimentum ipsum. Nulla ut erat nec magna ultricies pulvinar ut nec neque. Curabitur nunc dui, ullamcorper sed sodales et, faucibus eget neque. Aenean tincidunt, elit ac fermentum laoreet.",
+            EndDate = DateTime.Now,
+            IsVisible = true,
+        },
+         new ExperienceEntity
+        {
+            Id = ++index,
+            Title = "Deneyim 2",
+            Company = "Firma 2",
+            StartDate = DateTime.Now.AddYears(-10),
+            Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at justo nec risus malesuada condimentum id condimentum ipsum. Nulla ut erat nec magna ultricies pulvinar ut nec neque. Curabitur nunc dui, ullamcorper sed sodales et, faucibus eget neque. Aenean tincidunt, elit ac fermentum laoreet.",
+            EndDate = DateTime.Now.AddYears(-9),
+            IsVisible = true,
+        },
+          new ExperienceEntity
+        {
+            Id = ++index,
+            Title = "Deneyim 3",
+            Company = "Firma 3",
+            StartDate = DateTime.Now.AddMonths(-8),
+            Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at justo nec risus malesuada condimentum id condimentum ipsum. Nulla ut erat nec magna ultricies pulvinar ut nec neque. Curabitur nunc dui, ullamcorper sed sodales et, faucibus eget neque. Aenean tincidunt, elit ac fermentum laoreet.",
+            EndDate = DateTime.Now.AddMonths(-3),
+            IsVisible = true,
+        },
+    };
+
 
     [HttpGet]
     [Route("all-experiences")]
