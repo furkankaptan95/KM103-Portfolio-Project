@@ -1,5 +1,27 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model UpdateBlogPostViewModel
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="text-center">Blog Postu Güncelle</h2>
+            <form action="/update-blog-post-@Model.Id" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label">Başlık</label>
+                    <input asp-for="Title" class="form-control" placeholder="Başlığı buraya yazınız" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-3">
+                    <label asp-for="Content" class="control-label">İçerik</label>
+                    <textarea asp-for="Content" class="form-control" rows="5" placeholder="Post içeriğini buraya yazınız"></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary mt-4 w-100">Güncelle</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }
