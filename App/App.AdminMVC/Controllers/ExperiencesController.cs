@@ -133,7 +133,11 @@ public class ExperiencesController : Controller
     [Route("delete-experience-{id:int}")]
     public async Task<IActionResult> DeleteExperience([FromRoute] int id)
     {
-        return View();
+        var entityToDelete = experiences.FirstOrDefault(e=>e.Id == id);
+
+        experiences.Remove(entityToDelete);
+
+        return Redirect("/all-experiences");
     }
 
     [HttpGet]
