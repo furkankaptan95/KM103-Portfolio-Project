@@ -1,5 +1,39 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model AddEducationViewModel
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="text-center">Yeni Eğitim Ekle</h2>
+            <form action="/add-education" method="post">
+                <div class="form-group">
+                    <label asp-for="School" class="control-label">Okul</label>
+                    <input asp-for="School" class="form-control" placeholder="Okul bilgisini buraya yazınız" />
+                    <span asp-validation-for="School" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-3">
+                    <label asp-for="Degree" class="control-label">Derece</label>
+                    <textarea asp-for="Degree" class="form-control" rows="5" placeholder="Derece bilgisini buraya yazınız"></textarea>
+                    <span asp-validation-for="Degree" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label asp-for="StartDate" class="control-label">Başlangıç Tarihi</label>
+                    <input asp-for="StartDate" class="form-control" type="datetime-local" />
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label asp-for="EndDate" class="control-label">Bitiş Tarihi</label>
+                    <input asp-for="EndDate" class="form-control" type="datetime-local" />
+                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-4 w-100">Ekle</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }
