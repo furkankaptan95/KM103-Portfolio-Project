@@ -116,9 +116,22 @@ public class EducationsController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> UpdateEducation([FromForm] object updateEducationModel)
+    [Route("update-education")]
+    public async Task<IActionResult> UpdateEducation([FromForm] UpdateEducationViewModel updateEducationModel)
     {
-        return View();
+        if (!ModelState.IsValid)
+        {
+            return View(updateEducationModel);
+        }
+
+        var entity = educations.FirstOrDefault(e => e.Id == updateEducationModel.Id);
+
+        entity.School = updateEducationModel.School;
+        entity.Degree = updateEducationModel.Degree;
+        entity.StartDate = updateEducationModel.StartDate;
+        entity.EndDate = updateEducationModel.EndDate;
+
+        return Redirect("/all-educations");
     }
 
     [HttpGet]
