@@ -1,8 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using App.Data.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 public class EducationsController : Controller
 {
+    private static readonly int index = 0;
+
+    private static readonly List<EducationEntity> educations = new List<EducationEntity>
+    {
+        new EducationEntity
+        {
+            Id = ++index,
+            Degree = "Lisans",
+            School = "İTÜ",
+            StartDate = DateTime.Now.AddYears(-10),
+            EndDate = DateTime.Now,
+        },
+         new EducationEntity
+        {
+            Id = ++index,
+            Degree = "Hazırlık Sınıfı",
+            School = "İTÜ",
+            StartDate = DateTime.Now.AddYears(-10),
+            EndDate = DateTime.Now.AddYears(-9),
+        },
+    };
+
+
+
     [HttpGet]
     [Route("education-{id:int}")]
     public async Task<IActionResult> Education([FromRoute] int id)
