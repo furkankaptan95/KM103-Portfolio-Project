@@ -28,6 +28,7 @@ public class PersonalInfoController : Controller
     }
 
     [HttpPost]
+    [Route("add-personal-info")]
     public async Task<IActionResult> AddPersonalInfo([FromForm] AddPersonalInfoViewModel addPersonalInfoModel)
     {
         if (!ModelState.IsValid)
