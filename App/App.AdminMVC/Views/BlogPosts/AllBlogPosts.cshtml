@@ -1,5 +1,73 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model List<AllBlogPostsViewModel>
+
+<div class="container mt-4">
+    <h2 class="text-center">Tüm Blog Postlar</h2>
+    <table class="table table-bordered table-striped table-responsive-md">
+        <thead class="thead-dark">
+            <tr>
+                <th>Başlık</th>
+                <th>Yayınlanma Tarihi</th>
+                <th class="text-right">İşlemler</th>
+                <th class="text-right">Görünürlük</th>
+                <th class="text-right">Görünür Yap / Gizle</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var post in Model)
+            {
+                <tr>
+                    <td>@post.Title</td>
+                    <td>@post.PublishDate.ToString("dd MMM yyyy")</td>
+                    <td class="text-right">
+                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@post.Id" aria-haspopup="true" aria-expanded="false">İçeriği Görüntüle</button>
+                        <a href="/update-blog-post-@post.Id" class="btn btn-sm btn-primary">Düzenle</a>
+                        <a href="/delete-blog-post-@post.Id" class="btn btn-sm btn-danger">Sil</a>
+                    </td>
+                    <td class="text-right">
+                        @if (post.IsVisible)
+                        {
+                            <span>Görünür ✅</span>
+                        }
+                        else
+                        {
+                            <span>Gizli ❌</span>
+                        }
+                    </td>
+                    <td class="text-right">
+                        @if (post.IsVisible)
+                        {
+                            <a href="/toggle-visibility/@post.Id?status=hidden" class="btn btn-sm btn-secondary">Gizle</a>
+                        }
+                        else
+                        {
+                            <a href="/toggle-visibility/@post.Id?status=visible" class="btn btn-sm btn-success">Görünür Yap</a>
+                        }
+                    </td>
+                </tr>
+
+                <!-- Modal -->
+                <div class="modal fade" id="modal-@post.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabel-@post.Id" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel-@post.Id">@post.Title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>@post.Content</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
