@@ -21,7 +21,7 @@
                     <td class="text-right">
                         <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@post.Id" aria-haspopup="true" aria-expanded="false">İçeriği Görüntüle</button>
                         <a href="/update-blog-post-@post.Id" class="btn btn-sm btn-primary">Düzenle</a>
-                        <a href="/delete-blog-post-@post.Id" class="btn btn-sm btn-danger">Sil</a>
+                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal-@post.Id">Sil</button>
                     </td>
                     <td class="text-right">
                         @if (post.IsVisible)
@@ -60,6 +60,29 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Silme Onay Modalı -->
+                <div class="modal fade" id="deleteModal-@post.Id" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel-@post.Id" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel-@post.Id">Silme Onayı</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <b>@post.Title</b> başlıklı blog postu silmek istediğinize emin misiniz?
+                            </div>
+                            <div class="modal-footer">
+                                <form action="/delete-blog-post-@post.Id" method="get">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                                    <button type="submit" class="btn btn-danger">Sil</button>
+                                </form>
                             </div>
                         </div>
                     </div>
