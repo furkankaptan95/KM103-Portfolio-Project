@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using App.ViewModels.AdminMvc.BlogPostsViewModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 public class BlogPostsController : Controller
@@ -25,7 +26,7 @@ public class BlogPostsController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddBlogPost([FromForm] object addBlogPostModel)
+    public async Task<IActionResult> AddBlogPost([FromForm] AddBlogPostViewModel addBlogPostModel)
     {
         return View();
     }
