@@ -20,6 +20,7 @@ public class AboutMeController : Controller
     }
 
     [HttpGet]
+    [Route("add-about-me")]
     public async Task<IActionResult> AddAboutMe()
     {
         return View();
@@ -39,6 +40,7 @@ public class AboutMeController : Controller
     }
 
     [HttpGet]
+    [Route("update-about-me")]
     public async Task<IActionResult> UpdateAboutMe()
     {
         var updateModel = new UpdateAboutMeViewModel();

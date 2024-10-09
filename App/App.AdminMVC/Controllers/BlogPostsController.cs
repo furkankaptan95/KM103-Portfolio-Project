@@ -4,18 +4,21 @@ namespace App.AdminMVC.Controllers;
 public class BlogPostsController : Controller
 {
     [HttpGet]
-    public async Task<IActionResult> BlogPost()
+    [Route("blog-post-{id:int}")]
+    public async Task<IActionResult> BlogPost([FromRoute] int id)
     {
         return View();
     }
 
     [HttpGet]
+    [Route("all-blog-posts")]
     public async Task<IActionResult> AllBlogPosts()
     {
         return View();
     }
 
     [HttpGet]
+    [Route("add-blog-post")]
     public async Task<IActionResult> AddBlogPost()
     {
         return View();
@@ -28,7 +31,8 @@ public class BlogPostsController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> UpdateBlogPost()
+    [Route("update-blog-post-{id:int}")]
+    public async Task<IActionResult> UpdateBlogPost([FromRoute] int id)
     {
         return View();
     }
@@ -40,19 +44,22 @@ public class BlogPostsController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> DeleteBlogPost()
+    [Route("delete-blog-post-{id:int}")]
+    public async Task<IActionResult> DeleteBlogPost([FromRoute] int id)
     {
         return View();
     }
 
     [HttpGet]
-    public async Task<IActionResult> MakeBlogPostVisible()
+    [Route("make-blog-post-visible-{id:int}")]
+    public async Task<IActionResult> MakeBlogPostVisible([FromRoute] int id)
     {
         return View();
     }
 
     [HttpGet]
-    public async Task<IActionResult> MakeBlogPostInVisible()
+    [Route("make-blog-post-invisible-{id:int}")]
+    public async Task<IActionResult> MakeBlogPostInVisible([FromRoute] int id)
     {
         return View();
     }

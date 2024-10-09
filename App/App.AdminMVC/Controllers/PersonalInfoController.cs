@@ -4,12 +4,14 @@ namespace App.AdminMVC.Controllers;
 public class PersonalInfoController : Controller
 {
     [HttpGet]
+    [Route("personal-info")]
     public async Task<IActionResult> PersonalInfo()
     {
         return View();
     }
 
     [HttpGet]
+    [Route("add-personal-info")]
     public async Task<IActionResult> AddPersonalInfo()
     {
         return View();
@@ -22,6 +24,7 @@ public class PersonalInfoController : Controller
     }
 
     [HttpGet]
+    [Route("update-personal-info")]
     public async Task<IActionResult> UpdatePersonalInfo()
     {
         return View();
@@ -32,10 +35,5 @@ public class PersonalInfoController : Controller
     {
         return View();
     }
-
-    [HttpGet]
-    public async Task<IActionResult> DeletePersonalInfo()
-    {
-        return View();
-    }
+ 
 }

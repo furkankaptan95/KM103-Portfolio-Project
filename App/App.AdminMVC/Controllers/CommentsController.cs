@@ -4,6 +4,7 @@ namespace App.AdminMVC.Controllers;
 public class CommentsController : Controller
 {
     [HttpGet]
+    [Route("all-comments")]
     public async Task<IActionResult> AllComments()
     {
         return View();

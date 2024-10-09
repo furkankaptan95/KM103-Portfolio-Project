@@ -4,18 +4,21 @@ namespace App.AdminMVC.Controllers;
 public class ProjectsController : Controller
 {
     [HttpGet]
-    public async Task<IActionResult> Project()
+    [Route("project-{id:int}")]
+    public async Task<IActionResult> Project([FromRoute] int id)
     {
         return View();
     }
 
     [HttpGet]
+    [Route("all-projects")]
     public async Task<IActionResult> AllProjects()
     {
         return View();
     }
 
     [HttpGet]
+    [Route("add-project")]
     public async Task<IActionResult> AddProject()
     {
         return View();
@@ -28,7 +31,8 @@ public class ProjectsController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> UpdateProject()
+    [Route("update-project-{id:int}")]
+    public async Task<IActionResult> UpdateProject([FromRoute] int id)
     {
         return View();
     }
@@ -40,21 +44,24 @@ public class ProjectsController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> DeleteProject()
+    [Route("delete-project-{id:int}")]
+    public async Task<IActionResult> DeleteProject([FromRoute] int id)
     {
         return View();
     }
 
 
     [HttpGet]
-    public async Task<IActionResult> MakeProjectVisible()
+    [Route("make-project-visible-{id:int}")]
+    public async Task<IActionResult> MakeProjectVisible([FromRoute] int id)
     {
         return View();
     }
 
 
     [HttpGet]
-    public async Task<IActionResult> MakeProjectInVisible()
+    [Route("make-project-invisible-{id:int}")]
+    public async Task<IActionResult> MakeProjectInVisible([FromRoute] int id)
     {
         return View();
     }

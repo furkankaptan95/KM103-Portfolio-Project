@@ -4,18 +4,21 @@ namespace App.AdminMVC.Controllers;
 public class EducationsController : Controller
 {
     [HttpGet]
-    public async Task<IActionResult> Education()
+    [Route("education-{id:int}")]
+    public async Task<IActionResult> Education([FromRoute] int id)
     {
         return View();
     }
 
     [HttpGet]
+    [Route("all-educations")]
     public async Task<IActionResult> AllEducations()
     {
         return View();
     }
 
     [HttpGet]
+    [Route("add-education")]
     public async Task<IActionResult> AddEducation()
     {
         return View();
@@ -28,7 +31,8 @@ public class EducationsController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> UpdateEducation()
+    [Route("update-education-{id:int}")]
+    public async Task<IActionResult> UpdateEducation([FromRoute] int id)
     {
         return View();
     }
@@ -40,21 +44,24 @@ public class EducationsController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> DeleteEducation()
+    [Route("delete-education-{id:int}")]
+    public async Task<IActionResult> DeleteEducation([FromRoute] int id)
     {
         return View();
     }
 
 
     [HttpGet]
-    public async Task<IActionResult> MakeEducationVisible()
+    [Route("make-education-visible-{id:int}")]
+    public async Task<IActionResult> MakeEducationVisible([FromRoute] int id)
     {
         return View();
     }
 
 
     [HttpGet]
-    public async Task<IActionResult> MakeEducationInVisible()
+    [Route("make-education-invisible-{id:int}")]
+    public async Task<IActionResult> MakeEducationInVisible([FromRoute] int id)
     {
         return View();
     }
