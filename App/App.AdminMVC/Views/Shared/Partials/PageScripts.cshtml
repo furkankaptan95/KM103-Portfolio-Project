@@ -16,3 +16,21 @@
 
 <!-- Place this tag in your head or just before your close body tag. -->
 <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var alert = document.querySelector('.custom-alert');
+        if (alert) {
+            setTimeout(function () {
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = '0';
+                setTimeout(function () {
+                    alert.remove();
+                }, 500); // Görsel olarak kaybolduktan sonra tamamen kaldır
+            }, 5000); // 5 saniye sonra kaybolmaya başla
+        }
+    });
+
+
+</script>
