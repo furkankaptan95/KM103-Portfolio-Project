@@ -138,7 +138,12 @@ public class EducationsController : Controller
     [Route("delete-education-{id:int}")]
     public async Task<IActionResult> DeleteEducation([FromRoute] int id)
     {
-        return View();
+        var entityToDelete = educations.FirstOrDefault(e => e.Id == id);
+
+        educations.Remove(entityToDelete);
+
+        return Redirect("/all-educations");
+
     }
 
 
