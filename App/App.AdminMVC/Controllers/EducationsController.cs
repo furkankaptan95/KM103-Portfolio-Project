@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace App.AdminMVC.Controllers;
 public class EducationsController : Controller
 {
-    private static readonly int index = 0;
+    private static int index = 0;
 
     private static readonly List<EducationEntity> educations = new List<EducationEntity>
     {
@@ -81,6 +81,18 @@ public class EducationsController : Controller
         {
             return View(addEducationModel);
         }
+
+        var educationToAdd = new EducationEntity
+        {
+            Id = ++index,
+            School = addEducationModel.School,
+            Degree = addEducationModel.Degree,
+            EndDate = addEducationModel.EndDate,
+            StartDate = addEducationModel.StartDate,
+            IsVisible = true,
+        };
+
+        educations.Add(educationToAdd);
 
         return Redirect("/all-educations");
     }
