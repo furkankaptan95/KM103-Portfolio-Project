@@ -1,16 +1,17 @@
 ﻿using App.Data.Entities;
+using App.ViewModels.AdminMvc.PersonalInfoViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 public class PersonalInfoController : Controller
 {
-    private static readonly PersonalInfoEntity? personalInfoEntity = null;
+    private static readonly PersonalInfoEntity personalInfoEntity = new();
 
     [HttpGet]
     [Route("personal-info")]
     public async Task<IActionResult> PersonalInfo()
     {
-        if(personalInfoEntity is null)
+        if(personalInfoEntity.Id == 0)
         {
             TempData["Message"] = "Kişisel Bilgi bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurunuz.";
             return Redirect("/add-personal-info");
@@ -27,9 +28,20 @@ public class PersonalInfoController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddPersonalInfo([FromForm] object addPersonalInfoModel)
+    public async Task<IActionResult> AddPersonalInfo([FromForm] AddPersonalInfoViewModel addPersonalInfoModel)
     {
-        return View();
+        if (!ModelState.IsValid)
+        {
+            return View(addPersonalInfoModel);
+        }
+
+        personalInfoEntity.Surname = addPersonalInfoModel.Surname;
+        personalInfoEntity.Name = addPersonalInfoModel.Name;
+        personalInfoEntity.About = addPersonalInfoModel.About;
+        personalInfoEntity.BirthDate = addPersonalInfoModel.BirthDate;
+        personalInfoEntity.Id = 1;
+
+        return Redirect("/personal-info");
     }
 
     [HttpGet]
