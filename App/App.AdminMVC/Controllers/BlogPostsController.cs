@@ -15,7 +15,27 @@ public class BlogPostsController : Controller
     [Route("all-blog-posts")]
     public async Task<IActionResult> AllBlogPosts()
     {
-        return View();
+        var model = new List<AllBlogPostsViewModel>
+        {
+            new AllBlogPostsViewModel
+            {
+                Id = 1,
+                PublishDate = DateTime.Now.AddYears(-2),
+                Title = "Post1",
+                IsVisible = true,
+            },
+            new AllBlogPostsViewModel
+            {
+                Id = 2,
+                PublishDate = DateTime.Now.AddYears(-1),
+                Title = "Post2",
+                IsVisible = false,
+            },
+
+        };
+
+
+        return View(model);
     }
 
     [HttpGet]
