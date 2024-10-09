@@ -6,6 +6,7 @@ public class AboutMeController : Controller
 {
   
     [HttpGet]
+    [Route("about-me")]
     public async Task<IActionResult> AboutMe()
     {
 
