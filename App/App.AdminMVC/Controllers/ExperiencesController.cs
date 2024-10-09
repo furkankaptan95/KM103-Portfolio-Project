@@ -4,18 +4,21 @@ namespace App.AdminMVC.Controllers;
 public class ExperiencesController : Controller
 {
     [HttpGet]
-    public async Task<IActionResult> Experience()
+    [Route("experience-{id:int}")]
+    public async Task<IActionResult> Experience([FromRoute] int id)
     {
         return View();
     }
 
     [HttpGet]
+    [Route("all-experiences")]
     public async Task<IActionResult> AllExperiences()
     {
         return View();
     }
 
     [HttpGet]
+    [Route("add-experience")]
     public async Task<IActionResult> AddExperience()
     {
         return View();
@@ -28,7 +31,8 @@ public class ExperiencesController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> UpdateExperience()
+    [Route("update-experience-{id:int}")]
+    public async Task<IActionResult> UpdateExperience([FromRoute] int id)
     {
         return View();
     }
@@ -40,21 +44,22 @@ public class ExperiencesController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> DeleteExperience()
+    [Route("delete-experience-{id:int}")]
+    public async Task<IActionResult> DeleteExperience([FromRoute] int id)
     {
         return View();
     }
 
-
     [HttpGet]
-    public async Task<IActionResult> MakeExperienceVisible()
+    [Route("make-experience-visible-{id:int}")]
+    public async Task<IActionResult> MakeExperienceVisible([FromRoute] int id)
     {
         return View();
     }
 
-
     [HttpGet]
-    public async Task<IActionResult> MakeExperienceInVisible()
+    [Route("make-experience-invisible-{id:int}")]
+    public async Task<IActionResult> MakeExperienceInVisible([FromRoute] int id)
     {
         return View();
     }
