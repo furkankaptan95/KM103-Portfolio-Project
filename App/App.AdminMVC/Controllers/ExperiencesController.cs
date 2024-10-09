@@ -71,9 +71,28 @@ public class ExperiencesController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddExperience([FromForm] object addExperienceModel)
+    [Route("add-experience")]
+    public async Task<IActionResult> AddExperience([FromForm] AddExperienceViewModel addExperienceModel)
     {
-        return View();
+        if (!ModelState.IsValid)
+        {
+            return View(addExperienceModel);
+        }
+
+        var experienceToAdd = new ExperienceEntity
+        {
+            Id = ++index,
+            Title = addExperienceModel.Title,
+            Company = addExperienceModel.Company,
+            Description= addExperienceModel.Description,
+            EndDate = addExperienceModel.EndDate,
+            StartDate = addExperienceModel.StartDate,
+            IsVisible = true,
+        };
+
+        experiences.Add(experienceToAdd);
+
+        return Redirect("/all-experiences");
     }
 
     [HttpGet]
