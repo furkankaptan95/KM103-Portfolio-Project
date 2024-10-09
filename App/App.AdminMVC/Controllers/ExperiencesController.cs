@@ -99,13 +99,34 @@ public class ExperiencesController : Controller
     [Route("update-experience-{id:int}")]
     public async Task<IActionResult> UpdateExperience([FromRoute] int id)
     {
-        return View();
+        var entityToUpdate = experiences.FirstOrDefault(e => e.Id == id);
+
+        var model = new UpdateExperienceViewModel{
+            Id = id,
+            Title = entityToUpdate.Title,
+            Company = entityToUpdate.Company,
+            Description = entityToUpdate.Description,
+            EndDate = entityToUpdate.EndDate,
+            StartDate = entityToUpdate.StartDate,
+
+        };
+
+        return View(model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> UpdateExperience([FromForm] object updateExperienceModel)
+    [Route("update-experience")]
+    public async Task<IActionResult> UpdateExperience([FromForm] UpdateExperienceViewModel updateExperienceModel)
     {
-        return View();
+        var entityToUpdate = experiences.FirstOrDefault(e => e.Id == updateExperienceModel.Id);
+
+        entityToUpdate.Title = updateExperienceModel.Title;
+        entityToUpdate.Company = updateExperienceModel.Company;
+        entityToUpdate.Description = updateExperienceModel.Description;
+        entityToUpdate.StartDate = updateExperienceModel.StartDate;
+        entityToUpdate.EndDate = updateExperienceModel.EndDate;
+
+        return Redirect("/all-experiences");
     }
 
     [HttpGet]
