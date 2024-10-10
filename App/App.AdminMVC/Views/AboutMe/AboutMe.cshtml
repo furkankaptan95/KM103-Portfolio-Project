@@ -2,8 +2,12 @@
 
 <div class="container my-5">
     <div class="about-me-container">
-        <h1 class="text-center">Hakkımda</h1>
-        <p class="text-center">@Model.Introduction</p>
+        <h1 class="text-center about-me-title">Hakkımda</h1>
+        
+        <div class="introduction-container mx-auto mb-4">
+            <p class="introduction-text">@Model.Introduction</p>
+        </div>
+
         <div class="row">
             <div class="col-md-6 mb-4">
                 <div class="card">
@@ -37,6 +41,40 @@
             background-color: #f9f9f9;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* Hover efekti kaldırıldı */
+        }
+
+
+        .about-me-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #007bff;
+            transition: color 0.3s ease;
+        }
+
+        .about-me-title:hover {
+            color: #0056b3;
+        }
+
+        .introduction-container {
+            max-width: 700px;
+            background-color: #e8f4fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .introduction-container:hover {
+                background-color: #d0e8f2; /* Daha koyu bir mavi tonu */
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Hover sırasında gölgeyi artırdım */
+            }
+
+        .introduction-text {
+            font-size: 1.1rem;
+            color: #333;
+            line-height: 1.6;
+            text-align: justify;
         }
 
         .card {
@@ -47,6 +85,31 @@
             border-radius: 10px 10px 0 0;
             height: 200px;
             object-fit: cover;
+        }
+
+        /* Responsive Improvements */
+        @@media (max-width: 768px) {
+            .about-me-title {
+                font-size: 2rem;
+            }
+
+            .card-img-top {
+                height: 150px;
+            }
+
+            .introduction-container {
+                max-width: 100%;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .about-me-title {
+                font-size: 1.75rem;
+            }
+
+            .card-img-top {
+                height: 120px;
+            }
         }
     </style>
 }
