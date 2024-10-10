@@ -1,5 +1,138 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model List<AllUsersViewModel>
+
+<div class="container mt-4">
+    <h2 class="text-center">Eğitimler</h2>
+    <table class="table table-bordered table-striped table-responsive-md">
+        <thead class="thead-dark">
+            <tr>
+                <th>Resim</th>
+                <th>Kullanıcı adı</th>
+                <th>Email</th>
+                <th class="text-right">Yorumlar</th>
+                <th class="text-right">Aktiflik</th>
+                <th class="text-right">Aktive et/ Deaktive et</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>
+                        <img src="~/assets/img/@user.ImageUrl" alt="@user.Username" class="img-thumbnail" style="max-width: 100px; height: auto;">
+                    </td>
+                    <td>@user.Username</td>
+                    <td>@user.Email</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@user.Id" aria-haspopup="true" aria-expanded="false">Yorumları Görüntüle</button>
+                    </td>
+                    <td class="text-right">
+                        @if (user.IsActive)
+                        {
+                            <span>Aktif ✅</span>
+                        }
+                        else
+                        {
+                            <span>Aktif değil ❌</span>
+                        }
+                    </td>
+                    <td class="text-right">
+                        @if (user.IsActive)
+                        {
+                            <a href="/make-user-active-@user.Id" class="btn btn-sm btn-secondary">İnaktif yap</a>
+                        }
+                        else
+                        {
+                            <a href="/make-user-inactive-@user.Id" class="btn btn-sm btn-success">Aktif Yap</a>
+                        }
+                    </td>
+                </tr>
+
+                <div class="modal fade" id="modal-@user.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabel-@user.Id" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel-@user.Id">@user.Username</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="comments-section">
+                                <h6 class="ml-3">Yorumlar:</h6>
+                                <div class="comment-list">
+                                    @foreach (var comment in user.Comments)
+                                    {
+                                        <div class="comment">
+                                            <div class="comment-content">
+                                                <strong>@comment.BlogPostName</strong>
+                                                <p>@comment.Content</p>
+                                            </div>
+                                            <small class="text-muted">Yorum Tarihi: @comment.CreatedAt.ToString("dd MMMM yyyy HH:mm")</small>
+                                            <p class="comment-status">
+                                                @if (comment.IsApproved)
+                                                {
+                                                    <span class="text-success">Onaylı</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-danger">Onaylı Değil</span>
+                                                }
+                                            </p>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Styles{
+    <style>
+        .table td {
+            vertical-align: middle; /* Tüm tablo hücrelerini dikey olarak ortalar */
+        }
+
+           .comments-section {
+        margin-top: 20px;
+    }
+
+    .comment-list {
+        border-top: 1px solid #dee2e6;
+        padding-top: 10px;
+    }
+
+        .comment {
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f1f1;
+            padding-left: 15px; /* Yorumlara soldan boşluk ekledim */
+        }
+
+    .comment:last-child {
+        border-bottom: none;
+    }
+
+    .comment-content {
+        margin-bottom: 5px;
+    }
+
+    .comment-status {
+        font-weight: bold;
+        margin-top: 5px;
+    }
+
+    @@media (max-width: 576px) {
+        .comment {
+            padding: 5px 0;
+        }
+    }
+
+    </style>
 }
+
+
