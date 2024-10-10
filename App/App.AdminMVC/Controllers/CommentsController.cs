@@ -11,18 +11,6 @@ public class CommentsController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> AddComment()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> AddComment([FromForm] object addCommentModel)
-    {
-        return View();
-    }
-
-    [HttpGet]
     public async Task<IActionResult> DeleteComment()
     {
         return View();
