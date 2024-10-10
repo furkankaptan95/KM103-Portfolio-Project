@@ -20,7 +20,7 @@ public class UsersController : Controller
                 {
                     Content ="Harika bir yazı!",
                     CreatedAt = DateTime.Now.AddDays(-2),
-                    IsApproved = true,
+                    IsApproved = false,
                     BlogPostName = "Nasıl Başladım?",
                 }, new()
                 {

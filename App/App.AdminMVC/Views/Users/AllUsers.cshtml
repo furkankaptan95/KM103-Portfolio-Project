@@ -1,16 +1,16 @@
 ﻿@model List<AllUsersViewModel>
 
 <div class="container mt-4">
-    <h2 class="text-center">Eğitimler</h2>
-    <table class="table table-bordered table-striped table-responsive-md">
+    <h2 class="text-center">Kullanıcılar</h2>
+    <table class="table table-bordered table-striped table-responsive-md mt-4">
         <thead class="thead-dark">
             <tr>
-                <th>Resim</th>
-                <th>Kullanıcı adı</th>
-                <th>Email</th>
-                <th class="text-right">Yorumlar</th>
-                <th class="text-right">Aktiflik</th>
-                <th class="text-right">Aktive et/ Deaktive et</th>
+                <th class="text-center">Resim</th>
+                <th class="text-center">Kullanıcı adı</th>
+                <th class="text-center">Email</th>
+                <th class="text-center">Yorumlar</th>
+                <th class="text-center">Aktiflik</th>
+                <th class="text-center">Aktive et/ Deaktive et</th>
             </tr>
         </thead>
         <tbody>
@@ -18,14 +18,14 @@
             {
                 <tr>
                     <td>
-                        <img src="~/assets/img/@user.ImageUrl" alt="@user.Username" class="img-thumbnail" style="max-width: 100px; height: auto;">
-                    </td>
-                    <td>@user.Username</td>
-                    <td>@user.Email</td>
-                    <td>
+                        <img src="~/assets/img/@user.ImageUrl" alt="@user.Username" class="img-thumbnail" style="max-width: 100px; height: auto; display: block; margin: auto;">
+                    </td class="text-center">
+                    <td class="text-center">@user.Username</td>
+                    <td class="text-center">@user.Email</td>
+                    <td class="text-center">
                         <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@user.Id" aria-haspopup="true" aria-expanded="false">Yorumları Görüntüle</button>
                     </td>
-                    <td class="text-right">
+                    <td  class="text-center">
                         @if (user.IsActive)
                         {
                             <span>Aktif ✅</span>
@@ -35,7 +35,7 @@
                             <span>Aktif değil ❌</span>
                         }
                     </td>
-                    <td class="text-right">
+                    <td class="text-center">
                         @if (user.IsActive)
                         {
                             <a href="/deactivate-user-@user.Id" class="btn btn-sm btn-secondary">İnaktif yap</a>
@@ -63,8 +63,8 @@
                                     {
                                         <div class="comment">
                                             <div class="comment-content">
-                                                <strong>@comment.BlogPostName</strong>
-                                                <p>@comment.Content</p>
+                                                <strong>Blog Post -> " @comment.BlogPostName "</strong>
+                                                <p class="mt-2">" @comment.Content "</p>
                                             </div>
                                             <small class="text-muted">Yorum Tarihi: @comment.CreatedAt.ToString("dd MMMM yyyy HH:mm")</small>
                                             <p class="comment-status">
