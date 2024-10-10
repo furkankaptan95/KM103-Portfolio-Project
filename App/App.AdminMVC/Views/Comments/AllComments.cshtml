@@ -2,32 +2,32 @@
 
 <div class="container mt-4">
     <h2 class="text-center">Eğitimler</h2>
-    <table class="table table-bordered table-striped table-responsive-md">
+    <table class="table table-bordered table-striped table-responsive-md mt-4">
         <thead class="thead-dark">
             <tr>
-                <th>Yorumcu</th>
-                <th>İçerik</th>
-                <th>Blog Post</th>
-                <th>Yapılma Tarihi</th>
-                <th class="text-right">Yorumu Silme</th>
-                <th class="text-right">Onay Durumu</th>
-                <th class="text-right">Onayla / Onayı geri al</th>
+                <th class="text-center">Yorumcu</th>
+                <th class="text-center">İçerik</th>
+                <th class="text-center">Blog Post</th>
+                <th class="text-center">Yapılma Tarihi</th>
+                <th class="text-center">Yorumu Silme</th>
+                <th class="text-center">Onay Durumu</th>
+                <th class="text-center">Onayla / Onayı geri al</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var comment in Model)
             {
                 <tr>
-                    <td>@comment.Commenter</td>
-                    <td>
+                    <td class="text-center">@comment.Commenter</td>
+                    <td class="text-center">
                         <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@comment.Id" aria-haspopup="true" aria-expanded="false">Yorumu Görüntüle</button>
                     </td>
-                    <td>@comment.BlogPostName</td>
-                    <td>@comment.CreatedAt.ToString("dd MMMM yyyy HH:mm")</td>
-                    <td class="text-right">
-                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal-@comment.Id">Sil</button>
+                    <td class="text-center" >@comment.BlogPostName</td>
+                    <td class="text-center">@comment.CreatedAt.ToString("dd MMMM yyyy HH:mm")</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal-@comment.Id">Yorumu Sil</button>
                     </td>
-                    <td class="text-right">
+                    <td class="text-center">
                         @if (comment.IsApproved)
                         {
                             <span>Onaylandı ✅</span>
@@ -37,7 +37,7 @@
                             <span>Onaylanmadı ❌</span>
                         }
                     </td>
-                    <td class="text-right">
+                    <td class="text-center">
                         @if (comment.IsApproved)
                         {
                             <a href="/not-approve-comment-@comment.Id" class="btn btn-sm btn-secondary">Onayı geri al</a>
