@@ -123,7 +123,11 @@ public class ProjectsController : Controller
     [Route("make-project-visible-{id:int}")]
     public async Task<IActionResult> MakeProjectVisible([FromRoute] int id)
     {
-        return View();
+        var entity = _projects.FirstOrDefault(x => x.Id == id);
+
+        entity.IsVisible = true;
+
+        return Redirect("/all-projects");
     }
 
 
@@ -131,6 +135,10 @@ public class ProjectsController : Controller
     [Route("make-project-invisible-{id:int}")]
     public async Task<IActionResult> MakeProjectInVisible([FromRoute] int id)
     {
-        return View();
+        var entity = _projects.FirstOrDefault(x => x.Id == id);
+
+        entity.IsVisible = false;
+
+        return Redirect("/all-projects");
     }
 }
