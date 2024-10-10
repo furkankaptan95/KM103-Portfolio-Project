@@ -56,9 +56,14 @@ public class CommentsController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> DeleteComment()
+    [Route("delete-comment-{id:int}")]
+    public async Task<IActionResult> DeleteComment([FromRoute] int id)
     {
-        return View();
+        var comment = _comments.FirstOrDefault(c=>c.Id == id);
+
+        _comments.Remove(comment);
+
+        return Redirect("all-comments");
     }
 
 
