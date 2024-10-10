@@ -2,32 +2,32 @@
 
 <div class="container mt-4">
     <h2 class="text-center">Deneyimler</h2>
-    <table class="table table-bordered table-striped table-responsive-md">
+    <table class="table table-bordered table-striped table-responsive-md mt-4">
         <thead class="thead-dark">
             <tr>
-                <th>Başlık</th>
-                <th>Firma</th>
-                <th>Başlangıç Tarihi</th>
-                <th>Bitiş Tarihi</th>
-                <th class="text-right">İşlemler</th>
-                <th class="text-right">Görünürlük</th>
-                <th class="text-right">Görünür Yap / Gizle</th>
+                <th class="text-center">Başlık</th>
+                <th class="text-center">Firma</th>
+                <th class="text-center">Başlangıç Tarihi</th>
+                <th class="text-center">Bitiş Tarihi</th>
+                <th class="text-center">İşlemler</th>
+                <th class="text-center">Görünürlük</th>
+                <th class="text-center">Görünür Yap / Gizle</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var experience in Model)
             {
                 <tr>
-                    <td>@experience.Title</td>
-                    <td>@experience.Company</td>
-                    <td>@experience.StartDate.ToString("dd MMM yyyy")</td>
-                    <td>@experience.EndDate.ToString("dd MMM yyyy")</td>
-                    <td class="text-right">
+                    <td class="text-center">@experience.Title</td>
+                    <td class="text-center">@experience.Company</td>
+                    <td class="text-center">@experience.StartDate.ToString("dd MMM yyyy")</td>
+                        <td class="text-center">@experience.EndDate.ToString("dd MMM yyyy")</td>
+                    <td  class="text-center">
                         <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@experience.Id" aria-haspopup="true" aria-expanded="false">Açıklamayı Görüntüle</button>
                         <a href="/update-experience-@experience.Id" class="btn btn-sm btn-primary">Düzenle</a>
                         <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal-@experience.Id">Sil</button>
                     </td>
-                    <td class="text-right">
+                        <td  class="text-center">
                         @if (experience.IsVisible)
                         {
                             <span>Görünür ✅</span>
@@ -37,7 +37,7 @@
                             <span>Gizli ❌</span>
                         }
                     </td>
-                    <td class="text-right">
+                        <td  class="text-center">
                         @if (experience.IsVisible)
                         {
                             <a href="/make-experience-invisible-@experience.Id" class="btn btn-sm btn-secondary">Gizle</a>
