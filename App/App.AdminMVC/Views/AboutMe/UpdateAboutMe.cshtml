@@ -3,7 +3,7 @@
 <div class="container">
     <div class="form-container">
         <div class="form-title">Hakkımda</div>
-        <form asp-action="UpdateAboutMe" method="POST" enctype="multipart/form-data">
+        <form action="/update-about-me" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="All" class="text-danger"></div>
 
             <div class="mb-3">
@@ -11,10 +11,31 @@
                 <textarea asp-for="Introduction" rows="4" class="form-control"></textarea>
                 <span asp-validation-for="Introduction" class="text-danger" data-valmsg-replace="true"></span>
             </div>
-            
+
+            <div class="mb-3">
+                <h4>Mevcut 1. Fotoğraf</h4>
+                <img src="~/assets/img/@Model.ImageUrl1" class="img-thumbnail" style="max-width: 200px; height: auto;">
+            </div>
+
+            <div class="mb-3">
+                <h4>Mevcut 2. Fotoğraf</h4>
+                <img src="~/assets/img/@Model.ImageUrl2"  class="img-thumbnail" style="max-width: 200px; height: auto;">
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ImageFile1" class="form-label">Yeni 1. Fotoğraf</label>
+                <input asp-for="ImageFile1" class="form-control" type="file" accept="image/*">
+                <span asp-validation-for="ImageFile1" class="text-danger" data-valmsg-replace="true"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ImageFile2" class="form-label">Yeni 2. Fotoğraf</label>
+                <input asp-for="ImageFile2" class="form-control" type="file" accept="image/*">
+                <span asp-validation-for="ImageFile2" class="text-danger" data-valmsg-replace="true"></span>
+            </div>
+
             <button type="submit" class="btn btn-custom w-100">Güncelle</button>
         </form>
-
 
     </div>
 </div>
