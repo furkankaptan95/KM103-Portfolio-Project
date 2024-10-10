@@ -77,10 +77,21 @@ public class ProjectsController : Controller
     [Route("update-project-{id:int}")]
     public async Task<IActionResult> UpdateProject([FromRoute] int id)
     {
-        return View();
+        var entityToUpdate = _projects.FirstOrDefault(item => item.Id == id);
+
+        var model = new UpdateProjectViewModel
+        {
+            Id = id,
+            Title = entityToUpdate.Title,
+            Description = entityToUpdate.Description,
+            ImageUrl = entityToUpdate.ImageUrl,
+        };
+
+        return View(model);
     }
 
     [HttpPost]
+    [Route("update-project")]
     public async Task<IActionResult> UpdateProject([FromForm] object updateProjectModel)
     {
         return View();
