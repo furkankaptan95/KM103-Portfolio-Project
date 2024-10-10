@@ -14,7 +14,7 @@
 
             <div class="mb-3">
                 <label asp-for="Description" class="form-label">Açıklama</label>
-                <textarea asp-for="Description" rows="4" class="form-control"></textarea>
+                <textarea asp-for="Description" rows="7" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger" data-valmsg-replace="true"></span>
             </div>
 
@@ -24,7 +24,7 @@
                 <span asp-validation-for="ImageFile" class="text-danger" data-valmsg-replace="true"></span>
             </div>
            
-            <button type="submit" class="btn btn-custom w-100">Ekle</button>
+            <button type="submit" class="btn btn-custom mt-2">Ekle</button>
         </form>
 
     </div>
@@ -39,7 +39,7 @@
     <style>
         .form-container {
             max-width: 600px;
-            margin: 110px auto;
+            margin: 35px auto;
             padding: 20px;
             background-color: #f9f9f9;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

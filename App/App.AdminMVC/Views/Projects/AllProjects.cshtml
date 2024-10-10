@@ -1,34 +1,35 @@
 ﻿@model List<AllProjectsViewModel>
 
 <div class="container mt-4">
-    <h2 class="text-center">Eğitimler</h2>
-    <table class="table table-bordered table-striped table-responsive-md">
+    <h2 class="text-center">Projeler</h2>
+    <table class="table table-bordered table-striped table-responsive-md mt-4">
         <thead class="thead-dark">
             <tr>
-                <th>Resim</th>
-                <th>Başlık</th>
-                <th>Açıklama</th>
-                <th class="text-right">İşlemler</th>
-                <th class="text-right">Görünürlük</th>
-                <th class="text-right">Görünür Yap / Gizle</th>
+                <th class="text-center">Resim</th>
+                <th class="text-center">Başlık</th>
+                <th class="text-center">Açıklama</th>
+                <th class="text-center">İşlemler</th>
+                <th class="text-center">Görünürlük</th>
+                <th class="text-center">Görünür Yap / Gizle</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var project in Model)
             {
                 <tr>
-                    <td>
-                        <img src="~/assets/img/@project.ImageUrl" alt="@project.Title" class="img-thumbnail" style="max-width: 100px; height: auto;">
+                    <td style="text-align:center;">
+                        <img src="~/assets/img/@project.ImageUrl" alt="@project.Title" class="img-thumbnail" style="max-width: 100px; height: auto; display: block; margin: auto;">
                     </td>
-                    <td>@project.Title</td>
-                    <td>
+
+                    <td class="text-center">@project.Title</td>
+                    <td class="text-center">
                         <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@project.Id" aria-haspopup="true" aria-expanded="false">Açıklamayı Görüntüle</button>
                     </td>
-                    <td class="text-right">
+                    <td class="text-center">
                         <a href="/update-project-@project.Id" class="btn btn-sm btn-primary">Düzenle</a>
                         <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal-@project.Id">Sil</button>
                     </td>
-                    <td class="text-right">
+                    <td class="text-center">
                         @if (project.IsVisible)
                         {
                             <span>Görünür ✅</span>
@@ -38,7 +39,7 @@
                             <span>Gizli ❌</span>
                         }
                     </td>
-                    <td class="text-right">
+                    <td class="text-center">
                         @if (project.IsVisible)
                         {
                             <a href="/make-project-invisible-@project.Id" class="btn btn-sm btn-secondary">Gizle</a>
