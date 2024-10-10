@@ -2,28 +2,28 @@
 
 <div class="container mt-4">
     <h2 class="text-center">Tüm Blog Postlar</h2>
-    <table class="table table-bordered table-striped table-responsive-md">
+    <table class="table table-bordered table-striped table-responsive-md mt-4">
         <thead class="thead-dark">
             <tr>
-                <th>Başlık</th>
-                <th>Yayınlanma Tarihi</th>
-                <th class="text-right">İşlemler</th>
-                <th class="text-right">Görünürlük</th>
-                <th class="text-right">Görünür Yap / Gizle</th>
+                <th class="text-center">Başlık</th>
+                <th class ="text-center">Yayınlanma Tarihi</th>
+                <th class="text-center">İşlemler</th>
+                <th class="text-center">Görünürlük</th>
+                <th class="text-center">Görünür Yap / Gizle</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var post in Model)
             {
                 <tr>
-                    <td>@post.Title</td>
-                    <td>@post.PublishDate.ToString("dd MMM yyyy")</td>
-                    <td class="text-right">
+                    <td class="text-center">@post.Title</td>
+                    <td class="text-center">@post.PublishDate.ToString("dd MMM yyyy")</td>
+                    <td class="text-center">
                         <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@post.Id" aria-haspopup="true" aria-expanded="false">İçeriği Görüntüle</button>
                         <a href="/update-blog-post-@post.Id" class="btn btn-sm btn-primary">Düzenle</a>
                         <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal-@post.Id">Sil</button>
                     </td>
-                    <td class="text-right">
+                    <td class="text-center">
                         @if (post.IsVisible)
                         {
                             <span>Görünür ✅</span>
@@ -33,7 +33,7 @@
                             <span>Gizli ❌</span>
                         }
                     </td>
-                    <td class="text-right">
+                    <td class="text-center">
                         @if (post.IsVisible)
                         {
                             <a href="/make-blog-post-invisible-@post.Id" class="btn btn-sm btn-secondary">Gizle</a>
