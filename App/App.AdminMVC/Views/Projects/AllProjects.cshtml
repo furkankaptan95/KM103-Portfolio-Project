@@ -1,5 +1,107 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model List<AllProjectsViewModel>
+
+<div class="container mt-4">
+    <h2 class="text-center">Eğitimler</h2>
+    <table class="table table-bordered table-striped table-responsive-md">
+        <thead class="thead-dark">
+            <tr>
+                <th>Resim</th>
+                <th>Başlık</th>
+                <th>Açıklama</th>
+                <th class="text-right">İşlemler</th>
+                <th class="text-right">Görünürlük</th>
+                <th class="text-right">Görünür Yap / Gizle</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var project in Model)
+            {
+                <tr>
+                    <td>
+                        <img src="~/assets/img/@project.ImageUrl" alt="@project.Title" class="img-thumbnail" style="max-width: 100px; height: auto;">
+                    </td>
+                    <td>@project.Title</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@project.Id" aria-haspopup="true" aria-expanded="false">Açıklamayı Görüntüle</button>
+                    </td>
+                    <td class="text-right">
+                        <a href="/update-project-@project.Id" class="btn btn-sm btn-primary">Düzenle</a>
+                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal-@project.Id">Sil</button>
+                    </td>
+                    <td class="text-right">
+                        @if (project.IsVisible)
+                        {
+                            <span>Görünür ✅</span>
+                        }
+                        else
+                        {
+                            <span>Gizli ❌</span>
+                        }
+                    </td>
+                    <td class="text-right">
+                        @if (project.IsVisible)
+                        {
+                            <a href="/make-project-invisible-@project.Id" class="btn btn-sm btn-secondary">Gizle</a>
+                        }
+                        else
+                        {
+                            <a href="/make-project-visible-@project.Id" class="btn btn-sm btn-success">Görünür Yap</a>
+                        }
+                    </td>
+                </tr>
+
+                <div class="modal fade" id="modal-@project.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabel-@project.Id" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel-@project.Id">@project.Title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>@project.Description</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Silme Onay Modalı -->
+                <div class="modal fade" id="deleteModal-@project.Id" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel-@project.Id" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel-@project.Id">Silme Onayı</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <b>@project.Title</b> başlıklı projeyi silmek istediğinize emin misiniz?
+                            </div>
+                            <div class="modal-footer">
+                                <form action="/delete-project-@project.Id" method="get">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                                    <button type="submit" class="btn btn-danger">Sil</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Styles{
+    <style>
+        .table td {
+            vertical-align: middle; /* Tüm tablo hücrelerini dikey olarak ortalar */
+        }
+    </style>
 }
+
+

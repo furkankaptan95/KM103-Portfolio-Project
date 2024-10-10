@@ -1,4 +1,5 @@
 ﻿using App.Data.Entities;
+using App.ViewModels.AdminMvc.ExperiencesViewModels;
 using App.ViewModels.AdminMvc.ProjectsViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,7 +36,19 @@ public class ProjectsController : Controller
     [Route("all-projects")]
     public async Task<IActionResult> AllProjects()
     {
-        return View();
+        List<AllProjectsViewModel> models = _projects
+    .Select(item => new AllProjectsViewModel
+    {
+        Id = item.Id,
+        Title = item.Title,
+        Description = item.Description,
+        IsVisible = item.IsVisible,
+        ImageUrl = item.ImageUrl,
+        
+    })
+    .ToList();
+
+        return View(models);
     }
 
     [HttpGet]
@@ -64,7 +77,7 @@ public class ProjectsController : Controller
 
         _projects.Add(entityToAdd);
 
-        return View("/all-projects");
+        return Redirect("/all-projects");
     }
 
     [HttpGet]
