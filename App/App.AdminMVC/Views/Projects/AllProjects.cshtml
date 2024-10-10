@@ -18,7 +18,7 @@
             {
                 <tr>
                     <td>
-                        <img src="~\assets\img\@project.ImageUrl" alt="@project.Title" class="img-thumbnail" style="max-width: 100px; height: auto;">
+                        <img src="~/assets/img/@project.ImageUrl" alt="@project.Title" class="img-thumbnail" style="max-width: 100px; height: auto;">
                     </td>
                     <td>@project.Title</td>
                     <td>
@@ -96,5 +96,12 @@
     </table>
 </div>
 
+@section Styles{
+    <style>
+        .table td {
+            vertical-align: middle; /* Tüm tablo hücrelerini dikey olarak ortalar */
+        }
+    </style>
+}
 
 
