@@ -17,7 +17,7 @@ public class AboutMeController : Controller
         aboutMeModel.ImageUrl1 = "default-img.jpg";
         aboutMeModel.ImageUrl2 = "default-img.jpg";
 
-        //aboutMeModel = null;
+        aboutMeModel = null;
 
         if (aboutMeModel is null)
         {
@@ -36,12 +36,13 @@ public class AboutMeController : Controller
     }
 
     [HttpPost]
+    [Route("add-about-me")]
     [ValidateAntiForgeryToken]
     public IActionResult AddAboutMe(AddAboutMeViewModel model)
     {
         if(!ModelState.IsValid)
         {
-            // Model geçersiz ise view'a geri dön
+           
             return View(model);
         }
 
