@@ -2,55 +2,56 @@
 
 <div class="container">
     <div class="form-container">
-        <div class="form-title">Hakkımda</div>
+        <div class="form-title">Hakkımda - Güncelle</div>
         <form action="/update-about-me" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="All" class="text-danger"></div>
 
             <div class="mb-3">
                 <label asp-for="Introduction" class="form-label">Giriş</label>
-                <textarea asp-for="Introduction" rows="4" class="form-control"></textarea>
+                <textarea asp-for="Introduction" rows="10" class="form-control"></textarea>
                 <span asp-validation-for="Introduction" class="text-danger" data-valmsg-replace="true"></span>
             </div>
 
-            <div class="mb-3">
-                <h4>Mevcut 1. Fotoğraf</h4>
-                <img src="~/assets/img/@Model.ImageUrl1" class="img-thumbnail" style="max-width: 200px; height: auto;">
-            </div>
-
-            <div class="mb-3">
-                <h4>Mevcut 2. Fotoğraf</h4>
-                <img src="~/assets/img/@Model.ImageUrl2"  class="img-thumbnail" style="max-width: 200px; height: auto;">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <h4>Mevcut 1. Fotoğraf</h4>
+                    <img src="~/assets/img/@Model.ImageUrl1" class="img-thumbnail">
+                </div>
+                <div class="col-md-6">
+                    <h4>Mevcut 2. Fotoğraf</h4>
+                    <img src="~/assets/img/@Model.ImageUrl2" class="img-thumbnail">
+                </div>
             </div>
 
             <div class="mb-3">
                 <label asp-for="ImageFile1" class="form-label">Yeni 1. Fotoğraf</label>
+                <p>İlk fotoğrafınızı değiştirmek istiyorsanız fotoğraf dosyası yükleyiniz.</p>
+                <p>**Yüklemezseniz 1. fotoğrafınız aynı kalacaktır.</p>
                 <input asp-for="ImageFile1" class="form-control" type="file" accept="image/*">
                 <span asp-validation-for="ImageFile1" class="text-danger" data-valmsg-replace="true"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="ImageFile2" class="form-label">Yeni 2. Fotoğraf</label>
+                <p>İkinci fotoğrafınızı değiştirmek istiyorsanız fotoğraf dosyası yükleyiniz.</p>
+                <p>**Yüklemezseniz 2. fotoğrafınız aynı kalacaktır.</p>
                 <input asp-for="ImageFile2" class="form-control" type="file" accept="image/*">
                 <span asp-validation-for="ImageFile2" class="text-danger" data-valmsg-replace="true"></span>
             </div>
 
             <button type="submit" class="btn btn-custom w-100">Güncelle</button>
         </form>
-
     </div>
 </div>
 
-
-
 @section Styles {
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         .form-container {
-            max-width: 600px;
+            max-width: 700px;
             margin: 50px auto;
-            padding: 20px;
+            padding: 30px;
             background-color: #f9f9f9;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
@@ -60,7 +61,8 @@
             font-size: 24px;
             font-weight: bold;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            color: #007bff;
         }
 
         .btn-custom {
@@ -68,16 +70,39 @@
             color: white;
         }
 
-            .btn-custom:hover {
-                background-color: #0056b3;
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+
+        .img-thumbnail {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        @@media (max-width: 768px) {
+            .row {
+                flex-direction: column;
             }
+
+            .img-thumbnail {
+                margin-bottom: 15px;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .form-title {
+                font-size: 20px;
+            }
+        }
     </style>
-
-}
-
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 }
