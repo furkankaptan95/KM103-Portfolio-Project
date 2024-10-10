@@ -26,13 +26,6 @@ public class ProjectsController : Controller
     };
 
     [HttpGet]
-    [Route("project-{id:int}")]
-    public async Task<IActionResult> Project([FromRoute] int id)
-    {
-        return View();
-    }
-
-    [HttpGet]
     [Route("all-projects")]
     public async Task<IActionResult> AllProjects()
     {
