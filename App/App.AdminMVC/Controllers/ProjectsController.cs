@@ -97,7 +97,11 @@ public class ProjectsController : Controller
     [Route("delete-project-{id:int}")]
     public async Task<IActionResult> DeleteProject([FromRoute] int id)
     {
-        return View();
+        var entityToDelete = _projects.FirstOrDefault(x => x.Id == id);
+
+        _projects.Remove(entityToDelete);
+
+       return Redirect("/all-projects");
     }
 
 
