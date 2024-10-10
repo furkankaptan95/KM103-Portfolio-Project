@@ -26,13 +26,6 @@ public class ProjectsController : Controller
     };
 
     [HttpGet]
-    [Route("project-{id:int}")]
-    public async Task<IActionResult> Project([FromRoute] int id)
-    {
-        return View();
-    }
-
-    [HttpGet]
     [Route("all-projects")]
     public async Task<IActionResult> AllProjects()
     {
@@ -84,13 +77,34 @@ public class ProjectsController : Controller
     [Route("update-project-{id:int}")]
     public async Task<IActionResult> UpdateProject([FromRoute] int id)
     {
-        return View();
+        var entityToUpdate = _projects.FirstOrDefault(item => item.Id == id);
+
+        var model = new UpdateProjectViewModel
+        {
+            Id = id,
+            Title = entityToUpdate.Title,
+            Description = entityToUpdate.Description,
+            ImageUrl = entityToUpdate.ImageUrl,
+        };
+
+        return View(model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> UpdateProject([FromForm] object updateProjectModel)
+    [Route("update-project")]
+    public async Task<IActionResult> UpdateProject([FromForm] UpdateProjectViewModel updateProjectModel)
     {
-        return View();
+        if (!ModelState.IsValid)
+        {
+            return View(updateProjectModel);
+        }
+
+        var entity = _projects.FirstOrDefault(p=>p.Id == updateProjectModel.Id);
+
+        entity.Title = updateProjectModel.Title;
+        entity.Description = updateProjectModel.Description;
+
+        return Redirect("/all-projects");
     }
 
     [HttpGet]
