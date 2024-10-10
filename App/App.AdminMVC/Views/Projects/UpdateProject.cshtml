@@ -8,30 +8,32 @@
 
             <input type="hidden" asp-for="Id" />
 
-            <div class="form-group">
-                <label asp-for="Title" class="control-label">Başlık</label>
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label">Başlık</label>
                 <input asp-for="Title" class="form-control" placeholder="Başlığı buraya yazınız" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="Description" class="form-label">Açıklama</label>
-                <textarea asp-for="Description" rows="4" class="form-control"></textarea>
+                <textarea asp-for="Description" rows="7" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger" data-valmsg-replace="true"></span>
             </div>
 
             <div class="mb-3">
-                <h4>Mevcut Fotoğraf</h4>
+                <h4 class="mb-3">Mevcut Fotoğraf</h4>
                 <img src="~/assets/img/@Model.ImageUrl" alt="@Model.Title" class="img-thumbnail" style="max-width: 200px; height: auto;">
             </div>
 
             <div class="mb-3">
                 <label asp-for="ImageFile" class="form-label">Yeni Fotoğraf</label>
+                <p>Fotoğrafı değiştirmek istiyorsanız yeni fotoğraf yükleyiniz.</p>
+                <p>** Yeni fotoğraf yüklemezseniz fotoğraf aynı kalacaktır.</p>
                 <input asp-for="ImageFile" class="form-control" type="file" accept="image/*">
                 <span asp-validation-for="ImageFile" class="text-danger" data-valmsg-replace="true"></span>
             </div>
 
-            <button type="submit" class="btn btn-custom w-100">Güncelle</button>
+            <button type="submit" class="btn btn-custom mt-2">Güncelle</button>
         </form>
 
     </div>
@@ -46,7 +48,7 @@
     <style>
         .form-container {
             max-width: 600px;
-            margin: 110px auto;
+            margin: 25px auto;
             padding: 20px;
             background-color: #f9f9f9;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
