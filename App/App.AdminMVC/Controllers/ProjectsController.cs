@@ -92,9 +92,19 @@ public class ProjectsController : Controller
 
     [HttpPost]
     [Route("update-project")]
-    public async Task<IActionResult> UpdateProject([FromForm] object updateProjectModel)
+    public async Task<IActionResult> UpdateProject([FromForm] UpdateProjectViewModel updateProjectModel)
     {
-        return View();
+        if (!ModelState.IsValid)
+        {
+            return View(updateProjectModel);
+        }
+
+        var entity = _projects.FirstOrDefault(p=>p.Id == updateProjectModel.Id);
+
+        entity.Title = updateProjectModel.Title;
+        entity.Description = updateProjectModel.Description;
+
+        return Redirect("/all-projects");
     }
 
     [HttpGet]
