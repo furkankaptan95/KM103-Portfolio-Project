@@ -6,13 +6,6 @@ public class BlogPostsController : Controller
 {
 
     [HttpGet]
-    [Route("blog-post-{id:int}")]
-    public async Task<IActionResult> BlogPost([FromRoute] int id)
-    {
-        return View();
-    }
-
-    [HttpGet]
     [Route("all-blog-posts")]
     public async Task<IActionResult> AllBlogPosts()
     {
