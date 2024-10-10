@@ -72,7 +72,7 @@ public class UsersController : Controller
     [Route("all-users")]
     public async Task<IActionResult> AllUsers()
     {
-        return View();
+        return View(_users);
     }
 
     [HttpGet]
