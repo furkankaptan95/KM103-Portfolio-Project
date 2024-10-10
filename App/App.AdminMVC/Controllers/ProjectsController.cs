@@ -54,7 +54,17 @@ public class ProjectsController : Controller
             return View(addProjectModel);
         }
 
-        return View();
+        var entityToAdd = new ProjectEntity
+        {
+            Id = ++index,
+            Title = addProjectModel.Title,
+            Description = addProjectModel.Description,
+            ImageUrl = "default-img.jpg"
+        };
+
+        _projects.Add(entityToAdd);
+
+        return View("/all-projects");
     }
 
     [HttpGet]
