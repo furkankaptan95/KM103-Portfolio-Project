@@ -1,5 +1,106 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model List<AllCommentsViewModel>
+
+<div class="container mt-4">
+    <h2 class="text-center">Eğitimler</h2>
+    <table class="table table-bordered table-striped table-responsive-md">
+        <thead class="thead-dark">
+            <tr>
+                <th>Yorumcu</th>
+                <th>İçerik</th>
+                <th>Blog Post</th>
+                <th>Yapılma Tarihi</th>
+                <th class="text-right">Yorumu Silme</th>
+                <th class="text-right">Onay Durumu</th>
+                <th class="text-right">Onayla / Onayı geri al</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var comment in Model)
+            {
+                <tr>
+                    <td>@comment.Commenter</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@comment.Id" aria-haspopup="true" aria-expanded="false">Yorumu Görüntüle</button>
+                    </td>
+                    <td>@comment.BlogPostName</td>
+                    <td>@comment.CreatedAt.ToString("dd MMMM yyyy HH:mm")</td>
+                    <td class="text-right">
+                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal-@comment.Id">Sil</button>
+                    </td>
+                    <td class="text-right">
+                        @if (comment.IsApproved)
+                        {
+                            <span>Onaylandı ✅</span>
+                        }
+                        else
+                        {
+                            <span>Onaylanmadı ❌</span>
+                        }
+                    </td>
+                    <td class="text-right">
+                        @if (comment.IsApproved)
+                        {
+                            <a href="/not-approve-comment-@comment.Id" class="btn btn-sm btn-secondary">Onayı geri al</a>
+                        }
+                        else
+                        {
+                            <a href="/approve-comment-@comment.Id" class="btn btn-sm btn-success">Onayla</a>
+                        }
+                    </td>
+                </tr>
+
+                <div class="modal fade" id="modal-@comment.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabel-@comment.Id" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel-@comment.Id">@comment.Commenter</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>@comment.Content</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Silme Onay Modalı -->
+                <div class="modal fade" id="deleteModal-@comment.Id" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel-@comment.Id" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel-@comment.Id">Silme Onayı</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <b>@comment.Commenter</b> adlı yorumcunun yorumunu silmek istediğinize emin misiniz?
+                            </div>
+                            <div class="modal-footer">
+                                <form action="/delete-comment-@comment.Id" method="get">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                                    <button type="submit" class="btn btn-danger">Sil</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Styles {
+    <style>
+        .table td {
+            vertical-align: middle; /* Tüm tablo hücrelerini dikey olarak ortalar */
+        }
+    </style>
 }
+
+
