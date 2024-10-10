@@ -1,9 +1,29 @@
-﻿using App.ViewModels.AdminMvc.ProjectsViewModels;
+﻿using App.Data.Entities;
+using App.ViewModels.AdminMvc.ProjectsViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 public class ProjectsController : Controller
 {
+    private static int index = 0;
+    private static readonly List<ProjectEntity> _projects = new List<ProjectEntity>
+    {
+        new()
+        {
+            Id = ++index,
+            Title = "proje 1",
+            Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at justo nec risus malesuada condimentum id condimentum ipsum. Nulla ut erat nec magna ultricies pulvinar ut nec neque. Curabitur nunc dui, ullamcorper sed sodales et, faucibus eget neque. Aenean tincidunt, elit ac fermentum laoreet.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at justo nec risus malesuada condimentum id condimentum ipsum. Nulla ut erat nec magna ultricies pulvinar ut nec neque. Curabitur nunc dui, ullamcorper sed sodales et, faucibus eget neque. Aenean tincidunt, elit ac fermentum laoreet.",
+            ImageUrl = "default-img.jpg"
+        },
+          new()
+        {
+            Id = ++index,
+            Title = "proje 2",
+            Description = "2. Proje Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at justo nec risus malesuada condimentum id condimentum ipsum. Nulla ut erat nec magna ultricies pulvinar ut nec neque. Curabitur nunc dui, ullamcorper sed sodales et, faucibus eget neque. Aenean tincidunt, elit ac fermentum laoreet.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at justo nec risus malesuada condimentum id condimentum ipsum. Nulla ut erat nec magna ultricies pulvinar ut nec neque. Curabitur nunc dui, ullamcorper sed sodales et, faucibus eget neque. Aenean tincidunt, elit ac fermentum laoreet.",
+            ImageUrl = "default-img.jpg"
+        },
+    };
+
     [HttpGet]
     [Route("project-{id:int}")]
     public async Task<IActionResult> Project([FromRoute] int id)
