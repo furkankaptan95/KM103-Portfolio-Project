@@ -9,6 +9,7 @@ public class UsersController : Controller
     {
         new()
         {
+            Id = 1,
             Username = "user 1",
             Email = "mail1@gmail.com",
             ImageUrl = "default-img.jpg",
@@ -35,6 +36,7 @@ public class UsersController : Controller
 
           new()
         {
+            Id = 2,
             Username = "user 2",
             Email = "mail2@gmail.com",
             ImageUrl = "default-img.jpg",
@@ -68,10 +70,25 @@ public class UsersController : Controller
     }
 
     [HttpGet]
-    [Route("delete-user-{id:int}")]
-    public async Task<IActionResult> DeleteUser([FromRoute] int id)
+    [Route("activate-user-{id:int}")]
+    public async Task<IActionResult> ActivateUser([FromRoute] int id)
     {
-        return View();
+        var user = _users.FirstOrDefault(u => u.Id == id);
+
+        user.IsActive = true;
+
+        return Redirect("/all-users");
+    }
+
+    [HttpGet]
+    [Route("deactivate-user-{id:int}")]
+    public async Task<IActionResult> DeactivateUser([FromRoute] int id)
+    {
+        var user = _users.FirstOrDefault(u => u.Id == id);
+
+        user.IsActive = false;
+
+        return Redirect("/all-users");
     }
 
 }
