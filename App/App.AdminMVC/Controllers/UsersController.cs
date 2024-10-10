@@ -1,5 +1,4 @@
-﻿using App.Data.Entities;
-using App.ViewModels.AdminMvc.CommentsViewModels;
+﻿using App.ViewModels.AdminMvc.CommentsViewModels;
 using App.ViewModels.AdminMvc.UsersViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -62,43 +61,10 @@ public class UsersController : Controller
     };
 
     [HttpGet]
-    [Route("user-{id:int}")]
-    public async Task<IActionResult> User([FromRoute] int id)
-    {
-        return View();
-    }
-
-    [HttpGet]
     [Route("all-users")]
     public async Task<IActionResult> AllUsers()
     {
         return View(_users);
-    }
-
-    [HttpGet]
-    [Route("add-user")]
-    public async Task<IActionResult> AddUser()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> AddUser([FromForm] object addUserModel)
-    {
-        return View();
-    }
-
-    [HttpGet]
-    [Route("update-user-{id:int}")]
-    public async Task<IActionResult> UpdateUser([FromRoute] int id)
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> UpdateUser([FromForm] object updateUserModel)
-    {
-        return View();
     }
 
     [HttpGet]
