@@ -1,4 +1,6 @@
 ﻿using App.Data.Entities;
+using App.ViewModels.AdminMvc.CommentsViewModels;
+using App.ViewModels.AdminMvc.EducationsViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
@@ -37,9 +39,20 @@ public class CommentsController : Controller
     [Route("all-comments")]
     public async Task<IActionResult> AllComments()
     {
+        List<AllCommentsViewModel> models = _comments
+      .Select(item => new AllCommentsViewModel
+      {
+          Id = item.Id,
+          Content = item.Content,
+          CreatedAt = item.CreatedAt,
+          IsApproved = item.IsApproved,
+          BlogPostName = "Neden Backend?",
+          Commenter = item.UnsignedCommenterName,
+      })
+      .ToList();
 
 
-        return View();
+        return View(models);
     }
 
     [HttpGet]
