@@ -66,11 +66,26 @@ public class CommentsController : Controller
         return Redirect("all-comments");
     }
 
+    [HttpGet]
+    [Route("approve-comment-{id:int}")]
+    public async Task<IActionResult> ApproveComment([FromRoute] int id)
+    {
+        var comment = _comments.FirstOrDefault(c => c.Id == id);
+
+        comment.IsApproved = true;
+
+        return Redirect("all-comments");
+    }
 
     [HttpGet]
-    public async Task<IActionResult> ApproveComment()
+    [Route("not-approve-comment-{id:int}")]
+    public async Task<IActionResult> NotApproveComment([FromRoute] int id)
     {
-        return View();
+        var comment = _comments.FirstOrDefault(c => c.Id == id);
+
+        comment.IsApproved = false;
+
+        return Redirect("all-comments");
     }
 
 }
