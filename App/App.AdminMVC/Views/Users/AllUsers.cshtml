@@ -38,11 +38,11 @@
                     <td class="text-right">
                         @if (user.IsActive)
                         {
-                            <a href="/make-user-active-@user.Id" class="btn btn-sm btn-secondary">İnaktif yap</a>
+                            <a href="/deactivate-user-@user.Id" class="btn btn-sm btn-secondary">İnaktif yap</a>
                         }
                         else
                         {
-                            <a href="/make-user-inactive-@user.Id" class="btn btn-sm btn-success">Aktif Yap</a>
+                            <a href="/activate-user-@user.Id" class="btn btn-sm btn-success">Aktif Yap</a>
                         }
                     </td>
                 </tr>
