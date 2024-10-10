@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using App.ViewModels.AdminMvc.ProjectsViewModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 public class ProjectsController : Controller
@@ -25,8 +26,14 @@ public class ProjectsController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddProject([FromForm] object addProjectModel)
+    [Route("add-project")]
+    public async Task<IActionResult> AddProject([FromForm] AddProjectViewModel addProjectModel)
     {
+        if (!ModelState.IsValid)
+        {
+            return View(addProjectModel);
+        }
+
         return View();
     }
 

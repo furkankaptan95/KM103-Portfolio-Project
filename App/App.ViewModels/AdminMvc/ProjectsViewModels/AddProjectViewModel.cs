@@ -12,8 +12,8 @@ public class AddProjectViewModel
     [MaxLength(600, ErrorMessage = "Açıklama kısmı en fazla 600 karakter olabilir.")]
     public string Description { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Resim dosyası zorunludur.")]
-    [FileExtensions(Extensions = "jpg,jpeg,png,gif", ErrorMessage = "Lütfen geçerli bir resim dosyası yükleyiniz.")]
-    public IFormFile ImageFile { get; set; }
+    //[Required(ErrorMessage = "Resim dosyası zorunludur.")]
+    //[FileExtensions(Extensions = "jpg,jpeg,png,gif,JPG,JPEG,PNG,GIF", ErrorMessage = "Lütfen geçerli bir resim dosyası yükleyiniz.")]
+    public IFormFile? ImageFile { get; set; }
 
 }
