@@ -1,5 +1,5 @@
 ﻿namespace App.DTOs.AboutMeDtos;
-public class AddAboutMeDto
+public class ShowAboutMeDto
 {
     public string Introduction { get; set; }
     public string ImageUrl1 { get; set; }
