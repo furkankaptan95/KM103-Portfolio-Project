@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ardalis.Result;
 
-namespace App.Services.AdminServices.Abstract
+namespace App.Services.AdminServices.Abstract;
+public interface IBlogPostService
 {
-    internal interface IBlogPostService
-    {
-    }
+    Task<Result> GetAllBlogPosts();
+    Task<Result> AddBlogPost();
+    Task<Result> UpdateBlogPost();
+    Task<Result> DeleteBlogPost();
+    Task<Result> ChangeBlogPostVisibility();
 }
