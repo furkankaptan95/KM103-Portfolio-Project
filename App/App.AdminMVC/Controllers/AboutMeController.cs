@@ -40,25 +40,25 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
 
     [HttpPost]
     [Route("add-about-me")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AddAboutMe(AddAboutMeViewModel model)
+    public async Task<IActionResult> AddAboutMe([FromForm] AddAboutMeViewModel model)
     {
-        if(!ModelState.IsValid)
-        {  
-            return View(model);
-        }
+       
 
-        var dataApiDto = new AddAboutMeDto
+        var dataApiDto = new AddAboutMeMVCDto
         {
             Introduction = model.Introduction,
             ImageFile1 = model.Image1,
             ImageFile2 = model.Image2,
         };
 
-
         var result = await aboutMeService.AddAboutMeAsync(dataApiDto);
 
-        return View();
+        if (!result.IsSuccess)
+        {
+            return BadRequest();
+        }
+
+        return Redirect("/about-me");
     }
 
     [HttpGet]

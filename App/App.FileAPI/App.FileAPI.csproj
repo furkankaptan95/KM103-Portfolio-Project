@@ -14,4 +14,8 @@
     <ProjectReference Include="..\App.DTOs\App.DTOs.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
+  </ItemGroup>
+
 </Project>

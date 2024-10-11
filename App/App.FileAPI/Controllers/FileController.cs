@@ -1,9 +1,11 @@
 ﻿using App.DTOs.FileApiDtos;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.FileAPI.Controllers;
 
+[EnableCors("AllowMvcClient")]
 [Route("api/[controller]")]
 [ApiController]
 public class FileController : ControllerBase
@@ -12,17 +14,24 @@ public class FileController : ControllerBase
 
     public FileController()
     {
-        // Uploads dizininin yolunu belirle
-        _uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
-
-        // Eğer uploads dizini yoksa oluştur
-        if (!Directory.Exists(_uploadsFolder))
+        try
         {
-            Directory.CreateDirectory(_uploadsFolder);
+            _uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+
+            if (!Directory.Exists(_uploadsFolder))
+            {
+                Directory.CreateDirectory(_uploadsFolder);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Hata kaydı yapabilir veya uygun bir hata mesajı dönebilirsin
+            Console.WriteLine($"Dizin oluşturulurken hata oluştu: {ex.Message}");
+            // Hata yönetimi için başka bir çözüm düşünebilirsin.
         }
     }
 
-    [HttpPost("upload-files")]
+    [HttpPost("/upload-files")]
     public async Task<IActionResult> UploadFilesAsync([FromBody] UploadFileDto dto)
     {
      
