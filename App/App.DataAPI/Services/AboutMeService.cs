@@ -2,6 +2,7 @@
 using App.DTOs.AboutMeDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
+using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services
 {
@@ -12,9 +13,24 @@ namespace App.DataAPI.Services
             throw new NotImplementedException();
         }
 
-        public Task<Result<ShowAboutMeDto>> GetAboutMeAsync()
+        public async Task<Result<ShowAboutMeDto>> GetAboutMeAsync()
         {
-            throw new NotImplementedException();
+            var entity = await dataApiDb.AboutMes.FirstOrDefaultAsync();
+
+            if (entity == null)
+            {
+                return Result<ShowAboutMeDto>.NotFound();
+            }
+
+            var dto = new ShowAboutMeDto()
+            {
+                Introduction = entity.Introduction,
+                ImageUrl1 = entity.ImageUrl1,
+                ImageUrl2 = entity.ImageUrl2,
+            };
+
+            return Result<ShowAboutMeDto>.Success(dto);
+
         }
 
         public Task<Result> UpdateAboutMeAsync(UpdateAboutMeDto dto)
