@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using App.DTOs.ProjectDtos;
+using Ardalis.Result;
 
-namespace App.Services.AdminServices.Abstract
+namespace App.Services.AdminServices.Abstract;
+public interface IProjectService
 {
-    internal interface IProjectService
-    {
-    }
+    Task<Result<List<AllProjectsDto>>> GetAllProjectsAsync();
+    Task<Result> AddProjectAsync(AddProjectDto dto);
+    Task<Result> UpdateProjectAsync(UpdateProjectDto dto);
+    Task<Result> DeleteProjectAsync(int id);
+    Task<Result> ChangeProjectVisibilityAsync(int id);
 }
