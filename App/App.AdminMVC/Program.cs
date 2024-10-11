@@ -19,6 +19,20 @@ builder.Services.AddHttpClient("dataApi", c =>
     c.BaseAddress = new Uri(dataApiUrl);
 });
 
+var fileApiUrl = builder.Configuration.GetValue<string>("FileApiUrl");
+
+if (string.IsNullOrWhiteSpace(fileApiUrl))
+{
+    throw new InvalidOperationException("FileApiUrl is required in appsettings.json");
+}
+
+builder.Services.AddHttpClient("fileApi", c =>
+{
+    c.BaseAddress = new Uri(fileApiUrl);
+});
+
+builder.Services.AddServices(builder.Configuration);
+
 builder.Services.AddScoped<IAboutMeService, AboutMeService>();
 
 var app = builder.Build();
