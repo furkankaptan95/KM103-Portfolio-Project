@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ardalis.Result;
 
-namespace App.Services.AdminServices.Abstract
+namespace App.Services.AdminServices.Abstract;
+public interface IAboutMeService
 {
-    internal interface IAboutMeService
-    {
-    }
+    Task<Result> AddAboutMeAsync();
+    Task<Result> GetAboutMeAsync();
+    Task<Result> UpdateAboutMeAsync();
+
 }
