@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using App.DTOs.PersonalInfoDtos;
+using Ardalis.Result;
 
-namespace App.Services.AdminServices.Abstract
+namespace App.Services.AdminServices.Abstract;
+public interface IPersonalInfoService
 {
-    internal interface IPersonalInfoService
-    {
-    }
+    Task<Result> AddPersonalInfoAsync(AddPersonalInfoDto dto);
+    Task<Result<ShowPersonalInfoDto>> GetPersonalInfoAsync();
+    Task<Result> UpdatePersonalInfoAsync(UpdatePersonalInfoDto dto);
 }
