@@ -1,4 +1,5 @@
-﻿using App.Services.AdminServices.Abstract;
+﻿using App.DTOs.AboutMeDtos;
+using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.AboutMeViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,13 +41,22 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
     [HttpPost]
     [Route("add-about-me")]
     [ValidateAntiForgeryToken]
-    public IActionResult AddAboutMe(AddAboutMeViewModel model)
+    public async Task<IActionResult> AddAboutMe(AddAboutMeViewModel model)
     {
         if(!ModelState.IsValid)
-        {
-           
+        {  
             return View(model);
         }
+
+        var dataApiDto = new AddAboutMeDto
+        {
+            Introduction = model.Introduction,
+            ImageFile1 = model.Image1,
+            ImageFile2 = model.Image2,
+        };
+
+
+        var result = await aboutMeService.AddAboutMeAsync(dataApiDto);
 
         return View();
     }
