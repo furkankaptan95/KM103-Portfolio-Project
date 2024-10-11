@@ -1,6 +1,9 @@
 using App.AdminMVC.Services;
+using App.Core.Validators.AboutMeValidators;
+using App.DTOs.AboutMeDtos;
 using App.Services;
 using App.Services.AdminServices.Abstract;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +35,7 @@ builder.Services.AddHttpClient("fileApi", c =>
 });
 
 builder.Services.AddScoped<IAboutMeService, AboutMeService>();
+builder.Services.AddTransient<IValidator<AddAboutMeMVCDto>, AddAboutMeMVCDtoValidator>();
 
 var app = builder.Build();
 

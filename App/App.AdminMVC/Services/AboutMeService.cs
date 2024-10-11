@@ -2,31 +2,47 @@
 using App.DTOs.FileApiDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
+using FluentValidation;
 using System.Net;
 
 namespace App.AdminMVC.Services;
-public class AboutMeService(IHttpClientFactory factory) : IAboutMeService
+public class AboutMeService : IAboutMeService
 {
-    private HttpClient DataApiClient => factory.CreateClient("dataApi");
-    private HttpClient FileApiClient => factory.CreateClient("fileApi");
+    private readonly IHttpClientFactory _factory;
+    private readonly IValidator<AddAboutMeMVCDto> _addValidator;
+
+    // Primary constructor
+    public AboutMeService(IHttpClientFactory factory, IValidator<AddAboutMeMVCDto> addValidator)
+    {
+        _factory = factory;
+        _addValidator = addValidator;
+    }
+
+    private HttpClient DataApiClient => _factory.CreateClient("dataApi");
+    private HttpClient FileApiClient => _factory.CreateClient("fileApi");
+
     public async Task<Result> AddAboutMeAsync(AddAboutMeMVCDto dto)
     {
+        var validationResult = await _addValidator.ValidateAsync(dto);
+
+        // Eğer doğrulama başarısızsa, uygun bir sonuç döndür
+        if (!validationResult.IsValid)
+        {
+            // Hataları bir Result nesnesi ile dönebilirsiniz
+            var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+            return Result.Error(errorMessage);
+        }
+
         using var content = new MultipartFormDataContent();
 
-        if (dto.ImageFile1 != null)
-        {
             var imageContent1 = new StreamContent(dto.ImageFile1.OpenReadStream());
             imageContent1.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(dto.ImageFile1.ContentType);
             content.Add(imageContent1, "imageFile1", dto.ImageFile1.FileName); // "imageFile1" API'deki parametre adı ile uyumlu olmalı
-        }
-
-        if (dto.ImageFile2 != null)
-        {
+        
             var imageContent2 = new StreamContent(dto.ImageFile2.OpenReadStream());
             imageContent2.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(dto.ImageFile2.ContentType);
             content.Add(imageContent2, "imageFile2", dto.ImageFile2.FileName); // "imageFile2" API'deki parametre adı ile uyumlu olmalı
-        }
-
+        
         var fileResponse = await FileApiClient.PostAsync("upload-files", content);
 
         if (!fileResponse.IsSuccessStatusCode)
