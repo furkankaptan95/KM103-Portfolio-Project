@@ -3,8 +3,9 @@ using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 
 namespace App.AdminMVC.Services;
-public class AboutMeService : IAboutMeService
+public class AboutMeService(IHttpClientFactory factory) : IAboutMeService
 {
+    private HttpClient DataApiClient => factory.CreateClient("dataApi");
     public Task<Result> AddAboutMeAsync(AddAboutMeDto dto)
     {
         throw new NotImplementedException();

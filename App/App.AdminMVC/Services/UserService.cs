@@ -3,8 +3,9 @@ using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 
 namespace App.AdminMVC.Services;
-public class UserService : IUserService
+public class UserService(IHttpClientFactory factory) : IUserService
 {
+    private HttpClient DataApiClient => factory.CreateClient("dataApi");
     public Task<Result> ChangeActivenessOfUserAsync(int id)
     {
         throw new NotImplementedException();

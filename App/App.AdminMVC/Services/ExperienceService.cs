@@ -3,8 +3,9 @@ using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 
 namespace App.AdminMVC.Services;
-public class ExperienceService : IExperienceService
+public class ExperienceService(IHttpClientFactory factory) : IExperienceService
 {
+    private HttpClient DataApiClient => factory.CreateClient("dataApi");
     public Task<Result> AddExperienceAsync(AddExperienceDto dto)
     {
         throw new NotImplementedException();

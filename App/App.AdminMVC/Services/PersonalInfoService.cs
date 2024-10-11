@@ -3,8 +3,9 @@ using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 
 namespace App.AdminMVC.Services;
-public class PersonalInfoService : IPersonalInfoService
+public class PersonalInfoService(IHttpClientFactory factory) : IPersonalInfoService
 {
+    private HttpClient DataApiClient => factory.CreateClient("dataApi");
     public Task<Result> AddPersonalInfoAsync(AddPersonalInfoDto dto)
     {
         throw new NotImplementedException();
