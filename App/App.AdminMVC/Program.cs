@@ -5,6 +5,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddServices(builder.Configuration);
 
+var dataApiUrl = builder.Configuration.GetValue<string>("DataApiUrl");
+
+if (string.IsNullOrWhiteSpace(dataApiUrl))
+{
+    throw new InvalidOperationException("DataApiUrl is required in appsettings.json");
+}
+
+builder.Services.AddHttpClient("dataApi", c =>
+{
+    c.BaseAddress = new Uri(dataApiUrl);
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
