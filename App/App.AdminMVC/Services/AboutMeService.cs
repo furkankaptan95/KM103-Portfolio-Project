@@ -7,6 +7,7 @@ namespace App.AdminMVC.Services;
 public class AboutMeService(IHttpClientFactory factory) : IAboutMeService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
+    private HttpClient FileApiClient => factory.CreateClient("fileApi");
     public async Task<Result> AddAboutMeAsync(AddAboutMeMVCDto dto)
     {
         var response = await DataApiClient.PostAsJsonAsync("add-about-me", dto);
