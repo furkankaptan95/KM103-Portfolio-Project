@@ -1,4 +1,5 @@
 ﻿using App.DTOs.AboutMeDtos;
+using App.DTOs.FileApiDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using System.Net;
@@ -10,7 +11,32 @@ public class AboutMeService(IHttpClientFactory factory) : IAboutMeService
     private HttpClient FileApiClient => factory.CreateClient("fileApi");
     public async Task<Result> AddAboutMeAsync(AddAboutMeMVCDto dto)
     {
-        var response = await DataApiClient.PostAsJsonAsync("add-about-me", dto);
+        var fileDto = new UploadFileDto
+        {
+            ImageFile1 = dto.ImageFile1,
+            ImageFile2 = dto.ImageFile2,
+        };
+
+        var fileResponse = await FileApiClient.PostAsJsonAsync("upload-files", fileDto);
+
+        if (!fileResponse.IsSuccessStatusCode)
+        {
+            return Result.Error();
+        }
+
+        var fileResult = await fileResponse.Content.ReadFromJsonAsync<Result<ReturnUrlDto>>();
+
+        var urlDto = fileResult.Value;
+
+        var apiDto = new AddAboutMeApiDto
+        {
+            ImageUrl1 = urlDto.ImageUrl1,
+            ImageUrl2 = urlDto.ImageUrl2,
+            Introduction = dto.Introduction,
+        };
+
+        var response = await DataApiClient.PostAsJsonAsync("add-about-me", apiDto);
+
         return await response.Content.ReadFromJsonAsync<Result>();
     }
 
