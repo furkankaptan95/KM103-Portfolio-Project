@@ -43,7 +43,6 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
     public async Task<IActionResult> AddAboutMe([FromForm] AddAboutMeViewModel model)
     {
        
-
         var mvcDto = new AddAboutMeMVCDto
         {
             Introduction = model.Introduction,
