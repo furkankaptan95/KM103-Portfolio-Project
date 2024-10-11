@@ -11,13 +11,23 @@ public class AboutMeService(IHttpClientFactory factory) : IAboutMeService
     private HttpClient FileApiClient => factory.CreateClient("fileApi");
     public async Task<Result> AddAboutMeAsync(AddAboutMeMVCDto dto)
     {
-        var fileDto = new UploadFileDto
-        {
-            ImageFile1 = dto.ImageFile1,
-            ImageFile2 = dto.ImageFile2,
-        };
+        using var content = new MultipartFormDataContent();
 
-        var fileResponse = await FileApiClient.PostAsJsonAsync("upload-files", fileDto);
+        if (dto.ImageFile1 != null)
+        {
+            var imageContent1 = new StreamContent(dto.ImageFile1.OpenReadStream());
+            imageContent1.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(dto.ImageFile1.ContentType);
+            content.Add(imageContent1, "imageFile1", dto.ImageFile1.FileName); // "imageFile1" API'deki parametre adı ile uyumlu olmalı
+        }
+
+        if (dto.ImageFile2 != null)
+        {
+            var imageContent2 = new StreamContent(dto.ImageFile2.OpenReadStream());
+            imageContent2.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(dto.ImageFile2.ContentType);
+            content.Add(imageContent2, "imageFile2", dto.ImageFile2.FileName); // "imageFile2" API'deki parametre adı ile uyumlu olmalı
+        }
+
+        var fileResponse = await FileApiClient.PostAsync("upload-files", content);
 
         if (!fileResponse.IsSuccessStatusCode)
         {
