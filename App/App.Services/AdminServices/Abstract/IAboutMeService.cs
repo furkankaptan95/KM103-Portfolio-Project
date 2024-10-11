@@ -1,10 +1,10 @@
-﻿using Ardalis.Result;
+﻿using App.DTOs.AboutMeDtos;
+using Ardalis.Result;
 
 namespace App.Services.AdminServices.Abstract;
 public interface IAboutMeService
 {
-    Task<Result> AddAboutMeAsync();
-    Task<Result> GetAboutMeAsync();
-    Task<Result> UpdateAboutMeAsync();
-
+    Task<Result<AddAboutMeDto>> AddAboutMeAsync();
+    Task<Result<ShowAboutMeDto>> GetAboutMeAsync();
+    Task<Result<UpdateAboutMeDto>> UpdateAboutMeAsync();
 }
