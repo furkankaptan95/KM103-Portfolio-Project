@@ -21,7 +21,7 @@ public class AboutMeController(IAboutMeService aboutMeService) : ControllerBase
 
         if (result.IsSuccess)
         {
-            return Ok(result.Value);
+            return Ok(result);
         }
 
         return StatusCode(500, "An error occurred while processing your request.");
