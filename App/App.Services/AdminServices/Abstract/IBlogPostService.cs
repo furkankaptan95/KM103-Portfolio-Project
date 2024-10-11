@@ -4,9 +4,9 @@ using Ardalis.Result;
 namespace App.Services.AdminServices.Abstract;
 public interface IBlogPostService
 {
-    Task<Result<List<AllBlogPostsDto>>> GetAllBlogPosts();
-    Task<Result> AddBlogPost(AddBlogPostDto dto);
-    Task<Result> UpdateBlogPost(UpdateBlogPostDto dto);
-    Task<Result> DeleteBlogPost(int id);
-    Task<Result> ChangeBlogPostVisibility(int id);
+    Task<Result<List<AllBlogPostsDto>>> GetAllBlogPostsAsync();
+    Task<Result> AddBlogPostAsync(AddBlogPostDto dto);
+    Task<Result> UpdateBlogPostAsync(UpdateBlogPostDto dto);
+    Task<Result> DeleteBlogPostAsync(int id);
+    Task<Result> ChangeBlogPostVisibilityAsync(int id);
 }

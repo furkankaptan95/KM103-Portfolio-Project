@@ -4,9 +4,9 @@ using Ardalis.Result;
 namespace App.Services.AdminServices.Abstract;
 public interface IEducationService
 {
-    Task<Result<List<AllEducationsDto>>> GetAllEducations();
-    Task<Result> AddEducation(AddEducationDto dto);
-    Task<Result> UpdateEducation(UpdateEducationDto dto);
-    Task<Result> DeleteEducation(int id);
-    Task<Result> ChangeEducationVisibility(int id);
+    Task<Result<List<AllEducationsDto>>> GetAllEducationsAsync();
+    Task<Result> AddEducationAsync(AddEducationDto dto);
+    Task<Result> UpdateEducationAsync(UpdateEducationDto dto);
+    Task<Result> DeleteEducationAsync(int id);
+    Task<Result> ChangeEducationVisibilityAsync(int id);
 }

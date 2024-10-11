@@ -4,9 +4,9 @@ using Ardalis.Result;
 namespace App.Services.AdminServices.Abstract;
 public interface IExperienceService
 {
-    Task<Result<List<AllExperiencesDto>>> GetAllExperiences();
-    Task<Result> AddExperience(AddExperienceDto dto);
-    Task<Result> UpdateExperience(UpdateExperienceDto dto);
-    Task<Result> DeleteExperience(int id);
-    Task<Result> ChangeExperienceVisibility(int id);
+    Task<Result<List<AllExperiencesDto>>> GetAllExperiencesAsync();
+    Task<Result> AddExperienceAsync(AddExperienceDto dto);
+    Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto);
+    Task<Result> DeleteExperienceAsync(int id);
+    Task<Result> ChangeExperienceVisibilityAsync(int id);
 }

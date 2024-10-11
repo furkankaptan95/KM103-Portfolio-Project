@@ -4,7 +4,7 @@ using Ardalis.Result;
 namespace App.Services.AdminServices.Abstract;
 public interface ICommentService
 {
-    Task<Result<List<AllCommentsDto>>> GetAllComments();
-    Task<Result> DeleteComment(int id);
-    Task<Result> ApproveOrNotApproveComment(int id);
+    Task<Result<List<AllCommentsDto>>> GetAllCommentsAsync();
+    Task<Result> DeleteCommentAsync(int id);
+    Task<Result> ApproveOrNotApproveCommentAsync(int id);
 }
