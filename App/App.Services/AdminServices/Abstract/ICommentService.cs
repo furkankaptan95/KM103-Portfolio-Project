@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using App.DTOs.CommentDtos;
+using Ardalis.Result;
 
-namespace App.Services.AdminServices.Abstract
+namespace App.Services.AdminServices.Abstract;
+public interface ICommentService
 {
-    internal interface ICommentService
-    {
-    }
+    Task<Result<List<AllCommentsDto>>> GetAllComments();
+    Task<Result> DeleteComment(int id);
+    Task<Result> ApproveOrNotApproveComment(int id);
 }
