@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using App.DTOs.UserDtos;
+using Ardalis.Result;
 
-namespace App.Services.AdminServices.Abstract
+namespace App.Services.AdminServices.Abstract;
+public interface IUserService
 {
-    internal interface IUserService
-    {
-    }
+    Task<Result<List<AllUsersDto>>> GetAllUsersAsync();
+    Task<Result> ChangeActivenessOfUserAsync(int id);
 }
