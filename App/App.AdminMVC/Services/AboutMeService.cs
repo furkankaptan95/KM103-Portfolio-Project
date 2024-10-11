@@ -34,9 +34,7 @@ public class AboutMeService(IHttpClientFactory factory) : IAboutMeService
             return Result.Error();
         }
 
-        var fileResult = await fileResponse.Content.ReadFromJsonAsync<Result<ReturnUrlDto>>();
-
-        var urlDto = fileResult.Value;
+        var urlDto = await fileResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
 
         var apiDto = new AddAboutMeApiDto
         {

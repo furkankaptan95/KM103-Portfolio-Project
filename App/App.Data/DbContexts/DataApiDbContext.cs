@@ -23,19 +23,6 @@ public class DataApiDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
-        modelBuilder.Entity<AboutMeEntity>().HasData(
-
-            new AboutMeEntity
-            {
-                Id = 1,
-                ImageUrl1 = "default-img.jpg",
-                ImageUrl2 = "default-img.jpg",
-                Introduction = "Açıklama",
-
-            }
-
-            );
     }
 
 }
