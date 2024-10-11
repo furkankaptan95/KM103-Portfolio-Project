@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using App.DTOs.HomeDtos;
+using Ardalis.Result;
 
-namespace App.Services.AdminServices.Abstract
+namespace App.Services.AdminServices.Abstract;
+public interface IHomeService
 {
-    internal interface IHomeService
-    {
-    }
+    Task<Result<HomeDto>> GetHomeInfosAsync();
 }
