@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using App.Data.DbContexts;
+using App.Services.AdminServices.Abstract;
+using App.DataAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,8 @@ builder.Services.AddDbContext<DataApiDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DataApiBaseDb"));
 });
+
+builder.Services.AddScoped<IAboutMeService, AboutMeService>();
 
 var app = builder.Build();
 
