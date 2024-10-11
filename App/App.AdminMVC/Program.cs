@@ -1,4 +1,6 @@
+using App.AdminMVC.Services;
 using App.Services;
+using App.Services.AdminServices.Abstract;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,8 @@ builder.Services.AddHttpClient("dataApi", c =>
 {
     c.BaseAddress = new Uri(dataApiUrl);
 });
+
+builder.Services.AddScoped<IAboutMeService, AboutMeService>();
 
 var app = builder.Build();
 
