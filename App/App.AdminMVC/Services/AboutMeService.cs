@@ -7,9 +7,10 @@ namespace App.AdminMVC.Services;
 public class AboutMeService(IHttpClientFactory factory) : IAboutMeService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
-    public Task<Result> AddAboutMeAsync(AddAboutMeDto dto)
+    public async Task<Result> AddAboutMeAsync(AddAboutMeDto dto)
     {
-        throw new NotImplementedException();
+        var response = await DataApiClient.PostAsJsonAsync("add-about-me", dto);
+        return await response.Content.ReadFromJsonAsync<Result>();
     }
 
     public async Task<Result<ShowAboutMeDto>> GetAboutMeAsync()
