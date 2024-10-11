@@ -1,4 +1,5 @@
 ﻿using App.Data.DbContexts;
+using App.Data.Entities;
 using App.DTOs.AboutMeDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
@@ -8,9 +9,20 @@ namespace App.DataAPI.Services
 {
     public class AboutMeService(DataApiDbContext dataApiDb) : IAboutMeService
     {
-        public Task<Result> AddAboutMeAsync(AddAboutMeDto dto)
+        public async Task<Result> AddAboutMeAsync(AddAboutMeDto dto)
         {
-            throw new NotImplementedException();
+            var entity = new AboutMeEntity()
+            {
+                Introduction = dto.Introduction,
+                ImageUrl1 = dto.ImageUrl1,
+                ImageUrl2 = dto.ImageUrl2,
+
+            };
+
+            await dataApiDb.AboutMes.AddAsync(entity);
+            await dataApiDb.SaveChangesAsync();
+
+            return Result.Success();
         }
 
         public async Task<Result<ShowAboutMeDto>> GetAboutMeAsync()
