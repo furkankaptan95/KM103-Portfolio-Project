@@ -33,6 +33,12 @@ public class AboutMeController(IAboutMeService aboutMeService) : ControllerBase
     {
         var result = await aboutMeService.AddAboutMeAsync(dto);
 
-        return Ok();
+        if (result.IsSuccess)
+        {
+            return Ok(result);
+        }
+
+        return StatusCode(500, "An error occurred while processing your request.");
+
     }
 }
