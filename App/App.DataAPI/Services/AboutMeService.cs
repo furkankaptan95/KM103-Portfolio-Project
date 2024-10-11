@@ -9,7 +9,7 @@ namespace App.DataAPI.Services
 {
     public class AboutMeService(DataApiDbContext dataApiDb) : IAboutMeService
     {
-        public async Task<Result> AddAboutMeAsync(AddAboutMeDto dto)
+        public async Task<Result> AddAboutMeAsync(AddAboutMeApiDto dto)
         {
             var entity = new AboutMeEntity()
             {
@@ -23,6 +23,11 @@ namespace App.DataAPI.Services
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
+        }
+
+        public Task<Result> AddAboutMeAsync(AddAboutMeMVCDto dto)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Result<ShowAboutMeDto>> GetAboutMeAsync()

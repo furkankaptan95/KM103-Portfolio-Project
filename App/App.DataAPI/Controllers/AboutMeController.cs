@@ -29,7 +29,7 @@ public class AboutMeController(IAboutMeService aboutMeService) : ControllerBase
     }
 
     [HttpPost("/add-about-me")]
-    public async Task<IActionResult> AddAboutMeAsync([FromBody] AddAboutMeDto dto)
+    public async Task<IActionResult> AddAboutMeAsync([FromBody] AddAboutMeApiDto dto)
     {
         var result = await aboutMeService.AddAboutMeAsync(dto);
 
@@ -39,6 +39,5 @@ public class AboutMeController(IAboutMeService aboutMeService) : ControllerBase
         }
 
         return StatusCode(500, "An error occurred while processing your request.");
-
     }
 }
