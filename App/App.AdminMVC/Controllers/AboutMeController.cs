@@ -44,14 +44,14 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
     {
        
 
-        var dataApiDto = new AddAboutMeMVCDto
+        var mvcDto = new AddAboutMeMVCDto
         {
             Introduction = model.Introduction,
             ImageFile1 = model.Image1,
             ImageFile2 = model.Image2,
         };
 
-        var result = await aboutMeService.AddAboutMeAsync(dataApiDto);
+        var result = await aboutMeService.AddAboutMeAsync(mvcDto);
 
         if (!result.IsSuccess)
         {
