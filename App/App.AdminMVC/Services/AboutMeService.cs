@@ -85,7 +85,6 @@ public class AboutMeService : IAboutMeService
     {
         var response = await DataApiClient.GetAsync("get-about-me");
 
-
         if (response.IsSuccessStatusCode)
         {
             // JSON verisini doğrudan Result<ShowAboutMeDto> olarak deseralize et
