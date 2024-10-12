@@ -10,12 +10,14 @@ public class AboutMeService : IAboutMeService
 {
     private readonly IHttpClientFactory _factory;
     private readonly IValidator<AddAboutMeMVCDto> _addValidator;
+    private readonly IValidator<ReturnUrlDto> _returnUrlValidator;
 
     // Primary constructor
-    public AboutMeService(IHttpClientFactory factory, IValidator<AddAboutMeMVCDto> addValidator)
+    public AboutMeService(IHttpClientFactory factory, IValidator<AddAboutMeMVCDto> addValidator, IValidator<ReturnUrlDto> returnUrlValidator)
     {
         _factory = factory;
         _addValidator = addValidator;
+        _returnUrlValidator = returnUrlValidator;
     }
 
     private HttpClient DataApiClient => _factory.CreateClient("dataApi");
@@ -51,6 +53,16 @@ public class AboutMeService : IAboutMeService
         }
 
         var urlDto = await fileResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
+
+        var returnUrlValidationResult = await _returnUrlValidator.ValidateAsync(urlDto);
+
+        // Eğer doğrulama başarısızsa, uygun bir sonuç döndür
+        if (!returnUrlValidationResult.IsValid)
+        {
+            // Hataları bir Result nesnesi ile dönebilirsiniz
+            var errorMessage = string.Join(", ", returnUrlValidationResult.Errors.Select(e => e.ErrorMessage));
+            return Result.Error(errorMessage);
+        }
 
         var apiDto = new AddAboutMeApiDto
         {

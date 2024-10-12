@@ -11,18 +11,30 @@ namespace App.DataAPI.Services
     {
         public async Task<Result> AddAboutMeAsync(AddAboutMeApiDto dto)
         {
-            var entity = new AboutMeEntity()
+            try
             {
-                Introduction = dto.Introduction,
-                ImageUrl1 = dto.ImageUrl1,
-                ImageUrl2 = dto.ImageUrl2,
+                var entity = new AboutMeEntity()
+                {
+                    Introduction = dto.Introduction,
+                    ImageUrl1 = dto.ImageUrl1,
+                    ImageUrl2 = dto.ImageUrl2,
+                };
 
-            };
+                await dataApiDb.AboutMes.AddAsync(entity);
+                await dataApiDb.SaveChangesAsync();
 
-            await dataApiDb.AboutMes.AddAsync(entity);
-            await dataApiDb.SaveChangesAsync();
-
-            return Result.Success();
+                return Result.Success();
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Veritabanı ile ilgili bir hata oluştu
+                return Result.Error("Veritabanı hatası: " + dbEx.Message);
+            }
+            catch (Exception ex)
+            {
+                // Diğer tüm hatalar
+                return Result.Error("Bir hata oluştu: " + ex.Message);
+            }
         }
 
         public Task<Result> AddAboutMeAsync(AddAboutMeMVCDto dto)

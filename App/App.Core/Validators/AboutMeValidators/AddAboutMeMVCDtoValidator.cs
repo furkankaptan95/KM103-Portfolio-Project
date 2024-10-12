@@ -9,7 +9,7 @@ public class AddAboutMeMVCDtoValidator : AbstractValidator<AddAboutMeMVCDto>
     {
         RuleFor(x=>x.Introduction)
             .NotEmpty().WithMessage("Giriş kısmı boş olamaz.")
-             .Length(10, 1000).WithMessage("Başlık 3 ile 100 karakter arasında olmalı.");
+             .Length(10, 1000).WithMessage("Başlık 10 ile 1000 karakter arasında olmalı.");
 
         RuleFor(x => x.ImageFile1)
             .NotNull().WithMessage("Resim boş olamaz.")
