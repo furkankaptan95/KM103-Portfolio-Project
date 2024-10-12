@@ -11,6 +11,13 @@
         </div>
     }
 
+    @if (ViewData["errors"] is not null)
+    {
+            <div class="alert mt-5">
+                @ViewData["errors"]
+            </div>
+    }
+
     <div class="form-container">
         <div class="form-title">Hakkımda</div>
         <form action="/add-about-me" method="post" enctype="multipart/form-data">

@@ -42,7 +42,11 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
     [Route("add-about-me")]
     public async Task<IActionResult> AddAboutMe([FromForm] AddAboutMeViewModel model)
     {
-       
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
         var mvcDto = new AddAboutMeMVCDto
         {
             Introduction = model.Introduction,

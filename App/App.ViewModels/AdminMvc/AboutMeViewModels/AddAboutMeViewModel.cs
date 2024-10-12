@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using App.ViewModels.AdminMvc.AboutMeViewModels.Validation;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace App.ViewModels.AdminMvc.AboutMeViewModels;
@@ -10,11 +11,11 @@ public class AddAboutMeViewModel
     public string Introduction { get; set; }
 
     [Required(ErrorMessage = "1. Fotoğraf zorunludur.")]
-    [FileExtensions(Extensions = "jpg,jpeg,png,gif", ErrorMessage = "Lütfen geçerli bir resim dosyası yükleyiniz.")]
+    [ImageFileValidation]
     public IFormFile Image1 { get; set; }
 
     [Required(ErrorMessage = "2. Fotoğraf zorunludur.")]
-    [FileExtensions(Extensions = "jpg,jpeg,png,gif", ErrorMessage = "Lütfen geçerli bir resim dosyası yükleyiniz.")]
+    [ImageFileValidation]
     public IFormFile Image2 { get; set; }
 
 }
