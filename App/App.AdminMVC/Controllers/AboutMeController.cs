@@ -86,6 +86,20 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
     [HttpPost]
     public async Task<IActionResult> UpdateAboutMe([FromForm] UpdateAboutMeViewModel updateAboutMeModel)
     {
+        if (!ModelState.IsValid)
+        {
+            return View(updateAboutMeModel);
+        }
+
+        var dto = new UpdateAboutMeMVCDto
+        {
+            ImageFile1 = updateAboutMeModel.ImageFile1,
+            ImageFile2 = updateAboutMeModel.ImageFile2,
+            Introduction = updateAboutMeModel.Introduction,
+        };
+
+        var result = await aboutMeService.UpdateAboutMeAsync(dto);
+
         return View();
     }
 

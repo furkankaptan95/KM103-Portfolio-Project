@@ -50,7 +50,12 @@ namespace App.DataAPI.Services
 
         }
 
-        public Task<Result> UpdateAboutMeAsync(UpdateAboutMeDto dto)
+        public Task<Result> UpdateAboutMeAsync(UpdateAboutMeApiDto dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result> UpdateAboutMeAsync(UpdateAboutMeMVCDto dto)
         {
             throw new NotImplementedException();
         }
