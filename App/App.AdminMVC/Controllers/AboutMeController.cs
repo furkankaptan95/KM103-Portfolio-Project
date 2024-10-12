@@ -64,14 +64,23 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
     [Route("update-about-me")]
     public async Task<IActionResult> UpdateAboutMe()
     {
-        var updateModel = new UpdateAboutMeViewModel();
+        var result = await aboutMeService.GetAboutMeAsync();
 
-        updateModel.Introduction = "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.";
+        if (!result.IsSuccess)
+        {
+            return BadRequest("Hakkımda bilgileri getirilirken bir hata oluştu.");
+        }
 
-        updateModel.ImageUrl1 = "default-img.jpg";
-        updateModel.ImageUrl2 = "default-img.jpg";
+        var dto = result.Value;
 
-        return View(updateModel);
+        var model = new UpdateAboutMeViewModel
+        {
+            ImageUrl1 = dto.ImageUrl1,
+            ImageUrl2 = dto.ImageUrl2,
+            Introduction = dto.Introduction,
+        };
+
+        return View(model);
     }
 
     [HttpPost]
