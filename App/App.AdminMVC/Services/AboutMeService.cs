@@ -85,23 +85,20 @@ public class AboutMeService : IAboutMeService
     {
         var response = await DataApiClient.GetAsync("get-about-me");
 
-
         if (response.IsSuccessStatusCode)
         {
-            // JSON verisini doğrudan Result<ShowAboutMeDto> olarak deseralize et
-            var result = await response.Content.ReadFromJsonAsync<Result<ShowAboutMeDto>>();
+            var dto = await response.Content.ReadFromJsonAsync<ShowAboutMeDto>();
 
-            return result;
+            return Result<ShowAboutMeDto>.Success(dto);
         }
 
-        // Eğer yanıt başarısızsa, duruma göre NotFound ya da hata dönebilirsiniz
         if (response.StatusCode == HttpStatusCode.NotFound)
         {
-            return Result<ShowAboutMeDto>.NotFound();
+            return Result<ShowAboutMeDto>.NotFound("Hakkımda bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurunuz.");
         }
 
         // Diğer hata durumları için uygun bir sonuç döndür
-        return Result<ShowAboutMeDto>.Error("An error occurred while fetching the data.");
+        return Result<ShowAboutMeDto>.Error("Beklenmeyen bir hata oluştu.");
     }
 
     public Task<Result> UpdateAboutMeAsync(UpdateAboutMeApiDto dto)

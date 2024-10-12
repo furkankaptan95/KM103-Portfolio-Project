@@ -1,6 +1,7 @@
 ﻿using App.DTOs.AboutMeDtos;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.AboutMeViewModels;
+using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
@@ -10,13 +11,20 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
     [HttpGet]
     [Route("about-me")]
     public async Task<IActionResult> AboutMe()
-    {
+    { 
         var result = await aboutMeService.GetAboutMeAsync();
 
         if (!result.IsSuccess)
         {
-            TempData["Message"] = "Hakkımda bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurunuz.";
-            return Redirect("/add-about-me");
+            var errorMessage = result.Errors.FirstOrDefault();
+
+            if (result.Status == ResultStatus.NotFound)
+            {
+                TempData["AddMessage"] = errorMessage;
+                return Redirect("/add-about-me");
+            }
+
+            return BadRequest(result.Errors.FirstOrDefault());
         }
 
         var dto = result.Value;
@@ -42,7 +50,11 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
     [Route("add-about-me")]
     public async Task<IActionResult> AddAboutMe([FromForm] AddAboutMeViewModel model)
     {
-       
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
         var mvcDto = new AddAboutMeMVCDto
         {
             Introduction = model.Introduction,
@@ -54,8 +66,11 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
 
         if (!result.IsSuccess)
         {
-            return BadRequest();
+            ViewBag.ErrorMessage = "Bir hata oluştu. Lütfen tekrar deneyiniz.";
+            return View();
         }
+
+        TempData["Success"] = " -Hakkımda- bilgileri başarıyla eklendi. ";
 
         return Redirect("/about-me");
     }

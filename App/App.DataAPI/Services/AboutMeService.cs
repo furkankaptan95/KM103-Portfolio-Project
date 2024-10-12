@@ -44,21 +44,29 @@ namespace App.DataAPI.Services
 
         public async Task<Result<ShowAboutMeDto>> GetAboutMeAsync()
         {
-            var entity = await dataApiDb.AboutMes.FirstOrDefaultAsync();
-
-            if (entity == null)
+            try
             {
-                return Result<ShowAboutMeDto>.NotFound();
+                var entity = await dataApiDb.AboutMes.FirstOrDefaultAsync();
+
+                if (entity == null)
+                {
+                    return Result<ShowAboutMeDto>.NotFound();
+                }
+
+                var dto = new ShowAboutMeDto()
+                {
+                    Introduction = entity.Introduction,
+                    ImageUrl1 = entity.ImageUrl1,
+                    ImageUrl2 = entity.ImageUrl2,
+                };
+
+                return Result<ShowAboutMeDto>.Success(dto);
             }
-
-            var dto = new ShowAboutMeDto()
+            catch (Exception ex)
             {
-                Introduction = entity.Introduction,
-                ImageUrl1 = entity.ImageUrl1,
-                ImageUrl2 = entity.ImageUrl2,
-            };
-
-            return Result<ShowAboutMeDto>.Success(dto);
+                var errorMessage = $"Bir hata oluştu: {ex.Message}, Hata Kodu: {ex.HResult}";
+                return Result<ShowAboutMeDto>.Error(errorMessage); // Error statüsüyle geri dönülür.
+            }
 
         }
 
