@@ -11,13 +11,15 @@ public class AboutMeService : IAboutMeService
     private readonly IHttpClientFactory _factory;
     private readonly IValidator<AddAboutMeMVCDto> _addValidator;
     private readonly IValidator<ReturnUrlDto> _returnUrlValidator;
+    private readonly IValidator<UpdateAboutMeMVCDto> _updateValidator;
 
     // Primary constructor
-    public AboutMeService(IHttpClientFactory factory, IValidator<AddAboutMeMVCDto> addValidator, IValidator<ReturnUrlDto> returnUrlValidator)
+    public AboutMeService(IHttpClientFactory factory, IValidator<AddAboutMeMVCDto> addValidator, IValidator<ReturnUrlDto> returnUrlValidator, IValidator<UpdateAboutMeMVCDto> updateValidator)
     {
         _factory = factory;
         _addValidator = addValidator;
         _returnUrlValidator = returnUrlValidator;
+        _updateValidator = updateValidator;
     }
 
     private HttpClient DataApiClient => _factory.CreateClient("dataApi");
