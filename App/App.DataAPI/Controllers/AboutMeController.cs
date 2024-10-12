@@ -8,12 +8,19 @@ namespace App.DataAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AboutMeController(IAboutMeService aboutMeService) : ControllerBase
+public class AboutMeController : ControllerBase
 {
+    private readonly IAboutMeService _aboutMeService;
+    public AboutMeController(IAboutMeService aboutMeService)
+    {
+        _aboutMeService = aboutMeService;
+    }
+
+
     [HttpGet("/get-about-me")]
     public async Task<IActionResult> GetAboutMeAsync()
     {
-        var result = await aboutMeService.GetAboutMeAsync();
+        var result = await _aboutMeService.GetAboutMeAsync();
 
         if (result == null || result.Value == null)
         {
@@ -31,7 +38,9 @@ public class AboutMeController(IAboutMeService aboutMeService) : ControllerBase
     [HttpPost("/add-about-me")]
     public async Task<IActionResult> AddAboutMeAsync([FromBody] AddAboutMeApiDto dto)
     {
-        var result = await aboutMeService.AddAboutMeAsync(dto);
+
+
+        var result = await _aboutMeService.AddAboutMeAsync(dto);
 
         if (result.IsSuccess)
         {
