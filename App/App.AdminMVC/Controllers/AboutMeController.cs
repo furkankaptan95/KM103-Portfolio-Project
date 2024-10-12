@@ -58,8 +58,11 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
 
         if (!result.IsSuccess)
         {
-            return BadRequest();
+            ViewBag.ErrorMessage = "Bir hata oluştu. Lütfen tekrar deneyiniz.";
+            return View();
         }
+
+        TempData["Success"] = " -Hakkımda- bilgileri başarıyla eklendi. ";
 
         return Redirect("/about-me");
     }
