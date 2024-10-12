@@ -41,7 +41,13 @@ public class AboutMeController : ControllerBase
     [HttpPost("/add-about-me")]
     public async Task<IActionResult> AddAboutMeAsync([FromBody] AddAboutMeApiDto dto)
     {
+        var validationResult = await _validator.ValidateAsync(dto);
 
+        if (!validationResult.IsValid)
+        {
+            var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(Result.Error(errorMessage));
+        }
 
         var result = await _aboutMeService.AddAboutMeAsync(dto);
 
