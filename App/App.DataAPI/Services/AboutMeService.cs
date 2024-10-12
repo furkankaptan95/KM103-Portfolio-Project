@@ -64,7 +64,8 @@ namespace App.DataAPI.Services
             }
             catch (Exception ex)
             {
-                return Result<ShowAboutMeDto>.Error("Bir hata oluştu: " + ex.Message);
+                var errorMessage = $"Bir hata oluştu: {ex.Message}, Hata Kodu: {ex.HResult}";
+                return Result<ShowAboutMeDto>.Error(errorMessage); // Error statüsüyle geri dönülür.
             }
 
         }

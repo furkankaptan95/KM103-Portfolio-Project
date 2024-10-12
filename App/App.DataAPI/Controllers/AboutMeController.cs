@@ -25,17 +25,21 @@ public class AboutMeController : ControllerBase
     {
         var result = await _aboutMeService.GetAboutMeAsync();
 
-        if (result == null || result.Value == null)
+        if (result.IsSuccess)
+        {
+            // Eğer başarı durumu varsa, DTO'yu geri döndür
+            return Ok(result.Value); // Success durumunda DTO'yu döndürüyoruz
+        }
+
+        else if (result.Status == ResultStatus.NotFound)
         {
             return NotFound();
         }
 
-        if (result.IsSuccess)
+        else
         {
-            return Ok(result);
+            return StatusCode(500, result.Errors.FirstOrDefault()); // Genel hata varsa hata mesajını döndür
         }
-
-        return StatusCode(500, "An error occurred while processing your request.");
     }
 
     [HttpPost("/add-about-me")]
