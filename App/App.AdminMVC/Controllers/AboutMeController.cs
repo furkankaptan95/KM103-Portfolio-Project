@@ -83,7 +83,8 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
 
         if (!result.IsSuccess)
         {
-            return BadRequest("Hakkımda bilgileri getirilirken bir hata oluştu.");
+            var errorMessage = result.Errors.FirstOrDefault();
+            return BadRequest(errorMessage);
         }
 
         var dto = result.Value;
