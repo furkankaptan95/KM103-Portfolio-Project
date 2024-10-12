@@ -1,6 +1,7 @@
 ﻿using App.DTOs.AboutMeDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,9 +12,11 @@ namespace App.DataAPI.Controllers;
 public class AboutMeController : ControllerBase
 {
     private readonly IAboutMeService _aboutMeService;
-    public AboutMeController(IAboutMeService aboutMeService)
+    private readonly IValidator<AddAboutMeApiDto> _validator;
+    public AboutMeController(IAboutMeService aboutMeService, IValidator<AddAboutMeApiDto> validator)
     {
         _aboutMeService = aboutMeService;
+        _validator = validator;
     }
 
 
