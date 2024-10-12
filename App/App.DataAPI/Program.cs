@@ -2,6 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using App.Data.DbContexts;
 using App.Services.AdminServices.Abstract;
 using App.DataAPI.Services;
+using App.Core.Validators.AboutMeValidators;
+using App.DTOs.FileApiDtos;
+using FluentValidation;
+using App.DTOs.AboutMeDtos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +22,7 @@ builder.Services.AddDbContext<DataApiDbContext>(options =>
 });
 
 builder.Services.AddScoped<IAboutMeService, AboutMeService>();
-
+builder.Services.AddTransient<IValidator<AddAboutMeApiDto>, AddAboutMeApiDtoValidator>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
