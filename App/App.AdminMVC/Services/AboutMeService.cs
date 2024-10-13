@@ -77,7 +77,6 @@ public class AboutMeService : IAboutMeService
     public async Task<Result<ShowAboutMeDto>> GetAboutMeAsync()
     {
         var response = await DataApiClient.GetAsync("get-about-me");
-        var result = await response.Content.ReadFromJsonAsync<Result<ShowAboutMeDto>>();
 
         return await response.Content.ReadFromJsonAsync<Result<ShowAboutMeDto>>();
     }

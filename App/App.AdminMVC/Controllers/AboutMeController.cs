@@ -27,7 +27,7 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
                 return Redirect("/add-about-me");
             }
 
-            TempData["Message"] = "Beklenmeyen bir hata oluştu.";
+            TempData["ErrorMessage"] = "Beklenmeyen bir hata oluştu.";
 
             return Redirect("/home/index");
         }
