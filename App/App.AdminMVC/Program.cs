@@ -37,7 +37,7 @@ builder.Services.AddHttpClient("fileApi", c =>
 
 builder.Services.AddScoped<IAboutMeService, AboutMeService>();
 builder.Services.AddTransient<IValidator<AddAboutMeMVCDto>, AddAboutMeMVCDtoValidator>();
-builder.Services.AddTransient<IValidator<ReturnUrlDto>, AboutMeReturnUrlDtoValidator>();
+builder.Services.AddTransient<IValidator<UpdateAboutMeMVCDto>, UpdateAboutMeMVCDtoValidator>();
 
 var app = builder.Build();
 

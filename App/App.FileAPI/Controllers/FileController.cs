@@ -32,21 +32,22 @@ public class FileController : ControllerBase
     }
 
     [HttpPost("/upload-files")]
-    public async Task<IActionResult> UploadFilesAsync([FromForm] IFormFile imageFile1, IFormFile imageFile2)
+    public async Task<IActionResult> UploadFilesAsync([FromForm] IFormFile? imageFile1, IFormFile? imageFile2)
     {
-     
-        // İlk dosyayı kaydet
-        var fileName1 = Path.GetFileName(imageFile1.FileName);
-        var filePath1 = Path.Combine(_uploadsFolder, fileName1);
-        using (var stream = new FileStream(filePath1, FileMode.Create))
-        {
-            await imageFile1.CopyToAsync(stream);
-        }
+        var urlDto = new ReturnUrlDto();
 
-        var urlDto = new ReturnUrlDto
+        if (imageFile1 is not null)
         {
-            ImageUrl1 = fileName1,
-        };
+            // İlk dosyayı kaydet
+            var fileName1 = Path.GetFileName(imageFile1.FileName);
+            var filePath1 = Path.Combine(_uploadsFolder, fileName1);
+            using (var stream = new FileStream(filePath1, FileMode.Create))
+            {
+                await imageFile1.CopyToAsync(stream);
+            }
+
+            urlDto.ImageUrl1 = fileName1;
+        }
 
         if (imageFile2 is not null)
         {

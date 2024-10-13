@@ -23,6 +23,7 @@ builder.Services.AddDbContext<DataApiDbContext>(options =>
 
 builder.Services.AddScoped<IAboutMeService, AboutMeService>();
 builder.Services.AddTransient<IValidator<AddAboutMeApiDto>, AddAboutMeApiDtoValidator>();
+builder.Services.AddTransient<IValidator<UpdateAboutMeApiDto>, UpdateAboutMeApiDtoValidator>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

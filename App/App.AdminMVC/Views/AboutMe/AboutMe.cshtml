@@ -1,10 +1,10 @@
 ﻿@model AboutMeViewModel
 
 
-@if (TempData["Success"] is not null)
+@if (TempData["Message"] is not null)
 {
     <div class="alert custom-alert-success mt-5">
-        @TempData["Success"]
+        @TempData["Message"]
     </div>
 }
 

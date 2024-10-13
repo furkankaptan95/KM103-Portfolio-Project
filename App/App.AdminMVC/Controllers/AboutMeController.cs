@@ -18,9 +18,9 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
         {
             var errorMessage = result.Errors.FirstOrDefault();
 
-            if (result.Status == ResultStatus.NotFound)
+            if(result.Status == ResultStatus.NotFound)
             {
-                TempData["AddMessage"] = errorMessage;
+                TempData["Message"] = errorMessage;
                 return Redirect("/add-about-me");
             }
 
@@ -70,7 +70,7 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
             return View();
         }
 
-        TempData["Success"] = " -Hakkımda- bilgileri başarıyla eklendi. ";
+        TempData["Message"] = " -Hakkımda- bilgileri başarıyla eklendi.";
 
         return Redirect("/about-me");
     }
@@ -83,7 +83,8 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
 
         if (!result.IsSuccess)
         {
-            return BadRequest("Hakkımda bilgileri getirilirken bir hata oluştu.");
+            var errorMessage = result.Errors.FirstOrDefault();
+            return BadRequest(errorMessage);
         }
 
         var dto = result.Value;
@@ -99,6 +100,7 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
     }
 
     [HttpPost]
+    [Route("update-about-me")]
     public async Task<IActionResult> UpdateAboutMe([FromForm] UpdateAboutMeViewModel updateAboutMeModel)
     {
         if (!ModelState.IsValid)
@@ -115,7 +117,14 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
 
         var result = await aboutMeService.UpdateAboutMeAsync(dto);
 
-        return View();
+        if (!result.IsSuccess)
+        {
+            TempData["Message"]= result.Errors.FirstOrDefault();
+        }
+
+        TempData["Message"] = result.SuccessMessage;
+
+        return Redirect("/about-me");
     }
 
 }

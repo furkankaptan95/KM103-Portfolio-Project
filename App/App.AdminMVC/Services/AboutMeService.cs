@@ -10,14 +10,15 @@ public class AboutMeService : IAboutMeService
 {
     private readonly IHttpClientFactory _factory;
     private readonly IValidator<AddAboutMeMVCDto> _addValidator;
-    private readonly IValidator<ReturnUrlDto> _returnUrlValidator;
+
+    private readonly IValidator<UpdateAboutMeMVCDto> _updateValidator;
 
     // Primary constructor
-    public AboutMeService(IHttpClientFactory factory, IValidator<AddAboutMeMVCDto> addValidator, IValidator<ReturnUrlDto> returnUrlValidator)
+    public AboutMeService(IHttpClientFactory factory, IValidator<AddAboutMeMVCDto> addValidator, IValidator<UpdateAboutMeMVCDto> updateValidator)
     {
         _factory = factory;
         _addValidator = addValidator;
-        _returnUrlValidator = returnUrlValidator;
+        _updateValidator = updateValidator;
     }
 
     private HttpClient DataApiClient => _factory.CreateClient("dataApi");
@@ -53,16 +54,6 @@ public class AboutMeService : IAboutMeService
         }
 
         var urlDto = await fileResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
-
-        var returnUrlValidationResult = await _returnUrlValidator.ValidateAsync(urlDto);
-
-        // Eğer doğrulama başarısızsa, uygun bir sonuç döndür
-        if (!returnUrlValidationResult.IsValid)
-        {
-            // Hataları bir Result nesnesi ile dönebilirsiniz
-            var errorMessage = string.Join(", ", returnUrlValidationResult.Errors.Select(e => e.ErrorMessage));
-            return Result.Error(errorMessage);
-        }
 
         var apiDto = new AddAboutMeApiDto
         {
@@ -106,8 +97,65 @@ public class AboutMeService : IAboutMeService
         throw new NotImplementedException();
     }
 
-    public Task<Result> UpdateAboutMeAsync(UpdateAboutMeMVCDto dto)
+    public async Task<Result> UpdateAboutMeAsync(UpdateAboutMeMVCDto dto)
     {
-        throw new NotImplementedException();
+        var validationResult = await _updateValidator.ValidateAsync(dto);
+
+        // Eğer doğrulama başarısızsa, uygun bir sonuç döndür
+        if (!validationResult.IsValid)
+        {
+            var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+            return Result.Error(errorMessage);
+        }
+
+        using var content = new MultipartFormDataContent();
+
+        if(dto.ImageFile1 is not null)
+        {
+            var imageContent1 = new StreamContent(dto.ImageFile1.OpenReadStream());
+            imageContent1.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(dto.ImageFile1.ContentType);
+            content.Add(imageContent1, "imageFile1", dto.ImageFile1.FileName); // "imageFile1" API'deki parametre adı ile uyumlu olmalı
+        }
+
+        if (dto.ImageFile2 is not null)
+        {
+            var imageContent2 = new StreamContent(dto.ImageFile2.OpenReadStream());
+            imageContent2.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(dto.ImageFile2.ContentType);
+            content.Add(imageContent2, "imageFile2", dto.ImageFile2.FileName); // "imageFile2" API'deki parametre adı ile uyumlu olmalı
+        }
+
+        var updateApiDto = new UpdateAboutMeApiDto()
+        {
+            Introduction = dto.Introduction,
+        };
+
+        if (dto.ImageFile1 != null || dto.ImageFile2 != null)
+        {
+            var fileResponse = await FileApiClient.PostAsync("upload-files", content);
+
+            if (!fileResponse.IsSuccessStatusCode)
+            {
+                return Result.Error();
+            }
+
+            var urlDto = await fileResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
+
+            updateApiDto.ImageUrl1 = urlDto.ImageUrl1;
+            updateApiDto.ImageUrl2 = urlDto.ImageUrl2;
+           
+        }
+
+
+        var apiResponse = await DataApiClient.PostAsJsonAsync("update-about-me", updateApiDto);
+
+            if (!apiResponse.IsSuccessStatusCode)
+            {
+                return Result.Error("Bilgileriniz güncellenirken beklenmedik bir hatayla karşılaşıldı.");
+            }
+
+            else
+            {
+                return Result.SuccessWithMessage("-Hakkında- bilgileriniz başarılı bir şekilde güncellendi.");
+            }
     }
 }

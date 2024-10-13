@@ -6,7 +6,8 @@ public class UpdateAboutMeViewModel
 {
     [Required(ErrorMessage = "Giriş kısmı zorunludur.")]
     [MinLength(10, ErrorMessage = "Giriş kısmı en az 10 karakter olmalıdır.")]
-    public string Introduction { get; set; } = string.Empty;
+    public string Introduction { get; set; }
+    
     public string? ImageUrl1 { get; set; }
     public string? ImageUrl2 { get; set; }
     public IFormFile? ImageFile1 { get; set; }

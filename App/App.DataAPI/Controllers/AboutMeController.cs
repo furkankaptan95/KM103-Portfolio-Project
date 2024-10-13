@@ -12,11 +12,13 @@ namespace App.DataAPI.Controllers;
 public class AboutMeController : ControllerBase
 {
     private readonly IAboutMeService _aboutMeService;
-    private readonly IValidator<AddAboutMeApiDto> _validator;
-    public AboutMeController(IAboutMeService aboutMeService, IValidator<AddAboutMeApiDto> validator)
+    private readonly IValidator<AddAboutMeApiDto> _addValidator;
+    private readonly IValidator<UpdateAboutMeApiDto> _updateValidator;
+    public AboutMeController(IAboutMeService aboutMeService, IValidator<AddAboutMeApiDto> addValidator, IValidator<UpdateAboutMeApiDto> updateValidator)
     {
         _aboutMeService = aboutMeService;
-        _validator = validator;
+        _addValidator = addValidator;
+        _updateValidator = updateValidator;
     }
 
 
@@ -45,7 +47,7 @@ public class AboutMeController : ControllerBase
     [HttpPost("/add-about-me")]
     public async Task<IActionResult> AddAboutMeAsync([FromBody] AddAboutMeApiDto dto)
     {
-        var validationResult = await _validator.ValidateAsync(dto);
+        var validationResult = await _addValidator.ValidateAsync(dto);
 
         if (!validationResult.IsValid)
         {
@@ -61,5 +63,30 @@ public class AboutMeController : ControllerBase
         }
 
         return StatusCode(500, "An error occurred while processing your request.");
+    }
+
+
+    [HttpPost("/update-about-me")]
+    public async Task<IActionResult> UpdateAboutMeAsync([FromBody] UpdateAboutMeApiDto dto)
+    {
+        var validationResult = await _updateValidator.ValidateAsync(dto);
+        string errorMessage;
+
+        if(!validationResult.IsValid)
+        {
+            errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(Result.Error(errorMessage));
+        }
+
+        var result = await _aboutMeService.UpdateAboutMeAsync(dto);
+
+        if (result.IsSuccess)
+        {
+            return Ok();
+        }
+
+        errorMessage = result.Errors.FirstOrDefault();
+
+        return StatusCode(500, errorMessage);
     }
 }
