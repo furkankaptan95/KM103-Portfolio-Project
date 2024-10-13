@@ -82,13 +82,58 @@ public class BlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
         }
     }
 
-    public Task<Result<BlogPostToUpdateDto>> GetBlogPostById(int id)
+    public async Task<Result<BlogPostToUpdateDto>> GetBlogPostById(int id)
     {
-        throw new NotImplementedException();
+        try
+        {       
+            var entity = await dataApiDb.BlogPosts.FirstOrDefaultAsync(x=>x.Id == id);
+
+            if (entity is null)
+            {
+                return Result.NotFound();
+            }
+
+            var dto = new BlogPostToUpdateDto
+            {
+                Id = id,
+                Title = entity.Title,
+                Content = entity.Content,
+            };
+
+            return Result.Success(dto);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
     }
 
-    public Task<Result> UpdateBlogPostAsync(UpdateBlogPostDto dto)
+    public async Task<Result> UpdateBlogPostAsync(UpdateBlogPostDto dto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var entity = await dataApiDb.BlogPosts.FirstOrDefaultAsync(x => x.Id == dto.Id);
+           
+            entity.Title = dto.Title;
+            entity.Content = dto.Content;
+            entity.UpdatedAt = DateTime.Now;
+
+             dataApiDb.BlogPosts.Update(entity);
+             await dataApiDb.SaveChangesAsync();
+
+            return Result.SuccessWithMessage(" Blog Post başarıyla güncellendi. ");
+        }
+        catch (DbUpdateException dbEx)
+        {
+            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
     }
 }

@@ -28,6 +28,8 @@ builder.Services.AddScoped<IBlogPostService, BlogPostService>();
 builder.Services.AddTransient<IValidator<AddAboutMeApiDto>, AddAboutMeApiDtoValidator>();
 builder.Services.AddTransient<IValidator<UpdateAboutMeApiDto>, UpdateAboutMeApiDtoValidator>();
 builder.Services.AddTransient<IValidator<AddBlogPostDto>, AddBlogPostDtoValidator>();
+builder.Services.AddTransient<IValidator<UpdateBlogPostDto>, UpdateBlogPostDtoValidator>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

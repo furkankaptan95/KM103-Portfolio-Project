@@ -67,7 +67,7 @@ public class AboutMeController : ControllerBase
     }
 
 
-    [HttpPost("/update-about-me")]
+    [HttpPut("/update-about-me")]
     public async Task<IActionResult> UpdateAboutMeAsync([FromBody] UpdateAboutMeApiDto dto)
     {
         var validationResult = await _updateValidator.ValidateAsync(dto);
