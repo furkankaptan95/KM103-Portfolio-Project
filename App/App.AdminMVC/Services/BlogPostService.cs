@@ -2,6 +2,8 @@
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
+using System.Net.Http;
+using System.Net.Http.Json;
 
 namespace App.AdminMVC.Services;
 public class BlogPostService : IBlogPostService
@@ -25,11 +27,10 @@ public class BlogPostService : IBlogPostService
             return Result.Invalid(new ValidationError(errorMessage));
         }
 
-        var apiResponse = DataApiClient.PostAsJsonAsync("add-blog-post", dto);
+        var apiResponse = await DataApiClient.PostAsJsonAsync("add-blog-post", dto);
 
-        //return await apiResponse.Content.ReadFromJsonAsync<Result>();
+        return await apiResponse.Content.ReadFromJsonAsync<Result>();
 
-        return Result.Success();
     }
 
     public Task<Result> ChangeBlogPostVisibilityAsync(int id)
