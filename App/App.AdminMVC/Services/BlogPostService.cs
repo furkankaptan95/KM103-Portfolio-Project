@@ -6,9 +6,13 @@ namespace App.AdminMVC.Services;
 public class BlogPostService(IHttpClientFactory factory) : IBlogPostService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
-    public Task<Result> AddBlogPostAsync(AddBlogPostDto dto)
+    public async Task<Result> AddBlogPostAsync(AddBlogPostDto dto)
     {
-        throw new NotImplementedException();
+
+
+
+        return  Result.Success();
+
     }
 
     public Task<Result> ChangeBlogPostVisibilityAsync(int id)
