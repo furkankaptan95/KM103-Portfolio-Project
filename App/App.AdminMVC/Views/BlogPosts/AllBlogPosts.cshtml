@@ -14,98 +14,122 @@
     </div>
 }
 
+@if (ViewData["ErrorMessage"] is not null)
+{
+    <div class="alert custom-alert-error  mt-5">
+        @ViewData["ErrorMessage"]
+    </div>
+}
 
-<div class="container mt-4">
-    <h2 class="text-center">Tüm Blog Postlar</h2>
-    <table class="table table-bordered table-striped table-responsive-md mt-4">
-        <thead class="thead-dark">
-            <tr>
-                <th class="text-center">Başlık</th>
-                <th class ="text-center">Yayınlanma Tarihi</th>
-                <th class="text-center">İşlemler</th>
-                <th class="text-center">Görünürlük</th>
-                <th class="text-center">Görünür Yap / Gizle</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var post in Model)
-            {
+@if(Model.Count == 0)
+{
+    <h2 class="text-center my-4" style="font-weight: 600; color: #333;">Tüm Blog Postlar</h2>
+
+    <div class="alert alert-info text-center mt-5 p-4" style="border-radius: 10px;">
+        <h4 class="font-weight-bold">Şu anda görüntülenecek bir Blog Post bulunmuyor.</h4>
+        <p class="mb-4 text-muted">Yeni blog gönderileri ekleyerek içeriği zenginleştirebilirsiniz.</p>
+        <a href="/add-blog-post" class="btn btn-sm btn-primary">
+            <i class="fas fa-plus mr-2"></i>Blog Post Ekle
+        </a>
+    </div>
+}
+
+else
+{
+    <div class="container mt-4">
+        <h2 class="text-center">Tüm Blog Postlar</h2>
+        <table class="table table-bordered table-striped table-responsive-md mt-4">
+            <thead class="thead-dark">
                 <tr>
-                    <td class="text-center">@post.Title</td>
-                    <td class="text-center">@post.PublishDate.ToString("dd MMM yyyy")</td>
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@post.Id" aria-haspopup="true" aria-expanded="false">İçeriği Görüntüle</button>
-                        <a href="/update-blog-post-@post.Id" class="btn btn-sm btn-primary">Düzenle</a>
-                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal-@post.Id">Sil</button>
-                    </td>
-                    <td class="text-center">
-                        @if (post.IsVisible)
-                        {
-                            <span>Görünür ✅</span>
-                        }
-                        else
-                        {
-                            <span>Gizli ❌</span>
-                        }
-                    </td>
-                    <td class="text-center">
-                        @if (post.IsVisible)
-                        {
-                            <a href="/make-blog-post-invisible-@post.Id" class="btn btn-sm btn-secondary">Gizle</a>
-                        }
-                        else
-                        {
-                            <a href="/make-blog-post-visible-@post.Id" class="btn btn-sm btn-success">Görünür Yap</a>
-                        }
-                    </td>
+                    <th class="text-center">Başlık</th>
+                    <th class="text-center">Yayınlanma Tarihi</th>
+                    <th class="text-center">İşlemler</th>
+                    <th class="text-center">Görünürlük</th>
+                    <th class="text-center">Görünür Yap / Gizle</th>
                 </tr>
+            </thead>
+            <tbody>
+                @foreach (var post in Model)
+                {
+                    <tr>
+                        <td class="text-center">@post.Title</td>
+                        <td class="text-center">@post.PublishDate.ToString("dd MMM yyyy")</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@post.Id" aria-haspopup="true" aria-expanded="false">İçeriği Görüntüle</button>
+                            <a href="/update-blog-post-@post.Id" class="btn btn-sm btn-primary">Düzenle</a>
+                            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal-@post.Id">Sil</button>
+                        </td>
+                        <td class="text-center">
+                            @if (post.IsVisible)
+                            {
+                                <span>Görünür ✅</span>
+                            }
+                            else
+                            {
+                                <span>Gizli ❌</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            @if (post.IsVisible)
+                            {
+                                <a href="/make-blog-post-invisible-@post.Id" class="btn btn-sm btn-secondary">Gizle</a>
+                            }
+                            else
+                            {
+                                <a href="/make-blog-post-visible-@post.Id" class="btn btn-sm btn-success">Görünür Yap</a>
+                            }
+                        </td>
+                    </tr>
 
-                <!-- Modal -->
-                <div class="modal fade" id="modal-@post.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabel-@post.Id" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalLabel-@post.Id">@post.Title</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>@post.Content</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="modal-@post.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabel-@post.Id" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalLabel-@post.Id">@post.Title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>@post.Content</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Silme Onay Modalı -->
-                <div class="modal fade" id="deleteModal-@post.Id" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel-@post.Id" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="deleteModalLabel-@post.Id">Silme Onayı</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <b>@post.Title</b> başlıklı blog postu silmek istediğinize emin misiniz?
-                            </div>
-                            <div class="modal-footer">
-                                <form action="/delete-blog-post-@post.Id" method="get">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
-                                    <button type="submit" class="btn btn-danger">Sil</button>
-                                </form>
+                    <!-- Silme Onay Modalı -->
+                    <div class="modal fade" id="deleteModal-@post.Id" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel-@post.Id" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel-@post.Id">Silme Onayı</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <b>@post.Title</b> başlıklı blog postu silmek istediğinize emin misiniz?
+                                </div>
+                                <div class="modal-footer">
+                                    <form action="/delete-blog-post-@post.Id" method="get">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                                        <button type="submit" class="btn btn-danger">Sil</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            }
-        </tbody>
-    </table>
-</div>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
 
 @section Styles{
     <style>

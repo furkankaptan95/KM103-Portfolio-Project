@@ -1,4 +1,5 @@
-﻿using App.DTOs.BlogPostDtos;
+﻿using App.DTOs.AboutMeDtos;
+using App.DTOs.BlogPostDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
@@ -43,9 +44,13 @@ public class BlogPostService : IBlogPostService
         throw new NotImplementedException();
     }
 
-    public Task<Result<List<AllBlogPostsDto>>> GetAllBlogPostsAsync()
+    public async Task<Result<List<AllBlogPostsDto>>> GetAllBlogPostsAsync()
     {
-        throw new NotImplementedException();
+
+        var apiResponse = await DataApiClient.GetAsync("all-blog-posts");
+
+        return await apiResponse.Content.ReadFromJsonAsync<Result<List<AllBlogPostsDto>>>();
+
     }
 
     public Task<Result> UpdateBlogPostAsync(UpdateBlogPostDto dto)
