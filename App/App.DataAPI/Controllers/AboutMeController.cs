@@ -29,18 +29,17 @@ public class AboutMeController : ControllerBase
 
         if (result.IsSuccess)
         {
-            // Eğer başarı durumu varsa, DTO'yu geri döndür
-            return Ok(result.Value); // Success durumunda DTO'yu döndürüyoruz
+            return Ok(result);
         }
 
         else if (result.Status == ResultStatus.NotFound)
         {
-            return NotFound();
+            return NotFound(result);
         }
 
         else
         {
-            return StatusCode(500, result.Errors.FirstOrDefault()); // Genel hata varsa hata mesajını döndür
+            return StatusCode(500, result);
         }
     }
 

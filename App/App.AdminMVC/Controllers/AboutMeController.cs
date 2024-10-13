@@ -18,13 +18,18 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
         {
             var errorMessage = result.Errors.FirstOrDefault();
 
-            if(result.Status == ResultStatus.NotFound)
+            
+
+            if (result.Status == ResultStatus.NotFound)
             {
                 TempData["Message"] = errorMessage;
+
                 return Redirect("/add-about-me");
             }
 
-            return BadRequest(result.Errors.FirstOrDefault());
+            TempData["ErrorMessage"] = "Beklenmeyen bir hata oluştu.";
+
+            return Redirect("/home/index");
         }
 
         var dto = result.Value;
