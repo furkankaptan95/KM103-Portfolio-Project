@@ -2,6 +2,13 @@
     ViewData["Title"] = "Ana Sayfa";
 }
 
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert custom-alert-error mt-5">
+        @TempData["Message"]
+    </div>
+}
+
 <div class="container mt-5">
     <h1 class="text-center welcome-text mb-3">Hoşgeldiniz</h1>
     <p class="text-center info-text">Görüntülemek istediğiniz bilgileri veya yapmak istediğiniz değişiklikleri sol taraftaki menüden yönetebilirsiniz.</p>
@@ -84,6 +91,33 @@
 @section Styles {
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
+
+             .custom-alert-success {
+            display: inline-block;
+            top: 10px; /* Varsayılan üst boşluk */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+          .custom-alert-error {
+            display: inline-block;
+            top: 10px; /* Varsayılan üst boşluk */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
         .welcome-text {
             font-size: 1.8rem; /* Font büyüklüğünü ayarladık */
             font-weight: bold;
