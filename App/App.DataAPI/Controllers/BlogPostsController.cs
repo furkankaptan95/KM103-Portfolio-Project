@@ -1,4 +1,5 @@
 ﻿using App.DTOs.BlogPostDtos;
+using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
@@ -11,9 +12,11 @@ namespace App.DataAPI.Controllers;
 public class BlogPostsController : ControllerBase
 {
     private readonly IValidator<AddBlogPostDto> _addValidator;
-    public BlogPostsController(IValidator<AddBlogPostDto> addValidator)
+    private readonly IBlogPostService _blogPostService;
+    public BlogPostsController(IValidator<AddBlogPostDto> addValidator, IBlogPostService blogPostService)
     {
         _addValidator = addValidator;
+        _blogPostService = blogPostService;
     }
 
     [HttpPost]

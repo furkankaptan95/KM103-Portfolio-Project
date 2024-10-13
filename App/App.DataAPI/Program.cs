@@ -23,7 +23,7 @@ builder.Services.AddDbContext<DataApiDbContext>(options =>
 });
 
 builder.Services.AddScoped<IAboutMeService, AboutMeService>();
-
+builder.Services.AddScoped<IBlogPostService, BlogPostService>();
 
 builder.Services.AddTransient<IValidator<AddAboutMeApiDto>, AddAboutMeApiDtoValidator>();
 builder.Services.AddTransient<IValidator<UpdateAboutMeApiDto>, UpdateAboutMeApiDtoValidator>();
