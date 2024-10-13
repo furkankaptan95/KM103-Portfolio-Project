@@ -36,33 +36,47 @@ public class FileController : ControllerBase
     {
         var urlDto = new ReturnUrlDto();
 
-        if (imageFile1 is not null)
+        try
         {
-            // İlk dosyayı kaydet
-            var fileName1 = Path.GetFileName(imageFile1.FileName);
-            var filePath1 = Path.Combine(_uploadsFolder, fileName1);
-            using (var stream = new FileStream(filePath1, FileMode.Create))
+            if (imageFile1 is not null)
             {
-                await imageFile1.CopyToAsync(stream);
+                // İlk dosyayı kaydet
+                var fileName1 = Path.GetFileName(imageFile1.FileName);
+                var filePath1 = Path.Combine(_uploadsFolder, fileName1);
+                using (var stream = new FileStream(filePath1, FileMode.Create))
+                {
+                    await imageFile1.CopyToAsync(stream);
+                }
+
+                urlDto.ImageUrl1 = fileName1;
             }
 
-            urlDto.ImageUrl1 = fileName1;
-        }
-
-        if (imageFile2 is not null)
-        {
-            // İkinci dosyayı kaydet
-            var fileName2 = Path.GetFileName(imageFile2.FileName);
-            var filePath2 = Path.Combine(_uploadsFolder, fileName2);
-            using (var stream = new FileStream(filePath2, FileMode.Create))
+            if (imageFile2 is not null)
             {
-                await imageFile2.CopyToAsync(stream);
+                // İkinci dosyayı kaydet
+                var fileName2 = Path.GetFileName(imageFile2.FileName);
+                var filePath2 = Path.Combine(_uploadsFolder, fileName2);
+                using (var stream = new FileStream(filePath2, FileMode.Create))
+                {
+                    await imageFile2.CopyToAsync(stream);
+                }
+
+                urlDto.ImageUrl2 = fileName2;
             }
 
-            urlDto.ImageUrl2 = fileName2;
+            // Başarılı yanıt döndür
+            return Ok(urlDto);
         }
-
-        // Başarılı yanıt döndür
-        return Ok(urlDto);
+        catch (IOException ex)
+        {
+            // Dosya sistemiyle ilgili bir hata oluşursa
+            return StatusCode(500, $"Dosya yükleme sırasında bir hata oluştu: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            // Genel bir hata varsa
+            return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
+        }
     }
+
 }

@@ -31,7 +31,7 @@ public class AboutMeService : IAboutMeService
         if (!validationResult.IsValid)
         {
             var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return Result.Error(errorMessage);
+            return Result.Invalid(new ValidationError(errorMessage));
         }
 
         using var content = new MultipartFormDataContent();
@@ -48,7 +48,7 @@ public class AboutMeService : IAboutMeService
 
         if (!fileResponse.IsSuccessStatusCode)
         {
-            return Result.Error();
+            return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu.");
         }
 
         var urlDto = await fileResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
