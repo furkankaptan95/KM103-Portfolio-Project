@@ -13,8 +13,6 @@ public class AboutMeService : IAboutMeService
     private readonly IValidator<AddAboutMeMVCDto> _addValidator;
 
     private readonly IValidator<UpdateAboutMeMVCDto> _updateValidator;
-
-    // Primary constructor
     public AboutMeService(IHttpClientFactory factory, IValidator<AddAboutMeMVCDto> addValidator, IValidator<UpdateAboutMeMVCDto> updateValidator)
     {
         _factory = factory;
@@ -47,7 +45,7 @@ public class AboutMeService : IAboutMeService
         
         var fileResponse = await FileApiClient.PostAsync("upload-files", content);
 
-        var errorList = new ErrorList(new List<string>());
+        // var errorList = new ErrorList(new List<string>()); Çoklu mesaj dönülmek istenirse bu şekilde eklenebilir.
 
 
         if (!fileResponse.IsSuccessStatusCode)

@@ -1,8 +1,11 @@
-﻿using App.ViewModels.AdminMvc.BlogPostsViewModels;
+﻿using App.DTOs.BlogPostDtos;
+using App.Services.AdminServices.Abstract;
+using App.ViewModels.AdminMvc.BlogPostsViewModels;
+using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-public class BlogPostsController : Controller
+public class BlogPostsController(IBlogPostService blogPostService) : Controller
 {
 
     [HttpGet]
@@ -50,7 +53,30 @@ public class BlogPostsController : Controller
             return View(addBlogPostModel);
         }
 
-        return View();
+        var dto = new AddBlogPostDto
+        {
+            Content = addBlogPostModel.Content,
+            Title = addBlogPostModel.Title,
+        };
+
+        var result = await blogPostService.AddBlogPostAsync(dto);
+
+        if (result.Status == ResultStatus.Invalid)
+        {
+            ViewBag.ErrorMessage = result.ValidationErrors.FirstOrDefault();
+            return View(addBlogPostModel);
+        }
+
+        if (result.Status == ResultStatus.Error)
+        {
+            ViewBag.ErrorMessage = result.Errors.FirstOrDefault();
+            return View();
+        }
+
+        TempData["Message"] = result.SuccessMessage;
+
+        return Redirect("/all-blog-posts");
+
     }
 
     [HttpGet]
