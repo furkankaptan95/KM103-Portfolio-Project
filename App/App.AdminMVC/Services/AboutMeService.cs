@@ -109,7 +109,7 @@ public class AboutMeService : IAboutMeService
            
         }
 
-        var apiResponse = await DataApiClient.PostAsJsonAsync("update-about-me", updateApiDto);
+        var apiResponse = await DataApiClient.PutAsJsonAsync("update-about-me", updateApiDto);
 
         return await apiResponse.Content.ReadFromJsonAsync<Result>();
     }
