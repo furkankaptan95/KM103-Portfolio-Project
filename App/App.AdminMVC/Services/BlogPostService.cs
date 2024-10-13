@@ -25,8 +25,11 @@ public class BlogPostService : IBlogPostService
             return Result.Invalid(new ValidationError(errorMessage));
         }
 
-        return  Result.Success();
+        var apiResponse = DataApiClient.PostAsJsonAsync("add-blog-post", dto);
 
+        //return await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        return Result.Success();
     }
 
     public Task<Result> ChangeBlogPostVisibilityAsync(int id)
