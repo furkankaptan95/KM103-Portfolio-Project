@@ -23,7 +23,7 @@ public class AboutMeService(DataApiDbContext dataApiDb) : IAboutMeService
             await dataApiDb.AboutMes.AddAsync(entity);
             await dataApiDb.SaveChangesAsync();
 
-            return Result.SuccessWithMessage(" -Hakkımda- bilgileri başarıyla eklendi. ");
+            return Result.Success();
         }
         catch (DbUpdateException dbEx)
         {

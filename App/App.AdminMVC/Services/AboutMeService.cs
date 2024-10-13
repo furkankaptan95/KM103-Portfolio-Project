@@ -49,7 +49,14 @@ public class AboutMeService : IAboutMeService
 
         var apiResponse = await DataApiClient.PostAsJsonAsync("add-about-me", apiDto);
 
-        return await apiResponse.Content.ReadFromJsonAsync<Result>();
+        var result =  await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (!result.IsSuccess)
+        {
+            return Result.Error("Hakkımda bilgileri eklenirken beklenmeyen bir hata oluştu..");
+        }
+
+        return Result.SuccessWithMessage(" - Hakkımda - bilgileri başarıyla eklendi. ");
     }
 
     public Task<Result> AddAboutMeAsync(AddAboutMeApiDto dto)

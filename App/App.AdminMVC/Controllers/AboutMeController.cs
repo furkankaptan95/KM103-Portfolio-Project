@@ -66,13 +66,8 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
 
         var result = await aboutMeService.AddAboutMeAsync(mvcDto);
 
-        if (result.Status == ResultStatus.Invalid)
-        {
-            ViewBag.ErrorMessage = result.ValidationErrors.FirstOrDefault();
-            return View(model);
-        }
-
-        if(result.Status == ResultStatus.Error)
+       
+        if(!result.IsSuccess)
         {
             ViewBag.ErrorMessage = result.Errors.FirstOrDefault();
             return View();
