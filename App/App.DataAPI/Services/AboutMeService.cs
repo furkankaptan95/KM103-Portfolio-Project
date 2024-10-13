@@ -5,118 +5,116 @@ using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using Microsoft.EntityFrameworkCore;
 
-namespace App.DataAPI.Services
+namespace App.DataAPI.Services;
+public class AboutMeService(DataApiDbContext dataApiDb) : IAboutMeService
 {
-    public class AboutMeService(DataApiDbContext dataApiDb) : IAboutMeService
+    public async Task<Result> AddAboutMeAsync(AddAboutMeApiDto dto)
     {
-        public async Task<Result> AddAboutMeAsync(AddAboutMeApiDto dto)
+        try
         {
-            try
+            var entity = new AboutMeEntity()
             {
-                var entity = new AboutMeEntity()
-                {
-                    Introduction = dto.Introduction,
-                    ImageUrl1 = dto.ImageUrl1,
-                    ImageUrl2 = dto.ImageUrl2,
-                };
+                Introduction = dto.Introduction,
+                ImageUrl1 = dto.ImageUrl1,
+                ImageUrl2 = dto.ImageUrl2,
+            };
 
-                await dataApiDb.AboutMes.AddAsync(entity);
-                await dataApiDb.SaveChangesAsync();
+            await dataApiDb.AboutMes.AddAsync(entity);
+            await dataApiDb.SaveChangesAsync();
 
-                return Result.SuccessWithMessage(" -Hakkımda- bilgileri başarıyla eklendi. ");
-            }
-            catch (DbUpdateException dbEx)
+            return Result.SuccessWithMessage(" -Hakkımda- bilgileri başarıyla eklendi. ");
+        }
+        catch (DbUpdateException dbEx)
+        {
+            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
+    }
+
+    public Task<Result> AddAboutMeAsync(AddAboutMeMVCDto dto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<ShowAboutMeDto>> GetAboutMeAsync()
+    {
+        try
+        {
+            var entity = await dataApiDb.AboutMes.FirstOrDefaultAsync();
+
+            if (entity == null)
             {
-                return Result.Error("Veritabanı hatası: " + dbEx.Message);
+                return Result<ShowAboutMeDto>.NotFound();
             }
-            catch (Exception ex)
+
+            var dto = new ShowAboutMeDto()
             {
-                return Result.Error("Bir hata oluştu: " + ex.Message);
-            }
+                Introduction = entity.Introduction,
+                ImageUrl1 = entity.ImageUrl1,
+                ImageUrl2 = entity.ImageUrl2,
+            };
+
+            return Result<ShowAboutMeDto>.Success(dto);
         }
 
-        public Task<Result> AddAboutMeAsync(AddAboutMeMVCDto dto)
+        catch (DbUpdateException dbEx)
         {
-            throw new NotImplementedException();
+            return Result.Error("Veritabanı hatası: " + dbEx.Message);
         }
 
-        public async Task<Result<ShowAboutMeDto>> GetAboutMeAsync()
+        catch (Exception ex)
         {
-            try
+            var errorMessage = $"Bir hata oluştu: {ex.Message}, Hata Kodu: {ex.HResult}";
+            return Result.Error(errorMessage);
+        }
+    }
+
+    public async Task<Result> UpdateAboutMeAsync(UpdateAboutMeApiDto dto)
+    {
+        try
+        {
+            var entity = await dataApiDb.AboutMes.FirstOrDefaultAsync();
+
+            if (entity == null)
             {
-                var entity = await dataApiDb.AboutMes.FirstOrDefaultAsync();
-
-                if (entity == null)
-                {
-                    return Result<ShowAboutMeDto>.NotFound();
-                }
-
-                var dto = new ShowAboutMeDto()
-                {
-                    Introduction = entity.Introduction,
-                    ImageUrl1 = entity.ImageUrl1,
-                    ImageUrl2 = entity.ImageUrl2,
-                };
-
-                return Result<ShowAboutMeDto>.Success(dto);
+                return Result.NotFound();
             }
 
-            catch (DbUpdateException dbEx)
+            entity.Introduction = dto.Introduction;
+
+            if (dto.ImageUrl1 != null) 
             {
-                return Result.Error("Veritabanı hatası: " + dbEx.Message);
+                entity.ImageUrl1 = dto.ImageUrl1;
             }
 
-            catch (Exception ex)
+            if (dto.ImageUrl2 != null)
             {
-                var errorMessage = $"Bir hata oluştu: {ex.Message}, Hata Kodu: {ex.HResult}";
-                return Result.Error(errorMessage);
+                entity.ImageUrl2 = dto.ImageUrl2;
             }
+
+            dataApiDb.AboutMes.Update(entity);
+            await dataApiDb.SaveChangesAsync();
+
+            return Result.SuccessWithMessage(" -Hakkında- bilgileriniz başarılı bir şekilde güncellendi. ");
         }
 
-        public async Task<Result> UpdateAboutMeAsync(UpdateAboutMeApiDto dto)
+        catch (DbUpdateException dbEx)
         {
-            try
-            {
-                var entity = await dataApiDb.AboutMes.FirstOrDefaultAsync();
-
-                if (entity == null)
-                {
-                    return Result.NotFound();
-                }
-
-                entity.Introduction = dto.Introduction;
-
-                if (dto.ImageUrl1 != null) 
-                {
-                    entity.ImageUrl1 = dto.ImageUrl1;
-                }
-
-                if (dto.ImageUrl2 != null)
-                {
-                    entity.ImageUrl2 = dto.ImageUrl2;
-                }
-
-                dataApiDb.AboutMes.Update(entity);
-                await dataApiDb.SaveChangesAsync();
-
-                return Result.Success();
-            }
-
-            catch (DbUpdateException dbEx)
-            {
-                return Result.Error("Veritabanı hatası: " + dbEx.Message);
-            }
-
-            catch (Exception ex)
-            {
-                var errorMessage = $"Bir hata oluştu: {ex.Message}, Hata Kodu: {ex.HResult}";
-                return Result.Error(errorMessage);
-            }
+            return Result.Error("Veritabanı hatası: " + dbEx.Message);
         }
 
-        public Task<Result> UpdateAboutMeAsync(UpdateAboutMeMVCDto dto)
+        catch (Exception ex)
         {
-            throw new NotImplementedException();
+            var errorMessage = $"Bir hata oluştu: {ex.Message}, Hata Kodu: {ex.HResult}";
+            return Result.Error(errorMessage);
         }
+    }
+
+    public Task<Result> UpdateAboutMeAsync(UpdateAboutMeMVCDto dto)
+    {
+        throw new NotImplementedException();
     }
 }

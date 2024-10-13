@@ -2,6 +2,7 @@
 using App.DTOs.FileApiDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
+using Azure;
 using FluentValidation;
 using System.Net;
 
@@ -46,6 +47,9 @@ public class AboutMeService : IAboutMeService
         
         var fileResponse = await FileApiClient.PostAsync("upload-files", content);
 
+        var errorList = new ErrorList(new List<string>());
+
+
         if (!fileResponse.IsSuccessStatusCode)
         {
             return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu.");
@@ -60,9 +64,9 @@ public class AboutMeService : IAboutMeService
             Introduction = dto.Introduction,
         };
 
-        var response = await DataApiClient.PostAsJsonAsync("add-about-me", apiDto);
+        var apiResponse = await DataApiClient.PostAsJsonAsync("add-about-me", apiDto);
 
-        return await response.Content.ReadFromJsonAsync<Result>();
+        return await apiResponse.Content.ReadFromJsonAsync<Result>();
     }
 
     public Task<Result> AddAboutMeAsync(AddAboutMeApiDto dto)
@@ -99,12 +103,16 @@ public class AboutMeService : IAboutMeService
     {
         var validationResult = await _updateValidator.ValidateAsync(dto);
 
-        // Eğer doğrulama başarısızsa, uygun bir sonuç döndür
         if (!validationResult.IsValid)
         {
             var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return Result.Error(errorMessage);
+            return Result.Invalid(new ValidationError(errorMessage));
         }
+
+        var updateApiDto = new UpdateAboutMeApiDto()
+        {
+            Introduction = dto.Introduction,
+        };
 
         using var content = new MultipartFormDataContent();
 
@@ -122,18 +130,13 @@ public class AboutMeService : IAboutMeService
             content.Add(imageContent2, "imageFile2", dto.ImageFile2.FileName); // "imageFile2" API'deki parametre adı ile uyumlu olmalı
         }
 
-        var updateApiDto = new UpdateAboutMeApiDto()
-        {
-            Introduction = dto.Introduction,
-        };
-
         if (dto.ImageFile1 != null || dto.ImageFile2 != null)
         {
             var fileResponse = await FileApiClient.PostAsync("upload-files", content);
 
             if (!fileResponse.IsSuccessStatusCode)
             {
-                return Result.Error();
+                return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu.");
             }
 
             var urlDto = await fileResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
@@ -146,14 +149,6 @@ public class AboutMeService : IAboutMeService
 
         var apiResponse = await DataApiClient.PostAsJsonAsync("update-about-me", updateApiDto);
 
-            if (!apiResponse.IsSuccessStatusCode)
-            {
-                return Result.Error("Bilgileriniz güncellenirken beklenmedik bir hatayla karşılaşıldı.");
-            }
-
-            else
-            {
-                return Result.SuccessWithMessage("-Hakkında- bilgileriniz başarılı bir şekilde güncellendi.");
-            }
+        return await apiResponse.Content.ReadFromJsonAsync<Result>();
     }
 }

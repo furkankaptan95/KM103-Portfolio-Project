@@ -77,18 +77,17 @@ public class AboutMeController : ControllerBase
         if(!validationResult.IsValid)
         {
             errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return BadRequest(Result.Error(errorMessage));
+
+            return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
         }
 
         var result = await _aboutMeService.UpdateAboutMeAsync(dto);
 
         if (result.IsSuccess)
         {
-            return Ok();
+            return Ok(result);
         }
 
-        errorMessage = result.Errors.FirstOrDefault();
-
-        return StatusCode(500, errorMessage);
+        return StatusCode(500, result);
     }
 }

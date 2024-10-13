@@ -66,13 +66,13 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
 
         if (result.Status == ResultStatus.Invalid)
         {
-            ViewBag.ErrorMessage = string.Join(", ", result.ValidationErrors);
+            ViewBag.ErrorMessage = result.ValidationErrors.FirstOrDefault();
             return View(model);
         }
 
         if(result.Status == ResultStatus.Error)
         {
-            ViewBag.ErrorMessage = result.Errors.ToString();
+            ViewBag.ErrorMessage = result.Errors.FirstOrDefault();
             return View();
         }
 
@@ -123,9 +123,16 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
 
         var result = await aboutMeService.UpdateAboutMeAsync(dto);
 
-        if (!result.IsSuccess)
+        if (result.Status == ResultStatus.Invalid)
         {
-            TempData["Message"]= result.Errors.FirstOrDefault();
+            ViewBag.ErrorMessage = result.ValidationErrors.FirstOrDefault();
+            return View(updateAboutMeModel);
+        }
+
+        if (result.Status == ResultStatus.Error)
+        {
+            ViewBag.ErrorMessage = result.Errors.FirstOrDefault();
+            return View();
         }
 
         TempData["Message"] = result.SuccessMessage;
