@@ -31,6 +31,8 @@ public class BlogPostsController : ControllerBase
             return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
         }
 
+        var result = await _blogPostService.AddBlogPostAsync(dto);
+
         return Ok();
     }
 }
