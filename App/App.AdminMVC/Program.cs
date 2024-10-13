@@ -1,12 +1,6 @@
 using App.AdminMVC.Services;
-using App.Core.Validators.AboutMeValidators;
-using App.Core.Validators.BlogPostValidators;
-using App.DTOs.AboutMeDtos;
-using App.DTOs.BlogPostDtos;
-using App.DTOs.FileApiDtos;
 using App.Services;
 using App.Services.AdminServices.Abstract;
-using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,14 +33,6 @@ builder.Services.AddHttpClient("fileApi", c =>
 
 builder.Services.AddScoped<IAboutMeService, AboutMeService>();
 builder.Services.AddScoped<IBlogPostService, BlogPostService>();
-
-
-
-builder.Services.AddTransient<IValidator<AddAboutMeMVCDto>, AddAboutMeMVCDtoValidator>();
-builder.Services.AddTransient<IValidator<UpdateAboutMeMVCDto>, UpdateAboutMeMVCDtoValidator>();
-builder.Services.AddTransient<IValidator<AddBlogPostDto>, AddBlogPostDtoValidator>();
-
-
 
 var app = builder.Build();
 

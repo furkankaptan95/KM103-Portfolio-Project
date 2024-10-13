@@ -2,21 +2,14 @@
 using App.DTOs.FileApiDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
-using Azure;
-using FluentValidation;
-using System.Net;
 
 namespace App.AdminMVC.Services;
 public class AboutMeService : IAboutMeService
 {
     private readonly IHttpClientFactory _factory;
-    private readonly IValidator<AddAboutMeMVCDto> _addValidator;
-    private readonly IValidator<UpdateAboutMeMVCDto> _updateValidator;
-    public AboutMeService(IHttpClientFactory factory, IValidator<AddAboutMeMVCDto> addValidator, IValidator<UpdateAboutMeMVCDto> updateValidator)
+    public AboutMeService(IHttpClientFactory factory)
     {
         _factory = factory;
-        _addValidator = addValidator;
-        _updateValidator = updateValidator;
     }
 
     private HttpClient DataApiClient => _factory.CreateClient("dataApi");
@@ -24,13 +17,6 @@ public class AboutMeService : IAboutMeService
 
     public async Task<Result> AddAboutMeAsync(AddAboutMeMVCDto dto)
     {
-        var validationResult = await _addValidator.ValidateAsync(dto);
-
-        if (!validationResult.IsValid)
-        {
-            var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return Result.Invalid(new ValidationError(errorMessage));
-        }
 
         using var content = new MultipartFormDataContent();
 
@@ -85,13 +71,6 @@ public class AboutMeService : IAboutMeService
 
     public async Task<Result> UpdateAboutMeAsync(UpdateAboutMeMVCDto dto)
     {
-        var validationResult = await _updateValidator.ValidateAsync(dto);
-
-        if (!validationResult.IsValid)
-        {
-            var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return Result.Invalid(new ValidationError(errorMessage));
-        }
 
         var updateApiDto = new UpdateAboutMeApiDto()
         {
@@ -130,8 +109,7 @@ public class AboutMeService : IAboutMeService
            
         }
 
-
-        var apiResponse = await DataApiClient.PostAsJsonAsync("update-about-me", updateApiDto);
+        var apiResponse = await DataApiClient.PutAsJsonAsync("update-about-me", updateApiDto);
 
         return await apiResponse.Content.ReadFromJsonAsync<Result>();
     }
