@@ -46,7 +46,6 @@ public class BlogPostService : IBlogPostService
 
     public async Task<Result<List<AllBlogPostsDto>>> GetAllBlogPostsAsync()
     {
-
         var apiResponse = await DataApiClient.GetAsync("all-blog-posts");
 
         return await apiResponse.Content.ReadFromJsonAsync<Result<List<AllBlogPostsDto>>>();

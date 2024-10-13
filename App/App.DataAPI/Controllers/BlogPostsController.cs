@@ -41,7 +41,7 @@ public class BlogPostsController : ControllerBase
         return StatusCode(500, result);
     }
 
-    [HttpGet]
+    [HttpGet("/all-blog-posts")]
     public async Task<IActionResult> GetAllBlogPosts()
     {
          var result = await _blogPostService.GetAllBlogPostsAsync();
