@@ -64,13 +64,19 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
 
         var result = await aboutMeService.AddAboutMeAsync(mvcDto);
 
-        if (!result.IsSuccess)
+        if (result.Status == ResultStatus.Invalid)
         {
-            ViewBag.ErrorMessage = "Bir hata oluştu. Lütfen tekrar deneyiniz.";
+            ViewBag.ErrorMessage = string.Join(", ", result.ValidationErrors);
+            return View(model);
+        }
+
+        if(result.Status == ResultStatus.Error)
+        {
+            ViewBag.ErrorMessage = result.Errors.ToString();
             return View();
         }
 
-        TempData["Message"] = " -Hakkımda- bilgileri başarıyla eklendi.";
+        TempData["Message"] = result.SuccessMessage;
 
         return Redirect("/about-me");
     }
