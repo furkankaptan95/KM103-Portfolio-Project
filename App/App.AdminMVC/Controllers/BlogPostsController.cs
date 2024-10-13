@@ -1,4 +1,5 @@
-﻿using App.ViewModels.AdminMvc.BlogPostsViewModels;
+﻿using App.DTOs.BlogPostDtos;
+using App.ViewModels.AdminMvc.BlogPostsViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
@@ -49,6 +50,12 @@ public class BlogPostsController : Controller
         {
             return View(addBlogPostModel);
         }
+
+        var dto = new AddBlogPostDto
+        {
+            Content = addBlogPostModel.Content,
+            Title = addBlogPostModel.Title,
+        };
 
         return View();
     }
