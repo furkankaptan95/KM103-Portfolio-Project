@@ -48,11 +48,12 @@ public class AboutMeController : ControllerBase
     public async Task<IActionResult> AddAboutMeAsync([FromBody] AddAboutMeApiDto dto)
     {
         var validationResult = await _addValidator.ValidateAsync(dto);
+        string errorMessage;
 
         if (!validationResult.IsValid)
         {
-            var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return BadRequest(Result.Error(errorMessage));
+            errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
         }
 
         var result = await _aboutMeService.AddAboutMeAsync(dto);
@@ -62,7 +63,9 @@ public class AboutMeController : ControllerBase
             return Ok(result);
         }
 
-        return StatusCode(500, "An error occurred while processing your request.");
+        errorMessage = result.Errors.FirstOrDefault();
+
+        return StatusCode(500,errorMessage);
     }
 
 

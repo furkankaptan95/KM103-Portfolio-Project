@@ -28,12 +28,10 @@ public class AboutMeService : IAboutMeService
     {
         var validationResult = await _addValidator.ValidateAsync(dto);
 
-        // Eğer doğrulama başarısızsa, uygun bir sonuç döndür
         if (!validationResult.IsValid)
         {
-            // Hataları bir Result nesnesi ile dönebilirsiniz
             var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return Result.Error(errorMessage);
+            return Result.Invalid(new ValidationError(errorMessage));
         }
 
         using var content = new MultipartFormDataContent();
@@ -50,7 +48,7 @@ public class AboutMeService : IAboutMeService
 
         if (!fileResponse.IsSuccessStatusCode)
         {
-            return Result.Error();
+            return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu.");
         }
 
         var urlDto = await fileResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
