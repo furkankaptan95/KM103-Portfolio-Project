@@ -48,7 +48,7 @@ public class AboutMeService(DataApiDbContext dataApiDb) : IAboutMeService
 
             if (entity == null)
             {
-                return Result<ShowAboutMeDto>.NotFound("Hakkımda bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurunuz.");
+                return Result<ShowAboutMeDto>.NotFound();
             }
 
             var dto = new ShowAboutMeDto()
