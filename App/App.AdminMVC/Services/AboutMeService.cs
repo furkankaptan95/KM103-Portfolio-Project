@@ -13,8 +13,6 @@ public class AboutMeService : IAboutMeService
     private readonly IValidator<AddAboutMeMVCDto> _addValidator;
 
     private readonly IValidator<UpdateAboutMeMVCDto> _updateValidator;
-
-    // Primary constructor
     public AboutMeService(IHttpClientFactory factory, IValidator<AddAboutMeMVCDto> addValidator, IValidator<UpdateAboutMeMVCDto> updateValidator)
     {
         _factory = factory;
