@@ -13,11 +13,13 @@ namespace App.DataAPI.Controllers;
 public class BlogPostsController : ControllerBase
 {
     private readonly IValidator<AddBlogPostDto> _addValidator;
+    private readonly IValidator<UpdateBlogPostDto> _updateValidator;
     private readonly IBlogPostService _blogPostService;
-    public BlogPostsController(IValidator<AddBlogPostDto> addValidator, IBlogPostService blogPostService)
+    public BlogPostsController(IValidator<AddBlogPostDto> addValidator, IValidator<UpdateBlogPostDto> updateValidator, IBlogPostService blogPostService)
     {
         _addValidator = addValidator;
         _blogPostService = blogPostService;
+        _updateValidator = updateValidator;
     }
 
     [HttpPost("/add-blog-post")]
@@ -70,5 +72,27 @@ public class BlogPostsController : ControllerBase
         }
 
         return Ok(result);
+    }
+
+    [HttpPost("/update-blog-post")]
+    public async Task<IActionResult> UpdateBlogPostAsync([FromBody] UpdateBlogPostDto dto)
+    {
+        var validationResult = await _updateValidator.ValidateAsync(dto);
+
+        if (!validationResult.IsValid)
+        {
+            var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+        }
+
+        var result = await _blogPostService.UpdateBlogPostAsync(dto);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result);
+        }
+
+        return StatusCode(500, result);
+
     }
 }
