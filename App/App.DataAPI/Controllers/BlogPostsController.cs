@@ -74,7 +74,7 @@ public class BlogPostsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("/update-blog-post")]
+    [HttpPut("/update-blog-post")]
     public async Task<IActionResult> UpdateBlogPostAsync([FromBody] UpdateBlogPostDto dto)
     {
         var validationResult = await _updateValidator.ValidateAsync(dto);
