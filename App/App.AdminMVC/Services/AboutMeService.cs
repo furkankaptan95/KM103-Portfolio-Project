@@ -47,6 +47,9 @@ public class AboutMeService : IAboutMeService
         
         var fileResponse = await FileApiClient.PostAsync("upload-files", content);
 
+        var errorList = new ErrorList(new List<string>());
+
+
         if (!fileResponse.IsSuccessStatusCode)
         {
             return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu.");
