@@ -3,6 +3,7 @@ using App.Data.Entities;
 using App.DTOs.AboutMeDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services;
@@ -60,9 +61,9 @@ public class AboutMeService(DataApiDbContext dataApiDb) : IAboutMeService
             return Result<ShowAboutMeDto>.Success(dto);
         }
 
-        catch (DbUpdateException dbEx)
+        catch (SqlException sqlEx)
         {
-            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
 
         catch (Exception ex)
