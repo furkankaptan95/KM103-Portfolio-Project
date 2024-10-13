@@ -33,6 +33,11 @@ public class BlogPostsController : ControllerBase
 
         var result = await _blogPostService.AddBlogPostAsync(dto);
 
-        return Ok();
+        if (result.IsSuccess)
+        {
+            return Ok(result);
+        }
+
+        return StatusCode(500, result);
     }
 }
