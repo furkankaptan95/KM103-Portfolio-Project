@@ -61,7 +61,7 @@ public class BlogPostService : IBlogPostService
 
     public async Task<Result> UpdateBlogPostAsync(UpdateBlogPostDto dto)
     {
-        var apiResponse = await DataApiClient.PutAsJsonAsync("updaet-blog-post", dto);
+        var apiResponse = await DataApiClient.PutAsJsonAsync("update-blog-post", dto);
 
         return await apiResponse.Content.ReadFromJsonAsync<Result>();
     }
