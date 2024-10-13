@@ -53,4 +53,22 @@ public class BlogPostsController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpGet("/blog-post-{id:int}")]
+    public async Task<IActionResult> GetById([FromRoute] int id)
+    {
+        var result = await _blogPostService.GetBlogPostById(id);
+
+        if (!result.IsSuccess)
+        {
+            if (result.Status == ResultStatus.NotFound)
+            {
+                return NotFound(result);
+            }
+
+            return StatusCode(500,result);
+        }
+
+        return Ok(result);
+    }
 }
