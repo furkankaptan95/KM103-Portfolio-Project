@@ -153,7 +153,7 @@ public class AboutMeService : IAboutMeService
 
             else
             {
-                return Result.SuccessWithMessage("-Hakkında- bilgileriniz başarılı bir şekilde güncellendi.");
+                return Result.SuccessWithMessage("");
             }
     }
 }

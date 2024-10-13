@@ -8,6 +8,6 @@ public class UpdateAboutMeApiDtoValidator : AbstractValidator<UpdateAboutMeApiDt
     {
         RuleFor(x => x.Introduction)
            .NotEmpty().WithMessage("Giriş kısmı boş olamaz.")
-            .Length(10, 1000).WithMessage("Başlık 10 ile 1000 karakter arasında olmalı.");
+            .Length(10, 1000).WithMessage("Giriş 10 ile 1000 karakter arasında olmalı.");
     }
 }
