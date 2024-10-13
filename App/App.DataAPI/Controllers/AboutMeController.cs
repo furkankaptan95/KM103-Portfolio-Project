@@ -63,9 +63,8 @@ public class AboutMeController : ControllerBase
             return Ok(result);
         }
 
-        errorMessage = result.Errors.FirstOrDefault();
+     return StatusCode(500,result);
 
-        return StatusCode(500,errorMessage);
     }
 
 

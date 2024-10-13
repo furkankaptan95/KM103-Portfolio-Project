@@ -23,16 +23,14 @@ namespace App.DataAPI.Services
                 await dataApiDb.AboutMes.AddAsync(entity);
                 await dataApiDb.SaveChangesAsync();
 
-                return Result.Success();
+                return Result.SuccessWithMessage(" -Hakkımda- bilgileri başarıyla eklendi. ");
             }
             catch (DbUpdateException dbEx)
             {
-                // Veritabanı ile ilgili bir hata oluştu
                 return Result.Error("Veritabanı hatası: " + dbEx.Message);
             }
             catch (Exception ex)
             {
-                // Diğer tüm hatalar
                 return Result.Error("Bir hata oluştu: " + ex.Message);
             }
         }

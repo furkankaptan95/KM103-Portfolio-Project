@@ -64,17 +64,16 @@ public class FileController : ControllerBase
                 urlDto.ImageUrl2 = fileName2;
             }
 
-            // Başarılı yanıt döndür
             return Ok(urlDto);
         }
+
         catch (IOException ex)
         {
-            // Dosya sistemiyle ilgili bir hata oluşursa
             return StatusCode(500, $"Dosya yükleme sırasında bir hata oluştu: {ex.Message}");
         }
+
         catch (Exception ex)
         {
-            // Genel bir hata varsa
             return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
         }
     }
