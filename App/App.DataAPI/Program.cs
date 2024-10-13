@@ -3,9 +3,10 @@ using App.Data.DbContexts;
 using App.Services.AdminServices.Abstract;
 using App.DataAPI.Services;
 using App.Core.Validators.AboutMeValidators;
-using App.DTOs.FileApiDtos;
 using FluentValidation;
 using App.DTOs.AboutMeDtos;
+using App.DTOs.BlogPostDtos;
+using App.Core.Validators.BlogPostValidators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,8 +23,11 @@ builder.Services.AddDbContext<DataApiDbContext>(options =>
 });
 
 builder.Services.AddScoped<IAboutMeService, AboutMeService>();
+
+
 builder.Services.AddTransient<IValidator<AddAboutMeApiDto>, AddAboutMeApiDtoValidator>();
 builder.Services.AddTransient<IValidator<UpdateAboutMeApiDto>, UpdateAboutMeApiDtoValidator>();
+builder.Services.AddTransient<IValidator<AddBlogPostDto>, AddBlogPostDtoValidator>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
