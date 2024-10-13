@@ -1,6 +1,7 @@
 ﻿using App.DTOs.BlogPostDtos;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.BlogPostsViewModels;
+using App.ViewModels.AdminMvc.ExperiencesViewModels;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,29 +13,29 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
     [Route("all-blog-posts")]
     public async Task<IActionResult> AllBlogPosts()
     {
-        var model = new List<AllBlogPostsViewModel>
+        var models = new List<AllBlogPostsViewModel>();
+
+        var result = await blogPostService.GetAllBlogPostsAsync();
+        if (!result.IsSuccess)
         {
-            new AllBlogPostsViewModel
-            {
-                Id = 1,
-                PublishDate = DateTime.Now.AddYears(-2),
-                Title = "Post1",
-                IsVisible = true,
-                Content ="There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.",
-            },
-            new AllBlogPostsViewModel
-            {
-                Id = 2,
-                PublishDate = DateTime.Now.AddYears(-1),
-                Title = "Post2",
-                IsVisible = false,
-                Content ="Deneme There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.",
-            },
+            ViewData["ErrorMessage"] = "Blog Postlar getirilirken beklenmedik bir hata oluştu.";
+            return View(models);
+        }
 
-        };
+        var dtos = result.Value;
 
+         models = dtos
+        .Select(item => new AllBlogPostsViewModel
+         {
+            Id = item.Id,
+            Title = item.Title,
+            Content = item.Content,
+            PublishDate = item.PublishDate,
+            IsVisible = item.IsVisible,
+         })
+        .ToList();
 
-        return View(model);
+        return View(models);
     }
 
     [HttpGet]
