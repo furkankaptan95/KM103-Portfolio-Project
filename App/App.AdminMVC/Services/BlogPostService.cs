@@ -52,6 +52,11 @@ public class BlogPostService : IBlogPostService
 
     }
 
+    public Task<Result<BlogPostToUpdateDto>> GetBlogPostById(int id)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<Result> UpdateBlogPostAsync(UpdateBlogPostDto dto)
     {
         throw new NotImplementedException();

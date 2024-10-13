@@ -82,6 +82,11 @@ public class BlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
         }
     }
 
+    public Task<Result<BlogPostToUpdateDto>> GetBlogPostById(int id)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<Result> UpdateBlogPostAsync(UpdateBlogPostDto dto)
     {
         throw new NotImplementedException();

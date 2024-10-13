@@ -8,5 +8,6 @@ public interface IBlogPostService
     Task<Result> AddBlogPostAsync(AddBlogPostDto dto);
     Task<Result> UpdateBlogPostAsync(UpdateBlogPostDto dto);
     Task<Result> DeleteBlogPostAsync(int id);
+    Task<Result<BlogPostToUpdateDto>> GetBlogPostById(int id);
     Task<Result> ChangeBlogPostVisibilityAsync(int id);
 }
