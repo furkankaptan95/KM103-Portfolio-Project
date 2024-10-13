@@ -2,21 +2,14 @@
 using App.DTOs.FileApiDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
-using Azure;
-using FluentValidation;
-using System.Net;
 
 namespace App.AdminMVC.Services;
 public class AboutMeService : IAboutMeService
 {
     private readonly IHttpClientFactory _factory;
-    private readonly IValidator<AddAboutMeMVCDto> _addValidator;
-    private readonly IValidator<UpdateAboutMeMVCDto> _updateValidator;
-    public AboutMeService(IHttpClientFactory factory, IValidator<AddAboutMeMVCDto> addValidator, IValidator<UpdateAboutMeMVCDto> updateValidator)
+    public AboutMeService(IHttpClientFactory factory)
     {
         _factory = factory;
-        _addValidator = addValidator;
-        _updateValidator = updateValidator;
     }
 
     private HttpClient DataApiClient => _factory.CreateClient("dataApi");
