@@ -28,10 +28,8 @@ public class AboutMeService : IAboutMeService
     {
         var validationResult = await _addValidator.ValidateAsync(dto);
 
-        // Eğer doğrulama başarısızsa, uygun bir sonuç döndür
         if (!validationResult.IsValid)
         {
-            // Hataları bir Result nesnesi ile dönebilirsiniz
             var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
             return Result.Error(errorMessage);
         }
