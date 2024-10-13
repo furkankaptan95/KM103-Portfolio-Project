@@ -153,7 +153,21 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
     [Route("delete-blog-post-{id:int}")]
     public async Task<IActionResult> DeleteBlogPost([FromRoute] int id)
     {
-        return View();
+        var result = await blogPostService.DeleteBlogPostAsync(id);
+
+        if (!result.IsSuccess)
+        {
+            if (result.Status == ResultStatus.NotFound)
+            {
+                TempData["ErrorMessage"] = "Silmek istediğiniz Blog Post bulunamadı!..";
+            }
+
+            TempData["ErrorMessage"] = "Blog Post silinirken beklenmedik bir hata oluştu..";
+        }
+
+        TempData["Message"] = "Blog Post başarıyla silindi.";
+
+        return Redirect("/all-blog-posts");
     }
 
     [HttpGet]
