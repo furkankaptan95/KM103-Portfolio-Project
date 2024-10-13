@@ -16,6 +16,7 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
         var models = new List<AllBlogPostsViewModel>();
 
         var result = await blogPostService.GetAllBlogPostsAsync();
+
         if (!result.IsSuccess)
         {
             ViewData["ErrorMessage"] = "Blog Postlar getirilirken beklenmedik bir hata oluştu.";
