@@ -16,18 +16,15 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
 
         if (!result.IsSuccess)
         {
-            var errorMessage = result.Errors.FirstOrDefault();
-
-            
+            string errorMessage = result.Errors.FirstOrDefault();
 
             if (result.Status == ResultStatus.NotFound)
             {
                 TempData["Message"] = errorMessage;
-
                 return Redirect("/add-about-me");
             }
 
-            TempData["ErrorMessage"] = "Beklenmeyen bir hata oluştu.";
+            TempData["ErrorMessage"] = errorMessage;
 
             return Redirect("/home/index");
         }

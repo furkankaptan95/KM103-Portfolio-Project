@@ -70,6 +70,8 @@ public class AboutMeService : IAboutMeService
             if (result.Status == ResultStatus.NotFound)
             {
                 errorMessage = "Hakkımda bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurunuz.";
+
+                return Result.NotFound(errorMessage);
             }
 
             errorMessage = "Beklenmeyen bir hata oluştu.";
