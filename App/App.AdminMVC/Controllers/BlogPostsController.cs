@@ -122,7 +122,31 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
             return View(updateBlogPostModel);
         }
 
-        return View();
+        var dto = new UpdateBlogPostDto
+        {
+            Content = updateBlogPostModel.Content,
+            Title = updateBlogPostModel.Title,
+            Id = updateBlogPostModel.Id
+        };
+
+        var result = await blogPostService.UpdateBlogPostAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+
+            if(result.Status == ResultStatus.Invalid)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return View(updateBlogPostModel);
+            }
+
+            TempData["ErrorMessage"] ="Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..";
+            return Redirect("/all-blog-posts");
+        }
+
+        TempData["Message"] = "Blog Post başarıyla güncellendi.";
+
+        return Redirect("/all-blog-posts");
     }
 
     [HttpGet]
