@@ -112,8 +112,28 @@ public class BlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
         }
     }
 
-    public Task<Result> UpdateBlogPostAsync(UpdateBlogPostDto dto)
+    public async Task<Result> UpdateBlogPostAsync(UpdateBlogPostDto dto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var entity = await dataApiDb.BlogPosts.FirstOrDefaultAsync(x => x.Id == dto.Id);
+           
+            entity.Title = dto.Title;
+            entity.Content = dto.Content;
+            entity.UpdatedAt = DateTime.Now;
+
+             dataApiDb.BlogPosts.Update(entity);
+             await dataApiDb.SaveChangesAsync();
+
+            return Result.SuccessWithMessage(" Blog Post başarıyla güncellendi. ");
+        }
+        catch (DbUpdateException dbEx)
+        {
+            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
     }
 }
