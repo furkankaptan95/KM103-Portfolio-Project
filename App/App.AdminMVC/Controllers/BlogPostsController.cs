@@ -19,22 +19,25 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
 
         if (!result.IsSuccess)
         {
-            ViewData["ErrorMessage"] = "Blog Postlar getirilirken beklenmedik bir hata oluştu.";
-            return View(models);
+            TempData["ErrorMessage"] = "Blog Postlar getirilirken beklenmedik bir hata oluştu.";
+            return Redirect("/home/index");
         }
 
         var dtos = result.Value;
 
-         models = dtos
-        .Select(item => new AllBlogPostsViewModel
-         {
-            Id = item.Id,
-            Title = item.Title,
-            Content = item.Content,
-            PublishDate = item.PublishDate,
-            IsVisible = item.IsVisible,
-         })
-        .ToList();
+        if(dtos.Count > 0)
+        {
+           models = dtos
+          .Select(item => new AllBlogPostsViewModel
+          {
+              Id = item.Id,
+              Title = item.Title,
+              Content = item.Content,
+              PublishDate = item.PublishDate,
+              IsVisible = item.IsVisible,
+          })
+          .ToList();
+        }
 
         return View(models);
     }
