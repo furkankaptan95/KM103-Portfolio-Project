@@ -2,7 +2,6 @@
 using App.Data.Entities;
 using App.DTOs.BlogPostDtos;
 using App.Services.AdminServices.Abstract;
-using App.ViewModels.AdminMvc.BlogPostsViewModels;
 using Ardalis.Result;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -41,9 +40,30 @@ public class BlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
         throw new NotImplementedException();
     }
 
-    public Task<Result> DeleteBlogPostAsync(int id)
+    public async Task<Result> DeleteBlogPostAsync(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var entity = await dataApiDb.BlogPosts.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity is null)
+            {
+                return Result.NotFound();
+            }
+
+             dataApiDb.BlogPosts.Remove(entity);
+             await dataApiDb.SaveChangesAsync();
+
+            return Result.Success();
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
     }
 
     public async Task<Result<List<AllBlogPostsDto>>> GetAllBlogPostsAsync()

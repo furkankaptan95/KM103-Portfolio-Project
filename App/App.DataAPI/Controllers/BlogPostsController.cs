@@ -95,4 +95,21 @@ public class BlogPostsController : ControllerBase
         return StatusCode(500, result);
 
     }
+    [HttpDelete("/delete-blog-post-{id:int}")]
+    public async Task<IActionResult> DeleteAsync([FromRoute] int id)
+    {
+        var result = await _blogPostService.DeleteBlogPostAsync(id);
+
+        if (!result.IsSuccess)
+        {
+            if(result.Status == ResultStatus.NotFound)
+            {
+                return NotFound(result);
+            }
+
+            return StatusCode(500,result);
+        }
+
+        return Ok(result);
+    }
 }
