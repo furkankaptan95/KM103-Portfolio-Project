@@ -13,6 +13,7 @@ public class BlogPostEntityConfiguration : IEntityTypeConfiguration<BlogPostEnti
         builder.Property(bp=>bp.Title).IsRequired().HasColumnType("varchar(100)");
         builder.Property(bp => bp.Content).IsRequired();
         builder.Property(bp => bp.PublishDate).IsRequired().HasColumnType("datetime");
+        builder.Property(bp => bp.UpdatedAt).HasColumnType("datetime");
 
         builder.HasMany(bp => bp.Comments)
             .WithOne(c => c.BlogPost)

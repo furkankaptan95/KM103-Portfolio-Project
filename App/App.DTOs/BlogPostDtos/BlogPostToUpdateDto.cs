@@ -1,5 +1,6 @@
 ﻿namespace App.DTOs.BlogPostDtos;
-public class UpdateBlogPostDto
+
+public class BlogPostToUpdateDto
 {
     public int Id { get; set; }
     public string Title { get; set; }

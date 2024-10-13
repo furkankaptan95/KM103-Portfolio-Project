@@ -52,6 +52,13 @@ public class BlogPostService : IBlogPostService
 
     }
 
+    public async Task<Result<BlogPostToUpdateDto>> GetBlogPostById(int id)
+    {
+        var apiResponse = await DataApiClient.GetAsync($"blog-post-{id}");
+
+        return await apiResponse.Content.ReadFromJsonAsync<Result<BlogPostToUpdateDto>>();
+    }
+
     public Task<Result> UpdateBlogPostAsync(UpdateBlogPostDto dto)
     {
         throw new NotImplementedException();
