@@ -24,9 +24,11 @@ public class BlogPostService : IBlogPostService
         throw new NotImplementedException();
     }
 
-    public Task<Result> DeleteBlogPostAsync(int id)
+    public async Task<Result> DeleteBlogPostAsync(int id)
     {
-        throw new NotImplementedException();
+        var apiResponses = await DataApiClient.DeleteAsync($"delete-blog-post-{id}");
+
+        return await apiResponses.Content.ReadFromJsonAsync<Result>();
     }
 
     public async Task<Result<List<AllBlogPostsDto>>> GetAllBlogPostsAsync()
