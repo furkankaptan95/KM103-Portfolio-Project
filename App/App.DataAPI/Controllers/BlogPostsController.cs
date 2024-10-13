@@ -4,6 +4,7 @@ using Ardalis.Result;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices;
 
 namespace App.DataAPI.Controllers;
 
@@ -38,5 +39,18 @@ public class BlogPostsController : ControllerBase
         }
 
         return StatusCode(500, result);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllBlogPosts()
+    {
+         var result = await _blogPostService.GetAllBlogPostsAsync();
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
     }
 }
