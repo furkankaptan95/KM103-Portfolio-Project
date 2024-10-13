@@ -36,6 +36,7 @@ builder.Services.AddHttpClient("fileApi", c =>
 });
 
 builder.Services.AddScoped<IAboutMeService, AboutMeService>();
+builder.Services.AddScoped<IBlogPostService, BlogPostService>();
 builder.Services.AddTransient<IValidator<AddAboutMeMVCDto>, AddAboutMeMVCDtoValidator>();
 builder.Services.AddTransient<IValidator<UpdateAboutMeMVCDto>, UpdateAboutMeMVCDtoValidator>();
 
