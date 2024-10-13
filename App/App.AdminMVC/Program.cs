@@ -40,14 +40,6 @@ builder.Services.AddHttpClient("fileApi", c =>
 builder.Services.AddScoped<IAboutMeService, AboutMeService>();
 builder.Services.AddScoped<IBlogPostService, BlogPostService>();
 
-
-
-builder.Services.AddTransient<IValidator<AddAboutMeMVCDto>, AddAboutMeMVCDtoValidator>();
-builder.Services.AddTransient<IValidator<UpdateAboutMeMVCDto>, UpdateAboutMeMVCDtoValidator>();
-builder.Services.AddTransient<IValidator<AddBlogPostDto>, AddBlogPostDtoValidator>();
-
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

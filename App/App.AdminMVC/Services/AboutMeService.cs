@@ -24,13 +24,6 @@ public class AboutMeService : IAboutMeService
 
     public async Task<Result> AddAboutMeAsync(AddAboutMeMVCDto dto)
     {
-        var validationResult = await _addValidator.ValidateAsync(dto);
-
-        if (!validationResult.IsValid)
-        {
-            var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return Result.Invalid(new ValidationError(errorMessage));
-        }
 
         using var content = new MultipartFormDataContent();
 
@@ -85,13 +78,6 @@ public class AboutMeService : IAboutMeService
 
     public async Task<Result> UpdateAboutMeAsync(UpdateAboutMeMVCDto dto)
     {
-        var validationResult = await _updateValidator.ValidateAsync(dto);
-
-        if (!validationResult.IsValid)
-        {
-            var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return Result.Invalid(new ValidationError(errorMessage));
-        }
 
         var updateApiDto = new UpdateAboutMeApiDto()
         {
@@ -129,7 +115,6 @@ public class AboutMeService : IAboutMeService
             updateApiDto.ImageUrl2 = urlDto.ImageUrl2;
            
         }
-
 
         var apiResponse = await DataApiClient.PostAsJsonAsync("update-about-me", updateApiDto);
 
