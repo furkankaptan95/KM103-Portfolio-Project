@@ -69,8 +69,8 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
 
         if (result.Status == ResultStatus.Error)
         {
-            ViewBag.ErrorMessage = result.Errors.FirstOrDefault();
-            return View();
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return View("/all-blog-posts");
         }
 
         TempData["Message"] = result.SuccessMessage;

@@ -1,5 +1,20 @@
 ﻿@model List<AllBlogPostsViewModel>
 
+@if (TempData["Message"] is not null)
+{
+    <div class="alert custom-alert-success mt-5">
+        @TempData["Message"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert custom-alert-error  mt-5">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+
 <div class="container mt-4">
     <h2 class="text-center">Tüm Blog Postlar</h2>
     <table class="table table-bordered table-striped table-responsive-md mt-4">
@@ -92,5 +107,33 @@
     </table>
 </div>
 
+@section Styles{
+    <style>
+        .custom-alert-success {
+            display: inline-block;
+            top: 10px; /* Varsayılan üst boşluk */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
 
+        .custom-alert-error {
+            display: inline-block;
+            top: 10px; /* Varsayılan üst boşluk */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+}
 

@@ -11,7 +11,6 @@ public class AboutMeService : IAboutMeService
 {
     private readonly IHttpClientFactory _factory;
     private readonly IValidator<AddAboutMeMVCDto> _addValidator;
-
     private readonly IValidator<UpdateAboutMeMVCDto> _updateValidator;
     public AboutMeService(IHttpClientFactory factory, IValidator<AddAboutMeMVCDto> addValidator, IValidator<UpdateAboutMeMVCDto> updateValidator)
     {

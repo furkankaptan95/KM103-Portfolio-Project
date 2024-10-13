@@ -19,8 +19,7 @@ public class BlogPostsController : ControllerBase
         _blogPostService = blogPostService;
     }
 
-    [HttpPost]
-    [Route("/add-blog-post")]
+    [HttpPost("/add-blog-post")]
     public async Task<IActionResult> AddBlogPostAsync([FromBody] AddBlogPostDto dto)
     {
         var validationResult = await _addValidator.ValidateAsync(dto);
