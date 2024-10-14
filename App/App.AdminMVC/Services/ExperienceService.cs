@@ -26,9 +26,26 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
         return Result.SuccessWithMessage("Deneyim bilgisi başarıyla eklendi.");
     }
 
-    public Task<Result> ChangeExperienceVisibilityAsync(int id)
+    public async Task<Result> ChangeExperienceVisibilityAsync(int id)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.GetAsync($"change-experience-visibility-{id}");
+
+        if (apiResponse.IsSuccessStatusCode)
+        {
+            return Result.SuccessWithMessage("Deneyimin görünürlüğü başarıyla değiştirildi.");
+        }
+
+        string errorMessage;
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+            if (result.Status == ResultStatus.NotFound)
+            {
+                errorMessage = "Görünürlüğünü değiştirmek istediğiniz Deneyim bulunamadı!..";
+            }
+
+            errorMessage = "Deneyimin görünürlüğü değiştirilirken beklenmeyen bir hata oluştu..";
+
+            return Result.Error(errorMessage);
     }
 
     public Task<Result> DeleteExperienceAsync(int id)
