@@ -81,7 +81,7 @@ public class AboutMeService : IAboutMeService
                 return Result.NotFound(errorMessage);
             }
 
-            errorMessage = "Beklenmeyen bir hata oluştu.";
+            errorMessage = "Güncellenecek bilgiler getirilirken beklenmeyen bir hata oluştu.";
 
             return Result.Error(errorMessage);
         }
@@ -123,7 +123,7 @@ public class AboutMeService : IAboutMeService
 
             if (!fileResponse.IsSuccessStatusCode)
             {
-                return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu.");
+                return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
             }
 
             var urlDto = await fileResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
@@ -135,6 +135,13 @@ public class AboutMeService : IAboutMeService
 
         var apiResponse = await DataApiClient.PutAsJsonAsync("update-about-me", updateApiDto);
 
-        return await apiResponse.Content.ReadFromJsonAsync<Result>();
+        var result =  await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (!result.IsSuccess)
+        {
+            return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
+        }
+
+        return Result.SuccessWithMessage(" -Hakkımda- bilgileriniz başarılı bir şekilde güncellendi. ");
     }
 }

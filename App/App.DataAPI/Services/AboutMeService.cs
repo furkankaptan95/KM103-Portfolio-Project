@@ -99,7 +99,7 @@ public class AboutMeService(DataApiDbContext dataApiDb) : IAboutMeService
             dataApiDb.AboutMes.Update(entity);
             await dataApiDb.SaveChangesAsync();
 
-            return Result.SuccessWithMessage(" -Hakkında- bilgileriniz başarılı bir şekilde güncellendi. ");
+            return Result.Success();
         }
 
         catch (DbUpdateException dbEx)
