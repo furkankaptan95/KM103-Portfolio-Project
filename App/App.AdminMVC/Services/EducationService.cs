@@ -30,9 +30,27 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
         throw new NotImplementedException();
     }
 
-    public Task<Result> DeleteEducationAsync(int id)
+    public async Task<Result> DeleteEducationAsync(int id)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.DeleteAsync($"delete-education-{id}");
+
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (!result.IsSuccess)
+        {
+            string errorMessage;
+
+            if (result.Status == ResultStatus.NotFound)
+            {
+                errorMessage = "Silmek istediğiniz Eğitim bilgisi bulunamadı!..";
+            }
+
+            errorMessage = "Eğitim bilgisi silinirken beklenmedik bir hata oluştu..";
+
+            return Result.Error(errorMessage);
+        }
+
+        return Result.SuccessWithMessage("Eğitim bilgisi başarıyla silindi.");
     }
 
     public async Task<Result<List<AllEducationsDto>>> GetAllEducationsAsync()
