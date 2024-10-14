@@ -35,7 +35,7 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
     {
         throw new NotImplementedException();
     }
-
+    
     public async Task<Result<List<AllExperiencesDto>>> GetAllExperiencesAsync()
     {
         var apiResponse = await DataApiClient.GetAsync("all-experiences");
@@ -55,8 +55,22 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
         return Result<List<AllExperiencesDto>>.Success(result.Value);
     }
 
-    public Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)
+    public async Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.PutAsJsonAsync("update-experience", dto);
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
+        }
+
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (!result.IsSuccess)
+        {
+            return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
+        }
+
+        return Result.SuccessWithMessage("Deneyim bilgileri başarıyla güncellendi.");
     }
 }
