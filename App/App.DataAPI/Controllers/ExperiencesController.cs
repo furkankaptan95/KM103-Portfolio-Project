@@ -14,9 +14,10 @@ public class ExperiencesController : ControllerBase
 {
     private readonly IExperienceService _experiencesService;
     private readonly IValidator<AddExperienceDto> _addValidator;
-    public ExperiencesController(IExperienceService experiencesService)
+    public ExperiencesController(IExperienceService experiencesService, IValidator<AddExperienceDto> addValidator)
     {
         _experiencesService = experiencesService;
+        _addValidator = addValidator;
     }
 
     [HttpPost("/add-experience")]
@@ -31,6 +32,19 @@ public class ExperiencesController : ControllerBase
         }
 
         var result = await _experiencesService.AddExperienceAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpGet("/all-experiences")]
+    public async Task<IActionResult> GetAllAsync()
+    {
+        var result = await _experiencesService.GetAllExperiencesAsync();
 
         if (!result.IsSuccess)
         {

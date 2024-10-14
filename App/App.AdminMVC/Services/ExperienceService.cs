@@ -1,4 +1,5 @@
-﻿using App.DTOs.ExperienceDtos;
+﻿using App.DTOs.EducationDtos;
+using App.DTOs.ExperienceDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 
@@ -35,9 +36,23 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
         throw new NotImplementedException();
     }
 
-    public Task<Result<List<AllExperiencesDto>>> GetAllExperiencesAsync()
+    public async Task<Result<List<AllExperiencesDto>>> GetAllExperiencesAsync()
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.GetAsync("all-experiences");
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result<List<AllExperiencesDto>>.Error("Deneyimler getirilirken beklenmedik bir hata oluştu..");
+        }
+
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<AllExperiencesDto>>>();
+
+        if (!result.IsSuccess)
+        {
+            return Result<List<AllExperiencesDto>>.Error("Deneyimler getirilirken beklenmedik bir hata oluştu..");
+        }
+
+        return Result<List<AllExperiencesDto>>.Success(result.Value);
     }
 
     public Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)

@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-
-namespace App.ViewModels.AdminMvc.EducationsViewModels.Validation;
+namespace App.ViewModels.AdminMvc.ExperiencesViewModels.Validation;
 public class EndDateAfterStartDateAttribute : ValidationAttribute
 {
     protected override ValidationResult IsValid(object value, ValidationContext validationContext)

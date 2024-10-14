@@ -50,18 +50,32 @@ public class ExperiencesController(IExperienceService experienceService) : Contr
     [Route("all-experiences")]
     public async Task<IActionResult> AllExperiences()
     {
-        List<AllExperiencesViewModel> models = experiences
-      .Select(item => new AllExperiencesViewModel
-      {
-          Id = item.Id,
-          Title = item.Title,
-          Company = item.Company,
-          Description = item.Description,
-          StartDate = item.StartDate,
-          EndDate = item.EndDate,
-          IsVisible = item.IsVisible
-      })
-      .ToList();
+        var result = await experienceService.GetAllExperiencesAsync();
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return Redirect("/home/index");
+        }
+
+        var models = new List<AllExperiencesViewModel>();
+        var dtos = result.Value;
+
+        if (dtos.Count > 0)
+        {
+            models = dtos
+           .Select(item => new AllExperiencesViewModel
+           {
+               Id = item.Id,
+               Title = item.Title,
+               Company = item.Company,
+               Description = item.Description,
+               StartDate = item.StartDate,
+               EndDate = item.EndDate,
+               IsVisible = item.IsVisible
+           })
+           .ToList();
+        }
 
         return View(models);
     }
