@@ -72,7 +72,7 @@ public class AboutMeService : IAboutMeService
 
         if (!apiResponse.IsSuccessStatusCode)
         {
-            return Result.Error(" -Hakkımda- bilgileri getirilirken beklenmedik bir hata oluştu..");
+            return Result<ShowAboutMeDto>.Error(" -Hakkımda- bilgileri getirilirken beklenmedik bir hata oluştu..");
         }
 
         var result = await apiResponse.Content.ReadFromJsonAsync<Result<ShowAboutMeDto>>();
@@ -85,15 +85,15 @@ public class AboutMeService : IAboutMeService
             {
                 errorMessage = "Hakkımda bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurunuz.";
 
-                return Result.NotFound(errorMessage);
+                return Result<ShowAboutMeDto>.NotFound(errorMessage);
             }
 
             errorMessage = "Güncellenecek bilgiler getirilirken beklenmeyen bir hata oluştu.";
 
-            return Result.Error(errorMessage);
+            return Result<ShowAboutMeDto>.Error(errorMessage);
         }
 
-        return Result.Success(result.Value);
+        return Result<ShowAboutMeDto>.Success(result.Value);
     }
     public Task<Result> UpdateAboutMeAsync(UpdateAboutMeApiDto dto)
     {

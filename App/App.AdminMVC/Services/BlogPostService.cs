@@ -93,17 +93,17 @@ public class BlogPostService : IBlogPostService
 
         if (!apiResponse.IsSuccessStatusCode)
         {
-            return Result.Error("Blog Postlar getirilirken beklenmedik bir hata oluştu..");
+            return Result<List<AllBlogPostsDto>>.Error("Blog Postlar getirilirken beklenmedik bir hata oluştu..");
         }
 
         var result =  await apiResponse.Content.ReadFromJsonAsync<Result<List<AllBlogPostsDto>>>();
 
         if (!result.IsSuccess)
         {
-            return Result.Error("Blog Postlar getirilirken beklenmedik bir hata oluştu.");
+            return Result<List<AllBlogPostsDto>>.Error("Blog Postlar getirilirken beklenmedik bir hata oluştu.");
         }
 
-        return Result.Success(result.Value);
+        return Result<List<AllBlogPostsDto>>.Success(result.Value);
     }
 
     public async Task<Result<BlogPostToUpdateDto>> GetBlogPostById(int id)
@@ -112,7 +112,7 @@ public class BlogPostService : IBlogPostService
 
         if (!apiResponse.IsSuccessStatusCode)
         {
-            return Result.Error("Düzenlemek istediğiniz Blog Post getirilirken beklenmedik bir hata oluştu..");
+            return Result<BlogPostToUpdateDto>.Error("Düzenlemek istediğiniz Blog Post getirilirken beklenmedik bir hata oluştu..");
         }
 
         var result = await apiResponse.Content.ReadFromJsonAsync<Result<BlogPostToUpdateDto>>();
@@ -131,10 +131,10 @@ public class BlogPostService : IBlogPostService
                 errorMessage = "Düzenlemek istediğiniz Blog Post getirilirken beklenmedik bir hata oluştu..";
             }
 
-            return Result.Error(errorMessage);
+            return Result<BlogPostToUpdateDto>.Error(errorMessage);
         }
 
-        return Result.Success(result.Value);
+        return Result<BlogPostToUpdateDto>.Success(result.Value);
     }
 
     public async Task<Result> UpdateBlogPostAsync(UpdateBlogPostDto dto)

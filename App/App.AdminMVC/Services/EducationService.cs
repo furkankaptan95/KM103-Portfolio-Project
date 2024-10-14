@@ -91,17 +91,17 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
 
         if (!apiResponse.IsSuccessStatusCode)
         {
-            return Result.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
+            return Result<List<AllEducationsDto>>.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
         }
 
         var result = await apiResponse.Content.ReadFromJsonAsync< Result<List<AllEducationsDto>>>();
 
         if (!result.IsSuccess)
         {
-            return Result.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
+            return Result<List<AllEducationsDto>>.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
         }
 
-        return Result.Success(result.Value);
+        return Result<List<AllEducationsDto>>.Success(result.Value);
     }
 
     public async Task<Result<EducationToUpdateDto>> GetEducationByIdAsync(int id)
