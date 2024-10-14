@@ -145,9 +145,17 @@ public class EducationsController(IEducationService educationService) : Controll
     [Route("delete-education-{id:int}")]
     public async Task<IActionResult> DeleteEducation([FromRoute] int id)
     {
-        var entityToDelete = educations.FirstOrDefault(e => e.Id == id);
+        var result = await educationService.DeleteEducationAsync(id);
 
-        educations.Remove(entityToDelete);
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+        }
+
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
 
         return Redirect("/all-educations");
 

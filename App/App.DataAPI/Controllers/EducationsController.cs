@@ -94,4 +94,23 @@ public class EducationsController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpDelete("/delete-education-{id:int}")]
+    public async Task<IActionResult> DeleteAsync([FromRoute] int id)
+    {
+
+        var result = await _educationService.DeleteEducationAsync(id);
+
+        if (!result.IsSuccess)
+        {
+            if (result.Status == ResultStatus.NotFound)
+            {
+                return NotFound(result);
+            }
+
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
+    }
 }
