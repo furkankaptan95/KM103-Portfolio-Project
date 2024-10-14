@@ -14,10 +14,12 @@ public class EducationsController : ControllerBase
 {
     private readonly IEducationService _educationService;
     private readonly IValidator<AddEducationDto> _addValidator;
-    public EducationsController(IEducationService educationService, IValidator<AddEducationDto> addValidator)
+    private readonly IValidator<UpdateEducationDto> _updateValidator;
+    public EducationsController(IEducationService educationService, IValidator<AddEducationDto> addValidator, IValidator<UpdateEducationDto> updateValidator)
     {
         _educationService = educationService;
         _addValidator = addValidator;
+        _updateValidator = updateValidator;
     }
 
     [HttpGet("/all-educations")]
@@ -49,6 +51,45 @@ public class EducationsController : ControllerBase
         if (!result.IsSuccess)
         {
           return StatusCode(500, result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpPut("/update-education")]
+    public async Task<IActionResult> UpdateAsync([FromBody] UpdateEducationDto dto)
+    {
+        var validationResult = await _updateValidator.ValidateAsync(dto);
+
+        if (!validationResult.IsValid)
+        {
+            var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+        }
+
+        var result = await _educationService.UpdateEducationAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpGet("/get-education-{id:int}")]
+    public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
+    {
+        var result = await _educationService.GetEducationByIdAsync(id);
+
+        if (!result.IsSuccess)
+        {
+            if(result.Status == ResultStatus.NotFound)
+            {
+                return NotFound(result);
+            }
+
+            return StatusCode(500, result);
         }
 
         return Ok(result);

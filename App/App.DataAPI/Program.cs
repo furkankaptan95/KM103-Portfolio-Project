@@ -33,7 +33,7 @@ builder.Services.AddTransient<IValidator<UpdateAboutMeApiDto>, UpdateAboutMeApiD
 builder.Services.AddTransient<IValidator<AddBlogPostDto>, AddBlogPostDtoValidator>();
 builder.Services.AddTransient<IValidator<UpdateBlogPostDto>, UpdateBlogPostDtoValidator>();
 builder.Services.AddTransient<IValidator<AddEducationDto>, AddEducationDtoValidator>();
-
+builder.Services.AddTransient<IValidator<UpdateEducationDto>, UpdateEducationDtoValidator>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

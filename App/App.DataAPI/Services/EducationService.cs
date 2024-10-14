@@ -84,8 +84,61 @@ public class EducationService(DataApiDbContext dataApiDb) : IEducationService
         }
     }
 
-    public Task<Result> UpdateEducationAsync(UpdateEducationDto dto)
+    public async Task<Result<EducationToUpdateDto>> GetEducationByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var entity = await dataApiDb.Educations.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity is null)
+            {
+                return Result.NotFound();
+            }
+
+            var dto = new EducationToUpdateDto
+            {
+                Id = id,
+                School = entity.School,
+                Degree = entity.Degree,
+                StartDate = entity.StartDate,
+                EndDate = entity.EndDate,
+            };
+
+            return Result.Success(dto);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
+    }
+
+    public async Task<Result> UpdateEducationAsync(UpdateEducationDto dto)
+    {
+        try
+        {
+            var entity = await dataApiDb.Educations.FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+            entity.School = dto.School;
+            entity.EndDate = dto.EndDate;
+            entity.StartDate = dto.StartDate;
+            entity.Degree = dto.Degree;
+
+            dataApiDb.Educations.Update(entity);
+            await dataApiDb.SaveChangesAsync();
+
+            return Result.Success();
+        }
+        catch (DbUpdateException dbEx)
+        {
+            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
     }
 }
