@@ -72,7 +72,10 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
             TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
         }
 
-        TempData["Message"] = result.SuccessMessage;
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
 
         return Redirect("/all-blog-posts");
 
@@ -123,10 +126,12 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
         if (!result.IsSuccess)
         {
             TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-            return Redirect("/all-blog-posts");
+        }
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
         }
 
-        TempData["Message"] = result.SuccessMessage;
         return Redirect("/all-blog-posts");
     }
 
