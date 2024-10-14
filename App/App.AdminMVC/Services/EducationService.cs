@@ -6,9 +6,23 @@ namespace App.AdminMVC.Services;
 public class EducationService(IHttpClientFactory factory) : IEducationService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
-    public Task<Result> AddEducationAsync(AddEducationDto dto)
+    public async Task<Result> AddEducationAsync(AddEducationDto dto)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.PostAsJsonAsync("add-education", dto);
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result.Error("Eğitim bilgisi eklenirken beklenmedik bir hata oluştu..");
+        }
+
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (!result.IsSuccess)
+        {
+            return Result.Error("Eğitim bilgisi eklenirken beklenmedik bir hata oluştu..");
+        }
+
+        return Result.SuccessWithMessage("Eğitim bilgisi başarıyla eklendi.");
     }
 
     public Task<Result> ChangeEducationVisibilityAsync(int id)
