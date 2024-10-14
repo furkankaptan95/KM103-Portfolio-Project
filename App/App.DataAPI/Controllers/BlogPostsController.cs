@@ -86,13 +86,12 @@ public class BlogPostsController : ControllerBase
 
         var result = await _blogPostService.UpdateBlogPostAsync(dto);
 
-        if (result.IsSuccess)
+        if (!result.IsSuccess)
         {
-            return Ok(result);
+            return StatusCode(500, result);
         }
 
-        return StatusCode(500, result);
-
+        return Ok(result);
     }
     [HttpDelete("/delete-blog-post-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)

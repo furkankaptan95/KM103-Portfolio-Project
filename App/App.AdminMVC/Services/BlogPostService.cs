@@ -57,13 +57,39 @@ public class BlogPostService : IBlogPostService
     {
         var apiResponse = await DataApiClient.GetAsync($"blog-post-{id}");
 
-        return await apiResponse.Content.ReadFromJsonAsync<Result<BlogPostToUpdateDto>>();
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result<BlogPostToUpdateDto>>();
+
+        if (!result.IsSuccess)
+        {
+            string errorMessage;
+
+            if(result.Status == ResultStatus.NotFound)
+            {
+                errorMessage = "Düzenlemek istediğiniz Blog Post bulunamadı!..";
+            }
+
+            else
+            {
+                errorMessage = "Düzenlemek istediğiniz Blog Post getirilirken beklenmedik bir hata oluştu..";
+            }
+
+            return Result.Error(errorMessage);
+        }
+
+        return Result.Success(result.Value);
     }
 
     public async Task<Result> UpdateBlogPostAsync(UpdateBlogPostDto dto)
     {
         var apiResponse = await DataApiClient.PutAsJsonAsync("update-blog-post", dto);
 
-        return await apiResponse.Content.ReadFromJsonAsync<Result>();
+        var result =  await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (!result.IsSuccess)
+        {
+            return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
+        }
+
+        return Result.SuccessWithMessage("Blog Post başarıyla güncellendi.");
     }
 }
