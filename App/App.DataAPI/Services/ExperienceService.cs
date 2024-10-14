@@ -87,9 +87,37 @@ namespace App.DataAPI.Services
             }
         }
 
-        public Task<Result<ExperienceToUpdateDto>> GetByIdAsync(int id)
+        public async Task<Result<ExperienceToUpdateDto>> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
+
+                if (entity is null)
+                {
+                    return Result<ExperienceToUpdateDto>.NotFound();
+                }
+
+                var dto = new ExperienceToUpdateDto
+                {
+                    Id = id,
+                    Company = entity.Company,
+                    Title = entity.Title,
+                    Description = entity.Description,
+                    StartDate = entity.StartDate,
+                    EndDate = entity.EndDate,
+                };
+
+                return Result<ExperienceToUpdateDto>.Success(dto);
+            }
+            catch (SqlException sqlEx)
+            {
+                return Result<ExperienceToUpdateDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            }
+            catch (Exception ex)
+            {
+                return Result<ExperienceToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
+            }
         }
 
         public async Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)
