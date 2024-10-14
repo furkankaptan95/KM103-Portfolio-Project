@@ -31,9 +31,32 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
         throw new NotImplementedException();
     }
 
-    public Task<Result> DeleteExperienceAsync(int id)
+    public async Task<Result> DeleteExperienceAsync(int id)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.DeleteAsync($"delete-experience-{id}");
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result.Error("Deneyim bilgisi silinirken beklenmedik bir hata oluştu..");
+        }
+
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (!result.IsSuccess)
+        {
+            string errorMessage;
+
+            if (result.Status == ResultStatus.NotFound)
+            {
+                errorMessage = "Silmek istediğiniz Deneyim bilgisi bulunamadı!..";
+            }
+
+            errorMessage = "Deneyim bilgisi silinirken beklenmedik bir hata oluştu..";
+
+            return Result.Error(errorMessage);
+        }
+
+        return Result.SuccessWithMessage("Deneyim bilgisi başarıyla silindi.");
     }
     
     public async Task<Result<List<AllExperiencesDto>>> GetAllExperiencesAsync()
