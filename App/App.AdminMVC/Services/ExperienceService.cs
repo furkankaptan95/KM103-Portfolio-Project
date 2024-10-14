@@ -55,9 +55,31 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
         return Result<List<AllExperiencesDto>>.Success(result.Value);
     }
 
-    public Task<Result<ExperienceToUpdateDto>> GetByIdAsync(int id)
+    public async Task<Result<ExperienceToUpdateDto>> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.GetAsync($"get-experience-{id}");
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result<ExperienceToUpdateDto>.Error("Güncellemek istediğiniz Deneyim bilgileri getirilirken beklenmeyen bir hata oluştu.");
+        }
+
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result<ExperienceToUpdateDto>>();
+
+        if (!result.IsSuccess)
+        {
+            string errorMessage;
+
+            if (result.Status == ResultStatus.NotFound)
+            {
+                errorMessage = "Güncellemek istediğiniz Deneyim bilgisine ulaşılamadı!..";
+            }
+            errorMessage = "Güncellemek istediğiniz Deneyim bilgileri getirilirken beklenmeyen bir hata oluştu.";
+
+            return Result<ExperienceToUpdateDto>.Error(errorMessage);
+        }
+
+        return Result<ExperienceToUpdateDto>.Success(result.Value);
     }
 
     public async Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)
