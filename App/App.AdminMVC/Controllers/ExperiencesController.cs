@@ -1,8 +1,6 @@
 ﻿using App.Data.Entities;
-using App.DTOs.EducationDtos;
 using App.DTOs.ExperienceDtos;
 using App.Services.AdminServices.Abstract;
-using App.ViewModels.AdminMvc.EducationsViewModels;
 using App.ViewModels.AdminMvc.ExperiencesViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -123,16 +121,24 @@ public class ExperiencesController(IExperienceService experienceService) : Contr
     [Route("update-experience-{id:int}")]
     public async Task<IActionResult> UpdateExperience([FromRoute] int id)
     {
-        var entityToUpdate = experiences.FirstOrDefault(e => e.Id == id);
+        var result = await experienceService.GetByIdAsync(id);
 
-        var model = new UpdateExperienceViewModel{
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return Redirect("/all-experiences");
+        }
+
+        var dto = result.Value;
+
+        var model = new UpdateExperienceViewModel
+        {
             Id = id,
-            Title = entityToUpdate.Title,
-            Company = entityToUpdate.Company,
-            Description = entityToUpdate.Description,
-            EndDate = entityToUpdate.EndDate,
-            StartDate = entityToUpdate.StartDate,
-
+            Company = dto.Company,
+            StartDate = dto.StartDate,
+            EndDate = dto.EndDate,
+            Title = dto.Title,
+            Description = dto.Description,
         };
 
         return View(model);
@@ -142,13 +148,31 @@ public class ExperiencesController(IExperienceService experienceService) : Contr
     [Route("update-experience")]
     public async Task<IActionResult> UpdateExperience([FromForm] UpdateExperienceViewModel updateExperienceModel)
     {
-        var entityToUpdate = experiences.FirstOrDefault(e => e.Id == updateExperienceModel.Id);
+        if (!ModelState.IsValid)
+        {
+            return View(updateExperienceModel);
+        }
 
-        entityToUpdate.Title = updateExperienceModel.Title;
-        entityToUpdate.Company = updateExperienceModel.Company;
-        entityToUpdate.Description = updateExperienceModel.Description;
-        entityToUpdate.StartDate = updateExperienceModel.StartDate;
-        entityToUpdate.EndDate = updateExperienceModel.EndDate;
+        var dto = new UpdateExperienceDto
+        {
+            Id = updateExperienceModel.Id,
+            Description = updateExperienceModel.Description,
+            Title = updateExperienceModel.Title,
+            Company = updateExperienceModel.Company,
+            EndDate = updateExperienceModel.EndDate,
+            StartDate = updateExperienceModel.StartDate,
+        };
+
+        var result = await experienceService.UpdateExperienceAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+        }
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
 
         return Redirect("/all-experiences");
     }

@@ -87,9 +87,64 @@ namespace App.DataAPI.Services
             }
         }
 
-        public Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)
+        public async Task<Result<ExperienceToUpdateDto>> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
+
+                if (entity is null)
+                {
+                    return Result<ExperienceToUpdateDto>.NotFound();
+                }
+
+                var dto = new ExperienceToUpdateDto
+                {
+                    Id = id,
+                    Company = entity.Company,
+                    Title = entity.Title,
+                    Description = entity.Description,
+                    StartDate = entity.StartDate,
+                    EndDate = entity.EndDate,
+                };
+
+                return Result<ExperienceToUpdateDto>.Success(dto);
+            }
+            catch (SqlException sqlEx)
+            {
+                return Result<ExperienceToUpdateDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            }
+            catch (Exception ex)
+            {
+                return Result<ExperienceToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
+            }
+        }
+
+        public async Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)
+        {
+            try
+            {
+                var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+                entity.Company = dto.Company;
+                entity.EndDate = dto.EndDate;
+                entity.StartDate = dto.StartDate;
+                entity.Title = dto.Title;
+                entity.Description = dto.Description;
+
+                dataApiDb.Experiences.Update(entity);
+                await dataApiDb.SaveChangesAsync();
+
+                return Result.Success();
+            }
+            catch (DbUpdateException dbEx)
+            {
+                return Result.Error("Veritabanı hatası: " + dbEx.Message);
+            }
+            catch (Exception ex)
+            {
+                return Result.Error("Bir hata oluştu: " + ex.Message);
+            }
         }
     }
 }

@@ -35,7 +35,7 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
     {
         throw new NotImplementedException();
     }
-
+    
     public async Task<Result<List<AllExperiencesDto>>> GetAllExperiencesAsync()
     {
         var apiResponse = await DataApiClient.GetAsync("all-experiences");
@@ -55,8 +55,49 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
         return Result<List<AllExperiencesDto>>.Success(result.Value);
     }
 
-    public Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)
+    public async Task<Result<ExperienceToUpdateDto>> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.GetAsync($"get-experience-{id}");
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result<ExperienceToUpdateDto>.Error("Güncellemek istediğiniz Deneyim bilgileri getirilirken beklenmeyen bir hata oluştu.");
+        }
+
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result<ExperienceToUpdateDto>>();
+
+        if (!result.IsSuccess)
+        {
+            string errorMessage;
+
+            if (result.Status == ResultStatus.NotFound)
+            {
+                errorMessage = "Güncellemek istediğiniz Deneyim bilgisine ulaşılamadı!..";
+            }
+            errorMessage = "Güncellemek istediğiniz Deneyim bilgileri getirilirken beklenmeyen bir hata oluştu.";
+
+            return Result<ExperienceToUpdateDto>.Error(errorMessage);
+        }
+
+        return Result<ExperienceToUpdateDto>.Success(result.Value);
+    }
+
+    public async Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)
+    {
+        var apiResponse = await DataApiClient.PutAsJsonAsync("update-experience", dto);
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
+        }
+
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (!result.IsSuccess)
+        {
+            return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
+        }
+
+        return Result.SuccessWithMessage("Deneyim bilgileri başarıyla güncellendi.");
     }
 }

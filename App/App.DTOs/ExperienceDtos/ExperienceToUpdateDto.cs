@@ -1,5 +1,5 @@
 ﻿namespace App.DTOs.ExperienceDtos;
-public class UpdateExperienceDto
+public class ExperienceToUpdateDto
 {
     public int Id { get; set; }
     public string Title { get; set; }
