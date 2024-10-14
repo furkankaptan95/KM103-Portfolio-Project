@@ -53,4 +53,19 @@ public class EducationsController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPut("/update-education")]
+    public async Task<IActionResult> UpdateAsync([FromBody] UpdateEducationDto dto)
+    {
+        //validasyon
+
+        var result = await _educationService.UpdateEducationAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
+    }
 }
