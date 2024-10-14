@@ -44,9 +44,30 @@ namespace App.DataAPI.Services
             throw new NotImplementedException();
         }
 
-        public Task<Result> DeleteExperienceAsync(int id)
+        public async Task<Result> DeleteExperienceAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
+
+                if (entity is null)
+                {
+                    return Result.NotFound();
+                }
+
+                dataApiDb.Experiences.Remove(entity);
+                await dataApiDb.SaveChangesAsync();
+
+                return Result.Success();
+            }
+            catch (SqlException sqlEx)
+            {
+                return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            }
+            catch (Exception ex)
+            {
+                return Result.Error("Bir hata oluştu: " + ex.Message);
+            }
         }
 
         public async Task<Result<List<AllExperiencesDto>>> GetAllExperiencesAsync()
