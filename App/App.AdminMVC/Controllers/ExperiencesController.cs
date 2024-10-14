@@ -131,7 +131,7 @@ public class ExperiencesController(IExperienceService experienceService) : Contr
 
         var dto = result.Value;
 
-        var educationToUpdate = new UpdateExperienceDto
+        var model = new UpdateExperienceViewModel
         {
             Id = id,
             Company = dto.Company,
@@ -141,7 +141,7 @@ public class ExperiencesController(IExperienceService experienceService) : Contr
             Description = dto.Description,
         };
 
-        return View(educationToUpdate);
+        return View(model);
     }
 
     [HttpPost]
