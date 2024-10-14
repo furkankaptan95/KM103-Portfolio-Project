@@ -7,9 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace App.AdminMVC.Controllers;
 public class EducationsController(IEducationService educationService) : Controller
 {
-    private static int index = 0;
-
-    private static readonly List<EducationEntity> educations = new(); 
 
     [HttpGet]
     [Route("all-educations")]

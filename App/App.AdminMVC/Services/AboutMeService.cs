@@ -28,17 +28,14 @@ public class AboutMeService : IAboutMeService
             imageContent2.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(dto.ImageFile2.ContentType);
             content.Add(imageContent2, "imageFile2", dto.ImageFile2.FileName); // "imageFile2" API'deki parametre adı ile uyumlu olmalı
         
-        var fileResponse = await FileApiClient.PostAsync("upload-files", content);
+        var fileApiResponse = await FileApiClient.PostAsync("upload-files", content);
 
-        // var errorList = new ErrorList(new List<string>()); Çoklu mesaj dönülmek istenirse bu şekilde eklenebilir.
-
-
-        if (!fileResponse.IsSuccessStatusCode)
+        if (!fileApiResponse.IsSuccessStatusCode)
         {
             return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu.");
         }
 
-        var urlDto = await fileResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
+        var urlDto = await fileApiResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
 
         var apiDto = new AddAboutMeApiDto
         {
@@ -48,6 +45,11 @@ public class AboutMeService : IAboutMeService
         };
 
         var apiResponse = await DataApiClient.PostAsJsonAsync("add-about-me", apiDto);
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result.Error("Hakkımda bilgileri eklenirken beklenmedik bir hata oluştu..");
+        }
 
         var result =  await apiResponse.Content.ReadFromJsonAsync<Result>();
 
@@ -66,9 +68,14 @@ public class AboutMeService : IAboutMeService
 
     public async Task<Result<ShowAboutMeDto>> GetAboutMeAsync()
     {
-        var response = await DataApiClient.GetAsync("get-about-me");
+        var apiResponse = await DataApiClient.GetAsync("get-about-me");
 
-        var result = await response.Content.ReadFromJsonAsync<Result<ShowAboutMeDto>>();
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result<ShowAboutMeDto>.Error("-Hakkımda- bilgileri getirilirken beklenmedik bir hata oluştu..");
+        }
+
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result<ShowAboutMeDto>>();
 
         if (!result.IsSuccess)
         {
@@ -76,17 +83,17 @@ public class AboutMeService : IAboutMeService
 
             if (result.Status == ResultStatus.NotFound)
             {
-                errorMessage = "Hakkımda bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurunuz.";
+                errorMessage = "Hakkımda bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurabilirsiniz.";
 
-                return Result.NotFound(errorMessage);
+                return Result<ShowAboutMeDto>.NotFound(errorMessage);
             }
 
             errorMessage = "Güncellenecek bilgiler getirilirken beklenmeyen bir hata oluştu.";
 
-            return Result.Error(errorMessage);
+            return Result<ShowAboutMeDto>.Error(errorMessage);
         }
 
-        return Result.Success(result.Value);
+        return Result<ShowAboutMeDto>.Success(result.Value);
     }
     public Task<Result> UpdateAboutMeAsync(UpdateAboutMeApiDto dto)
     {
@@ -119,21 +126,25 @@ public class AboutMeService : IAboutMeService
 
         if (dto.ImageFile1 != null || dto.ImageFile2 != null)
         {
-            var fileResponse = await FileApiClient.PostAsync("upload-files", content);
+            var fileApiResponse = await FileApiClient.PostAsync("upload-files", content);
 
-            if (!fileResponse.IsSuccessStatusCode)
+            if (!fileApiResponse.IsSuccessStatusCode)
             {
-                return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
+                return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
             }
 
-            var urlDto = await fileResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
+            var urlDto = await fileApiResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
 
             updateApiDto.ImageUrl1 = urlDto.ImageUrl1;
             updateApiDto.ImageUrl2 = urlDto.ImageUrl2;
-           
         }
 
         var apiResponse = await DataApiClient.PutAsJsonAsync("update-about-me", updateApiDto);
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu.");
+        }
 
         var result =  await apiResponse.Content.ReadFromJsonAsync<Result>();
 

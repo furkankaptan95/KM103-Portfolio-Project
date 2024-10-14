@@ -15,6 +15,11 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
             return Result.Error("Eğitim bilgisi eklenirken beklenmedik bir hata oluştu..");
         }
 
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result.Error("Eğitim bilgisi eklenirken beklenmedik bir hata oluştu..");
+        }
+
         var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
 
         if (!result.IsSuccess)
@@ -28,6 +33,11 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
     public async Task<Result> ChangeEducationVisibilityAsync(int id)
     {
         var apiResponse = await DataApiClient.GetAsync($"change-education-visibility-{id}");
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result.Error("Eğitim'in görünürlüğü değiştirilirken beklenmedik bir hata oluştu..");
+        }
 
         var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
 
@@ -50,6 +60,11 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
     public async Task<Result> DeleteEducationAsync(int id)
     {
         var apiResponse = await DataApiClient.DeleteAsync($"delete-education-{id}");
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result.Error("Eğitim bilgisi silinirken beklenmedik bir hata oluştu..");
+        }
 
         var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
 
@@ -76,17 +91,17 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
 
         if (!apiResponse.IsSuccessStatusCode)
         {
-            return Result.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
+            return Result<List<AllEducationsDto>>.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
         }
 
         var result = await apiResponse.Content.ReadFromJsonAsync< Result<List<AllEducationsDto>>>();
 
         if (!result.IsSuccess)
         {
-            return Result.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
+            return Result<List<AllEducationsDto>>.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
         }
 
-        return Result.Success(result.Value);
+        return Result<List<AllEducationsDto>>.Success(result.Value);
     }
 
     public async Task<Result<EducationToUpdateDto>> GetEducationByIdAsync(int id)
@@ -122,16 +137,16 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
 
         if (!apiResponse.IsSuccessStatusCode)
         {
-            return Result.Error("Eğitim bilgisi güncellenirken beklenmedik bir hata oluştu..");
+            return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
         }
 
         var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
 
         if (!result.IsSuccess)
         {
-            return Result.Error("Eğitim bilgisi güncellenirken beklenmedik bir hata oluştu..");
+            return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
         }
 
-        return Result.SuccessWithMessage("Eğitim bilgisi başarıyla güncellendi.");
+        return Result.SuccessWithMessage("Eğitim bilgileri başarıyla güncellendi.");
     }
 }

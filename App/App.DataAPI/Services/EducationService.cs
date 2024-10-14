@@ -101,7 +101,7 @@ public class EducationService(DataApiDbContext dataApiDb) : IEducationService
 
             if (entities is null)
             {
-                return Result.Success(dtos);
+                return Result<List<AllEducationsDto>>.Success(dtos);
             }
 
             dtos = entities
@@ -116,15 +116,15 @@ public class EducationService(DataApiDbContext dataApiDb) : IEducationService
            })
            .ToList();
 
-            return Result.Success(dtos);
+            return Result<List<AllEducationsDto>>.Success(dtos);
         }
         catch (SqlException sqlEx)
         {
-            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<List<AllEducationsDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result.Error("Bir hata oluştu: " + ex.Message);
+            return Result<List<AllEducationsDto>>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
 
@@ -136,7 +136,7 @@ public class EducationService(DataApiDbContext dataApiDb) : IEducationService
 
             if (entity is null)
             {
-                return Result.NotFound();
+                return Result<EducationToUpdateDto>.NotFound();
             }
 
             var dto = new EducationToUpdateDto
@@ -148,15 +148,15 @@ public class EducationService(DataApiDbContext dataApiDb) : IEducationService
                 EndDate = entity.EndDate,
             };
 
-            return Result.Success(dto);
+            return Result<EducationToUpdateDto>.Success(dto);
         }
         catch (SqlException sqlEx)
         {
-            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<EducationToUpdateDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result.Error("Bir hata oluştu: " + ex.Message);
+            return Result<EducationToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
 
