@@ -76,4 +76,22 @@ public class EducationsController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpGet("/get-education-{id:int}")]
+    public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
+    {
+        var result = await _educationService.GetEducationByIdAsync(id);
+
+        if (!result.IsSuccess)
+        {
+            if(result.Status == ResultStatus.NotFound)
+            {
+                return NotFound(result);
+            }
+
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
+    }
 }
