@@ -39,4 +39,17 @@ public class ExperiencesController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpGet("/all-experiences")]
+    public async Task<IActionResult> GetAllAsync()
+    {
+        var result = await _experiencesService.GetAllExperiencesAsync();
+
+        if (!result.IsSuccess)
+        {
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
+    }
 }
