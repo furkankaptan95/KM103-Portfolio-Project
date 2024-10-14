@@ -11,6 +11,8 @@ public  class UpdateEducationDtoValidator : AbstractValidator<UpdateEducationDto
 {
     public UpdateEducationDtoValidator()
     {
+        RuleFor(x => x.Id).NotEmpty().WithMessage("Id bilgisi boş olamaz.");
+
         RuleFor(x => x.Degree)
            .NotEmpty().WithMessage("Derece kısmı boş olamaz.")
             .MaximumLength(100).WithMessage("Derece maksimum 50 karakter olabilir.");

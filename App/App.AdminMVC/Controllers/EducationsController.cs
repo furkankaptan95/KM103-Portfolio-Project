@@ -120,6 +120,7 @@ public class EducationsController(IEducationService educationService) : Controll
 
         var dto = new UpdateEducationDto
         {
+            Id = updateEducationModel.Id,
             School = updateEducationModel.School,
             Degree = updateEducationModel.Degree,
             EndDate = updateEducationModel.EndDate,
