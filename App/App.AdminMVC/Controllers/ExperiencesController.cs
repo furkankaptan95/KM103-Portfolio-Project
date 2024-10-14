@@ -1,5 +1,4 @@
 ﻿using App.Data.Entities;
-using App.DTOs.EducationDtos;
 using App.DTOs.ExperienceDtos;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.ExperiencesViewModels;
@@ -122,19 +121,27 @@ public class ExperiencesController(IExperienceService experienceService) : Contr
     [Route("update-experience-{id:int}")]
     public async Task<IActionResult> UpdateExperience([FromRoute] int id)
     {
-        var entityToUpdate = experiences.FirstOrDefault(e => e.Id == id);
+        var result = await experienceService.GetByIdAsync(id);
 
-        var model = new UpdateExperienceViewModel{
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return Redirect("/all-experiences");
+        }
+
+        var dto = result.Value;
+
+        var educationToUpdate = new UpdateExperienceDto
+        {
             Id = id,
-            Title = entityToUpdate.Title,
-            Company = entityToUpdate.Company,
-            Description = entityToUpdate.Description,
-            EndDate = entityToUpdate.EndDate,
-            StartDate = entityToUpdate.StartDate,
-
+            Company = dto.Company,
+            StartDate = dto.StartDate,
+            EndDate = dto.EndDate,
+            Title = dto.Title,
+            Description = dto.Description,
         };
 
-        return View(model);
+        return View(educationToUpdate);
     }
 
     [HttpPost]
