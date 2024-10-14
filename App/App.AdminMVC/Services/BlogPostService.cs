@@ -16,7 +16,15 @@ public class BlogPostService : IBlogPostService
     {
         var apiResponse = await DataApiClient.PostAsJsonAsync("add-blog-post", dto);
 
-        return await apiResponse.Content.ReadFromJsonAsync<Result>();
+        var result =  await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (!result.IsSuccess)
+        {
+            return Result.Error("Blog Post eklenirken beklenmeyen bir hata oluştu..");
+        }
+
+        return Result.SuccessWithMessage("Blog Post başarıyla eklendi.");
+
     }
 
     public Task<Result> ChangeBlogPostVisibilityAsync(int id)
@@ -35,8 +43,14 @@ public class BlogPostService : IBlogPostService
     {
         var apiResponse = await DataApiClient.GetAsync("all-blog-posts");
 
-        return await apiResponse.Content.ReadFromJsonAsync<Result<List<AllBlogPostsDto>>>();
+        var result =  await apiResponse.Content.ReadFromJsonAsync<Result<List<AllBlogPostsDto>>>();
 
+        if (!result.IsSuccess)
+        {
+            return Result.Error("Blog Postlar getirilirken beklenmedik bir hata oluştu.");
+        }
+
+        return Result.Success(result.Value);
     }
 
     public async Task<Result<BlogPostToUpdateDto>> GetBlogPostById(int id)
