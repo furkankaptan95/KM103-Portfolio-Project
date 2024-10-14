@@ -21,9 +21,23 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
         throw new NotImplementedException();
     }
 
-    public Task<Result<List<AllEducationsDto>>> GetAllEducationsAsync()
+    public async Task<Result<List<AllEducationsDto>>> GetAllEducationsAsync()
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.GetAsync("all-educations");
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
+        }
+
+        var result = await apiResponse.Content.ReadFromJsonAsync< Result<List<AllEducationsDto>>>();
+
+        if (!result.IsSuccess)
+        {
+            return Result.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
+        }
+
+        return Result.Success(result.Value);
     }
 
     public Task<Result> UpdateEducationAsync(UpdateEducationDto dto)
