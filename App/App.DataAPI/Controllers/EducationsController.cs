@@ -14,9 +14,16 @@ public class EducationsController : ControllerBase
         _educationService = _educationService;
     }
 
-    [HttpGet("/get-all-educations")]
+    [HttpGet("/all-educations")]
     public async Task<IActionResult> GetAll()
     {
-        return Ok();
+        var result = await _educationService.GetAllEducationsAsync();
+
+        if (!result.IsSuccess)
+        {
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
     }
 }
