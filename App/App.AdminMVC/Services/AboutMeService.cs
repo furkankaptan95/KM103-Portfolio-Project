@@ -86,7 +86,7 @@ public class AboutMeService : IAboutMeService
             return Result.Error(errorMessage);
         }
 
-        return Result.Success();
+        return Result.Success(result.Value);
     }
     public Task<Result> UpdateAboutMeAsync(UpdateAboutMeApiDto dto)
     {
