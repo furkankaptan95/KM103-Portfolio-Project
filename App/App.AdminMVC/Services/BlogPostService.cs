@@ -27,9 +27,26 @@ public class BlogPostService : IBlogPostService
 
     }
 
-    public Task<Result> ChangeBlogPostVisibilityAsync(int id)
+    public async Task<Result> ChangeBlogPostVisibilityAsync(int id)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.GetAsync($"change-blog-post-visibility-{id}");
+
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (!result.IsSuccess)
+        {
+            string errorMessage;
+
+            if(result.Status == ResultStatus.NotFound)
+            {
+                errorMessage = "Görünürlüğünü değiştirmek istediğiniz Blog Post bulunamadı!..";
+            }
+
+            errorMessage = "Blog Post'un görünürlüğü değiştirilirken beklenmeyen bir hata oluştu..";
+            return Result.Error(errorMessage);
+        }
+
+        return Result.SuccessWithMessage("Blog Post'un görünürlüğü başarıyla değiştirildi.");
     }
 
     public async Task<Result> DeleteBlogPostAsync(int id)
