@@ -48,7 +48,7 @@ public class AboutMeService : IAboutMeService
 
         if (!apiResponse.IsSuccessStatusCode)
         {
-            return Result.Error("Hakkımda bilgisi eklenirken beklenmedik bir hata oluştu..");
+            return Result.Error("Hakkımda bilgileri eklenirken beklenmedik bir hata oluştu..");
         }
 
         var result =  await apiResponse.Content.ReadFromJsonAsync<Result>();
@@ -72,7 +72,7 @@ public class AboutMeService : IAboutMeService
 
         if (!apiResponse.IsSuccessStatusCode)
         {
-            return Result<ShowAboutMeDto>.Error(" -Hakkımda- bilgileri getirilirken beklenmedik bir hata oluştu..");
+            return Result<ShowAboutMeDto>.Error("-Hakkımda- bilgileri getirilirken beklenmedik bir hata oluştu..");
         }
 
         var result = await apiResponse.Content.ReadFromJsonAsync<Result<ShowAboutMeDto>>();
@@ -83,7 +83,7 @@ public class AboutMeService : IAboutMeService
 
             if (result.Status == ResultStatus.NotFound)
             {
-                errorMessage = "Hakkımda bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurunuz.";
+                errorMessage = "Hakkımda bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurabilirsiniz.";
 
                 return Result<ShowAboutMeDto>.NotFound(errorMessage);
             }

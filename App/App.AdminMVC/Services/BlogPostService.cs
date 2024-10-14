@@ -38,7 +38,7 @@ public class BlogPostService : IBlogPostService
 
         if (!apiResponse.IsSuccessStatusCode)
         {
-            return Result.Error("Blog Post görünürlüğü değiştirilirken beklenmedik bir hata oluştu..");
+            return Result.Error("Blog Post'un görünürlüğü değiştirilirken beklenmedik bir hata oluştu..");
         }
 
         var result = await apiResponse.Content.ReadFromJsonAsync<Result>();

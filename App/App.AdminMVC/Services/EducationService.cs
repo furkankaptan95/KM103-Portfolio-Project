@@ -36,7 +36,7 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
 
         if (!apiResponse.IsSuccessStatusCode)
         {
-            return Result.Error("Eğitim bilgisi görünürlüğü değiştirilirken beklenmedik bir hata oluştu..");
+            return Result.Error("Eğitim'in görünürlüğü değiştirilirken beklenmedik bir hata oluştu..");
         }
 
         var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
@@ -137,16 +137,16 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
 
         if (!apiResponse.IsSuccessStatusCode)
         {
-            return Result.Error("Eğitim bilgisi güncellenirken beklenmedik bir hata oluştu..");
+            return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
         }
 
         var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
 
         if (!result.IsSuccess)
         {
-            return Result.Error("Eğitim bilgisi güncellenirken beklenmedik bir hata oluştu..");
+            return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
         }
 
-        return Result.SuccessWithMessage("Eğitim bilgisi başarıyla güncellendi.");
+        return Result.SuccessWithMessage("Eğitim bilgileri başarıyla güncellendi.");
     }
 }
