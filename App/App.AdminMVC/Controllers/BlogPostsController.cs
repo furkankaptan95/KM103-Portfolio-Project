@@ -155,16 +155,20 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
     }
 
     [HttpGet]
-    [Route("make-blog-post-visible-{id:int}")]
+    [Route("change-blog-post-visibility-{id:int}")]
     public async Task<IActionResult> MakeBlogPostVisible([FromRoute] int id)
     {
-        return View();
-    }
+        var result = await blogPostService.ChangeBlogPostVisibilityAsync(id);
 
-    [HttpGet]
-    [Route("make-blog-post-invisible-{id:int}")]
-    public async Task<IActionResult> MakeBlogPostInVisible([FromRoute] int id)
-    {
-        return View();
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+        }
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
+        
+        return Redirect("/all-blog-posts");
     }
 }
