@@ -1,9 +1,10 @@
 ﻿using App.Data.Entities;
+using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.EducationsViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-public class EducationsController : Controller
+public class EducationsController(IEducationService educationService) : Controller
 {
     private static int index = 0;
 

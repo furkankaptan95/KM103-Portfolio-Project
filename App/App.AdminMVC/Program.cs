@@ -33,6 +33,7 @@ builder.Services.AddHttpClient("fileApi", c =>
 
 builder.Services.AddScoped<IAboutMeService, AboutMeService>();
 builder.Services.AddScoped<IBlogPostService, BlogPostService>();
+builder.Services.AddScoped<IEducationService, EducationService>();
 
 var app = builder.Build();
 
