@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using App.ViewModels.AdminMvc.EducationsViewModels.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace App.ViewModels.AdminMvc.EducationsViewModels;
 public class AddEducationViewModel
@@ -16,6 +17,7 @@ public class AddEducationViewModel
     public DateTime StartDate { get; set; }
 
     [DataType(DataType.Date, ErrorMessage = "Geçerli bir tarih giriniz.")]
+    [EndDateAfterStartDate]
     public DateTime? EndDate { get; set; }
 
 }
