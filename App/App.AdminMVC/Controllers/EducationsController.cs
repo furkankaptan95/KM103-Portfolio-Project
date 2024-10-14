@@ -1,9 +1,10 @@
 ﻿using App.Data.Entities;
+using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.EducationsViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-public class EducationsController : Controller
+public class EducationsController(IEducationService educationService) : Controller
 {
     private static int index = 0;
 
@@ -42,17 +43,32 @@ public class EducationsController : Controller
     [Route("all-educations")]
     public async Task<IActionResult> AllEducations()
     {
-        List<AllEducationsViewModel> models = educations
-       .Select(item => new AllEducationsViewModel
-       {
-           Id = item.Id,
-           School = item.School,
-           Degree = item.Degree,
-           StartDate = item.StartDate,
-           EndDate = item.EndDate,
-           IsVisible = item.IsVisible
-       })
-       .ToList();
+        var result = await educationService.GetAllEducationsAsync();
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return Redirect("/home/index");
+        }
+
+        var models = new List<AllEducationsViewModel>();
+        var dtos = result.Value;
+
+        if(dtos.Count > 0)
+        {
+           models = dtos
+          .Select(item => new AllEducationsViewModel
+          {
+              Id = item.Id,
+              School = item.School,
+              Degree = item.Degree,
+              StartDate = item.StartDate,
+              EndDate = item.EndDate,
+              IsVisible = item.IsVisible
+          })
+          .ToList();
+
+        }
 
         return View(models);
     }
