@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using App.ViewModels.AdminMvc.ExperiencesViewModels.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace App.ViewModels.AdminMvc.ExperiencesViewModels;
 public class UpdateExperienceViewModel
@@ -17,9 +18,10 @@ public class UpdateExperienceViewModel
     public string Description { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Başlangıç tarihi zorunludur.")]
-    [DataType(DataType.Date)]
+    [DataType(DataType.Date, ErrorMessage = "Geçerli bir tarih giriniz.")]
     public DateTime StartDate { get; set; }
 
-    [DataType(DataType.Date)]
+    [DataType(DataType.Date, ErrorMessage = "Geçerli bir tarih giriniz.")]
+    [EndDateAfterStartDate]
     public DateTime? EndDate { get; set; }
 }
