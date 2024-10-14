@@ -14,9 +14,10 @@ public class ExperiencesController : ControllerBase
 {
     private readonly IExperienceService _experiencesService;
     private readonly IValidator<AddExperienceDto> _addValidator;
-    public ExperiencesController(IExperienceService experiencesService)
+    public ExperiencesController(IExperienceService experiencesService, IValidator<AddExperienceDto> addValidator)
     {
         _experiencesService = experiencesService;
+        _addValidator = addValidator;
     }
 
     [HttpPost("/add-experience")]
