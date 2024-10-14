@@ -84,8 +84,29 @@ public class EducationService(DataApiDbContext dataApiDb) : IEducationService
         }
     }
 
-    public Task<Result> UpdateEducationAsync(UpdateEducationDto dto)
+    public async Task<Result> UpdateEducationAsync(UpdateEducationDto dto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var entity = await dataApiDb.Educations.FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+            entity.School = dto.School;
+            entity.EndDate = dto.EndDate;
+            entity.StartDate = dto.StartDate;
+            entity.Degree = dto.Degree;
+
+            dataApiDb.Educations.Update(entity);
+            await dataApiDb.SaveChangesAsync();
+
+            return Result.Success();
+        }
+        catch (DbUpdateException dbEx)
+        {
+            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
     }
 }
