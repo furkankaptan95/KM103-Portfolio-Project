@@ -115,7 +115,7 @@ public class EducationsController : ControllerBase
     }
 
     [HttpGet("/change-education-visibility-{id:int}")]
-    public async Task<IActionResult> ChangeVisibility([FromRoute] int id)
+    public async Task<IActionResult> ChangeVisibilityAsync([FromRoute] int id)
     {
         var result = await _educationService.ChangeEducationVisibilityAsync(id);
 
