@@ -1,4 +1,5 @@
-﻿using App.Services.AdminServices.Abstract;
+﻿using App.DTOs.EducationDtos;
+using App.Services.AdminServices.Abstract;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,13 +16,28 @@ public class EducationsController : ControllerBase
     }
 
     [HttpGet("/all-educations")]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAllAsync()
     {
         var result = await _educationService.GetAllEducationsAsync();
 
         if (!result.IsSuccess)
         {
             return StatusCode(500, result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpPost("/add-education")]
+    public async Task<IActionResult> AddAsync([FromBody] AddEducationDto dto)
+    {
+        //validation eklenecek.
+
+        var result = await _educationService.AddEducationAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+          return StatusCode(500, result);
         }
 
         return Ok(result);
