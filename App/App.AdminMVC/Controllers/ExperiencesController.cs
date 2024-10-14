@@ -181,9 +181,17 @@ public class ExperiencesController(IExperienceService experienceService) : Contr
     [Route("delete-experience-{id:int}")]
     public async Task<IActionResult> DeleteExperience([FromRoute] int id)
     {
-        var entityToDelete = experiences.FirstOrDefault(e=>e.Id == id);
+        var result = await experienceService.DeleteExperienceAsync(id);
 
-        experiences.Remove(entityToDelete);
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+        }
+
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
 
         return Redirect("/all-experiences");
     }
