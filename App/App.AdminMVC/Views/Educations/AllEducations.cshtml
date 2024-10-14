@@ -50,7 +50,16 @@ else
                         <td class="text-center">@education.School</td>
                         <td class="text-center">@education.Degree</td>
                         <td class="text-center">@education.StartDate.ToString("dd MMM yyyy")</td>
-                        <td class="text-center">@education.EndDate.ToString("dd MMM yyyy")</td>
+                        @if (@education.EndDate is null)
+                        {
+                           <td>
+                               <span> Devam Ediyor </span>
+                           </td>
+                        }
+                        else
+                        {
+                        <td class="text-center">@education.EndDate?.ToString("dd MMM yyyy")</td>
+                        }
                         <td class="text-center">
                             <a href="/update-education-@education.Id" class="btn btn-sm btn-primary">Düzenle</a>
                             <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal-@education.Id">Sil</button>

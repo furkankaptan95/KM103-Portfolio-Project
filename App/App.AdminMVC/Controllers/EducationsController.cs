@@ -8,36 +8,7 @@ public class EducationsController(IEducationService educationService) : Controll
 {
     private static int index = 0;
 
-    private static readonly List<EducationEntity> educations = new List<EducationEntity>
-    {
-        new EducationEntity
-        {
-            Id = ++index,
-            Degree = "Lisans",
-            School = "İTÜ",
-            StartDate = DateTime.Now.AddYears(-10),
-            EndDate = DateTime.Now,
-            IsVisible = true,
-        },
-         new EducationEntity
-        {
-            Id = ++index,
-            Degree = "Hazırlık Sınıfı",
-            School = "İTÜ",
-            StartDate = DateTime.Now.AddYears(-10),
-            EndDate = DateTime.Now.AddYears(-9),
-            IsVisible = true,
-        },
-          new EducationEntity
-        {
-            Id = ++index,
-            Degree = "Temel Programlama Eğitimi",
-            School = "Siliconmade Academy",
-            StartDate = DateTime.Now.AddMonths(-8),
-            EndDate = DateTime.Now.AddMonths(-3),
-            IsVisible = true,
-        },
-    };
+    private static readonly List<EducationEntity> educations = new(); 
 
     [HttpGet]
     [Route("all-educations")]
