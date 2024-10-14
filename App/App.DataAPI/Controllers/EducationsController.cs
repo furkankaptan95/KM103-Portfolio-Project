@@ -113,4 +113,20 @@ public class EducationsController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpGet("/change-education-visibility-{id:int}")]
+    public async Task<IActionResult> ChangeVisibilityAsync([FromRoute] int id)
+    {
+        var result = await _educationService.ChangeEducationVisibilityAsync(id);
+
+        if (!result.IsSuccess)
+        {
+            if (result.Status == ResultStatus.NotFound)
+            {
+                return NotFound(result);
+            }
+            return StatusCode(500, result);
+        }
+        return Ok(result);
+    }
 }

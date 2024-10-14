@@ -112,7 +112,7 @@ public class BlogPostsController : ControllerBase
     }
 
     [HttpGet("/change-blog-post-visibility-{id:int}")]
-    public async Task<IActionResult> ChangeVisibility([FromRoute] int id)
+    public async Task<IActionResult> ChangeVisibilityAsync([FromRoute] int id)
     {
         var result = await _blogPostService.ChangeBlogPostVisibilityAsync(id);
 

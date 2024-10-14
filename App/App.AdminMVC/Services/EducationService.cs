@@ -25,9 +25,26 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
         return Result.SuccessWithMessage("Eğitim bilgisi başarıyla eklendi.");
     }
 
-    public Task<Result> ChangeEducationVisibilityAsync(int id)
+    public async Task<Result> ChangeEducationVisibilityAsync(int id)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.GetAsync($"change-education-visibility-{id}");
+
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (!result.IsSuccess)
+        {
+            string errorMessage;
+
+            if (result.Status == ResultStatus.NotFound)
+            {
+                errorMessage = "Görünürlüğünü değiştirmek istediğiniz Eğitim bulunamadı!..";
+            }
+
+            errorMessage = "Eğitim'in görünürlüğü değiştirilirken beklenmeyen bir hata oluştu..";
+            return Result.Error(errorMessage);
+        }
+
+        return Result.SuccessWithMessage("Eğitim'in görünürlüğü başarıyla değiştirildi.");
     }
 
     public async Task<Result> DeleteEducationAsync(int id)

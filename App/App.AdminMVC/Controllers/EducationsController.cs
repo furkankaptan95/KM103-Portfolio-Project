@@ -163,24 +163,20 @@ public class EducationsController(IEducationService educationService) : Controll
 
 
     [HttpGet]
-    [Route("make-education-visible-{id:int}")]
-    public async Task<IActionResult> MakeEducationVisible([FromRoute] int id)
+    [Route("change-education-visibility-{id:int}")]
+    public async Task<IActionResult> ChangeVisibility([FromRoute] int id)
     {
-        var entity = educations.FirstOrDefault(e => e.Id == id);
+        var result = await educationService.ChangeEducationVisibilityAsync(id);
 
-        entity.IsVisible = true;
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+        }
 
-        return Redirect("/all-educations");
-    }
-
-
-    [HttpGet]
-    [Route("make-education-invisible-{id:int}")]
-    public async Task<IActionResult> MakeEducationInVisible([FromRoute] int id)
-    {
-        var entity = educations.FirstOrDefault(e => e.Id == id);
-
-        entity.IsVisible = false;
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
 
         return Redirect("/all-educations");
     }
