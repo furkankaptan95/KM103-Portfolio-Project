@@ -138,15 +138,13 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
 
         if (!result.IsSuccess)
         {
-            if (result.Status == ResultStatus.NotFound)
-            {
-                TempData["ErrorMessage"] = "Silmek istediğiniz Blog Post bulunamadı!..";
-            }
-
-            TempData["ErrorMessage"] = "Blog Post silinirken beklenmedik bir hata oluştu..";
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
         }
 
-        TempData["Message"] = "Blog Post başarıyla silindi.";
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
 
         return Redirect("/all-blog-posts");
     }

@@ -36,7 +36,23 @@ public class BlogPostService : IBlogPostService
     {
         var apiResponses = await DataApiClient.DeleteAsync($"delete-blog-post-{id}");
 
-        return await apiResponses.Content.ReadFromJsonAsync<Result>();
+        var result =  await apiResponses.Content.ReadFromJsonAsync<Result>();
+
+        if (!result.IsSuccess)
+        {
+            string errorMessage;
+
+            if(result.Status == ResultStatus.NotFound)
+            {
+                errorMessage = "Silmek istediğiniz Blog Post bulunamadı!..";
+            }
+
+            errorMessage = "Blog Post silinirken beklenmedik bir hata oluştu..";
+
+            return Result.Error(errorMessage);
+        }
+
+        return Result.SuccessWithMessage("Blog Post başarıyla silindi.");
     }
 
     public async Task<Result<List<AllBlogPostsDto>>> GetAllBlogPostsAsync()
