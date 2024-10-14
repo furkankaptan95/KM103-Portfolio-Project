@@ -1,4 +1,6 @@
 ﻿using App.Data.Entities;
+using App.DTOs.EducationDtos;
+using App.DTOs.ExperienceDtos;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.EducationsViewModels;
 using App.ViewModels.AdminMvc.ExperiencesViewModels;
@@ -80,18 +82,25 @@ public class ExperiencesController(IExperienceService experienceService) : Contr
             return View(addExperienceModel);
         }
 
-        var experienceToAdd = new ExperienceEntity
+        var dto = new AddExperienceDto
         {
-            Id = ++index,
             Title = addExperienceModel.Title,
             Company = addExperienceModel.Company,
-            Description= addExperienceModel.Description,
-            EndDate = addExperienceModel.EndDate,
             StartDate = addExperienceModel.StartDate,
-            IsVisible = true,
+            EndDate = addExperienceModel.EndDate,
+            Description = addExperienceModel.Description,
         };
 
-        experiences.Add(experienceToAdd);
+        var result = await experienceService.AddExperienceAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+        }
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
 
         return Redirect("/all-experiences");
     }
