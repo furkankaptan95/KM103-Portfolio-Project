@@ -87,15 +87,23 @@ public class EducationsController(IEducationService educationService) : Controll
     [Route("update-education-{id:int}")]
     public async Task<IActionResult> UpdateEducation([FromRoute] int id)
     {
-        var entity = educations.FirstOrDefault(e => e.Id == id);
+        var result = await educationService.GetEducationByIdAsync(id);
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return Redirect("/all-educations");
+        }
+
+        var dto = result.Value;
 
         var educationToUpdate = new UpdateEducationViewModel
         {
             Id = id,
-            School = entity.School,
-            Degree = entity.Degree,
-            EndDate = entity.EndDate,
-            StartDate = entity.StartDate,
+            School = dto.School,
+            StartDate = dto.StartDate,
+            EndDate = dto.EndDate,
+            Degree = dto.Degree,
         };
 
         return View(educationToUpdate);
