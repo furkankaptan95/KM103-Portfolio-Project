@@ -13,7 +13,7 @@ public class ExperienceEntityConfiguration : IEntityTypeConfiguration<Experience
         builder.Property(e=>e.Title).IsRequired().HasColumnType("varchar(100)");
         builder.Property(e => e.Company).IsRequired().HasColumnType("varchar(100)");
         builder.Property(e => e.Description).IsRequired();
-        builder.Property(c => c.StartDate).HasColumnType("datetime");
+        builder.Property(c => c.StartDate).IsRequired().HasColumnType("datetime");
         builder.Property(c => c.EndDate).HasColumnType("datetime");
     }
 }

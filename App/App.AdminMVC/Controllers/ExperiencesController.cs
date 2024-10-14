@@ -1,10 +1,11 @@
 ﻿using App.Data.Entities;
+using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.EducationsViewModels;
 using App.ViewModels.AdminMvc.ExperiencesViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-public class ExperiencesController : Controller
+public class ExperiencesController(IExperienceService experienceService) : Controller
 {
     private static int index = 0;
 
