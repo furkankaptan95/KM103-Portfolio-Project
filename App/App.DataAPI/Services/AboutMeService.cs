@@ -23,7 +23,7 @@ public class AboutMeService(DataApiDbContext dataApiDb) : IAboutMeService
             await dataApiDb.AboutMes.AddAsync(entity);
             await dataApiDb.SaveChangesAsync();
 
-            return Result.SuccessWithMessage(" -Hakkımda- bilgileri başarıyla eklendi. ");
+            return Result.Success();
         }
         catch (DbUpdateException dbEx)
         {
@@ -48,7 +48,7 @@ public class AboutMeService(DataApiDbContext dataApiDb) : IAboutMeService
 
             if (entity == null)
             {
-                return Result<ShowAboutMeDto>.NotFound("Hakkımda bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurunuz.");
+                return Result<ShowAboutMeDto>.NotFound();
             }
 
             var dto = new ShowAboutMeDto()
@@ -99,7 +99,7 @@ public class AboutMeService(DataApiDbContext dataApiDb) : IAboutMeService
             dataApiDb.AboutMes.Update(entity);
             await dataApiDb.SaveChangesAsync();
 
-            return Result.SuccessWithMessage(" -Hakkında- bilgileriniz başarılı bir şekilde güncellendi. ");
+            return Result.Success();
         }
 
         catch (DbUpdateException dbEx)

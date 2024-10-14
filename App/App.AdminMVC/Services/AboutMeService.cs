@@ -49,7 +49,14 @@ public class AboutMeService : IAboutMeService
 
         var apiResponse = await DataApiClient.PostAsJsonAsync("add-about-me", apiDto);
 
-        return await apiResponse.Content.ReadFromJsonAsync<Result>();
+        var result =  await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (!result.IsSuccess)
+        {
+            return Result.Error("Hakkımda bilgileri eklenirken beklenmeyen bir hata oluştu..");
+        }
+
+        return Result.SuccessWithMessage(" - Hakkımda - bilgileri başarıyla eklendi. ");
     }
 
     public Task<Result> AddAboutMeAsync(AddAboutMeApiDto dto)
@@ -61,9 +68,26 @@ public class AboutMeService : IAboutMeService
     {
         var response = await DataApiClient.GetAsync("get-about-me");
 
-        return await response.Content.ReadFromJsonAsync<Result<ShowAboutMeDto>>();
-    }
+        var result = await response.Content.ReadFromJsonAsync<Result<ShowAboutMeDto>>();
 
+        if (!result.IsSuccess)
+        {
+            string errorMessage;
+
+            if (result.Status == ResultStatus.NotFound)
+            {
+                errorMessage = "Hakkımda bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurunuz.";
+
+                return Result.NotFound(errorMessage);
+            }
+
+            errorMessage = "Güncellenecek bilgiler getirilirken beklenmeyen bir hata oluştu.";
+
+            return Result.Error(errorMessage);
+        }
+
+        return Result.Success(result.Value);
+    }
     public Task<Result> UpdateAboutMeAsync(UpdateAboutMeApiDto dto)
     {
         throw new NotImplementedException();
@@ -99,7 +123,7 @@ public class AboutMeService : IAboutMeService
 
             if (!fileResponse.IsSuccessStatusCode)
             {
-                return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu.");
+                return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
             }
 
             var urlDto = await fileResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
@@ -111,6 +135,13 @@ public class AboutMeService : IAboutMeService
 
         var apiResponse = await DataApiClient.PutAsJsonAsync("update-about-me", updateApiDto);
 
-        return await apiResponse.Content.ReadFromJsonAsync<Result>();
+        var result =  await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (!result.IsSuccess)
+        {
+            return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
+        }
+
+        return Result.SuccessWithMessage(" -Hakkımda- bilgileriniz başarılı bir şekilde güncellendi. ");
     }
 }

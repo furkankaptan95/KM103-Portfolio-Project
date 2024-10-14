@@ -16,18 +16,15 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
 
         if (!result.IsSuccess)
         {
-            var errorMessage = result.Errors.FirstOrDefault();
-
-            
+            string errorMessage = result.Errors.FirstOrDefault();
 
             if (result.Status == ResultStatus.NotFound)
             {
                 TempData["Message"] = errorMessage;
-
                 return Redirect("/add-about-me");
             }
 
-            TempData["ErrorMessage"] = "Beklenmeyen bir hata oluştu.";
+            TempData["ErrorMessage"] = errorMessage;
 
             return Redirect("/home/index");
         }
@@ -69,13 +66,8 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
 
         var result = await aboutMeService.AddAboutMeAsync(mvcDto);
 
-        if (result.Status == ResultStatus.Invalid)
-        {
-            ViewBag.ErrorMessage = result.ValidationErrors.FirstOrDefault();
-            return View(model);
-        }
-
-        if(result.Status == ResultStatus.Error)
+       
+        if(!result.IsSuccess)
         {
             ViewBag.ErrorMessage = result.Errors.FirstOrDefault();
             return View();
@@ -95,7 +87,15 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
         if (!result.IsSuccess)
         {
             var errorMessage = result.Errors.FirstOrDefault();
-            return BadRequest(errorMessage);
+
+            if (result.Status == ResultStatus.NotFound)
+            {
+                TempData["Message"] = errorMessage;
+                return Redirect("/add-about-me");
+            }
+
+            TempData["ErrorMessage"] = errorMessage;
+            return Redirect("/about-me");
         }
 
         var dto = result.Value;
@@ -128,15 +128,9 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
 
         var result = await aboutMeService.UpdateAboutMeAsync(dto);
 
-        if (result.Status == ResultStatus.Invalid)
+        if (!result.IsSuccess)
         {
-            ViewBag.ErrorMessage = result.ValidationErrors.FirstOrDefault();
-            return View(updateAboutMeModel);
-        }
-
-        if (result.Status == ResultStatus.Error)
-        {
-            ViewBag.ErrorMessage = result.Errors.FirstOrDefault();
+            ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
             return View();
         }
 

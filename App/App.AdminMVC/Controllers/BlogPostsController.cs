@@ -1,7 +1,6 @@
 ﻿using App.DTOs.BlogPostDtos;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.BlogPostsViewModels;
-using App.ViewModels.AdminMvc.ExperiencesViewModels;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +18,9 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
 
         if (!result.IsSuccess)
         {
-            TempData["ErrorMessage"] = "Blog Postlar getirilirken beklenmedik bir hata oluştu.";
+            var errorMessage = result.Errors.FirstOrDefault();
+            TempData["ErrorMessage"] = errorMessage;
+
             return Redirect("/home/index");
         }
 
@@ -66,19 +67,15 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
 
         var result = await blogPostService.AddBlogPostAsync(dto);
 
-        if (result.Status == ResultStatus.Invalid)
-        {
-            ViewBag.ErrorMessage = result.ValidationErrors.FirstOrDefault();
-            return View(addBlogPostModel);
-        }
-
-        if (result.Status == ResultStatus.Error)
+        if (!result.IsSuccess)
         {
             TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-            return View("/all-blog-posts");
         }
 
-        TempData["Message"] = result.SuccessMessage;
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
 
         return Redirect("/all-blog-posts");
 
@@ -92,12 +89,7 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
 
         if (!result.IsSuccess)
         {
-            if (result.Status == ResultStatus.NotFound)
-            {
-                TempData["ErrorMessage"] = "Düzenlemek istediğiniz Blog Post bulunamadı!..";
-            }
-
-            TempData["ErrorMessage"] = "Düzenlemek istediğiniz Blog Post getirilirken beklenmedik bir hata oluştu!..";
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
             return Redirect("/all-blog-posts");
         }
 
@@ -133,18 +125,12 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
 
         if (!result.IsSuccess)
         {
-
-            if(result.Status == ResultStatus.Invalid)
-            {
-                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-                return View(updateBlogPostModel);
-            }
-
-            TempData["ErrorMessage"] ="Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..";
-            return Redirect("/all-blog-posts");
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
         }
-
-        TempData["Message"] = "Blog Post başarıyla güncellendi.";
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
 
         return Redirect("/all-blog-posts");
     }
@@ -157,15 +143,13 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
 
         if (!result.IsSuccess)
         {
-            if (result.Status == ResultStatus.NotFound)
-            {
-                TempData["ErrorMessage"] = "Silmek istediğiniz Blog Post bulunamadı!..";
-            }
-
-            TempData["ErrorMessage"] = "Blog Post silinirken beklenmedik bir hata oluştu..";
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
         }
 
-        TempData["Message"] = "Blog Post başarıyla silindi.";
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
 
         return Redirect("/all-blog-posts");
     }

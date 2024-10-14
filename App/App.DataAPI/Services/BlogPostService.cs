@@ -23,7 +23,7 @@ public class BlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
             await dataApiDb.BlogPosts.AddAsync(entity);
             await dataApiDb.SaveChangesAsync();
 
-            return Result.SuccessWithMessage(" Yeni BlogPost başarıyla eklendi. ");
+            return Result.Success();
         }
         catch (DbUpdateException dbEx)
         {
@@ -145,7 +145,7 @@ public class BlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
              dataApiDb.BlogPosts.Update(entity);
              await dataApiDb.SaveChangesAsync();
 
-            return Result.SuccessWithMessage(" Blog Post başarıyla güncellendi. ");
+            return Result.Success();
         }
         catch (DbUpdateException dbEx)
         {
