@@ -15,6 +15,11 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
             return Result.Error("Eğitim bilgisi eklenirken beklenmedik bir hata oluştu..");
         }
 
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result.Error("Eğitim bilgisi eklenirken beklenmedik bir hata oluştu..");
+        }
+
         var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
 
         if (!result.IsSuccess)
@@ -28,6 +33,11 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
     public async Task<Result> ChangeEducationVisibilityAsync(int id)
     {
         var apiResponse = await DataApiClient.GetAsync($"change-education-visibility-{id}");
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result.Error("Eğitim bilgisi görünürlüğü değiştirilirken beklenmedik bir hata oluştu..");
+        }
 
         var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
 
@@ -50,6 +60,11 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
     public async Task<Result> DeleteEducationAsync(int id)
     {
         var apiResponse = await DataApiClient.DeleteAsync($"delete-education-{id}");
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result.Error("Eğitim bilgisi silinirken beklenmedik bir hata oluştu..");
+        }
 
         var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
 
