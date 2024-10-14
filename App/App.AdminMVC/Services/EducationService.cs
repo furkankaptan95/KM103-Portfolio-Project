@@ -54,8 +54,22 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
         return Result.Success(result.Value);
     }
 
-    public Task<Result> UpdateEducationAsync(UpdateEducationDto dto)
+    public async Task<Result> UpdateEducationAsync(UpdateEducationDto dto)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.PutAsJsonAsync("update-education", dto);
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result.Error("Eğitim bilgisi güncellenirken beklenmedik bir hata oluştu..");
+        }
+
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (!result.IsSuccess)
+        {
+            return Result.Error("Eğitim bilgisi güncellenirken beklenmedik bir hata oluştu..");
+        }
+
+        return Result.SuccessWithMessage("Eğitim bilgisi başarıyla güncellendi.");
     }
 }
