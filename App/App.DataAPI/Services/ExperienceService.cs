@@ -1,8 +1,10 @@
 ﻿using App.Data.DbContexts;
 using App.Data.Entities;
+using App.DTOs.EducationDtos;
 using App.DTOs.ExperienceDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services
@@ -47,9 +49,42 @@ namespace App.DataAPI.Services
             throw new NotImplementedException();
         }
 
-        public Task<Result<List<AllExperiencesDto>>> GetAllExperiencesAsync()
+        public async Task<Result<List<AllExperiencesDto>>> GetAllExperiencesAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var dtos = new List<AllExperiencesDto>();
+
+                var entities = await dataApiDb.Experiences.ToListAsync();
+
+                if (entities is null)
+                {
+                    return Result<List<AllExperiencesDto>>.Success(dtos);
+                }
+
+                dtos = entities
+               .Select(item => new AllExperiencesDto
+               {
+                   Id = item.Id,
+                   Company = item.Company,
+                   Description = item.Description,
+                   StartDate = item.StartDate,
+                   EndDate = item.EndDate,
+                   IsVisible = item.IsVisible,
+                   Title = item.Title,
+               })
+               .ToList();
+
+                return Result<List<AllExperiencesDto>>.Success(dtos);
+            }
+            catch (SqlException sqlEx)
+            {
+                return Result<List<AllExperiencesDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            }
+            catch (Exception ex)
+            {
+                return Result<List<AllExperiencesDto>>.Error("Bir hata oluştu: " + ex.Message);
+            }
         }
 
         public Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)
