@@ -84,6 +84,11 @@ public class EducationService(DataApiDbContext dataApiDb) : IEducationService
         }
     }
 
+    public Task<Result<EducationToUpdateDto>> GetEducationByIdAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<Result> UpdateEducationAsync(UpdateEducationDto dto)
     {
         try

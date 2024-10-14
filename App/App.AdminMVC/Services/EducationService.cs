@@ -54,6 +54,11 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
         return Result.Success(result.Value);
     }
 
+    public Task<Result<EducationToUpdateDto>> GetEducationByIdAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<Result> UpdateEducationAsync(UpdateEducationDto dto)
     {
         var apiResponse = await DataApiClient.PutAsJsonAsync("update-education", dto);
