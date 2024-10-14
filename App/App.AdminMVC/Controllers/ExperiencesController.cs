@@ -189,24 +189,22 @@ public class ExperiencesController(IExperienceService experienceService) : Contr
     }
 
     [HttpGet]
-    [Route("make-experience-visible-{id:int}")]
-    public async Task<IActionResult> MakeExperienceVisible([FromRoute] int id)
+    [Route("change-experience-visibility-{id:int}")]
+    public async Task<IActionResult> ChangeExperienceVisibility([FromRoute] int id)
     {
-        var entity = experiences.FirstOrDefault(e=>e.Id == id);
+        var result = await experienceService.ChangeExperienceVisibilityAsync(id);
 
-        entity.IsVisible = true;
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+        }
+
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
 
         return Redirect("/all-experiences");
     }
 
-    [HttpGet]
-    [Route("make-experience-invisible-{id:int}")]
-    public async Task<IActionResult> MakeExperienceInVisible([FromRoute] int id)
-    {
-        var entity = experiences.FirstOrDefault(e => e.Id == id);
-
-        entity.IsVisible = false;
-
-        return Redirect("/all-experiences");
-    }
 }
