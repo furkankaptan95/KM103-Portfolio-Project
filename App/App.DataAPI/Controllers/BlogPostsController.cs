@@ -45,7 +45,7 @@ public class BlogPostsController : ControllerBase
     [HttpGet("/all-blog-posts")]
     public async Task<IActionResult> GetAllBlogPosts()
     {
-         var result = await _blogPostService.GetAllBlogPostsAsync();
+        var result = await _blogPostService.GetAllBlogPostsAsync();
 
         if (!result.IsSuccess)
         {
@@ -67,7 +67,7 @@ public class BlogPostsController : ControllerBase
                 return NotFound(result);
             }
 
-            return StatusCode(500,result);
+            return StatusCode(500, result);
         }
 
         return Ok(result);
@@ -100,14 +100,32 @@ public class BlogPostsController : ControllerBase
 
         if (!result.IsSuccess)
         {
-            if(result.Status == ResultStatus.NotFound)
+            if (result.Status == ResultStatus.NotFound)
             {
                 return NotFound(result);
             }
 
-            return StatusCode(500,result);
+            return StatusCode(500, result);
         }
 
         return Ok(result);
     }
+
+    [HttpGet("/change-blog-post-visibility-{id:int}")]
+    public async Task<IActionResult> ChangeVisibility([FromRoute] int id)
+    {
+        var result = await _blogPostService.ChangeBlogPostVisibilityAsync(id);
+
+        if (!result.IsSuccess)
+        {
+            if (result.Status == ResultStatus.NotFound)
+
+            {
+                return NotFound(result);
+            }
+            return StatusCode(500, result);
+        }
+        return Ok(result);
+    }
+
 }
