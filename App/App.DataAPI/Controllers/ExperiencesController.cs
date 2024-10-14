@@ -53,4 +53,25 @@ public class ExperiencesController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPut("/update-experience")]
+    public async Task<IActionResult> UpdateAsync([FromBody] UpdateExperienceDto dto)
+    {
+        //var validationResult = await _updateValidator.ValidateAsync(dto);
+
+        //if (!validationResult.IsValid)
+        //{
+        //    var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+        //    return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+        //}
+
+        var result = await _experiencesService.UpdateExperienceAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
+    }
 }
