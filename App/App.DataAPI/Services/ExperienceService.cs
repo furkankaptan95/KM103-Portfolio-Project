@@ -39,9 +39,32 @@ namespace App.DataAPI.Services
             }
         }
 
-        public Task<Result> ChangeExperienceVisibilityAsync(int id)
+        public async Task<Result> ChangeExperienceVisibilityAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
+
+                if (entity is null)
+                {
+                    return Result.NotFound();
+                }
+
+                entity.IsVisible = !entity.IsVisible;
+
+                dataApiDb.Experiences.Update(entity);
+                await dataApiDb.SaveChangesAsync();
+
+                return Result.Success();
+            }
+            catch (DbUpdateException dbEx)
+            {
+                return Result.Error("Veritabanı hatası: " + dbEx.Message);
+            }
+            catch (Exception ex)
+            {
+                return Result.Error("Bir hata oluştu: " + ex.Message);
+            }
         }
 
         public async Task<Result> DeleteExperienceAsync(int id)
