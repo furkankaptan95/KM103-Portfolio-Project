@@ -9,9 +9,9 @@ namespace App.DataAPI.Controllers;
 public class EducationsController : ControllerBase
 {
     private readonly IEducationService _educationService;
-    public EducationsController(IBlogPostService educationService)
+    public EducationsController(IEducationService educationService)
     {
-        _educationService = _educationService;
+        _educationService = educationService;
     }
 
     [HttpGet("/all-educations")]
