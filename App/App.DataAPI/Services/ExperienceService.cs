@@ -87,6 +87,11 @@ namespace App.DataAPI.Services
             }
         }
 
+        public Task<Result<ExperienceToUpdateDto>> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)
         {
             try

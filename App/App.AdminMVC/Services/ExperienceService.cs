@@ -55,6 +55,11 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
         return Result<List<AllExperiencesDto>>.Success(result.Value);
     }
 
+    public Task<Result<ExperienceToUpdateDto>> GetByIdAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)
     {
         var apiResponse = await DataApiClient.PutAsJsonAsync("update-experience", dto);

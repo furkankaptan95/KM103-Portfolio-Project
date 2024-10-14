@@ -9,4 +9,5 @@ public interface IExperienceService
     Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto);
     Task<Result> DeleteExperienceAsync(int id);
     Task<Result> ChangeExperienceVisibilityAsync(int id);
+    Task<Result<ExperienceToUpdateDto>> GetByIdAsync(int id);
 }
