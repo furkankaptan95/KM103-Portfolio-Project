@@ -7,6 +7,8 @@ using FluentValidation;
 using App.DTOs.AboutMeDtos;
 using App.DTOs.BlogPostDtos;
 using App.Core.Validators.BlogPostValidators;
+using App.DTOs.EducationDtos;
+using App.Core.Validators.EducationValidators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +32,7 @@ builder.Services.AddTransient<IValidator<AddAboutMeApiDto>, AddAboutMeApiDtoVali
 builder.Services.AddTransient<IValidator<UpdateAboutMeApiDto>, UpdateAboutMeApiDtoValidator>();
 builder.Services.AddTransient<IValidator<AddBlogPostDto>, AddBlogPostDtoValidator>();
 builder.Services.AddTransient<IValidator<UpdateBlogPostDto>, UpdateBlogPostDtoValidator>();
+builder.Services.AddTransient<IValidator<AddEducationDto>, AddEducationDtoValidator>();
 
 var app = builder.Build();
 

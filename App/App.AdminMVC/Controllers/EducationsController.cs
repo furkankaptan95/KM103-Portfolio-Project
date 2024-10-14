@@ -1,4 +1,5 @@
 ﻿using App.Data.Entities;
+using App.DTOs.EducationDtos;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.EducationsViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -8,36 +9,7 @@ public class EducationsController(IEducationService educationService) : Controll
 {
     private static int index = 0;
 
-    private static readonly List<EducationEntity> educations = new List<EducationEntity>
-    {
-        new EducationEntity
-        {
-            Id = ++index,
-            Degree = "Lisans",
-            School = "İTÜ",
-            StartDate = DateTime.Now.AddYears(-10),
-            EndDate = DateTime.Now,
-            IsVisible = true,
-        },
-         new EducationEntity
-        {
-            Id = ++index,
-            Degree = "Hazırlık Sınıfı",
-            School = "İTÜ",
-            StartDate = DateTime.Now.AddYears(-10),
-            EndDate = DateTime.Now.AddYears(-9),
-            IsVisible = true,
-        },
-          new EducationEntity
-        {
-            Id = ++index,
-            Degree = "Temel Programlama Eğitimi",
-            School = "Siliconmade Academy",
-            StartDate = DateTime.Now.AddMonths(-8),
-            EndDate = DateTime.Now.AddMonths(-3),
-            IsVisible = true,
-        },
-    };
+    private static readonly List<EducationEntity> educations = new(); 
 
     [HttpGet]
     [Route("all-educations")]
@@ -89,17 +61,24 @@ public class EducationsController(IEducationService educationService) : Controll
             return View(addEducationModel);
         }
 
-        var educationToAdd = new EducationEntity
+        var dto = new AddEducationDto
         {
-            Id = ++index,
-            School = addEducationModel.School,
             Degree = addEducationModel.Degree,
-            EndDate = addEducationModel.EndDate,
             StartDate = addEducationModel.StartDate,
-            IsVisible = true,
+            EndDate = addEducationModel.EndDate,
+            School = addEducationModel.School,
         };
 
-        educations.Add(educationToAdd);
+        var result = await educationService.AddEducationAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+        }
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
 
         return Redirect("/all-educations");
     }

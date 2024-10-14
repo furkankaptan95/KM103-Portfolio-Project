@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using App.ViewModels.AdminMvc.EducationsViewModels.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace App.ViewModels.AdminMvc.EducationsViewModels;
 public class AddEducationViewModel
@@ -12,12 +13,12 @@ public class AddEducationViewModel
     public string School { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Başlangıç tarihi zorunludur.")]
-    [DataType(DataType.Date)]
+    [DataType(DataType.Date, ErrorMessage = "Geçerli bir tarih giriniz.")]
     public DateTime StartDate { get; set; }
 
-    [Required(ErrorMessage = "Bitiş tarihi zorunludur.")]
-    [DataType(DataType.Date)]
-    public DateTime EndDate { get; set; }
+    [DataType(DataType.Date, ErrorMessage = "Geçerli bir tarih giriniz.")]
+    [EndDateAfterStartDate]
+    public DateTime? EndDate { get; set; }
 
 }
 
