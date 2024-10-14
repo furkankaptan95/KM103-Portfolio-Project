@@ -15,11 +15,6 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
             return Result.Error("Eğitim bilgisi eklenirken beklenmedik bir hata oluştu..");
         }
 
-        if (!apiResponse.IsSuccessStatusCode)
-        {
-            return Result.Error("Eğitim bilgisi eklenirken beklenmedik bir hata oluştu..");
-        }
-
         var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
 
         if (!result.IsSuccess)

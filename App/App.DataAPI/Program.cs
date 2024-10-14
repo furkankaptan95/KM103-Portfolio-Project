@@ -9,6 +9,8 @@ using App.DTOs.BlogPostDtos;
 using App.Core.Validators.BlogPostValidators;
 using App.DTOs.EducationDtos;
 using App.Core.Validators.EducationValidators;
+using App.DTOs.ExperienceDtos;
+using App.Core.Validators.ExperienceValidators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,8 @@ builder.Services.AddDbContext<DataApiDbContext>(options =>
 builder.Services.AddScoped<IAboutMeService, AboutMeService>();
 builder.Services.AddScoped<IBlogPostService, BlogPostService>();
 builder.Services.AddScoped<IEducationService, EducationService>();
+builder.Services.AddScoped<IExperienceService, ExperienceService>();
+
 
 builder.Services.AddTransient<IValidator<AddAboutMeApiDto>, AddAboutMeApiDtoValidator>();
 builder.Services.AddTransient<IValidator<UpdateAboutMeApiDto>, UpdateAboutMeApiDtoValidator>();
@@ -34,6 +38,8 @@ builder.Services.AddTransient<IValidator<AddBlogPostDto>, AddBlogPostDtoValidato
 builder.Services.AddTransient<IValidator<UpdateBlogPostDto>, UpdateBlogPostDtoValidator>();
 builder.Services.AddTransient<IValidator<AddEducationDto>, AddEducationDtoValidator>();
 builder.Services.AddTransient<IValidator<UpdateEducationDto>, UpdateEducationDtoValidator>();
+builder.Services.AddTransient<IValidator<AddExperienceDto>, AddExperienceDtoValidator>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

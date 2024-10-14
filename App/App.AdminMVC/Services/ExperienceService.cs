@@ -6,9 +6,23 @@ namespace App.AdminMVC.Services;
 public class ExperienceService(IHttpClientFactory factory) : IExperienceService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
-    public Task<Result> AddExperienceAsync(AddExperienceDto dto)
+    public async Task<Result> AddExperienceAsync(AddExperienceDto dto)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.PostAsJsonAsync("add-experience", dto);
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result.Error("Deneyim bilgisi eklenirken beklenmedik bir hata oluştu..");
+        }
+
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (!result.IsSuccess)
+        {
+            return Result.Error("Deneyim bilgisi eklenirken beklenmedik bir hata oluştu..");
+        }
+
+        return Result.SuccessWithMessage("Deneyim bilgisi başarıyla eklendi.");
     }
 
     public Task<Result> ChangeExperienceVisibilityAsync(int id)

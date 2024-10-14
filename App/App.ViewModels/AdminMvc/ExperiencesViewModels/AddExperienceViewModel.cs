@@ -19,7 +19,6 @@ public class AddExperienceViewModel
     [DataType(DataType.Date)]
     public DateTime StartDate { get; set; }
 
-    [Required(ErrorMessage = "Bitiş tarihi zorunludur.")]
     [DataType(DataType.Date)]
-    public DateTime EndDate { get; set; }
+    public DateTime? EndDate { get; set; }
 }

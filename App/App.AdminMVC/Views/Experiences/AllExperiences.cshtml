@@ -21,7 +21,16 @@
                     <td class="text-center">@experience.Title</td>
                     <td class="text-center">@experience.Company</td>
                     <td class="text-center">@experience.StartDate.ToString("dd MMM yyyy")</td>
-                        <td class="text-center">@experience.EndDate.ToString("dd MMM yyyy")</td>
+
+                    @if(experience.EndDate is null)
+                    {
+                        <td><span>Aktif</span></td>
+                    }
+                    else
+                    {
+                        <td class="text-center">@experience.EndDate?.ToString("dd MMM yyyy")</td>
+                    }
+                    
                     <td  class="text-center">
                         <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@experience.Id" aria-haspopup="true" aria-expanded="false">Açıklamayı Görüntüle</button>
                         <a href="/update-experience-@experience.Id" class="btn btn-sm btn-primary">Düzenle</a>
