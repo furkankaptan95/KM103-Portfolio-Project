@@ -14,10 +14,12 @@ public class ExperiencesController : ControllerBase
 {
     private readonly IExperienceService _experiencesService;
     private readonly IValidator<AddExperienceDto> _addValidator;
-    public ExperiencesController(IExperienceService experiencesService, IValidator<AddExperienceDto> addValidator)
+    private readonly IValidator<UpdateExperienceDto> _updateValidator;
+    public ExperiencesController(IExperienceService experiencesService, IValidator<AddExperienceDto> addValidator, IValidator<UpdateExperienceDto> updateValidator)
     {
         _experiencesService = experiencesService;
         _addValidator = addValidator;
+        _updateValidator = updateValidator;
     }
 
     [HttpPost("/add-experience")]
@@ -57,13 +59,13 @@ public class ExperiencesController : ControllerBase
     [HttpPut("/update-experience")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateExperienceDto dto)
     {
-        //var validationResult = await _updateValidator.ValidateAsync(dto);
+        var validationResult = await _updateValidator.ValidateAsync(dto);
 
-        //if (!validationResult.IsValid)
-        //{
-        //    var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-        //    return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
-        //}
+        if (!validationResult.IsValid)
+        {
+            var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+        }
 
         var result = await _experiencesService.UpdateExperienceAsync(dto);
 

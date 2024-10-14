@@ -39,6 +39,7 @@ builder.Services.AddTransient<IValidator<UpdateBlogPostDto>, UpdateBlogPostDtoVa
 builder.Services.AddTransient<IValidator<AddEducationDto>, AddEducationDtoValidator>();
 builder.Services.AddTransient<IValidator<UpdateEducationDto>, UpdateEducationDtoValidator>();
 builder.Services.AddTransient<IValidator<AddExperienceDto>, AddExperienceDtoValidator>();
+builder.Services.AddTransient<IValidator<UpdateExperienceDto>, UpdateExperienceDtoValidator>();
 
 var app = builder.Build();
 
