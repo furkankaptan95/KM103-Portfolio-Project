@@ -99,7 +99,7 @@ public class BlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
             
             if(entities is null)
             {
-                return Result.Success(dtos);
+                return Result<List<AllBlogPostsDto>>.Success(dtos);
             }
 
              dtos = entities
@@ -113,15 +113,15 @@ public class BlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
             })
             .ToList();
 
-            return Result.Success(dtos);
+            return Result<List<AllBlogPostsDto>>.Success(dtos);
         }
         catch (SqlException sqlEx)
         {
-            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<List<AllBlogPostsDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result.Error("Bir hata oluştu: " + ex.Message);
+            return Result<List<AllBlogPostsDto>>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
 
@@ -133,7 +133,7 @@ public class BlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
 
             if (entity is null)
             {
-                return Result.NotFound();
+                return Result<BlogPostToUpdateDto>.NotFound();
             }
 
             var dto = new BlogPostToUpdateDto
@@ -143,15 +143,15 @@ public class BlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
                 Content = entity.Content,
             };
 
-            return Result.Success(dto);
+            return Result<BlogPostToUpdateDto>.Success(dto);
         }
         catch (SqlException sqlEx)
         {
-            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<BlogPostToUpdateDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result.Error("Bir hata oluştu: " + ex.Message);
+            return Result<BlogPostToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
 

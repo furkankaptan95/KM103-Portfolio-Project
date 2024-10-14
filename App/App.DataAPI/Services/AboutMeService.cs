@@ -63,13 +63,13 @@ public class AboutMeService(DataApiDbContext dataApiDb) : IAboutMeService
 
         catch (SqlException sqlEx)
         {
-            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<ShowAboutMeDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
 
         catch (Exception ex)
         {
             var errorMessage = $"Bir hata oluştu: {ex.Message}, Hata Kodu: {ex.HResult}";
-            return Result.Error(errorMessage);
+            return Result<ShowAboutMeDto>.Error(errorMessage);
         }
     }
 
