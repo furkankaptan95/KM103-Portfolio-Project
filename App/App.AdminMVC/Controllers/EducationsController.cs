@@ -110,12 +110,24 @@ public class EducationsController(IEducationService educationService) : Controll
             return View(updateEducationModel);
         }
 
-        var entity = educations.FirstOrDefault(e => e.Id == updateEducationModel.Id);
+        var dto = new UpdateEducationDto
+        {
+            School = updateEducationModel.School,
+            Degree = updateEducationModel.Degree,
+            EndDate = updateEducationModel.EndDate,
+            StartDate = updateEducationModel.StartDate,
+        };
 
-        entity.School = updateEducationModel.School;
-        entity.Degree = updateEducationModel.Degree;
-        entity.StartDate = updateEducationModel.StartDate;
-        entity.EndDate = updateEducationModel.EndDate;
+        var result = await educationService.UpdateEducationAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+        }
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
 
         return Redirect("/all-educations");
     }
