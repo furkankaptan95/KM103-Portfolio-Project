@@ -70,8 +70,37 @@ public class PersonalInfoService(DataApiDbContext dataApiDb) : IPersonalInfoServ
         }
     }
 
-    public Task<Result> UpdatePersonalInfoAsync(UpdatePersonalInfoDto dto)
+    public async Task<Result> UpdatePersonalInfoAsync(UpdatePersonalInfoDto dto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var entity = await dataApiDb.PersonalInfos.FirstOrDefaultAsync();
+
+            if (entity == null)
+            {
+                return Result.NotFound();
+            }
+
+            entity.Name = dto.Name;
+            entity.Surname = dto.Surname;
+            entity.About = dto.About;
+            entity.BirthDate = dto.BirthDate;
+
+            dataApiDb.PersonalInfos.Update(entity);
+            await dataApiDb.SaveChangesAsync();
+
+            return Result.Success();
+        }
+
+        catch (DbUpdateException dbEx)
+        {
+            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+        }
+
+        catch (Exception ex)
+        {
+            var errorMessage = $"Bir hata oluştu: {ex.Message}, Hata Kodu: {ex.HResult}";
+            return Result.Error(errorMessage);
+        }
     }
 }
