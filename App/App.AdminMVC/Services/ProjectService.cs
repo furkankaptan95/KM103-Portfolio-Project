@@ -55,9 +55,28 @@ public class ProjectService(IHttpClientFactory factory) : IProjectService
         throw new NotImplementedException();
     }
 
-    public Task<Result> DeleteProjectAsync(int id)
+    public async Task<Result> DeleteProjectAsync(int id)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.DeleteAsync($"delete-project-{id}");
+
+        if (apiResponse.IsSuccessStatusCode)
+        {
+            return Result.SuccessWithMessage("Proje başarıyla silindi.");
+        }
+
+        string errorMessage;
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (result.Status == ResultStatus.NotFound)
+        {
+            errorMessage = "Silmek istediğiniz Proje bilgisi bulunamadı!..";
+        }
+        else
+        {
+            errorMessage = "Proje silinirken beklenmedik bir hata oluştu..";
+        }
+
+        return Result.Error(errorMessage);
     }
 
     public async Task<Result<List<AllProjectsDto>>> GetAllProjectsAsync()
