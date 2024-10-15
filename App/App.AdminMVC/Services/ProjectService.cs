@@ -50,9 +50,28 @@ public class ProjectService(IHttpClientFactory factory) : IProjectService
         return Result.Error("Proje eklenirken beklenmeyen bir hata oluştu..");
     }
 
-    public Task<Result> ChangeProjectVisibilityAsync(int id)
+    public async Task<Result> ChangeProjectVisibilityAsync(int id)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.GetAsync($"change-project-visibility-{id}");
+
+        if (apiResponse.IsSuccessStatusCode)
+        {
+            return Result.SuccessWithMessage("Projenin görünürlüğü başarıyla değiştirildi.");
+        }
+
+        string errorMessage;
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (result.Status == ResultStatus.NotFound)
+        {
+            errorMessage = "Görünürlüğünü değiştirmek istediğiniz Proje bulunamadı!..";
+        }
+        else
+        {
+            errorMessage = "Projenin görünürlüğü değiştirilirken beklenmeyen bir hata oluştu..";
+        }
+
+        return Result.Error(errorMessage);
     }
 
     public async Task<Result> DeleteProjectAsync(int id)

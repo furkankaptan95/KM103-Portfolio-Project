@@ -11,24 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace App.AdminMVC.Controllers;
 public class ProjectsController(IProjectService projectService) : Controller
 {
-    private static int index = 0;
-    private static readonly List<ProjectEntity> _projects = new List<ProjectEntity>
-    {
-        new()
-        {
-            Id = ++index,
-            Title = "proje 1",
-            Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at justo nec risus malesuada condimentum id condimentum ipsum. Nulla ut erat nec magna ultricies pulvinar ut nec neque. Curabitur nunc dui, ullamcorper sed sodales et, faucibus eget neque. Aenean tincidunt, elit ac fermentum laoreet.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at justo nec risus malesuada condimentum id condimentum ipsum. Nulla ut erat nec magna ultricies pulvinar ut nec neque. Curabitur nunc dui, ullamcorper sed sodales et, faucibus eget neque. Aenean tincidunt, elit ac fermentum laoreet.",
-            ImageUrl = "default-img.jpg"
-        },
-          new()
-        {
-            Id = ++index,
-            Title = "proje 2",
-            Description = "2. Proje Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at justo nec risus malesuada condimentum id condimentum ipsum. Nulla ut erat nec magna ultricies pulvinar ut nec neque. Curabitur nunc dui, ullamcorper sed sodales et, faucibus eget neque. Aenean tincidunt, elit ac fermentum laoreet.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at justo nec risus malesuada condimentum id condimentum ipsum. Nulla ut erat nec magna ultricies pulvinar ut nec neque. Curabitur nunc dui, ullamcorper sed sodales et, faucibus eget neque. Aenean tincidunt, elit ac fermentum laoreet.",
-            ImageUrl = "default-img.jpg"
-        },
-    };
 
     [HttpGet]
     [Route("all-projects")]
@@ -182,25 +164,22 @@ public class ProjectsController(IProjectService projectService) : Controller
 
 
     [HttpGet]
-    [Route("make-project-visible-{id:int}")]
-    public async Task<IActionResult> MakeProjectVisible([FromRoute] int id)
+    [Route("change-project-visibility-{id:int}")]
+    public async Task<IActionResult> ChangeProjectVisibility([FromRoute] int id)
     {
-        var entity = _projects.FirstOrDefault(x => x.Id == id);
+        var result = await projectService.ChangeProjectVisibilityAsync(id);
 
-        entity.IsVisible = true;
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+        }
+
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
 
         return Redirect("/all-projects");
     }
 
-
-    [HttpGet]
-    [Route("make-project-invisible-{id:int}")]
-    public async Task<IActionResult> MakeProjectInVisible([FromRoute] int id)
-    {
-        var entity = _projects.FirstOrDefault(x => x.Id == id);
-
-        entity.IsVisible = false;
-
-        return Redirect("/all-projects");
-    }
 }
