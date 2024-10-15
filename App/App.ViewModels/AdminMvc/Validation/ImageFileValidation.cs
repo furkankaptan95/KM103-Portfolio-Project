@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
-namespace App.ViewModels.AdminMvc.AboutMeViewModels.Validation;
+namespace App.ViewModels.AdminMvc.Validation;
 public class ImageFileValidation : ValidationAttribute
 {
     protected override ValidationResult IsValid(object value, ValidationContext validationContext)

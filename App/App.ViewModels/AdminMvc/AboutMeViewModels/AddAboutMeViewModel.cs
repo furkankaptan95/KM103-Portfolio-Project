@@ -1,4 +1,4 @@
-﻿using App.ViewModels.AdminMvc.AboutMeViewModels.Validation;
+﻿using App.ViewModels.AdminMvc.Validation;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
