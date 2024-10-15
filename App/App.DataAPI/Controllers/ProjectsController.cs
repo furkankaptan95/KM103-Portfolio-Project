@@ -55,4 +55,25 @@ public class ProjectsController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPut("/update-project")]
+    public async Task<IActionResult> UpdateAsync([FromBody] UpdateProjectApiDto dto)
+    {
+        var validationResult = await _updateValidator.ValidateAsync(dto);
+
+        if (!validationResult.IsValid)
+        {
+            var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+        }
+
+        var result = await _projectService.UpdateProjectAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
+    }
 }
