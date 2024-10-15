@@ -1,4 +1,6 @@
-﻿@{
+﻿@model HomeViewModel
+
+@{
     ViewData["Title"] = "Ana Sayfa";
 }
 
@@ -20,7 +22,7 @@
                     Toplam Kullanıcı Sayısı
                 </div>
                 <div class="card-body">
-                    <h2 class="card-title">15</h2>
+                    <h2 class="card-title">@Model.UsersCount</h2>
                     <p class="card-text">Bu, sistemde kayıtlı toplam kullanıcı sayısını gösterir.</p>
                 </div>
             </div>
@@ -32,7 +34,7 @@
                     Toplam Blog Post Sayısı
                 </div>
                 <div class="card-body">
-                    <h2 class="card-title">4</h2>
+                    <h2 class="card-title">@Model.BlogPostsCount</h2>
                     <p class="card-text">Bu, sistemde yayınlanan toplam blog post sayısını gösterir.</p>
                 </div>
             </div>
@@ -44,7 +46,7 @@
                     Toplam Yorum Sayısı
                 </div>
                 <div class="card-body">
-                    <h2 class="card-title">27</h2>
+                    <h2 class="card-title">@Model.CommentsCount</h2>
                     <p class="card-text">Bu, sistemde yapılan toplam yorum sayısını gösterir.</p>
                 </div>
             </div>
@@ -56,7 +58,7 @@
                     Toplam Proje Sayısı
                 </div>
                 <div class="card-body">
-                    <h2 class="card-title">3</h2>
+                    <h2 class="card-title">@Model.ProjectsCount</h2>
                     <p class="card-text">Bu, sistemde oluşturulan toplam proje sayısını gösterir.</p>
                 </div>
             </div>
@@ -68,7 +70,7 @@
                     Toplam Eğitim Sayısı
                 </div>
                 <div class="card-body">
-                    <h2 class="card-title">5</h2>
+                    <h2 class="card-title">@Model.EducationsCount</h2>
                     <p class="card-text">Bu, sistemde mevcut toplam eğitim sayısını gösterir.</p>
                 </div>
             </div>
@@ -80,7 +82,7 @@
                     Toplam Deneyim Sayısı
                 </div>
                 <div class="card-body">
-                    <h2 class="card-title">2</h2>
+                    <h2 class="card-title">@Model.ExperiencesCount</h2>
                     <p class="card-text">Bu, sistemde kayıtlı toplam deneyim sayısını gösterir.</p>
                 </div>
             </div>

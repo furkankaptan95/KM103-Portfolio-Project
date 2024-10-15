@@ -1,5 +1,5 @@
-﻿namespace App.DTOs.HomeDtos;
-public class HomeDto
+﻿namespace App.ViewModels.AdminMvc.HomeViewModels;
+public class HomeViewModel
 {
     public int UsersCount { get; set; }
     public int BlogPostsCount { get; set; }
