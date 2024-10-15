@@ -31,15 +31,11 @@ public class AboutMeController : ControllerBase
             return Ok(result);
         }
 
-        else if (result.Status == ResultStatus.NotFound)
+        if (result.Status == ResultStatus.NotFound)
         {
             return NotFound(result);
         }
-
-        else
-        {
             return StatusCode(500, result);
-        }
     }
 
     [HttpPost("/add-about-me")]
