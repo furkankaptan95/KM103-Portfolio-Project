@@ -1,10 +1,11 @@
 ﻿using App.Data.Entities;
+using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.ExperiencesViewModels;
 using App.ViewModels.AdminMvc.ProjectsViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-public class ProjectsController : Controller
+public class ProjectsController(IProjectService projectService) : Controller
 {
     private static int index = 0;
     private static readonly List<ProjectEntity> _projects = new List<ProjectEntity>
@@ -29,17 +30,30 @@ public class ProjectsController : Controller
     [Route("all-projects")]
     public async Task<IActionResult> AllProjects()
     {
-        List<AllProjectsViewModel> models = _projects
-    .Select(item => new AllProjectsViewModel
-    {
-        Id = item.Id,
-        Title = item.Title,
-        Description = item.Description,
-        IsVisible = item.IsVisible,
-        ImageUrl = item.ImageUrl,
-        
-    })
-    .ToList();
+        var result = await projectService.GetAllProjectsAsync();
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return Redirect("/home/index");
+        }
+
+        var models = new List<AllProjectsViewModel>();
+        var dtos = result.Value;
+
+        if (dtos.Count > 0)
+        {
+            models = dtos
+           .Select(item => new AllProjectsViewModel
+           {
+               Id = item.Id,
+               Title = item.Title,
+               ImageUrl= item.ImageUrl,
+               Description = item.Description,
+               IsVisible = item.IsVisible
+           })
+           .ToList();
+        }
 
         return View(models);
     }
