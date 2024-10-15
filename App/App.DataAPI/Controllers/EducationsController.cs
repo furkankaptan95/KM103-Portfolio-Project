@@ -1,9 +1,7 @@
-﻿using App.Core.Validators.EducationValidators;
-using App.DTOs.EducationDtos;
+﻿using App.DTOs.EducationDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.DataAPI.Controllers;

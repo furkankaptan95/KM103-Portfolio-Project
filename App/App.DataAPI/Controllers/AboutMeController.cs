@@ -2,7 +2,6 @@
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.DataAPI.Controllers;

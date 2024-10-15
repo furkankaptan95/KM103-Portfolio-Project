@@ -1,5 +1,4 @@
-﻿using App.Data.Entities;
-using App.DTOs.EducationDtos;
+﻿using App.DTOs.EducationDtos;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.EducationsViewModels;
 using Microsoft.AspNetCore.Mvc;

@@ -1,5 +1,4 @@
-﻿using App.DTOs.EducationDtos;
-using App.DTOs.ExperienceDtos;
+﻿using App.DTOs.ExperienceDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 
@@ -12,13 +11,6 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
         var apiResponse = await DataApiClient.PostAsJsonAsync("add-experience", dto);
 
         if (!apiResponse.IsSuccessStatusCode)
-        {
-            return Result.Error("Deneyim bilgisi eklenirken beklenmedik bir hata oluştu..");
-        }
-
-        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
-
-        if (!result.IsSuccess)
         {
             return Result.Error("Deneyim bilgisi eklenirken beklenmedik bir hata oluştu..");
         }
@@ -46,6 +38,7 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
         {
             errorMessage = "Deneyimin görünürlüğü değiştirilirken beklenmeyen bir hata oluştu..";
         }
+
         return Result.Error(errorMessage);
     }
 
@@ -53,28 +46,24 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
     {
         var apiResponse = await DataApiClient.DeleteAsync($"delete-experience-{id}");
 
-        if (!apiResponse.IsSuccessStatusCode)
+        if (apiResponse.IsSuccessStatusCode)
         {
-            return Result.Error("Deneyim bilgisi silinirken beklenmedik bir hata oluştu..");
+            return Result.SuccessWithMessage("Deneyim bilgisi başarıyla silindi.");
         }
 
+        string errorMessage;
         var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
 
-        if (!result.IsSuccess)
+        if (result.Status == ResultStatus.NotFound)
         {
-            string errorMessage;
-
-            if (result.Status == ResultStatus.NotFound)
-            {
-                errorMessage = "Silmek istediğiniz Deneyim bilgisi bulunamadı!..";
-            }
-
-            errorMessage = "Deneyim bilgisi silinirken beklenmedik bir hata oluştu..";
-
-            return Result.Error(errorMessage);
+            errorMessage = "Silmek istediğiniz Deneyim bilgisi bulunamadı!..";
         }
-
-        return Result.SuccessWithMessage("Deneyim bilgisi başarıyla silindi.");
+        else
+        {
+            errorMessage = "Deneyim bilgisi silinirken beklenmedik bir hata oluştu..";
+        }
+       
+        return Result.Error(errorMessage);
     }
     
     public async Task<Result<List<AllExperiencesDto>>> GetAllExperiencesAsync()
@@ -86,41 +75,31 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
             return Result<List<AllExperiencesDto>>.Error("Deneyimler getirilirken beklenmedik bir hata oluştu..");
         }
 
-        var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<AllExperiencesDto>>>();
-
-        if (!result.IsSuccess)
-        {
-            return Result<List<AllExperiencesDto>>.Error("Deneyimler getirilirken beklenmedik bir hata oluştu..");
-        }
-
-        return Result<List<AllExperiencesDto>>.Success(result.Value);
+        return await apiResponse.Content.ReadFromJsonAsync<Result<List<AllExperiencesDto>>>();
     }
 
     public async Task<Result<ExperienceToUpdateDto>> GetByIdAsync(int id)
     {
         var apiResponse = await DataApiClient.GetAsync($"get-experience-{id}");
 
-        if (!apiResponse.IsSuccessStatusCode)
+        if (apiResponse.IsSuccessStatusCode)
         {
-            return Result<ExperienceToUpdateDto>.Error("Güncellemek istediğiniz Deneyim bilgileri getirilirken beklenmeyen bir hata oluştu.");
+            return await apiResponse.Content.ReadFromJsonAsync<Result<ExperienceToUpdateDto>>();
         }
 
+        string errorMessage;
         var result = await apiResponse.Content.ReadFromJsonAsync<Result<ExperienceToUpdateDto>>();
 
-        if (!result.IsSuccess)
+        if (result.Status == ResultStatus.NotFound)
         {
-            string errorMessage;
-
-            if (result.Status == ResultStatus.NotFound)
-            {
-                errorMessage = "Güncellemek istediğiniz Deneyim bilgisine ulaşılamadı!..";
-            }
+            errorMessage = "Güncellemek istediğiniz Deneyim bilgisine ulaşılamadı!..";
+        }
+        else
+        {
             errorMessage = "Güncellemek istediğiniz Deneyim bilgileri getirilirken beklenmeyen bir hata oluştu.";
-
-            return Result<ExperienceToUpdateDto>.Error(errorMessage);
         }
 
-        return Result<ExperienceToUpdateDto>.Success(result.Value);
+        return Result<ExperienceToUpdateDto>.Error(errorMessage);
     }
 
     public async Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)
@@ -128,13 +107,6 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
         var apiResponse = await DataApiClient.PutAsJsonAsync("update-experience", dto);
 
         if (!apiResponse.IsSuccessStatusCode)
-        {
-            return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
-        }
-
-        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
-
-        if (!result.IsSuccess)
         {
             return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
         }

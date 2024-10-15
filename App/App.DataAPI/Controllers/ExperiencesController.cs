@@ -1,9 +1,7 @@
-﻿using App.DTOs.EducationDtos;
-using App.DTOs.ExperienceDtos;
+﻿using App.DTOs.ExperienceDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.DataAPI.Controllers;
@@ -113,7 +111,6 @@ public class ExperiencesController : ControllerBase
 
         return Ok(result);
     }
-
 
     [HttpGet("/change-experience-visibility-{id:int}")]
     public async Task<IActionResult> ChangeVisibilityAsync([FromRoute] int id)

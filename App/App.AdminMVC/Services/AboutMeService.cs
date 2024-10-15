@@ -46,19 +46,12 @@ public class AboutMeService : IAboutMeService
 
         var apiResponse = await DataApiClient.PostAsJsonAsync("add-about-me", apiDto);
 
-        if (!apiResponse.IsSuccessStatusCode)
+        if (apiResponse.IsSuccessStatusCode)
         {
-            return Result.Error("Hakkımda bilgileri eklenirken beklenmedik bir hata oluştu..");
+            return Result.SuccessWithMessage(" - Hakkımda - bilgileri başarıyla eklendi. ");
         }
 
-        var result =  await apiResponse.Content.ReadFromJsonAsync<Result>();
-
-        if (!result.IsSuccess)
-        {
-            return Result.Error("Hakkımda bilgileri eklenirken beklenmeyen bir hata oluştu..");
-        }
-
-        return Result.SuccessWithMessage(" - Hakkımda - bilgileri başarıyla eklendi. ");
+        return Result.Error("Hakkımda bilgileri eklenirken beklenmeyen bir hata oluştu..");
     }
 
     public Task<Result> AddAboutMeAsync(AddAboutMeApiDto dto)
@@ -70,15 +63,13 @@ public class AboutMeService : IAboutMeService
     {
         var apiResponse = await DataApiClient.GetAsync("get-about-me");
 
-        if (!apiResponse.IsSuccessStatusCode)
+        if (apiResponse.IsSuccessStatusCode)
         {
-            return Result<ShowAboutMeDto>.Error("-Hakkımda- bilgileri getirilirken beklenmedik bir hata oluştu..");
+            return await apiResponse.Content.ReadFromJsonAsync<Result<ShowAboutMeDto>>();
         }
 
-        var result = await apiResponse.Content.ReadFromJsonAsync<Result<ShowAboutMeDto>>();
+       var result = await apiResponse.Content.ReadFromJsonAsync<Result<ShowAboutMeDto>>();
 
-        if (!result.IsSuccess)
-        {
             string errorMessage;
 
             if (result.Status == ResultStatus.NotFound)
@@ -88,12 +79,9 @@ public class AboutMeService : IAboutMeService
                 return Result<ShowAboutMeDto>.NotFound(errorMessage);
             }
 
-            errorMessage = "Güncellenecek bilgiler getirilirken beklenmeyen bir hata oluştu.";
+            errorMessage = "Bilgiler getirilirken beklenmeyen bir hata oluştu.";
 
             return Result<ShowAboutMeDto>.Error(errorMessage);
-        }
-
-        return Result<ShowAboutMeDto>.Success(result.Value);
     }
     public Task<Result> UpdateAboutMeAsync(UpdateAboutMeApiDto dto)
     {
@@ -130,7 +118,7 @@ public class AboutMeService : IAboutMeService
 
             if (!fileApiResponse.IsSuccessStatusCode)
             {
-                return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
+                return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu.");
             }
 
             var urlDto = await fileApiResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
@@ -142,13 +130,6 @@ public class AboutMeService : IAboutMeService
         var apiResponse = await DataApiClient.PutAsJsonAsync("update-about-me", updateApiDto);
 
         if (!apiResponse.IsSuccessStatusCode)
-        {
-            return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu.");
-        }
-
-        var result =  await apiResponse.Content.ReadFromJsonAsync<Result>();
-
-        if (!result.IsSuccess)
         {
             return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
         }
