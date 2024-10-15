@@ -87,9 +87,35 @@ public class ProjectService(DataApiDbContext dataApiDb) : IProjectService
         }
     }
     
-    public Task<Result<ProjectToUpdateDto>> GetByIdAsync(int id)
+    public async Task<Result<ProjectToUpdateDto>> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var entity = await dataApiDb.Projects.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity is null)
+            {
+                return Result<ProjectToUpdateDto>.NotFound();
+            }
+
+            var dto = new ProjectToUpdateDto
+            {
+                Id = id,
+                ImageUrl = entity.ImageUrl,
+                Title = entity.Title,
+                Description = entity.Description,
+            };
+
+            return Result<ProjectToUpdateDto>.Success(dto);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result<ProjectToUpdateDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result<ProjectToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
+        }
     }
 
     public Task<Result> UpdateProjectAsync(UpdateProjectMVCDto dto)
