@@ -22,7 +22,7 @@
 
             <div class="mb-3">
                 <h4 class="mb-3">Mevcut Fotoğraf</h4>
-                <img src="~/assets/img/@Model.ImageUrl" alt="@Model.Title" class="img-thumbnail" style="max-width: 200px; height: auto;">
+                <img src="@($"https://localhost:7085/uploads/{Model.ImageUrl}")" alt="@Model.Title" class="img-thumbnail" style="max-width: 200px; height: auto;">
             </div>
 
             <div class="mb-3">

@@ -1,4 +1,6 @@
 ﻿using App.Data.Entities;
+using App.DTOs.BlogPostDtos;
+using App.DTOs.ProjectDtos;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.ExperiencesViewModels;
 using App.ViewModels.AdminMvc.ProjectsViewModels;
@@ -74,15 +76,24 @@ public class ProjectsController(IProjectService projectService) : Controller
             return View(addProjectModel);
         }
 
-        var entityToAdd = new ProjectEntity
+        var dto = new AddProjectMVCDto
         {
-            Id = ++index,
+            ImageFile = addProjectModel.ImageFile,
             Title = addProjectModel.Title,
             Description = addProjectModel.Description,
-            ImageUrl = "default-img.jpg"
         };
 
-        _projects.Add(entityToAdd);
+        var result = await projectService.AddProjectAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+        }
+
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
 
         return Redirect("/all-projects");
     }

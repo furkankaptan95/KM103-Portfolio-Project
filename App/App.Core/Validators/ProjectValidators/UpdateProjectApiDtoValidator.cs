@@ -11,8 +11,8 @@ public class UpdateProjectApiDtoValidator : AbstractValidator<UpdateProjectApiDt
         RuleFor(x => x.ImageUrl).NotEmpty().WithMessage("ImageUrl boş olamaz.");
 
         RuleFor(x => x.Title)
-            .NotEmpty().WithMessage("Giriş kısmı boş olamaz.")
-             .Length(10, 1000).WithMessage("Başlık 10 ile 1000 karakter arasında olmalı.");
+            .NotEmpty().WithMessage("Başlık kısmı boş olamaz.")
+             .MaximumLength(100).WithMessage("Başlık en fazla 100 karakter olabilir.");
 
         RuleFor(x => x.Description)
             .NotEmpty().WithMessage("Açıklama kısmı boş olamaz.");

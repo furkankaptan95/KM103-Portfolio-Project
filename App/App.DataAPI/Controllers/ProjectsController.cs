@@ -1,5 +1,7 @@
-﻿using App.DTOs.ProjectDtos;
+﻿using App.DTOs.EducationDtos;
+using App.DTOs.ProjectDtos;
 using App.Services.AdminServices.Abstract;
+using Ardalis.Result;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +26,27 @@ public class ProjectsController : ControllerBase
     public async Task<IActionResult> GetAllAsync()
     {
         var result = await _projectService.GetAllProjectsAsync();
+
+        if (!result.IsSuccess)
+        {
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpPost("/add-project")]
+    public async Task<IActionResult> AddAsync([FromBody] AddProjectApiDto dto)
+    {
+        var validationResult = await _addValidator.ValidateAsync(dto);
+
+        if (!validationResult.IsValid)
+        {
+            var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+        }
+
+        var result = await _projectService.AddProjectAsync(dto);
 
         if (!result.IsSuccess)
         {

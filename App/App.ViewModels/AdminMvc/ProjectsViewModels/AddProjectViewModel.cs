@@ -10,7 +10,6 @@ public class AddProjectViewModel
     public string Title { get; set; }
 
     [Required(ErrorMessage = "Açıklama kısmı zorunludur.")]
-    [MaxLength(600, ErrorMessage = "Açıklama kısmı en fazla 600 karakter olabilir.")]
     public string Description { get; set; }
 
     [Required(ErrorMessage = "Fotoğraf zorunludur.")]
