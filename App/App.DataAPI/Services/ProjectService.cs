@@ -1,12 +1,11 @@
-﻿using App.DTOs.ProjectDtos;
+﻿using App.Data.DbContexts;
+using App.DTOs.ProjectDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 
-namespace App.AdminMVC.Services;
-public class ProjectService(IHttpClientFactory factory) : IProjectService
+namespace App.DataAPI.Services;
+public class ProjectService(DataApiDbContext dataApiDb) : IProjectService
 {
-    private HttpClient DataApiClient => factory.CreateClient("dataApi");
-
     public Task<Result> AddProjectAsync(AddProjectApiDto dto)
     {
         throw new NotImplementedException();

@@ -13,6 +13,8 @@ using App.DTOs.ExperienceDtos;
 using App.Core.Validators.ExperienceValidators;
 using App.DTOs.PersonalInfoDtos;
 using App.Core.Validators.PersonalInfoValidators;
+using App.Core.Validators.ProjectValidators;
+using App.DTOs.ProjectDtos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +35,7 @@ builder.Services.AddScoped<IBlogPostService, BlogPostService>();
 builder.Services.AddScoped<IEducationService, EducationService>();
 builder.Services.AddScoped<IExperienceService, ExperienceService>();
 builder.Services.AddScoped<IPersonalInfoService, PersonalInfoService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
 
 
 builder.Services.AddTransient<IValidator<AddAboutMeApiDto>, AddAboutMeApiDtoValidator>();
@@ -45,7 +48,8 @@ builder.Services.AddTransient<IValidator<AddExperienceDto>, AddExperienceDtoVali
 builder.Services.AddTransient<IValidator<UpdateExperienceDto>, UpdateExperienceDtoValidator>();
 builder.Services.AddTransient<IValidator<AddPersonalInfoDto>, AddPersonalInfoDtoValidator>();
 builder.Services.AddTransient<IValidator<UpdatePersonalInfoDto>, UpdatePersonalInfoDtoValidator>();
-
+builder.Services.AddTransient<IValidator<UpdateProjectApiDto>, UpdateProjectApiDtoValidator>();
+builder.Services.AddTransient<IValidator<AddProjectApiDto>, AddProjectApiDtoValidator>();
 
 var app = builder.Build();
 
