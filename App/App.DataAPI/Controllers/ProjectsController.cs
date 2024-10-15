@@ -20,7 +20,7 @@ public class ProjectsController : ControllerBase
         _projectService = projectService;
     }
 
-    [HttpGet("/all-experiences")]
+    [HttpGet("/all-projects")]
     public async Task<IActionResult> GetAllAsync()
     {
         var result = await _projectService.GetAllProjectsAsync();
