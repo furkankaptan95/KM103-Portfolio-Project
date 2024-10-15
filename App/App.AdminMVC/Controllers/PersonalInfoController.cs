@@ -1,9 +1,12 @@
 ﻿using App.Data.Entities;
+using App.DTOs.AboutMeDtos;
+using App.DTOs.PersonalInfoDtos;
+using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.PersonalInfoViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-public class PersonalInfoController : Controller
+public class PersonalInfoController(IPersonalInfoService personalInfoService) : Controller
 {
     private static readonly PersonalInfoEntity personalInfoEntity = new();
 
@@ -37,18 +40,30 @@ public class PersonalInfoController : Controller
 
     [HttpPost]
     [Route("add-personal-info")]
-    public async Task<IActionResult> AddPersonalInfo([FromForm] AddPersonalInfoViewModel addPersonalInfoModel)
+    public async Task<IActionResult> AddPersonalInfo([FromForm] AddPersonalInfoViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return View(addPersonalInfoModel);
+            return View(model);
         }
 
-        personalInfoEntity.Surname = addPersonalInfoModel.Surname;
-        personalInfoEntity.Name = addPersonalInfoModel.Name;
-        personalInfoEntity.About = addPersonalInfoModel.About;
-        personalInfoEntity.BirthDate = addPersonalInfoModel.BirthDate;
-        personalInfoEntity.Id = 1;
+        var dto = new AddPersonalInfoDto
+        {
+            About = model.About,
+            Name = model.Name,
+            BirthDate = model.BirthDate,
+            Surname = model.Surname,
+        };
+
+        var result = await personalInfoService.AddPersonalInfoAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return Redirect("/home/index");
+        }
+
+        TempData["Message"] = result.SuccessMessage;
 
         return Redirect("/personal-info");
     }
