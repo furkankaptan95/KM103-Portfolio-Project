@@ -13,10 +13,12 @@ public class PersonalInfoController : ControllerBase
 {
     private readonly IPersonalInfoService _personalInfoService;
     private readonly IValidator<AddPersonalInfoDto> _addValidator;
-    public PersonalInfoController(IPersonalInfoService personalInfoService, IValidator<AddPersonalInfoDto> addValidator)
+    private readonly IValidator<UpdatePersonalInfoDto> _updateValidator;
+    public PersonalInfoController(IPersonalInfoService personalInfoService, IValidator<AddPersonalInfoDto> addValidator, IValidator<UpdatePersonalInfoDto> updateValidator)
     {
         _personalInfoService = personalInfoService;
         _addValidator = addValidator;
+        _updateValidator = updateValidator;
     }
 
     [HttpPost("/add-personal-info")]
@@ -60,15 +62,15 @@ public class PersonalInfoController : ControllerBase
     [HttpPut("/update-personal-info")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdatePersonalInfoDto dto)
     {
-        //var validationResult = await _updateValidator.ValidateAsync(dto);
-        //string errorMessage;
+        var validationResult = await _updateValidator.ValidateAsync(dto);
+        string errorMessage;
 
-        //if (!validationResult.IsValid)
-        //{
-        //    errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+        if (!validationResult.IsValid)
+        {
+            errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
 
-        //    return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
-        //}
+            return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+        }
 
         var result = await _personalInfoService.UpdatePersonalInfoAsync(dto);
 

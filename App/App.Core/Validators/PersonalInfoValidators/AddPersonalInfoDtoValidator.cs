@@ -24,6 +24,6 @@ public class AddPersonalInfoDtoValidator : AbstractValidator<AddPersonalInfoDto>
     }
     private bool BeAValidDate(DateTime date)
     {
-        return date != default(DateTime);
+        return date != default;
     }
 }
