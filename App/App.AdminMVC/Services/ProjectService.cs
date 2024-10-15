@@ -72,18 +72,78 @@ public class ProjectService(IHttpClientFactory factory) : IProjectService
         return await apiResponse.Content.ReadFromJsonAsync<Result<List<AllProjectsDto>>>();
     }
 
-    public Task<Result<ProjectToUpdateDto>> GetByIdAsync(int id)
+    public async Task<Result<ProjectToUpdateDto>> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.GetAsync($"get-project-{id}");
+
+        if (apiResponse.IsSuccessStatusCode)
+        {
+            return await apiResponse.Content.ReadFromJsonAsync<Result<ProjectToUpdateDto>>();
+        }
+
+        string errorMessage;
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result<ProjectToUpdateDto>>();
+
+        if (result.Status == ResultStatus.NotFound)
+        {
+            errorMessage = "Güncellemek istediğiniz Proje bilgisine ulaşılamadı!..";
+        }
+        else
+        {
+            errorMessage = "Güncellemek istediğiniz Proje bilgileri getirilirken beklenmeyen bir hata oluştu.";
+        }
+
+        return Result<ProjectToUpdateDto>.Error(errorMessage);
     }
 
-    public Task<Result> UpdateProjectAsync(UpdateProjectMVCDto dto)
+    public async Task<Result> UpdateProjectAsync(UpdateProjectMVCDto dto)
     {
-        throw new NotImplementedException();
-    }
+        var apiDto = new UpdateProjectApiDto();
+
+        apiDto.Id = dto.Id;
+        apiDto.Description = dto.Description;
+        apiDto.Title = dto.Title;
+
+        if (dto.ImageFile is not null)
+        {
+            using var content = new MultipartFormDataContent();
+
+            var imageContent = new StreamContent(dto.ImageFile.OpenReadStream());
+            imageContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(dto.ImageFile.ContentType);
+            content.Add(imageContent, "imageFile1", dto.ImageFile.FileName); // "imageFile1" API'deki parametre adı ile uyumlu olmalı
+
+            var fileApiResponse = await FileApiClient.PostAsync("upload-files", content);
+
+            if (!fileApiResponse.IsSuccessStatusCode)
+            {
+                return Result.Error("Resim yüklenirken beklenmeyen bir hata oluştu.");
+            }
+
+            var urlDto = await fileApiResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
+
+            apiDto.ImageUrl = urlDto.ImageUrl1;
+        }
+
+        var apiResponse = await DataApiClient.PutAsJsonAsync("update-project", apiDto);
+
+        if (apiResponse.IsSuccessStatusCode)
+        {
+            return Result.SuccessWithMessage(" Proje bilgileri başarılı bir şekilde güncellendi. ");
+        }
+
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (result.Status == ResultStatus.NotFound)
+        {
+            return Result.NotFound("Güncellemek istediğiniz Proje bulunamadı!");
+        }
+
+        return Result.Error("Proje güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
+    }  
 
     public Task<Result> UpdateProjectAsync(UpdateProjectApiDto dto)
     {
         throw new NotImplementedException();
     }
+
 }

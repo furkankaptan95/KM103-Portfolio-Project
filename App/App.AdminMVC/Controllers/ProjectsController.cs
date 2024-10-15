@@ -1,9 +1,11 @@
 ﻿using App.Data.Entities;
 using App.DTOs.BlogPostDtos;
+using App.DTOs.PersonalInfoDtos;
 using App.DTOs.ProjectDtos;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.ExperiencesViewModels;
 using App.ViewModels.AdminMvc.ProjectsViewModels;
+using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
@@ -102,14 +104,22 @@ public class ProjectsController(IProjectService projectService) : Controller
     [Route("update-project-{id:int}")]
     public async Task<IActionResult> UpdateProject([FromRoute] int id)
     {
-        var entityToUpdate = _projects.FirstOrDefault(item => item.Id == id);
+        var result = await projectService.GetByIdAsync(id);
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return Redirect("/all-projects");
+        }
+
+        var dto = result.Value;
 
         var model = new UpdateProjectViewModel
         {
             Id = id,
-            Title = entityToUpdate.Title,
-            Description = entityToUpdate.Description,
-            ImageUrl = entityToUpdate.ImageUrl,
+            ImageUrl = dto.ImageUrl,
+            Title = dto.Title,
+            Description = dto.Description,
         };
 
         return View(model);
@@ -124,10 +134,29 @@ public class ProjectsController(IProjectService projectService) : Controller
             return View(updateProjectModel);
         }
 
-        var entity = _projects.FirstOrDefault(p=>p.Id == updateProjectModel.Id);
+        var dto = new UpdateProjectMVCDto
+        {
+            Title = updateProjectModel.Title,
+            Description = updateProjectModel.Description,
+            Id = updateProjectModel.Id,
+            ImageFile = updateProjectModel.ImageFile,
+        };
 
-        entity.Title = updateProjectModel.Title;
-        entity.Description = updateProjectModel.Description;
+        var result = await projectService.UpdateProjectAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            if (result.Status == ResultStatus.NotFound)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return Redirect("/all-projects");
+            }
+
+            ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return View(updateProjectModel);
+        }
+
+        TempData["Message"] = result.SuccessMessage;
 
         return Redirect("/all-projects");
     }
