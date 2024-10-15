@@ -50,7 +50,7 @@ public class PersonalInfoService(IHttpClientFactory factory) : IPersonalInfoServ
 
         if (apiResponse.IsSuccessStatusCode)
         {
-            return Result.SuccessWithMessage(" -Hakkımda- bilgileriniz başarılı bir şekilde güncellendi. ");
+            return Result.SuccessWithMessage(" Kişisel Bilgileriniz başarılı bir şekilde güncellendi. ");
         }
 
         var result = await apiResponse.Content.ReadFromJsonAsync<Result>();

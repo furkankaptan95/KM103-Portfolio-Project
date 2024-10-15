@@ -1,8 +1,6 @@
 ﻿using App.Data.Entities;
-using App.DTOs.AboutMeDtos;
 using App.DTOs.PersonalInfoDtos;
 using App.Services.AdminServices.Abstract;
-using App.ViewModels.AdminMvc.AboutMeViewModels;
 using App.ViewModels.AdminMvc.PersonalInfoViewModels;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
@@ -87,12 +85,30 @@ public class PersonalInfoController(IPersonalInfoService personalInfoService) : 
     [Route("update-personal-info")]
     public async Task<IActionResult> UpdatePersonalInfo()
     {
+        var result = await personalInfoService.GetPersonalInfoAsync();
+
+        if (!result.IsSuccess)
+        {
+            var errorMessage = result.Errors.FirstOrDefault();
+
+            if (result.Status == ResultStatus.NotFound)
+            {
+                TempData["ErrorMessage"] = errorMessage;
+                return Redirect("/add-personal-info");
+            }
+
+            TempData["ErrorMessage"] = errorMessage;
+            return Redirect("/home/index");
+        }
+
+        var dto = result.Value;
+
         var model = new UpdatePersonalInfoViewModel
         {
-            Name = personalInfoEntity.Name,
-            Surname = personalInfoEntity.Surname,
-            BirthDate = personalInfoEntity.BirthDate,
-            About = personalInfoEntity.About,
+            Name = dto.Name,
+            Surname = dto.Surname,
+            BirthDate = dto.BirthDate,
+            About = dto.About,
         };
 
         return View(model);
@@ -131,7 +147,7 @@ public class PersonalInfoController(IPersonalInfoService personalInfoService) : 
 
         TempData["Message"] = result.SuccessMessage;
 
-        return Redirect("/about-me");
+        return Redirect("/personal-info");
     }
  
 }

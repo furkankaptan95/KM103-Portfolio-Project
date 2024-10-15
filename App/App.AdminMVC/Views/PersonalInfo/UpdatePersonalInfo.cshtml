@@ -1,5 +1,19 @@
 ﻿@model UpdatePersonalInfoViewModel
 
+@if (TempData["Message"] is not null)
+{
+    <div class="alert custom-alert-success mt-5">
+        @TempData["Message"]
+    </div>
+}
+
+@if (ViewData["ErrorMessage"] is not null)
+{
+    <div class="alert custom-alert-error  mt-5">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+
 <div class="container" style="margin-top:70px;">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -40,10 +54,9 @@
 
     <style>
 
-        .custom-alert {
+        .custom-alert-success {
             display: inline-block;
-            position: fixed;
-            top: 70px; /* Varsayılan üst boşluk */
+            top: 10px; /* Varsayılan üst boşluk */
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
@@ -52,9 +65,19 @@
             padding: 10px 20px;
             border-radius: 5px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            width: auto; /* Varsayılan genişlik */
-            max-width: 90%; /* Ekran genişliğine göre sınırlama */
-            white-space: nowrap; /* Alt satıra geçmeyi engeller */
+        }
+
+        .custom-alert-error {
+            display: inline-block;
+            top: 10px; /* Varsayılan üst boşluk */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
     </style>
