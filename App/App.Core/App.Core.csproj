@@ -15,4 +15,8 @@
     <ProjectReference Include="..\App.ViewModels\App.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Validators\ProjectValidators\" />
+  </ItemGroup>
+
 </Project>

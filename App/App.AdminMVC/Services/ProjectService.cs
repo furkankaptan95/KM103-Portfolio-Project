@@ -6,7 +6,7 @@ namespace App.AdminMVC.Services;
 public class ProjectService(IHttpClientFactory factory) : IProjectService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
-    public Task<Result> AddProjectAsync(AddProjectDto dto)
+    public Task<Result> AddProjectAsync(AddProjectApiDto dto)
     {
         throw new NotImplementedException();
     }
