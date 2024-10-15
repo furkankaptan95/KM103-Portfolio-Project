@@ -72,11 +72,11 @@ else
                         <td class="text-center">
                             @if (project.IsVisible)
                             {
-                                <a href="/make-project-invisible-@project.Id" class="btn btn-sm btn-secondary">Gizle</a>
+                                <a href="/change-project-visibility-@project.Id" class="btn btn-sm btn-secondary">Gizle</a>
                             }
                             else
                             {
-                                <a href="/make-project-visible-@project.Id" class="btn btn-sm btn-success">Görünür Yap</a>
+                                <a href="/change-project-visibility-@project.Id" class="btn btn-sm btn-success">Görünür Yap</a>
                             }
                         </td>
                     </tr>
