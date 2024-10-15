@@ -46,9 +46,30 @@ public class ProjectService(DataApiDbContext dataApiDb) : IProjectService
         throw new NotImplementedException();
     }
 
-    public Task<Result> DeleteProjectAsync(int id)
+    public async Task<Result> DeleteProjectAsync(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var entity = await dataApiDb.Projects.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity is null)
+            {
+                return Result.NotFound();
+            }
+
+            dataApiDb.Projects.Remove(entity);
+            await dataApiDb.SaveChangesAsync();
+
+            return Result.Success();
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
     }
 
     public async Task<Result<List<AllProjectsDto>>> GetAllProjectsAsync()
