@@ -2,7 +2,9 @@
 using App.DTOs.AboutMeDtos;
 using App.DTOs.PersonalInfoDtos;
 using App.Services.AdminServices.Abstract;
+using App.ViewModels.AdminMvc.AboutMeViewModels;
 using App.ViewModels.AdminMvc.PersonalInfoViewModels;
+using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
@@ -14,21 +16,34 @@ public class PersonalInfoController(IPersonalInfoService personalInfoService) : 
     [Route("personal-info")]
     public async Task<IActionResult> PersonalInfo()
     {
-        if(personalInfoEntity.Id == 0)
+        var result = await personalInfoService.GetPersonalInfoAsync();
+
+        if (!result.IsSuccess)
         {
-            TempData["Message"] = "Kişisel Bilgi bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurunuz.";
-            return Redirect("/add-personal-info");
+            string errorMessage = result.Errors.FirstOrDefault();
+
+            if (result.Status == ResultStatus.NotFound)
+            {
+                TempData["Message"] = errorMessage;
+                return Redirect("/add-personal-info");
+            }
+
+            TempData["ErrorMessage"] = errorMessage;
+
+            return Redirect("/home/index");
         }
 
-        var model = new PersonalInfoViewModel
+        var dto = result.Value;
+
+        var aboutMeModel = new PersonalInfoViewModel
         {
-            Name = personalInfoEntity.Name,
-            Surname = personalInfoEntity.Surname,
-            BirthDate = personalInfoEntity.BirthDate,
-            About = personalInfoEntity.About,
+            Name = dto.Name,
+            Surname = dto.Surname,
+            About = dto.About,
+            BirthDate = dto.BirthDate,
         };
 
-        return View(model);
+        return View(aboutMeModel);
     }
 
     [HttpGet]

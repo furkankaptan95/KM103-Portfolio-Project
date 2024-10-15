@@ -38,4 +38,21 @@ public class PersonalInfoController : ControllerBase
 
         return StatusCode(500, result);
     }
+
+    [HttpGet("/get-personal-info")]
+    public async Task<IActionResult> GetAsync()
+    {
+        var result = await _personalInfoService.GetPersonalInfoAsync();
+
+        if (result.IsSuccess)
+        {
+            return Ok(result);
+        }
+
+       if (result.Status == ResultStatus.NotFound)
+       {
+            return NotFound(result);
+       }
+            return StatusCode(500, result);
+    }
 }

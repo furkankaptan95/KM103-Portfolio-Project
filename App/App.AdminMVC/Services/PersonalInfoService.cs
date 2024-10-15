@@ -1,4 +1,5 @@
-﻿using App.DTOs.PersonalInfoDtos;
+﻿using App.DTOs.AboutMeDtos;
+using App.DTOs.PersonalInfoDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 
@@ -18,9 +19,29 @@ public class PersonalInfoService(IHttpClientFactory factory) : IPersonalInfoServ
         return Result.SuccessWithMessage("Kişisel Bilgiler başarıyla eklendi.");
     }
 
-    public Task<Result<ShowPersonalInfoDto>> GetPersonalInfoAsync()
+    public async Task<Result<ShowPersonalInfoDto>> GetPersonalInfoAsync()
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.GetAsync("get-personal-info");
+
+        if (apiResponse.IsSuccessStatusCode)
+        {
+            return await apiResponse.Content.ReadFromJsonAsync<Result<ShowPersonalInfoDto>>();
+        }
+
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result<ShowPersonalInfoDto>>();
+
+        string errorMessage;
+
+        if (result.Status == ResultStatus.NotFound)
+        {
+            errorMessage = "Kişisel bilgiler bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurabilirsiniz.";
+
+            return Result<ShowPersonalInfoDto>.NotFound(errorMessage);
+        }
+
+        errorMessage = "Bilgiler getirilirken beklenmeyen bir hata oluştu.";
+
+        return Result<ShowPersonalInfoDto>.Error(errorMessage);
     }
 
     public Task<Result> UpdatePersonalInfoAsync(UpdatePersonalInfoDto dto)

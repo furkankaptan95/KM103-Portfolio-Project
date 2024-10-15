@@ -3,6 +3,7 @@ using App.Data.Entities;
 using App.DTOs.PersonalInfoDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services;
@@ -35,9 +36,38 @@ public class PersonalInfoService(DataApiDbContext dataApiDb) : IPersonalInfoServ
         }
     }
 
-    public Task<Result<ShowPersonalInfoDto>> GetPersonalInfoAsync()
+    public async Task<Result<ShowPersonalInfoDto>> GetPersonalInfoAsync()
     {
-        throw new NotImplementedException();
+        try
+        {
+            var entity = await dataApiDb.PersonalInfos.FirstOrDefaultAsync();
+
+            if (entity == null)
+            {
+                return Result<ShowPersonalInfoDto>.NotFound();
+            }
+
+            var dto = new ShowPersonalInfoDto()
+            {
+                Name = entity.Name,
+                Surname = entity.Surname,
+                About = entity.About,
+                BirthDate = entity.BirthDate,
+            };
+
+            return Result<ShowPersonalInfoDto>.Success(dto);
+        }
+
+        catch (SqlException sqlEx)
+        {
+            return Result<ShowPersonalInfoDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+
+        catch (Exception ex)
+        {
+            var errorMessage = $"Bir hata oluştu: {ex.Message}, Hata Kodu: {ex.HResult}";
+            return Result<ShowPersonalInfoDto>.Error(errorMessage);
+        }
     }
 
     public Task<Result> UpdatePersonalInfoAsync(UpdatePersonalInfoDto dto)
