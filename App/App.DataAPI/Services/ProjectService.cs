@@ -41,9 +41,32 @@ public class ProjectService(DataApiDbContext dataApiDb) : IProjectService
         throw new NotImplementedException();
     }
 
-    public Task<Result> ChangeProjectVisibilityAsync(int id)
+    public async Task<Result> ChangeProjectVisibilityAsync(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var entity = await dataApiDb.Projects.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity is null)
+            {
+                return Result.NotFound();
+            }
+
+            entity.IsVisible = !entity.IsVisible;
+
+            dataApiDb.Projects.Update(entity);
+            await dataApiDb.SaveChangesAsync();
+
+            return Result.Success();
+        }
+        catch (DbUpdateException dbEx)
+        {
+            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
     }
 
     public async Task<Result> DeleteProjectAsync(int id)
