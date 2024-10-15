@@ -131,7 +131,7 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
         if (!result.IsSuccess)
         {
             ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
-            return View();
+            return View(updateAboutMeModel);
         }
 
         TempData["Message"] = result.SuccessMessage;
