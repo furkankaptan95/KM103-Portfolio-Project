@@ -4,8 +4,15 @@
 
     @if (TempData["Message"] is not null)
     {
-        <div class="alert custom-alert mt-3">
+        <div class="alert custom-alert-success mt-5">
             @TempData["Message"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] is not null)
+    {
+        <div class="alert custom-alert-error mt-5">
+            @TempData["ErrorMessage"]
         </div>
     }
 
@@ -48,7 +55,7 @@
 
     <style>
 
-       .custom-alert {
+        .custom-alert-success {
             display: inline-block;
             top: 10px; /* Varsayılan üst boşluk */
             left: 50%;
@@ -61,6 +68,18 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
+        .custom-alert-error {
+            display: inline-block;
+            top: 10px; /* Varsayılan üst boşluk */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
     </style>
 
 }

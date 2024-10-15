@@ -1,5 +1,13 @@
 ﻿@model PersonalInfoViewModel
 
+@if (TempData["Message"] is not null)
+{
+    <div class="alert custom-alert-success mt-5">
+        @TempData["Message"]
+    </div>
+}
+
+
 <div class="container mt-5">
     <div class="profile-card">
         <h2 class="profile-title">Kişisel Bilgiler</h2>
@@ -28,6 +36,21 @@
 @section Styles {
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+
+        .custom-alert-success {
+            display: inline-block;
+            top: 10px; /* Varsayılan üst boşluk */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+
         .profile-card {
             background-color: #f8f9fa;
             padding: 20px;
