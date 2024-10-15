@@ -1,9 +1,11 @@
 ﻿using App.Data.Entities;
 using App.DTOs.BlogPostDtos;
+using App.DTOs.PersonalInfoDtos;
 using App.DTOs.ProjectDtos;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.ExperiencesViewModels;
 using App.ViewModels.AdminMvc.ProjectsViewModels;
+using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
@@ -124,10 +126,29 @@ public class ProjectsController(IProjectService projectService) : Controller
             return View(updateProjectModel);
         }
 
-        var entity = _projects.FirstOrDefault(p=>p.Id == updateProjectModel.Id);
+        var dto = new UpdateProjectMVCDto
+        {
+            Title = updateProjectModel.Title,
+            Description = updateProjectModel.Description,
+            Id = updateProjectModel.Id,
+            ImageFile = updateProjectModel.ImageFile,
+        };
 
-        entity.Title = updateProjectModel.Title;
-        entity.Description = updateProjectModel.Description;
+        var result = await projectService.UpdateProjectAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            if (result.Status == ResultStatus.NotFound)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return Redirect("/all-projects");
+            }
+
+            ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return View(updateProjectModel);
+        }
+
+        TempData["Message"] = result.SuccessMessage;
 
         return Redirect("/all-projects");
     }
