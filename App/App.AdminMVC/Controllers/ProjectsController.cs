@@ -136,11 +136,19 @@ public class ProjectsController(IProjectService projectService) : Controller
     [Route("delete-project-{id:int}")]
     public async Task<IActionResult> DeleteProject([FromRoute] int id)
     {
-        var entityToDelete = _projects.FirstOrDefault(x => x.Id == id);
+        var result = await projectService.DeleteProjectAsync(id);
 
-        _projects.Remove(entityToDelete);
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+        }
 
-       return Redirect("/all-projects");
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
+
+        return Redirect("/all-projects");
     }
 
 
