@@ -1,6 +1,5 @@
 ﻿using App.Data.DbContexts;
 using App.Data.Entities;
-using App.DTOs.BlogPostDtos;
 using App.DTOs.EducationDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;

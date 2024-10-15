@@ -15,13 +15,6 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
             return Result.Error("Eğitim bilgisi eklenirken beklenmedik bir hata oluştu..");
         }
 
-        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
-
-        if (!result.IsSuccess)
-        {
-            return Result.Error("Eğitim bilgisi eklenirken beklenmedik bir hata oluştu..");
-        }
-
         return Result.SuccessWithMessage("Eğitim bilgisi başarıyla eklendi.");
     }
 
@@ -29,55 +22,48 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
     {
         var apiResponse = await DataApiClient.GetAsync($"change-education-visibility-{id}");
 
-        if (!apiResponse.IsSuccessStatusCode)
+        if (apiResponse.IsSuccessStatusCode)
         {
-            return Result.Error("Eğitim'in görünürlüğü değiştirilirken beklenmedik bir hata oluştu..");
+            return Result.SuccessWithMessage("Eğitim'in görünürlüğü başarıyla değiştirildi.");
         }
 
+        string errorMessage;
         var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
 
-        if (!result.IsSuccess)
+        if (result.Status == ResultStatus.NotFound)
         {
-            string errorMessage;
-
-            if (result.Status == ResultStatus.NotFound)
-            {
-                errorMessage = "Görünürlüğünü değiştirmek istediğiniz Eğitim bulunamadı!..";
-            }
-
+            errorMessage = "Görünürlüğünü değiştirmek istediğiniz Eğitim bulunamadı!..";
+        }
+        else
+        {
             errorMessage = "Eğitim'in görünürlüğü değiştirilirken beklenmeyen bir hata oluştu..";
-            return Result.Error(errorMessage);
         }
 
-        return Result.SuccessWithMessage("Eğitim'in görünürlüğü başarıyla değiştirildi.");
+        return Result.Error(errorMessage);
     }
 
     public async Task<Result> DeleteEducationAsync(int id)
     {
         var apiResponse = await DataApiClient.DeleteAsync($"delete-education-{id}");
 
-        if (!apiResponse.IsSuccessStatusCode)
+        if (apiResponse.IsSuccessStatusCode)
         {
-            return Result.Error("Eğitim bilgisi silinirken beklenmedik bir hata oluştu..");
+            return Result.SuccessWithMessage("Eğitim bilgisi başarıyla silindi.");
         }
 
+        string errorMessage;
         var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
 
-        if (!result.IsSuccess)
+        if (result.Status == ResultStatus.NotFound)
         {
-            string errorMessage;
-
-            if (result.Status == ResultStatus.NotFound)
-            {
-                errorMessage = "Silmek istediğiniz Eğitim bilgisi bulunamadı!..";
-            }
-
-            errorMessage = "Eğitim bilgisi silinirken beklenmedik bir hata oluştu..";
-
-            return Result.Error(errorMessage);
+            errorMessage = "Silmek istediğiniz Eğitim bilgisi bulunamadı!..";
         }
-
-        return Result.SuccessWithMessage("Eğitim bilgisi başarıyla silindi.");
+        else
+        {
+            errorMessage = "Eğitim bilgisi silinirken beklenmedik bir hata oluştu..";
+        }
+       
+        return Result.Error(errorMessage);
     }
 
     public async Task<Result<List<AllEducationsDto>>> GetAllEducationsAsync()
@@ -89,41 +75,31 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
             return Result<List<AllEducationsDto>>.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
         }
 
-        var result = await apiResponse.Content.ReadFromJsonAsync< Result<List<AllEducationsDto>>>();
-
-        if (!result.IsSuccess)
-        {
-            return Result<List<AllEducationsDto>>.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
-        }
-
-        return Result<List<AllEducationsDto>>.Success(result.Value);
+        return await apiResponse.Content.ReadFromJsonAsync<Result<List<AllEducationsDto>>>();
     }
 
     public async Task<Result<EducationToUpdateDto>> GetEducationByIdAsync(int id)
     {
         var apiResponse = await DataApiClient.GetAsync($"get-education-{id}");
 
-        if (!apiResponse.IsSuccessStatusCode)
+        if (apiResponse.IsSuccessStatusCode)
         {
-            return Result<EducationToUpdateDto>.Error("Güncellemek istediğiniz Eğitim bilgileri getirilirken beklenmeyen bir hata oluştu.");
+            return await apiResponse.Content.ReadFromJsonAsync<Result<EducationToUpdateDto>>();
         }
 
+        string errorMessage;
         var result = await apiResponse.Content.ReadFromJsonAsync<Result<EducationToUpdateDto>>();
 
-        if (!result.IsSuccess)
+        if(result.Status == ResultStatus.NotFound)
         {
-            string errorMessage;
-
-            if(result.Status == ResultStatus.NotFound)
-            {
-                errorMessage = "Güncellemek istediğiniz Eğitim bilgisine ulaşılamadı!..";
-            }
+            errorMessage = "Güncellemek istediğiniz Eğitim bilgisine ulaşılamadı!..";
+        }
+        else
+        {
             errorMessage = "Güncellemek istediğiniz Eğitim bilgileri getirilirken beklenmeyen bir hata oluştu.";
-
-            return Result<EducationToUpdateDto>.Error(errorMessage);
         }
 
-        return Result<EducationToUpdateDto>.Success(result.Value);
+        return Result<EducationToUpdateDto>.Error(errorMessage);
     }
 
     public async Task<Result> UpdateEducationAsync(UpdateEducationDto dto)
@@ -131,13 +107,6 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
         var apiResponse = await DataApiClient.PutAsJsonAsync("update-education", dto);
 
         if (!apiResponse.IsSuccessStatusCode)
-        {
-            return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
-        }
-
-        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
-
-        if (!result.IsSuccess)
         {
             return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
         }
