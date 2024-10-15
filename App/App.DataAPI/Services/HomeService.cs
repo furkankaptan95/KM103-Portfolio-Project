@@ -20,17 +20,24 @@ public class HomeService : IHomeService
     {
         try
         {
+            var dto = new HomeDto();
 
             var apiResponse = await AuthApiClient.GetAsync("get-users-count");
 
-            var dto = new HomeDto();
+            if (!apiResponse.IsSuccessStatusCode)
+            {
+                dto.UsersCount = 0;
+            }
+            else
+            {
+                dto.UsersCount = await apiResponse.Content.ReadFromJsonAsync<int>();
+            }
 
             dto.CommentsCount = await _dataApiDb.Comments.CountAsync();
             dto.ProjectsCount = await _dataApiDb.Projects.CountAsync();
             dto.BlogPostsCount = await _dataApiDb.BlogPosts.CountAsync();
             dto.ExperiencesCount = await _dataApiDb.Experiences.CountAsync();
             dto.EducationsCount = await _dataApiDb.Educations.CountAsync();
-            dto.UsersCount = await apiResponse.Content.ReadFromJsonAsync<int>();
 
             return Result<HomeDto>.Success(dto);
         }
