@@ -25,6 +25,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var authApiUrl = builder.Configuration.GetValue<string>("AuthApiUrl");
+
+if (string.IsNullOrWhiteSpace(authApiUrl))
+{
+    throw new InvalidOperationException("AuthApiUrl is required in appsettings.json");
+}
+
+builder.Services.AddHttpClient("authApi", c =>
+{
+    c.BaseAddress = new Uri(authApiUrl);
+});
+
 builder.Services.AddDbContext<DataApiDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DataApiBaseDb"));
