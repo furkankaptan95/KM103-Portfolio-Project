@@ -44,8 +44,23 @@ public class PersonalInfoService(IHttpClientFactory factory) : IPersonalInfoServ
         return Result<ShowPersonalInfoDto>.Error(errorMessage);
     }
 
-    public Task<Result> UpdatePersonalInfoAsync(UpdatePersonalInfoDto dto)
+    public async Task<Result> UpdatePersonalInfoAsync(UpdatePersonalInfoDto dto)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.PutAsJsonAsync("update-personal-info", dto);
+
+        if (apiResponse.IsSuccessStatusCode)
+        {
+            return Result.SuccessWithMessage(" -Hakkımda- bilgileriniz başarılı bir şekilde güncellendi. ");
+        }
+
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if(result.Status == ResultStatus.NotFound)
+        {
+            return Result.NotFound("Güncellemek istediğiniz Kişisel Bilgiler kısmında herhangi bir bilgi bulunmuyor!..Eklemek için formu doldurabilirsiniz..");
+        }
+
+        return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
+
     }
 }
