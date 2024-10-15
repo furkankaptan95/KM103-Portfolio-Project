@@ -1,4 +1,5 @@
-﻿using App.DTOs.PersonalInfoDtos;
+﻿using App.DTOs.AboutMeDtos;
+using App.DTOs.PersonalInfoDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
@@ -54,5 +55,33 @@ public class PersonalInfoController : ControllerBase
             return NotFound(result);
        }
             return StatusCode(500, result);
+    }
+
+    [HttpPut("/update-personal-info")]
+    public async Task<IActionResult> UpdateAsync([FromBody] UpdatePersonalInfoDto dto)
+    {
+        //var validationResult = await _updateValidator.ValidateAsync(dto);
+        //string errorMessage;
+
+        //if (!validationResult.IsValid)
+        //{
+        //    errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+
+        //    return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+        //}
+
+        var result = await _personalInfoService.UpdatePersonalInfoAsync(dto);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result);
+        }
+
+        if(result.Status == ResultStatus.NotFound)
+        {
+            return NotFound(result);
+        }
+
+        return StatusCode(500, result);
     }
 }
