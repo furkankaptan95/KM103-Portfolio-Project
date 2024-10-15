@@ -11,6 +11,8 @@ using App.DTOs.EducationDtos;
 using App.Core.Validators.EducationValidators;
 using App.DTOs.ExperienceDtos;
 using App.Core.Validators.ExperienceValidators;
+using App.DTOs.PersonalInfoDtos;
+using App.Core.Validators.PersonalInfoValidators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +43,8 @@ builder.Services.AddTransient<IValidator<AddEducationDto>, AddEducationDtoValida
 builder.Services.AddTransient<IValidator<UpdateEducationDto>, UpdateEducationDtoValidator>();
 builder.Services.AddTransient<IValidator<AddExperienceDto>, AddExperienceDtoValidator>();
 builder.Services.AddTransient<IValidator<UpdateExperienceDto>, UpdateExperienceDtoValidator>();
+builder.Services.AddTransient<IValidator<AddPersonalInfoDto>, AddPersonalInfoDtoValidator>();
+
 
 var app = builder.Build();
 
