@@ -1,4 +1,5 @@
-﻿using App.DTOs.ProjectDtos;
+﻿using App.DTOs.ExperienceDtos;
+using App.DTOs.ProjectDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 
@@ -27,9 +28,16 @@ public class ProjectService(IHttpClientFactory factory) : IProjectService
         throw new NotImplementedException();
     }
 
-    public Task<Result<List<AllProjectsDto>>> GetAllProjectsAsync()
+    public async Task<Result<List<AllProjectsDto>>> GetAllProjectsAsync()
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.GetAsync("all-projects");
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result<List<AllProjectsDto>>.Error("Projeler getirilirken beklenmedik bir hata oluştu..");
+        }
+
+        return await apiResponse.Content.ReadFromJsonAsync<Result<List<AllProjectsDto>>>();
     }
 
     public Task<Result<ProjectToUpdateDto>> GetByIdAsync(int id)

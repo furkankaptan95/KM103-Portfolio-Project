@@ -1,104 +1,164 @@
 ﻿@model List<AllProjectsViewModel>
 
-<div class="container mt-4">
-    <h2 class="text-center">Projeler</h2>
-    <table class="table table-bordered table-striped table-responsive-md mt-4">
-        <thead class="thead-dark">
-            <tr>
-                <th class="text-center">Resim</th>
-                <th class="text-center">Başlık</th>
-                <th class="text-center">Açıklama</th>
-                <th class="text-center">İşlemler</th>
-                <th class="text-center">Görünürlük</th>
-                <th class="text-center">Görünür Yap / Gizle</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var project in Model)
-            {
+@if (TempData["Message"] is not null)
+{
+    <div class="alert custom-alert-success mt-5">
+        @TempData["Message"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert custom-alert-error  mt-5">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+
+@if (Model.Count == 0)
+{
+    <h2 class="text-center my-4" style="font-weight: 600; color: #333;">Projeler</h2>
+
+    <div class="alert alert-info text-center mt-5 p-4" style="border-radius: 10px;">
+        <h4 class="font-weight-bold">Şu anda görüntülenecek bir Proje bilgisi bulunmuyor.</h4>
+        <p class="mb-4 text-muted">Yeni Proje ekleyerek içeriği zenginleştirebilirsiniz.</p>
+        <a href="/add-experience" class="btn btn-sm btn-primary">
+            <i class="fas fa-plus mr-2"></i>Proje Ekle
+        </a>
+    </div>
+}
+
+else
+{
+    <div class="container mt-4">
+        <h2 class="text-center">Projeler</h2>
+        <table class="table table-bordered table-striped table-responsive-md mt-4">
+            <thead class="thead-dark">
                 <tr>
-                    <td style="text-align:center;">
-                        <img src="~/assets/img/@project.ImageUrl" alt="@project.Title" class="img-thumbnail" style="max-width: 100px; height: auto; display: block; margin: auto;">
-                    </td>
-
-                    <td class="text-center">@project.Title</td>
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@project.Id" aria-haspopup="true" aria-expanded="false">Açıklamayı Görüntüle</button>
-                    </td>
-                    <td class="text-center">
-                        <a href="/update-project-@project.Id" class="btn btn-sm btn-primary">Düzenle</a>
-                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal-@project.Id">Sil</button>
-                    </td>
-                    <td class="text-center">
-                        @if (project.IsVisible)
-                        {
-                            <span>Görünür ✅</span>
-                        }
-                        else
-                        {
-                            <span>Gizli ❌</span>
-                        }
-                    </td>
-                    <td class="text-center">
-                        @if (project.IsVisible)
-                        {
-                            <a href="/make-project-invisible-@project.Id" class="btn btn-sm btn-secondary">Gizle</a>
-                        }
-                        else
-                        {
-                            <a href="/make-project-visible-@project.Id" class="btn btn-sm btn-success">Görünür Yap</a>
-                        }
-                    </td>
+                    <th class="text-center">Resim</th>
+                    <th class="text-center">Başlık</th>
+                    <th class="text-center">Açıklama</th>
+                    <th class="text-center">İşlemler</th>
+                    <th class="text-center">Görünürlük</th>
+                    <th class="text-center">Görünür Yap / Gizle</th>
                 </tr>
+            </thead>
+            <tbody>
+                @foreach (var project in Model)
+                {
+                    <tr>
+                        <td style="text-align:center;">
+                            <img src="~/assets/img/@project.ImageUrl" alt="@project.Title" class="img-thumbnail" style="max-width: 100px; height: auto; display: block; margin: auto;">
+                        </td>
 
-                <div class="modal fade" id="modal-@project.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabel-@project.Id" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalLabel-@project.Id">@project.Title</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>@project.Description</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                        <td class="text-center">@project.Title</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@project.Id" aria-haspopup="true" aria-expanded="false">Açıklamayı Görüntüle</button>
+                        </td>
+                        <td class="text-center">
+                            <a href="/update-project-@project.Id" class="btn btn-sm btn-primary">Düzenle</a>
+                            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal-@project.Id">Sil</button>
+                        </td>
+                        <td class="text-center">
+                            @if (project.IsVisible)
+                            {
+                                <span>Görünür ✅</span>
+                            }
+                            else
+                            {
+                                <span>Gizli ❌</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            @if (project.IsVisible)
+                            {
+                                <a href="/make-project-invisible-@project.Id" class="btn btn-sm btn-secondary">Gizle</a>
+                            }
+                            else
+                            {
+                                <a href="/make-project-visible-@project.Id" class="btn btn-sm btn-success">Görünür Yap</a>
+                            }
+                        </td>
+                    </tr>
+
+                    <div class="modal fade" id="modal-@project.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabel-@project.Id" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalLabel-@project.Id">@project.Title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>@project.Description</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Silme Onay Modalı -->
-                <div class="modal fade" id="deleteModal-@project.Id" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel-@project.Id" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="deleteModalLabel-@project.Id">Silme Onayı</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <b>@project.Title</b> başlıklı projeyi silmek istediğinize emin misiniz?
-                            </div>
-                            <div class="modal-footer">
-                                <form action="/delete-project-@project.Id" method="get">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
-                                    <button type="submit" class="btn btn-danger">Sil</button>
-                                </form>
+                    <!-- Silme Onay Modalı -->
+                    <div class="modal fade" id="deleteModal-@project.Id" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel-@project.Id" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel-@project.Id">Silme Onayı</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <b>@project.Title</b> başlıklı projeyi silmek istediğinize emin misiniz?
+                                </div>
+                                <div class="modal-footer">
+                                    <form action="/delete-project-@project.Id" method="get">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                                        <button type="submit" class="btn btn-danger">Sil</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            }
-        </tbody>
-    </table>
-</div>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
 
 @section Styles{
     <style>
+
+        .custom-alert-success {
+            display: inline-block;
+            top: 10px; /* Varsayılan üst boşluk */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-alert-error {
+            display: inline-block;
+            top: 10px; /* Varsayılan üst boşluk */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
         .table td {
             vertical-align: middle; /* Tüm tablo hücrelerini dikey olarak ortalar */
         }
