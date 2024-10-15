@@ -44,7 +44,7 @@ public class ProjectService(IHttpClientFactory factory) : IProjectService
 
         if (apiResponse.IsSuccessStatusCode)
         {
-            return Result.SuccessWithMessage("Proje  başarıyla eklendi. ");
+            return Result.SuccessWithMessage("Proje başarıyla eklendi. ");
         }
 
         return Result.Error("Proje eklenirken beklenmeyen bir hata oluştu..");
