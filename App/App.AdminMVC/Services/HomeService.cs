@@ -6,8 +6,15 @@ namespace App.AdminMVC.Services;
 public class HomeService(IHttpClientFactory factory) : IHomeService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
-    public Task<Result<HomeDto>> GetHomeInfosAsync()
+    public async Task<Result<HomeDto>> GetHomeInfosAsync()
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.GetAsync("get-home-infos");
+
+        if (apiResponse.IsSuccessStatusCode)
+        {
+            return await apiResponse.Content.ReadFromJsonAsync<Result<HomeDto>>();
+        }
+
+        return Result<HomeDto>.Error();
     }
 }
