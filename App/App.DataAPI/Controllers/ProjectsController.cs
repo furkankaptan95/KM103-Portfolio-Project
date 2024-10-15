@@ -1,4 +1,4 @@
-﻿using App.DTOs.EducationDtos;
+using App.DTOs.EducationDtos;
 using App.DTOs.ProjectDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
@@ -56,11 +56,52 @@ public class ProjectsController : ControllerBase
         return Ok(result);
     }
 
+
+    
     [HttpDelete("/delete-project-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
 
         var result = await _projectService.DeleteProjectAsync(id);
+
+        if (!result.IsSuccess)
+        {
+            if (result.Status == ResultStatus.NotFound)
+            {
+                return NotFound(result);
+            }
+
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpPut("/update-project")]
+    public async Task<IActionResult> UpdateAsync([FromBody] UpdateProjectApiDto dto)
+    {
+        var validationResult = await _updateValidator.ValidateAsync(dto);
+
+        if (!validationResult.IsValid)
+        {
+            var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+        }
+
+        var result = await _projectService.UpdateProjectAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpGet("/get-project-{id:int}")]
+    public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
+    {
+        var result = await _projectService.GetByIdAsync(id);
 
         if (!result.IsSuccess)
         {
