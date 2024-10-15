@@ -72,9 +72,28 @@ public class ProjectService(IHttpClientFactory factory) : IProjectService
         return await apiResponse.Content.ReadFromJsonAsync<Result<List<AllProjectsDto>>>();
     }
 
-    public Task<Result<ProjectToUpdateDto>> GetByIdAsync(int id)
+    public async Task<Result<ProjectToUpdateDto>> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.GetAsync($"get-project-{id}");
+
+        if (apiResponse.IsSuccessStatusCode)
+        {
+            return await apiResponse.Content.ReadFromJsonAsync<Result<ProjectToUpdateDto>>();
+        }
+
+        string errorMessage;
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result<ProjectToUpdateDto>>();
+
+        if (result.Status == ResultStatus.NotFound)
+        {
+            errorMessage = "Güncellemek istediğiniz Proje bilgisine ulaşılamadı!..";
+        }
+        else
+        {
+            errorMessage = "Güncellemek istediğiniz Proje bilgileri getirilirken beklenmeyen bir hata oluştu.";
+        }
+
+        return Result<ProjectToUpdateDto>.Error(errorMessage);
     }
 
     public async Task<Result> UpdateProjectAsync(UpdateProjectMVCDto dto)
