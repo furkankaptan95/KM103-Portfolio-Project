@@ -1,4 +1,5 @@
 ﻿using App.Data.DbContexts;
+using App.Data.Entities;
 using App.DTOs.ExperienceDtos;
 using App.DTOs.ProjectDtos;
 using App.Services.AdminServices.Abstract;
@@ -9,9 +10,30 @@ using Microsoft.EntityFrameworkCore;
 namespace App.DataAPI.Services;
 public class ProjectService(DataApiDbContext dataApiDb) : IProjectService
 {
-    public Task<Result> AddProjectAsync(AddProjectApiDto dto)
+    public  async Task<Result> AddProjectAsync(AddProjectApiDto dto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var entity = new ProjectEntity()
+            {
+                Title  = dto.Title,
+                Description = dto.Description,
+                ImageUrl = dto.ImageUrl,
+            };
+
+            await dataApiDb.Projects.AddAsync(entity);
+            await dataApiDb.SaveChangesAsync();
+
+            return Result.Success();
+        }
+        catch (DbUpdateException dbEx)
+        {
+            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
     }
 
     public Task<Result> AddProjectAsync(AddProjectMVCDto dto)
@@ -64,7 +86,7 @@ public class ProjectService(DataApiDbContext dataApiDb) : IProjectService
             return Result<List<AllProjectsDto>>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
+    
     public Task<Result<ProjectToUpdateDto>> GetByIdAsync(int id)
     {
         throw new NotImplementedException();
