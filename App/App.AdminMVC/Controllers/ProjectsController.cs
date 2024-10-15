@@ -104,14 +104,22 @@ public class ProjectsController(IProjectService projectService) : Controller
     [Route("update-project-{id:int}")]
     public async Task<IActionResult> UpdateProject([FromRoute] int id)
     {
-        var entityToUpdate = _projects.FirstOrDefault(item => item.Id == id);
+        var result = await projectService.GetByIdAsync(id);
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return Redirect("/all-projects");
+        }
+
+        var dto = result.Value;
 
         var model = new UpdateProjectViewModel
         {
             Id = id,
-            Title = entityToUpdate.Title,
-            Description = entityToUpdate.Description,
-            ImageUrl = entityToUpdate.ImageUrl,
+            ImageUrl = dto.ImageUrl,
+            Title = dto.Title,
+            Description = dto.Description,
         };
 
         return View(model);

@@ -135,8 +135,12 @@ public class ProjectService(DataApiDbContext dataApiDb) : IProjectService
             }
 
             entity.Title = dto.Title;
-            entity.ImageUrl = dto.ImageUrl;
             entity.Description = dto.Description;
+
+            if (dto.ImageUrl != null) 
+            { 
+            entity.ImageUrl = dto.ImageUrl;
+            }
 
             dataApiDb.Projects.Update(entity);
             await dataApiDb.SaveChangesAsync();
