@@ -5,6 +5,7 @@ namespace App.ViewModels.AdminMvc.ExperiencesViewModels;
 public class UpdateExperienceViewModel
 {
     public int Id { get; set; }
+
     [Required(ErrorMessage = "Başlık kısmı zorunludur.")]
     [MaxLength(100, ErrorMessage = "Başlık kısmı en fazla 100 karakter olabilir.")]
     public string Title { get; set; } = string.Empty;

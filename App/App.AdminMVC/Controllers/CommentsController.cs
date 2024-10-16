@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace App.AdminMVC.Controllers;
 public class CommentsController(ICommentService commentService) : Controller
 {
-
     [HttpGet]
     [Route("all-comments")]
     public async Task<IActionResult> AllComments()
@@ -21,16 +20,16 @@ public class CommentsController(ICommentService commentService) : Controller
         var dtos = result.Value;
 
         List<AllCommentsViewModel> models = dtos
-      .Select(item => new AllCommentsViewModel
-      {
-          Id = item.Id,
-          Content = item.Content,
-          CreatedAt = item.CreatedAt,
-          IsApproved = item.IsApproved,
-          BlogPostName = item.BlogPostName,
-          Commenter = item.Commenter,
-      })
-      .ToList();
+          .Select(item => new AllCommentsViewModel
+          {
+              Id = item.Id,
+              Content = item.Content,
+              CreatedAt = item.CreatedAt,
+              IsApproved = item.IsApproved,
+              BlogPostName = item.BlogPostName,
+              Commenter = item.Commenter,
+          })
+          .ToList();
 
         return View(models);
     }
@@ -72,5 +71,4 @@ public class CommentsController(ICommentService commentService) : Controller
 
         return Redirect("/all-comments");
     }
-
 }

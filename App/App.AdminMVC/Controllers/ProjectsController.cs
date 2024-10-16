@@ -1,9 +1,5 @@
-﻿using App.Data.Entities;
-using App.DTOs.BlogPostDtos;
-using App.DTOs.PersonalInfoDtos;
-using App.DTOs.ProjectDtos;
+﻿using App.DTOs.ProjectDtos;
 using App.Services.AdminServices.Abstract;
-using App.ViewModels.AdminMvc.ExperiencesViewModels;
 using App.ViewModels.AdminMvc.ProjectsViewModels;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace App.AdminMVC.Controllers;
 public class ProjectsController(IProjectService projectService) : Controller
 {
-
     [HttpGet]
     [Route("all-projects")]
     public async Task<IActionResult> AllProjects()
@@ -27,8 +22,6 @@ public class ProjectsController(IProjectService projectService) : Controller
         var models = new List<AllProjectsViewModel>();
         var dtos = result.Value;
 
-        if (dtos.Count > 0)
-        {
             models = dtos
            .Select(item => new AllProjectsViewModel
            {
@@ -39,7 +32,6 @@ public class ProjectsController(IProjectService projectService) : Controller
                IsVisible = item.IsVisible
            })
            .ToList();
-        }
 
         return View(models);
     }
@@ -53,18 +45,18 @@ public class ProjectsController(IProjectService projectService) : Controller
 
     [HttpPost]
     [Route("add-project")]
-    public async Task<IActionResult> AddProject([FromForm] AddProjectViewModel addProjectModel)
+    public async Task<IActionResult> AddProject([FromForm] AddProjectViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return View(addProjectModel);
+            return View(model);
         }
 
         var dto = new AddProjectMVCDto
         {
-            ImageFile = addProjectModel.ImageFile,
-            Title = addProjectModel.Title,
-            Description = addProjectModel.Description,
+            ImageFile = model.ImageFile,
+            Title = model.Title,
+            Description = model.Description,
         };
 
         var result = await projectService.AddProjectAsync(dto);
@@ -109,19 +101,19 @@ public class ProjectsController(IProjectService projectService) : Controller
 
     [HttpPost]
     [Route("update-project")]
-    public async Task<IActionResult> UpdateProject([FromForm] UpdateProjectViewModel updateProjectModel)
+    public async Task<IActionResult> UpdateProject([FromForm] UpdateProjectViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return View(updateProjectModel);
+            return View(model);
         }
 
         var dto = new UpdateProjectMVCDto
         {
-            Title = updateProjectModel.Title,
-            Description = updateProjectModel.Description,
-            Id = updateProjectModel.Id,
-            ImageFile = updateProjectModel.ImageFile,
+            Title = model.Title,
+            Description = model.Description,
+            Id = model.Id,
+            ImageFile = model.ImageFile,
         };
 
         var result = await projectService.UpdateProjectAsync(dto);
@@ -135,7 +127,7 @@ public class ProjectsController(IProjectService projectService) : Controller
             }
 
             ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
-            return View(updateProjectModel);
+            return View();
         }
 
         TempData["Message"] = result.SuccessMessage;

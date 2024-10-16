@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace App.AdminMVC.Controllers;
 public class AboutMeController(IAboutMeService aboutMeService) : Controller
 {
-  
     [HttpGet]
     [Route("about-me")]
     public async Task<IActionResult> AboutMe()
@@ -66,7 +65,6 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
 
         var result = await aboutMeService.AddAboutMeAsync(mvcDto);
 
-       
         if(!result.IsSuccess)
         {
             ViewBag.ErrorMessage = result.Errors.FirstOrDefault();
@@ -131,7 +129,7 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
         if (!result.IsSuccess)
         {
             ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
-            return View(updateAboutMeModel);
+            return View();
         }
 
         TempData["Message"] = result.SuccessMessage;

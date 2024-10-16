@@ -22,8 +22,6 @@ public class EducationsController(IEducationService educationService) : Controll
         var models = new List<AllEducationsViewModel>();
         var dtos = result.Value;
 
-        if(dtos.Count > 0)
-        {
            models = dtos
           .Select(item => new AllEducationsViewModel
           {
@@ -35,8 +33,6 @@ public class EducationsController(IEducationService educationService) : Controll
               IsVisible = item.IsVisible
           })
           .ToList();
-
-        }
 
         return View(models);
     }
@@ -50,19 +46,19 @@ public class EducationsController(IEducationService educationService) : Controll
 
     [HttpPost]
     [Route("add-education")]
-    public async Task<IActionResult> AddEducation([FromForm] AddEducationViewModel addEducationModel)
+    public async Task<IActionResult> AddEducation([FromForm] AddEducationViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return View(addEducationModel);
+            return View(model);
         }
 
         var dto = new AddEducationDto
         {
-            Degree = addEducationModel.Degree,
-            StartDate = addEducationModel.StartDate,
-            EndDate = addEducationModel.EndDate,
-            School = addEducationModel.School,
+            Degree = model.Degree,
+            StartDate = model.StartDate,
+            EndDate = model.EndDate,
+            School = model.School,
         };
 
         var result = await educationService.AddEducationAsync(dto);
@@ -107,20 +103,20 @@ public class EducationsController(IEducationService educationService) : Controll
 
     [HttpPost]
     [Route("update-education")]
-    public async Task<IActionResult> UpdateEducation([FromForm] UpdateEducationViewModel updateEducationModel)
+    public async Task<IActionResult> UpdateEducation([FromForm] UpdateEducationViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return View(updateEducationModel);
+            return View(model);
         }
 
         var dto = new UpdateEducationDto
         {
-            Id = updateEducationModel.Id,
-            School = updateEducationModel.School,
-            Degree = updateEducationModel.Degree,
-            EndDate = updateEducationModel.EndDate,
-            StartDate = updateEducationModel.StartDate,
+            Id = model.Id,
+            School = model.School,
+            Degree = model.Degree,
+            EndDate = model.EndDate,
+            StartDate = model.StartDate,
         };
 
         var result = await educationService.UpdateEducationAsync(dto);
@@ -154,7 +150,6 @@ public class EducationsController(IEducationService educationService) : Controll
         }
 
         return Redirect("/all-educations");
-
     }
 
 
@@ -173,7 +168,6 @@ public class EducationsController(IEducationService educationService) : Controll
         {
             TempData["Message"] = result.SuccessMessage;
         }
-
         return Redirect("/all-educations");
     }
 }

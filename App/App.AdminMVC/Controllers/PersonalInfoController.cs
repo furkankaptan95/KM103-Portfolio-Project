@@ -1,5 +1,4 @@
-﻿using App.Data.Entities;
-using App.DTOs.PersonalInfoDtos;
+﻿using App.DTOs.PersonalInfoDtos;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.PersonalInfoViewModels;
 using Ardalis.Result;
@@ -8,8 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace App.AdminMVC.Controllers;
 public class PersonalInfoController(IPersonalInfoService personalInfoService) : Controller
 {
-    private static readonly PersonalInfoEntity personalInfoEntity = new();
-
     [HttpGet]
     [Route("personal-info")]
     public async Task<IActionResult> PersonalInfo()
