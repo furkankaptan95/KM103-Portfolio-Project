@@ -80,33 +80,7 @@ public class DataApiDbContext : DbContext
                 UnsignedCommenterName = "Güzel İnsan",
             }
             );
-
-        modelBuilder.Entity<UserEntity>().HasData(
-            new UserEntity
-            {
-                Id= 1,
-                Username= "hasansolmaz",
-                Email = "hslmz@gmail.com",
-                IsActive= true,
-                Role = "commenter",
-            },
-            new UserEntity
-            {
-                Id = 2,
-                Username = "ardagüler",
-                Email = "ardglr@gmail.com",
-                IsActive = true,
-                Role = "commenter",
-            },
-            new UserEntity
-            {
-                Id = 3,
-                Username = "fabrizioromano",
-                Email = "fromano@gmail.com",
-                IsActive = false,
-                Role = "commenter",
-            }
-            );
+     
     }
 
 

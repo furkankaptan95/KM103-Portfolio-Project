@@ -21,9 +21,5 @@ public class CommentEntityConfiguration : IEntityTypeConfiguration<CommentEntity
             .IsRequired()
             .OnDelete(DeleteBehavior.NoAction);
 
-        builder.HasOne(c=>c.User)
-            .WithMany(u => u.Comments)
-            .HasForeignKey(c=>c.UserId)
-            .OnDelete(DeleteBehavior.NoAction);      
     }
 }

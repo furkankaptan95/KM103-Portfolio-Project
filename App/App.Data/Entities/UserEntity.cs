@@ -9,7 +9,6 @@ public class UserEntity : BaseEntity<int>
     public byte[]? PasswordHash { get; set; } = default!;
     public byte[]? PasswordSalt { get; set; } = default!;
     public string Role { get; set; } = "commenter";
-    public virtual ICollection<CommentEntity> Comments { get; set; } = new List<CommentEntity>();
    
 }
 

@@ -18,9 +18,5 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
         builder.Property(u => u.ImageUrl).HasColumnType("varchar(255)");
         builder.Property(u => u.IsActive).HasColumnType("bit");
 
-        builder.HasMany(u => u.Comments)
-            .WithOne(c => c.User)
-            .HasForeignKey(c => c.UserId)
-            .OnDelete(DeleteBehavior.NoAction);
     }
 }

@@ -8,7 +8,6 @@ public class CommentEntity : BaseEntity<int>
     public int BlogPostId { get; set; }
     public BlogPostEntity BlogPost { get; set; }
     public int? UserId { get; set; }
-    public UserEntity? User { get; set; }
     public string? UnsignedCommenterName { get; set; }
 
 }
