@@ -1,4 +1,5 @@
 ﻿using App.Services.AdminServices.Abstract;
+using Ardalis.Result;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,7 +25,19 @@ public class UsersController : ControllerBase
     [HttpGet("/get-commenter-username-{id:int}")]
     public async Task<IActionResult> GetCommentsUserNameAsync([FromRoute] int id)
     {
-        return Ok();
+        var result = await _userService.GetCommentsUserName(id);
+
+        if (!result.IsSuccess)
+        {
+            if(result.Status == ResultStatus.NotFound)
+            {
+                return NotFound(result);
+            }
+
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
     }
 
     [HttpGet("/get-all-users")]
