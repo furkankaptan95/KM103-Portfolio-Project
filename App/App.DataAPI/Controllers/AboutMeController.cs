@@ -20,68 +20,88 @@ public class AboutMeController : ControllerBase
         _updateValidator = updateValidator;
     }
 
-
     [HttpGet("/get-about-me")]
     public async Task<IActionResult> GetAboutMeAsync()
     {
-        var result = await _aboutMeService.GetAboutMeAsync();
-
-        if (result.IsSuccess)
+        try
         {
-            return Ok(result);
-        }
+            var result = await _aboutMeService.GetAboutMeAsync();
 
-        if (result.Status == ResultStatus.NotFound)
-        {
-            return NotFound(result);
-        }
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            if (result.Status == ResultStatus.NotFound)
+            {
+                return NotFound(result);
+            }
             return StatusCode(500, result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
     }
 
     [HttpPost("/add-about-me")]
     public async Task<IActionResult> AddAboutMeAsync([FromBody] AddAboutMeApiDto dto)
     {
-        var validationResult = await _addValidator.ValidateAsync(dto);
-        string errorMessage;
-
-        if (!validationResult.IsValid)
+        try
         {
-            errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            var validationResult = await _addValidator.ValidateAsync(dto);
+            string errorMessage;
+
+            if (!validationResult.IsValid)
+            {
+                errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            }
+
+            var result = await _aboutMeService.AddAboutMeAsync(dto);
+
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            return StatusCode(500, result);
         }
-
-        var result = await _aboutMeService.AddAboutMeAsync(dto);
-
-        if (result.IsSuccess)
+      
+        catch (Exception ex)
         {
-            return Ok(result);
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
-
-     return StatusCode(500,result);
-
     }
-
 
     [HttpPut("/update-about-me")]
     public async Task<IActionResult> UpdateAboutMeAsync([FromBody] UpdateAboutMeApiDto dto)
     {
-        var validationResult = await _updateValidator.ValidateAsync(dto);
-        string errorMessage;
-
-        if(!validationResult.IsValid)
+        try
         {
-            errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+            var validationResult = await _updateValidator.ValidateAsync(dto);
+            string errorMessage;
 
-            return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            if (!validationResult.IsValid)
+            {
+                errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+
+                return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            }
+
+            var result = await _aboutMeService.UpdateAboutMeAsync(dto);
+
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            return StatusCode(500, result);
         }
 
-        var result = await _aboutMeService.UpdateAboutMeAsync(dto);
-
-        if (result.IsSuccess)
+        catch (Exception ex)
         {
-            return Ok(result);
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
-
-        return StatusCode(500, result);
     }
 }

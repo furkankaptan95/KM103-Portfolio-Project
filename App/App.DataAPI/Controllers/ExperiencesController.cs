@@ -23,109 +23,170 @@ public class ExperiencesController : ControllerBase
     [HttpPost("/add-experience")]
     public async Task<IActionResult> AddAsync([FromBody] AddExperienceDto dto)
     {
-        var validationResult = await _addValidator.ValidateAsync(dto);
-
-        if (!validationResult.IsValid)
+        try
         {
-            var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            var validationResult = await _addValidator.ValidateAsync(dto);
+
+            if (!validationResult.IsValid)
+            {
+                var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            }
+
+            var result = await _experiencesService.AddExperienceAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
         }
 
-        var result = await _experiencesService.AddExperienceAsync(dto);
-
-        if (!result.IsSuccess)
+        catch (Exception ex)
         {
-            return StatusCode(500, result);
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
-
-        return Ok(result);
     }
 
     [HttpGet("/all-experiences")]
     public async Task<IActionResult> GetAllAsync()
     {
-        var result = await _experiencesService.GetAllExperiencesAsync();
-
-        if (!result.IsSuccess)
+        try 
         {
-            return StatusCode(500, result);
-        }
+            var result = await _experiencesService.GetAllExperiencesAsync();
 
-        return Ok(result);
+            if (!result.IsSuccess)
+            {
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+        
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
     }
 
     [HttpPut("/update-experience")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateExperienceDto dto)
     {
-        var validationResult = await _updateValidator.ValidateAsync(dto);
-
-        if (!validationResult.IsValid)
+        try
         {
-            var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            var validationResult = await _updateValidator.ValidateAsync(dto);
+
+            if (!validationResult.IsValid)
+            {
+                var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            }
+
+            var result = await _experiencesService.UpdateExperienceAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
         }
 
-        var result = await _experiencesService.UpdateExperienceAsync(dto);
-
-        if (!result.IsSuccess)
+        catch (Exception ex)
         {
-            return StatusCode(500, result);
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
-
-        return Ok(result);
     }
 
     [HttpGet("/get-experience-{id:int}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
     {
-        var result = await _experiencesService.GetByIdAsync(id);
-
-        if (!result.IsSuccess)
+        if (id <= 0)
         {
-            if (result.Status == ResultStatus.NotFound)
-            {
-                return NotFound(result);
-            }
-
-            return StatusCode(500, result);
+            return BadRequest(Result.Error("Geçersiz ID bilgisi."));
         }
 
-        return Ok(result);
+        try
+        {
+            var result = await _experiencesService.GetByIdAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    return NotFound(result);
+                }
+
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
     }
 
     [HttpDelete("/delete-experience-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
-
-        var result = await _experiencesService.DeleteExperienceAsync(id);
-
-        if (!result.IsSuccess)
+        if (id <= 0)
         {
-            if (result.Status == ResultStatus.NotFound)
-            {
-                return NotFound(result);
-            }
-
-            return StatusCode(500, result);
+            return BadRequest(Result.Error("Geçersiz ID bilgisi."));
         }
 
-        return Ok(result);
+        try
+        {
+            var result = await _experiencesService.DeleteExperienceAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    return NotFound(result);
+                }
+
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
     }
 
     [HttpGet("/change-experience-visibility-{id:int}")]
     public async Task<IActionResult> ChangeVisibilityAsync([FromRoute] int id)
     {
-        var result = await _experiencesService.ChangeExperienceVisibilityAsync(id);
-
-        if (!result.IsSuccess)
+        if (id <= 0)
         {
-            if (result.Status == ResultStatus.NotFound)
-            {
-                return NotFound(result);
-            }
-            return StatusCode(500, result);
+            return BadRequest(Result.Error("Geçersiz ID bilgisi."));
         }
-        return Ok(result);
-    }
 
+        try
+        {
+            var result = await _experiencesService.ChangeExperienceVisibilityAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    return NotFound(result);
+                }
+                return StatusCode(500, result);
+            }
+            return Ok(result);
+        }
+        
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
+    }
 }

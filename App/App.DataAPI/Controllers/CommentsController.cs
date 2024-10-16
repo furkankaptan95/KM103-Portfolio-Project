@@ -9,7 +9,6 @@ namespace App.DataAPI.Controllers;
 public class CommentsController : ControllerBase
 {
     private readonly ICommentService _commentService;
-
     public CommentsController(ICommentService commentService)
     {
         _commentService = commentService;
@@ -18,60 +17,107 @@ public class CommentsController : ControllerBase
     [HttpGet("/all-comments")]
     public async Task<IActionResult> GetAllAsync()
     {
-        var result = await _commentService.GetAllCommentsAsync();
-
-        if (!result.IsSuccess)
+        try
         {
-            return StatusCode(500, result);
+            var result = await _commentService.GetAllCommentsAsync();
+
+            if (!result.IsSuccess)
+            {
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
         }
 
-        return Ok(result);
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
     }
 
     [HttpDelete("/delete-comment-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
-        var result = await _commentService.DeleteCommentAsync(id);
-
-        if (!result.IsSuccess)
+        if (id <= 0)
         {
-            if (result.Status == ResultStatus.NotFound)
-            {
-                return NotFound(result);
-            }
-
-            return StatusCode(500, result);
+            return BadRequest(Result.Error("Geçersiz ID bilgisi."));
         }
 
-        return Ok(result);
+        try
+        {
+            var result = await _commentService.DeleteCommentAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    return NotFound(result);
+                }
+
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
     }
 
     [HttpGet("/(not)-approve-comment-{id:int}")]
     public async Task<IActionResult> ApproveNotApproveAsync([FromRoute] int id)
     {
-        var result = await _commentService.ApproveOrNotApproveCommentAsync(id);
-
-        if (!result.IsSuccess)
+        if (id <= 0)
         {
-            if (result.Status == ResultStatus.NotFound)
-            {
-                return NotFound(result);
-            }
-            return StatusCode(500, result);
+            return BadRequest(Result.Error("Geçersiz ID bilgisi."));
         }
-        return Ok(result);
+
+        try
+        {
+            var result = await _commentService.ApproveOrNotApproveCommentAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    return NotFound(result);
+                }
+                return StatusCode(500, result);
+            }
+            return Ok(result);
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
     }
 
     [HttpGet("/get-users-comments-{id:int}")]
     public async Task<IActionResult> GetUsersCommentsAsync([FromRoute] int id)
     {
-        var result = await _commentService.GetUsersCommentsAsync(id);
-
-        if (!result.IsSuccess)
+        if (id <= 0)
         {
-            return StatusCode(500, result);
+            return BadRequest(Result.Error("Geçersiz ID bilgisi."));
         }
 
-        return Ok(result);
+        try
+        {
+            var result = await _commentService.GetUsersCommentsAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+  
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
     }
 }

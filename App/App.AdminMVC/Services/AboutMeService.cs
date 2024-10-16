@@ -128,9 +128,9 @@ public class AboutMeService : IAboutMeService
             updateApiDto.ImageUrl2 = urlDto.ImageUrl2;
         }
 
-        var apiResponse = await DataApiClient.PutAsJsonAsync("update-about-me", updateApiDto);
+        var dataApiResponse = await DataApiClient.PutAsJsonAsync("update-about-me", updateApiDto);
 
-        if (!apiResponse.IsSuccessStatusCode)
+        if (!dataApiResponse.IsSuccessStatusCode)
         {
             return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
         }
