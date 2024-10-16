@@ -12,7 +12,7 @@ public class CommentService(IHttpClientFactory factory) : ICommentService
 
         if (apiResponse.IsSuccessStatusCode)
         {
-            return Result.SuccessWithMessage("Yorum başarıyla onaylandı.");
+            return Result.SuccessWithMessage("Yorum onay durumu başarıyla değiştirildi.");
         }
 
         string errorMessage;
@@ -20,11 +20,11 @@ public class CommentService(IHttpClientFactory factory) : ICommentService
 
         if (result.Status == ResultStatus.NotFound)
         {
-            errorMessage = "Onaylamak  istediğiniz Yorum bulunamadı!..";
+            errorMessage = "Onay durumunu değiştirmek istediğiniz Yorum bulunamadı!..";
         }
         else
         {
-            errorMessage = "Yorum onaylanırken beklenmeyen bir hata oluştu..";
+            errorMessage = "Yorumun onay durumu değiştirilirken beklenmeyen bir hata oluştu..";
         }
 
         return Result.Error(errorMessage);
