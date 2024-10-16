@@ -11,9 +11,28 @@ public class CommentService(IHttpClientFactory factory) : ICommentService
         throw new NotImplementedException();
     }
 
-    public Task<Result> DeleteCommentAsync(int id)
+    public async Task<Result> DeleteCommentAsync(int id)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.DeleteAsync($"delete-comment-{id}");
+
+        if (apiResponse.IsSuccessStatusCode)
+        {
+            return Result.SuccessWithMessage("Yorum başarıyla silindi.");
+        }
+
+        string errorMessage;
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (result.Status == ResultStatus.NotFound)
+        {
+            errorMessage = "Silmek istediğiniz Yorum bulunamadı!..";
+        }
+        else
+        {
+            errorMessage = "Yorum silinirken beklenmedik bir hata oluştu..";
+        }
+
+        return Result.Error(errorMessage);
     }
 
     public async Task<Result<List<AllCommentsDto>>> GetAllCommentsAsync()
