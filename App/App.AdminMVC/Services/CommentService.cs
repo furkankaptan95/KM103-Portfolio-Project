@@ -16,8 +16,15 @@ public class CommentService(IHttpClientFactory factory) : ICommentService
         throw new NotImplementedException();
     }
 
-    public Task<Result<List<AllCommentsDto>>> GetAllCommentsAsync()
+    public async Task<Result<List<AllCommentsDto>>> GetAllCommentsAsync()
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.GetAsync("all-comments");
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return Result<List<AllCommentsDto>>.Error("Yorumlar getirilirken beklenmedik bir hata oluştu..");
+        }
+
+        return await apiResponse.Content.ReadFromJsonAsync<Result<List<AllCommentsDto>>>();
     }
 }
