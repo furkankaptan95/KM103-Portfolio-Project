@@ -8,9 +8,28 @@ public class UserService(IHttpClientFactory factory) : IUserService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
     private HttpClient AuthApiClient => factory.CreateClient("authApi");
-    public Task<Result> ChangeActivenessOfUserAsync(int id)
+    public async Task<Result> ChangeActivenessOfUserAsync(int id)
     {
-        throw new NotImplementedException();
+        var apiResponse = await AuthApiClient.GetAsync($"change-user-activeness-{id}");
+
+        if (apiResponse.IsSuccessStatusCode)
+        {
+            return Result.SuccessWithMessage("Kullanıcının aktifliği başarıyla değiştirildi.");
+        }
+
+        string errorMessage;
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (result.Status == ResultStatus.NotFound)
+        {
+            errorMessage = "Aktifliğini değiştirmek istediğiniz Kullanıcı bulunamadı!..";
+        }
+        else
+        {
+            errorMessage = "Kullanıcının aktifliği değiştirilirken beklenmeyen bir hata oluştu..";
+        }
+
+        return Result.Error(errorMessage);
     }
 
     public async Task<Result<List<AllUsersDto>>> GetAllUsersAsync()

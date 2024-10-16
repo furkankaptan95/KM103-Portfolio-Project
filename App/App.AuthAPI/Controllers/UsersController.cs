@@ -56,6 +56,17 @@ public class UsersController : ControllerBase
     [HttpGet("/change-user-activeness-{id:int}")]
     public async Task<IActionResult> ChangeActivenessOfUserAsync([FromRoute] int id)
     {
-        return Ok();
+            var result = await _userService.ChangeActivenessOfUserAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    return NotFound(result);
+                }
+                return StatusCode(500, result);
+            }
+            return Ok(result);
+       
     }
 }

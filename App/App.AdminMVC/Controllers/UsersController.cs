@@ -101,23 +101,20 @@ public class UsersController(IUserService userService) : Controller
     }
 
     [HttpGet]
-    [Route("activate-user-{id:int}")]
-    public async Task<IActionResult> ActivateUser([FromRoute] int id)
+    [Route("change-user-activeness-{id:int}")]
+    public async Task<IActionResult> ChangeUserActiveness([FromRoute] int id)
     {
-        var user = _users.FirstOrDefault(u => u.Id == id);
+        var result = await userService.ChangeActivenessOfUserAsync(id);
 
-        user.IsActive = true;
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+        }
 
-        return Redirect("/all-users");
-    }
-
-    [HttpGet]
-    [Route("deactivate-user-{id:int}")]
-    public async Task<IActionResult> DeactivateUser([FromRoute] int id)
-    {
-        var user = _users.FirstOrDefault(u => u.Id == id);
-
-        user.IsActive = false;
+        else
+        {
+            TempData["Message"] = result.SuccessMessage;
+        }
 
         return Redirect("/all-users");
     }

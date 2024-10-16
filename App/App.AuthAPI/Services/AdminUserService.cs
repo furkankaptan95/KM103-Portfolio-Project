@@ -1,6 +1,4 @@
 ﻿using App.Data.DbContexts;
-using App.DTOs.CommentDtos;
-using App.DTOs.EducationDtos;
 using App.DTOs.UserDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
@@ -20,9 +18,32 @@ public class AdminUserService : IUserService
 
     private HttpClient DataApiClient => _factory.CreateClient("dataApi");
 
-    public Task<Result> ChangeActivenessOfUserAsync(int id)
+    public async Task<Result> ChangeActivenessOfUserAsync(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var entity = await _authApiDb.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity is null)
+            {
+                return Result.NotFound();
+            }
+
+            entity.IsActive = !entity.IsActive;
+
+            _authApiDb.Users.Update(entity);
+            await _authApiDb.SaveChangesAsync();
+
+            return Result.Success();
+        }
+        catch (DbUpdateException dbEx)
+        {
+            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
     }
 
     public async Task<Result<List<AllUsersDto>>> GetAllUsersAsync()

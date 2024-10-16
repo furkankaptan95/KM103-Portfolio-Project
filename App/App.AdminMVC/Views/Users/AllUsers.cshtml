@@ -1,5 +1,20 @@
 ﻿@model List<AllUsersViewModel>
 
+@if (TempData["Message"] is not null)
+{
+    <div class="alert custom-alert-success mt-5">
+        @TempData["Message"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert custom-alert-error  mt-5">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+
 <div class="container mt-4">
     <h2 class="text-center">Kullanıcılar</h2>
     <table class="table table-bordered table-striped table-responsive-md mt-4">
@@ -38,11 +53,11 @@
                     <td class="text-center">
                         @if (user.IsActive)
                         {
-                            <a href="/deactivate-user-@user.Id" class="btn btn-sm btn-secondary">İnaktif yap</a>
+                            <a href="/change-user-activeness-@user.Id" class="btn btn-sm btn-secondary">İnaktif yap</a>
                         }
                         else
                         {
-                            <a href="/activate-user-@user.Id" class="btn btn-sm btn-success">Aktif Yap</a>
+                            <a href="/change-user-activeness-@user.Id" class="btn btn-sm btn-success">Aktif Yap</a>
                         }
                     </td>
                 </tr>
@@ -57,12 +72,14 @@
                                 </button>
                             </div>
                             <div class="comments-section">
-                                <h6 class="ml-3">Yorumlar:</h6>
+                                <h6 class="ml-3 mb-3">Yorumlar:</h6>
                                 <div class="comment-list">
 
                                     @if(user.Comments.Count == 0)
                                     {
-                                        <span>Kullanıcı henüz yorum yapmadı.</span>
+                                        <div class="mt-3 mb-3 ml-3">
+                                        <span >Kullanıcı henüz yorum yapmadı.</span>
+                                        </div>
                                     }
                                     else
                                     {
@@ -103,6 +120,36 @@
 
 @section Styles{
     <style>
+
+        .custom-alert-success {
+            display: inline-block;
+            top: 10px; /* Varsayılan üst boşluk */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-alert-error {
+            display: inline-block;
+            top: 10px; /* Varsayılan üst boşluk */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table td {
+            vertical-align: middle; /* Tüm tablo hücrelerini dikey olarak ortalar */
+        }
         .table td {
             vertical-align: middle; /* Tüm tablo hücrelerini dikey olarak ortalar */
         }
