@@ -6,9 +6,28 @@ namespace App.AdminMVC.Services;
 public class CommentService(IHttpClientFactory factory) : ICommentService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
-    public Task<Result> ApproveOrNotApproveCommentAsync(int id)
+    public async Task<Result> ApproveOrNotApproveCommentAsync(int id)
     {
-        throw new NotImplementedException();
+        var apiResponse = await DataApiClient.GetAsync($"(not)-approve-comment-{id}");
+
+        if (apiResponse.IsSuccessStatusCode)
+        {
+            return Result.SuccessWithMessage("Yorum onay durumu başarıyla değiştirildi.");
+        }
+
+        string errorMessage;
+        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
+
+        if (result.Status == ResultStatus.NotFound)
+        {
+            errorMessage = "Onay durumunu değiştirmek istediğiniz Yorum bulunamadı!..";
+        }
+        else
+        {
+            errorMessage = "Yorumun onay durumu değiştirilirken beklenmeyen bir hata oluştu..";
+        }
+
+        return Result.Error(errorMessage);
     }
 
     public async Task<Result> DeleteCommentAsync(int id)
