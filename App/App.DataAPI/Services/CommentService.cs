@@ -19,9 +19,32 @@ public class CommentService : ICommentService
 
     private HttpClient AuthApiClient => _factory.CreateClient("authApi");
 
-    public Task<Result> ApproveOrNotApproveCommentAsync(int id)
+    public async Task<Result> ApproveOrNotApproveCommentAsync(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var entity = await _dataApiDb.Comments.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity is null)
+            {
+                return Result.NotFound();
+            }
+
+            entity.IsApproved = !entity.IsApproved;
+
+            _dataApiDb.Comments.Update(entity);
+            await _dataApiDb.SaveChangesAsync();
+
+            return Result.Success();
+        }
+        catch (DbUpdateException dbEx)
+        {
+            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
     }
 
     public async Task<Result> DeleteCommentAsync(int id)
