@@ -1,4 +1,5 @@
 ﻿using App.DTOs.CommentDtos;
+using App.DTOs.UserDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 
@@ -64,5 +65,10 @@ public class CommentService(IHttpClientFactory factory) : ICommentService
         }
 
         return await apiResponse.Content.ReadFromJsonAsync<Result<List<AllCommentsDto>>>();
+    }
+
+    public Task<Result<List<UsersCommentsDto>>> GetUsersCommentsAsync(int id)
+    {
+        throw new NotImplementedException();
     }
 }
