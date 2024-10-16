@@ -15,4 +15,9 @@ public class UserService(IHttpClientFactory factory) : IUserService
     {
         throw new NotImplementedException();
     }
+
+    public Task<Result<string>> GetCommentsUserName(int id)
+    {
+        throw new NotImplementedException();
+    }
 }
