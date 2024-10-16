@@ -31,7 +31,6 @@ public class AuthApiDbContext : DbContext
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 IsActive = true,
-                ImageUrl = string.Empty,
                 Role = "admin",
 
             },

@@ -18,7 +18,7 @@
             {
                 <tr>
                     <td>
-                        <img src="~/assets/img/@user.ImageUrl" alt="@user.Username" class="img-thumbnail" style="max-width: 100px; height: auto; display: block; margin: auto;">
+                        <img src="@($"https://localhost:7085/uploads/{user.ImageUrl}")" class="img-thumbnail" style="max-width: 100px; height: auto; display: block; margin: auto;">
                     </td class="text-center">
                     <td class="text-center">@user.Username</td>
                     <td class="text-center">@user.Email</td>
@@ -59,7 +59,14 @@
                             <div class="comments-section">
                                 <h6 class="ml-3">Yorumlar:</h6>
                                 <div class="comment-list">
-                                    @foreach (var comment in user.Comments)
+
+                                    @if(user.Comments.Count == 0)
+                                    {
+                                        <span>Kullanıcı henüz yorum yapmadı.</span>
+                                    }
+                                    else
+                                    {
+                                       @foreach (var comment in user.Comments)
                                     {
                                         <div class="comment">
                                             <div class="comment-content">
@@ -78,7 +85,9 @@
                                                 }
                                             </p>
                                         </div>
+                                    } 
                                     }
+                                    
                                 </div>
                             </div>
                             <div class="modal-footer">

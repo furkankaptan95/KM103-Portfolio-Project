@@ -62,7 +62,7 @@ public class CommentsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpDelete("/get-users-comments-{id:int}")]
+    [HttpGet("/get-users-comments-{id:int}")]
     public async Task<IActionResult> GetUsersCommentsAsync([FromRoute] int id)
     {
         var result = await _commentService.GetUsersCommentsAsync(id);

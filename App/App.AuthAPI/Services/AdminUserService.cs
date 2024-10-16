@@ -46,7 +46,7 @@ public class AdminUserService : IUserService
 
                 if (dataApiResponse.IsSuccessStatusCode)
                 {
-                    var result = await dataApiResponse.Content.ReadFromJsonAsync<Result<List<UsersCommentsDto>>> ();
+                    var result = await dataApiResponse.Content.ReadFromJsonAsync<Result<List<UsersCommentsDto>>>();
                     userComments = result.Value;
                 }
 
