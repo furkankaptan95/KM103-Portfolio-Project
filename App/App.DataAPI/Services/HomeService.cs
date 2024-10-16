@@ -30,7 +30,8 @@ public class HomeService : IHomeService
             }
             else
             {
-                dto.UsersCount = await apiResponse.Content.ReadFromJsonAsync<int>();
+                var result = await apiResponse.Content.ReadFromJsonAsync<Result<int>>();
+                dto.UsersCount = result.Value;
             }
 
             dto.CommentsCount = await _dataApiDb.Comments.CountAsync();
