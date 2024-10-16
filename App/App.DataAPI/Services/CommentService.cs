@@ -1,6 +1,5 @@
 ﻿using App.Data.DbContexts;
 using App.DTOs.CommentDtos;
-using App.DTOs.EducationDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using Microsoft.Data.SqlClient;
@@ -25,9 +24,30 @@ public class CommentService : ICommentService
         throw new NotImplementedException();
     }
 
-    public Task<Result> DeleteCommentAsync(int id)
+    public async Task<Result> DeleteCommentAsync(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var entity = await _dataApiDb.Comments.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity is null)
+            {
+                return Result.NotFound();
+            }
+
+            _dataApiDb.Comments.Remove(entity);
+            await _dataApiDb.SaveChangesAsync();
+
+            return Result.Success();
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
     }
 
     public async Task<Result<List<AllCommentsDto>>> GetAllCommentsAsync()
