@@ -49,7 +49,7 @@ public class UserService(IHttpClientFactory factory) : IUserService
         throw new NotImplementedException();
     }
 
-    public Task<Result<int>> GetUsersCount(int id)
+    public Task<Result<int>> GetUsersCount()
     {
         throw new NotImplementedException();
     }
