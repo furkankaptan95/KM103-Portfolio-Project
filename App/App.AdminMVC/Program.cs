@@ -31,6 +31,18 @@ builder.Services.AddHttpClient("fileApi", c =>
     c.BaseAddress = new Uri(fileApiUrl);
 });
 
+var authApiUrl = builder.Configuration.GetValue<string>("AuthApiUrl");
+
+if (string.IsNullOrWhiteSpace(authApiUrl))
+{
+    throw new InvalidOperationException("AuthApiUrl is required in appsettings.json");
+}
+
+builder.Services.AddHttpClient("authApi", c =>
+{
+    c.BaseAddress = new Uri(authApiUrl);
+});
+
 builder.Services.AddScoped<IAboutMeService, AboutMeService>();
 builder.Services.AddScoped<IBlogPostService, BlogPostService>();
 builder.Services.AddScoped<IEducationService, EducationService>();
@@ -39,7 +51,7 @@ builder.Services.AddScoped<IPersonalInfoService, PersonalInfoService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
-
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

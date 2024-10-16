@@ -1,9 +1,11 @@
-﻿using App.ViewModels.AdminMvc.CommentsViewModels;
+﻿using App.Services.AdminServices.Abstract;
+using App.ViewModels.AdminMvc.CommentsViewModels;
+using App.ViewModels.AdminMvc.ExperiencesViewModels;
 using App.ViewModels.AdminMvc.UsersViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-public class UsersController : Controller
+public class UsersController(IUserService userService) : Controller
 {
     private static readonly List<AllUsersViewModel> _users = new()
     {
@@ -66,7 +68,36 @@ public class UsersController : Controller
     [Route("all-users")]
     public async Task<IActionResult> AllUsers()
     {
-        return View(_users);
+        var result = await userService.GetAllUsersAsync();
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return Redirect("/home/index");
+        }
+
+        var models = new List<AllUsersViewModel>();
+        var dtos = result.Value;
+
+            models = dtos
+           .Select(item => new AllUsersViewModel
+           {
+               Id = item.Id,
+               Username = item.Username,
+               Email = item.Email,
+               IsActive = item.IsActive,
+               ImageUrl = item.ImageUrl,
+               Comments = item.Comments.Select(c => new UsersCommentsViewModel
+               {
+                   Content = c.Content,
+                   CreatedAt = c.CreatedAt,
+                   BlogPostName = c.BlogPostName,
+                   IsApproved= c.IsApproved,
+               }).ToList()
+           })
+           .ToList();
+        
+        return View(models);
     }
 
     [HttpGet]

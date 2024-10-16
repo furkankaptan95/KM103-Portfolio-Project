@@ -40,10 +40,17 @@ public class UsersController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("/get-all-users")]
-    public async Task<IActionResult> GetAllUsersAsync()
+    [HttpGet("/all-users")]
+    public async Task<IActionResult> GetAllAsync()
     {
-        return Ok();
+        var result = await _userService.GetAllUsersAsync();
+
+        if (!result.IsSuccess)
+        {
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
     }
 
     [HttpGet("/change-user-activeness-{id:int}")]
