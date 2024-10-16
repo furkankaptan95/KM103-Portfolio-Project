@@ -25,7 +25,7 @@ public class AuthApiDbContext : DbContext
 
             new UserEntity
             {
-                Id = 1,
+                Id = 4,
                 Username = "FurkanKaptan",
                 Email = "iamfurkan86@gmail.com",
                 PasswordHash = passwordHash,
@@ -34,9 +34,36 @@ public class AuthApiDbContext : DbContext
                 ImageUrl = string.Empty,
                 Role = "admin",
 
-            }
+            },
+             new UserEntity
+             {
+                 Id = 1,
+                 Username = "hasansolmaz",
+                 Email = "hslmz@gmail.com",
+                 IsActive = true,
+                 Role = "commenter",
+             },
+               new UserEntity
+               {
+                   Id = 2,
+                   Username = "ardagüler",
+                   Email = "ardglr@gmail.com",
+                   IsActive = true,
+                   Role = "commenter",
+               },
+               new UserEntity
+               {
+                   Id = 3,
+                   Username = "fabrizioromano",
+                   Email = "fromano@gmail.com",
+                   IsActive = false,
+                   Role = "commenter",
+               }
 
             );
+
+        
+          
     }
 
 }
