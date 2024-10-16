@@ -16,7 +16,25 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("/get-users-count")]
-    public async Task<IActionResult> GetCount()
+    public async Task<IActionResult> GetCountAsync()
+    {
+        return Ok();
+    }
+
+    [HttpGet("/get-commenter-username-{id:int}")]
+    public async Task<IActionResult> GetCommentsUserNameAsync([FromRoute] int id)
+    {
+        return Ok();
+    }
+
+    [HttpGet("/get-all-users")]
+    public async Task<IActionResult> GetAllUsersAsync()
+    {
+        return Ok();
+    }
+
+    [HttpGet("/change-user-activeness-{id:int}")]
+    public async Task<IActionResult> ChangeActivenessOfUserAsync([FromRoute] int id)
     {
         return Ok();
     }
