@@ -1,10 +1,11 @@
 ﻿using App.Data.Entities;
+using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.CommentsViewModels;
 using App.ViewModels.AdminMvc.EducationsViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-public class CommentsController : Controller
+public class CommentsController(ICommentService commentService) : Controller
 {
     private static readonly List<CommentEntity> _comments = new()
     {
@@ -39,18 +40,27 @@ public class CommentsController : Controller
     [Route("all-comments")]
     public async Task<IActionResult> AllComments()
     {
-        List<AllCommentsViewModel> models = _comments
+        var result = await commentService.GetAllCommentsAsync();
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return Redirect("/home/index");
+        }
+
+        var dtos = result.Value;
+
+        List<AllCommentsViewModel> models = dtos
       .Select(item => new AllCommentsViewModel
       {
           Id = item.Id,
           Content = item.Content,
           CreatedAt = item.CreatedAt,
           IsApproved = item.IsApproved,
-          BlogPostName = "Neden Backend?",
-          Commenter = item.UnsignedCommenterName,
+          BlogPostName = item.BlogPostName,
+          Commenter = item.Commenter,
       })
       .ToList();
-
 
         return View(models);
     }
