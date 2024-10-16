@@ -19,7 +19,14 @@ public class UsersController : ControllerBase
     [HttpGet("/get-users-count")]
     public async Task<IActionResult> GetCountAsync()
     {
-        return Ok();
+        var result = await _userService.GetUsersCount();
+
+        if (!result.IsSuccess)
+        {
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
     }
 
     [HttpGet("/get-commenter-username-{id:int}")]

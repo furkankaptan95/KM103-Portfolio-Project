@@ -120,8 +120,21 @@ public class AdminUserService : IUserService
         }
     }
 
-    public Task<Result<int>> GetUsersCount(int id)
+    public async Task<Result<int>> GetUsersCount()
     {
-        throw new NotImplementedException();
+        try
+        {
+            var usersCount = await _authApiDb.Users.CountAsync();
+
+            return Result<int>.Success(usersCount);
+        }
+        catch (DbUpdateException dbEx)
+        {
+            return Result<int>.Error("Veritabanı hatası: " + dbEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result<int>.Error("Bir hata oluştu: " + ex.Message);
+        }
     }
 }
