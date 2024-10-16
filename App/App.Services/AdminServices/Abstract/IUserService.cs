@@ -7,4 +7,5 @@ public interface IUserService
     Task<Result<List<AllUsersDto>>> GetAllUsersAsync();
     Task<Result> ChangeActivenessOfUserAsync(int id);
     Task<Result<string>> GetCommentsUserName(int id);
+    Task<Result<int>> GetUsersCount(int id);
 }

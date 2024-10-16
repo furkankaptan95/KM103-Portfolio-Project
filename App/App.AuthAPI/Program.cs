@@ -1,4 +1,6 @@
+using App.AuthAPI.Services;
 using App.Data.DbContexts;
+using App.Services.AdminServices.Abstract;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +26,8 @@ builder.Services.AddDbContext<AuthApiDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("AuthApiBaseDb"));
 });
+
+builder.Services.AddScoped<IUserService, AdminUserService>();
 
 var app = builder.Build();
 
