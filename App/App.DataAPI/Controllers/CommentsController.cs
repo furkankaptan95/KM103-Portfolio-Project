@@ -1,5 +1,5 @@
 ﻿using App.Services.AdminServices.Abstract;
-using Microsoft.AspNetCore.Http;
+using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.DataAPI.Controllers;
@@ -22,6 +22,24 @@ public class CommentsController : ControllerBase
 
         if (!result.IsSuccess)
         {
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpDelete("/delete-comment-{id:int}")]
+    public async Task<IActionResult> DeleteAsync([FromRoute] int id)
+    {
+        var result = await _commentService.DeleteCommentAsync(id);
+
+        if (!result.IsSuccess)
+        {
+            if (result.Status == ResultStatus.NotFound)
+            {
+                return NotFound(result);
+            }
+
             return StatusCode(500, result);
         }
 
