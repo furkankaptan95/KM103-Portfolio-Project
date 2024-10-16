@@ -7,8 +7,19 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services;
-public class CommentService(DataApiDbContext dataApiDb) : ICommentService
+public class CommentService : ICommentService
 {
+    private readonly DataApiDbContext _dataApiDb;
+    private readonly IHttpClientFactory _factory;
+
+    public CommentService(DataApiDbContext dataApiDb, IHttpClientFactory factory)
+    {
+        _dataApiDb = dataApiDb;
+        _factory = factory;
+    }
+
+    private HttpClient AuthApiClient => _factory.CreateClient("authApi");
+
     public Task<Result> ApproveOrNotApproveCommentAsync(int id)
     {
         throw new NotImplementedException();
@@ -25,7 +36,7 @@ public class CommentService(DataApiDbContext dataApiDb) : ICommentService
         {
             var dtos = new List<AllCommentsDto>();
 
-            var entities = await dataApiDb.Comments.Include(c=>c.BlogPost).ToListAsync();
+            var entities = await _dataApiDb.Comments.Include(c=>c.BlogPost).ToListAsync();
 
             if (entities is null)
             {
@@ -43,27 +54,29 @@ public class CommentService(DataApiDbContext dataApiDb) : ICommentService
                 }
                 else
                 {
-                    // Yoksa, UserId üzerinden API'den kullanıcı bilgisi al
+                    
                     if (item.UserId.HasValue)
                     {
-                        /* var userResponse =await _userApiService.GetUserByIdAsync(item.UserId.Value);*/
+                        var authApiResponse = await AuthApiClient.GetAsync($"get-commenter-username-{item.UserId}");
 
-                        if (true)
+                        if (!authApiResponse.IsSuccessStatusCode)
                         {
-                            commenter = "Username";/*userResponse.Data.Username;*/
+                            commenter = "Unknown User";
                         }
+
                         else
                         {
-                            commenter = "Unknown User"; // API başarısız olursa alternatif bir metin
+                            var result = await authApiResponse.Content.ReadFromJsonAsync<Result<string>>();
+
+                            commenter = result.Value;
                         }
                     }
                     else
                     {
-                        commenter = "Anonymous"; // UserId null ise anonim kullanıcı
+                        commenter = "Anonymous";
                     }
                 }
 
-                // DTO oluştur
                 var dto = new AllCommentsDto
                 {
                     Id = item.Id,
