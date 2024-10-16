@@ -42,7 +42,7 @@ public class AdminUserService : IUserService
             {
                 var userComments = new List<UsersCommentsDto>();
                   
-                var dataApiResponse = await DataApiClient.GetAsync($"get-user-comments-{item.Id}");
+                var dataApiResponse = await DataApiClient.GetAsync($"get-users-comments-{item.Id}");
 
                 if (dataApiResponse.IsSuccessStatusCode)
                 {
