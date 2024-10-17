@@ -10,16 +10,18 @@ public class UsersController(IUserService userService) : Controller
     [Route("all-users")]
     public async Task<IActionResult> AllUsers()
     {
-        var result = await userService.GetAllUsersAsync();
-
-        if (!result.IsSuccess)
+        try
         {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-            return Redirect("/home/index");
-        }
+            var result = await userService.GetAllUsersAsync();
 
-        var models = new List<AllUsersViewModel>();
-        var dtos = result.Value;
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return Redirect("/home/index");
+            }
+
+            var models = new List<AllUsersViewModel>();
+            var dtos = result.Value;
 
             models = dtos
            .Select(item => new AllUsersViewModel
@@ -34,31 +36,44 @@ public class UsersController(IUserService userService) : Controller
                    Content = c.Content,
                    CreatedAt = c.CreatedAt,
                    BlogPostName = c.BlogPostName,
-                   IsApproved= c.IsApproved,
+                   IsApproved = c.IsApproved,
                }).ToList()
            })
            .ToList();
-        
-        return View(models);
+
+            return View(models);
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Kullanıcılar getirilirken beklenmedik bir hata oluştu..";
+            return Redirect("/home/index");
+        }
     }
 
     [HttpGet]
     [Route("change-user-activeness-{id:int}")]
     public async Task<IActionResult> ChangeUserActiveness([FromRoute] int id)
     {
-        var result = await userService.ChangeActivenessOfUserAsync(id);
-
-        if (!result.IsSuccess)
+        try
         {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-        }
+            var result = await userService.ChangeActivenessOfUserAsync(id);
 
-        else
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            }
+
+            else
+            {
+                TempData["Message"] = result.SuccessMessage;
+            }
+
+            return Redirect("/all-users");
+        }
+        catch (Exception)
         {
-            TempData["Message"] = result.SuccessMessage;
+            TempData["ErrorMessage"] = "Kullanıcının aktifliği değiştirilirken beklenmeyen bir hata oluştu..";
+            return Redirect("/all-users");
         }
-
-        return Redirect("/all-users");
     }
-
 }

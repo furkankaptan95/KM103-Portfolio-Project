@@ -127,14 +127,11 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
 
             return View(model);
         }
-
-
         catch (Exception )  // API çağrısı sırasında beklenmeyen bir hata oluşursa
         {
             TempData["ErrorMessage"] = "Hakkımda bilgisi getirilirken beklenmeyen bir hata oluştu.";
             return Redirect("/about-me");
         }
-
     }
 
     [HttpPost]
