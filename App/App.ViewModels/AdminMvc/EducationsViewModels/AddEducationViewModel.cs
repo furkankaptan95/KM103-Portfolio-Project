@@ -1,5 +1,5 @@
-﻿using App.ViewModels.AdminMvc.EducationsViewModels.Validation;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using App.ViewModels.AdminMvc.Validation;
 
 namespace App.ViewModels.AdminMvc.EducationsViewModels;
 public class AddEducationViewModel

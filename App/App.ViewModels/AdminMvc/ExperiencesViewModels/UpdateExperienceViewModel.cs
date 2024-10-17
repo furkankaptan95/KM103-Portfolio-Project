@@ -1,4 +1,4 @@
-﻿using App.ViewModels.AdminMvc.ExperiencesViewModels.Validation;
+﻿using App.ViewModels.AdminMvc.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace App.ViewModels.AdminMvc.ExperiencesViewModels;
