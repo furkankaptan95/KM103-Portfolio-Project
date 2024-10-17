@@ -17,6 +17,7 @@ public class BlogPostEntityConfiguration : IEntityTypeConfiguration<BlogPostEnti
 
         builder.HasMany(bp => bp.Comments)
             .WithOne(c => c.BlogPost)
-            .HasForeignKey(c => c.BlogPostId);
+            .HasForeignKey(c => c.BlogPostId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

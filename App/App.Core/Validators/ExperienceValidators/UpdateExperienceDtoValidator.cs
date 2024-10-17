@@ -7,7 +7,9 @@ public class UpdateExperienceDtoValidator : AbstractValidator<UpdateExperienceDt
 {
     public UpdateExperienceDtoValidator()
     {
-        RuleFor(x => x.Id).NotEmpty().WithMessage("Id bilgisi boş olamaz.");
+        RuleFor(x => x.Id)
+            .NotEmpty().WithMessage("Id bilgisi boş olamaz.")
+             .GreaterThan(0).WithMessage("Id 0'dan büyük olmalıdır.");
 
         RuleFor(x => x.Title)
        .NotEmpty().WithMessage("Başlık kısmı boş olamaz.")

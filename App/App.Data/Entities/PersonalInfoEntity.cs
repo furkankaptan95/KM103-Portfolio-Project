@@ -2,9 +2,9 @@
 namespace App.Data.Entities;
 public class PersonalInfoEntity : BaseEntity<int>
 {
-    public string About { get; set; } = string.Empty;
-    public string Name { get; set; } = string.Empty;
-    public string Surname { get; set; } = string.Empty;
+    public string About { get; set; }
+    public string Name { get; set; }
+    public string Surname { get; set; }
     public DateTime BirthDate { get; set; }
 
 }
