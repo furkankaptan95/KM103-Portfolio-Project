@@ -15,7 +15,7 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
 
             if (!apiResponse.IsSuccessStatusCode)
             {
-                return Result.Error("Eğitim bilgisi eklenirken beklenmedik bir hata oluştu..");
+                return Result.Error("Eğitim bilgisi eklenirken beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
             }
 
             return Result.SuccessWithMessage("Eğitim bilgisi başarıyla eklendi.");
@@ -23,7 +23,7 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
        
         catch (Exception)
         {
-            return Result.Error("Eğitim bilgisi eklenirken beklenmedik bir hata oluştu..");
+            return Result.Error("Eğitim bilgisi eklenirken beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
         }
     }
 
@@ -166,7 +166,7 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
                     return Result.Error("Güncellemek istediğiniz Eğitim bilgisi bulunamadı.");
                 }
 
-                return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
+                return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
             }
 
             return Result.SuccessWithMessage("Eğitim bilgileri başarıyla güncellendi.");
@@ -174,7 +174,7 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
         
         catch (Exception)
         {
-            return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
+            return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
         }
     }
 }

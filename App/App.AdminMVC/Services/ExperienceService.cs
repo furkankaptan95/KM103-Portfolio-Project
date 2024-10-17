@@ -15,7 +15,7 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
 
             if (!apiResponse.IsSuccessStatusCode)
             {
-                return Result.Error("Deneyim bilgisi eklenirken beklenmedik bir hata oluştu..");
+                return Result.Error("Deneyim bilgisi eklenirken beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
             }
 
             return Result.SuccessWithMessage("Deneyim bilgisi başarıyla eklendi.");
@@ -23,7 +23,7 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
         
         catch (Exception)
         {
-            return Result.Error("Deneyim bilgisi eklenirken beklenmedik bir hata oluştu..");
+            return Result.Error("Deneyim bilgisi eklenirken beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
         }
     }
 
@@ -166,7 +166,7 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
                     return Result.Error("Güncellemek istediğiniz Deneyim bilgisi bulunamadı.");
                 }
 
-                return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
+                return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
             }
 
             return Result.SuccessWithMessage("Deneyim bilgileri başarıyla güncellendi.");
@@ -174,7 +174,7 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceService
         
         catch (Exception)
         {
-            return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
+            return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
         }
     }
 }

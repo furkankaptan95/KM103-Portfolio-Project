@@ -32,14 +32,14 @@ public class AboutMeService : IAboutMeService
 
             if (!fileApiResponse.IsSuccessStatusCode)
             {
-                return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu.");
+                return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu.Tekrar deneyebilirsiniz.");
             }
 
             var urlDto = await fileApiResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
 
             if(urlDto is null)
             {
-                return Result.Error("Hakkımda bilgileri eklenirken beklenmeyen bir hata oluştu..");
+                return Result.Error("Hakkımda bilgileri eklenirken beklenmeyen bir hata oluştu..Tekrar deneyebilirsiniz.");
             }
 
             var apiDto = new AddAboutMeApiDto
@@ -56,11 +56,11 @@ public class AboutMeService : IAboutMeService
                 return Result.SuccessWithMessage(" - Hakkımda - bilgileri başarıyla eklendi. ");
             }
 
-            return Result.Error("Hakkımda bilgileri eklenirken beklenmeyen bir hata oluştu..");
+            return Result.Error("Hakkımda bilgileri eklenirken beklenmeyen bir hata oluştu..Tekrar deneyebilirsiniz.");
         }
         catch (Exception)
         {
-            return Result.Error("Hakkımda bilgileri eklenirken beklenmeyen bir hata oluştu..");
+            return Result.Error("Hakkımda bilgileri eklenirken beklenmeyen bir hata oluştu..Tekrar deneyebilirsiniz.");
         }
     }
     public Task<Result> AddAboutMeAsync(AddAboutMeApiDto dto)
@@ -137,14 +137,14 @@ public class AboutMeService : IAboutMeService
 
                 if (!fileApiResponse.IsSuccessStatusCode)
                 {
-                    return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu.");
+                    return Result.Error("Resimler yüklenirken beklenmeyen bir hata oluştu..Tekrar deneyebilirsiniz.");
                 }
 
                 var urlDto = await fileApiResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
 
                 if (urlDto == null)
                 {
-                    return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
+                    return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu..Tekrar deneyebilirsiniz.");
                 }
 
                 updateApiDto.ImageUrl1 = urlDto.ImageUrl1;
@@ -159,14 +159,14 @@ public class AboutMeService : IAboutMeService
                 {
                     return Result.NotFound("Güncellemek istediğiniz -Hakkımda- kısmında bilgi bulunmuyor.");
                 }
-                return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
+                return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu..Tekrar deneyebilirsiniz.");
             }
 
             return Result.SuccessWithMessage(" -Hakkımda- bilgileriniz başarılı bir şekilde güncellendi. ");
         }
         catch (Exception)
         {
-            return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
+            return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu..Tekrar deneyebilirsiniz.");
         }
     }
 }

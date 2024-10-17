@@ -7,5 +7,5 @@ public class AllExperiencesViewModel
     public DateTime StartDate { get; set; }
     public DateTime? EndDate { get; set; }
     public string Description { get; set; }
-    public bool IsVisible { get; set; } = true;
+    public bool IsVisible { get; set; }
 }

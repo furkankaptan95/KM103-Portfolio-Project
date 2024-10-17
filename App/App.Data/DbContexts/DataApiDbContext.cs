@@ -1,5 +1,4 @@
 ﻿using App.Data.Entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -10,7 +9,6 @@ public class DataApiDbContext : DbContext
     {
 
     }
-
     public DbSet<AboutMeEntity> AboutMes { get; set; }
     public DbSet<PersonalInfoEntity> PersonalInfos { get; set; }
     public DbSet<ExperienceEntity> Experiences { get; set; }
@@ -80,8 +78,5 @@ public class DataApiDbContext : DbContext
                 UnsignedCommenterName = "Güzel İnsan",
             }
             );
-     
     }
-
-
 }

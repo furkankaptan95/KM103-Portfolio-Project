@@ -1,4 +1,4 @@
-﻿using App.ViewModels.AdminMvc.EducationsViewModels.Validation;
+﻿using App.ViewModels.AdminMvc.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace App.ViewModels.AdminMvc.EducationsViewModels;

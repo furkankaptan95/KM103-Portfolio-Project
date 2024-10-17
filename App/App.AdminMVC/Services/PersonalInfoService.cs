@@ -15,7 +15,7 @@ public class PersonalInfoService(IHttpClientFactory factory) : IPersonalInfoServ
 
             if (!apiResponse.IsSuccessStatusCode)
             {
-                return Result.Error("Kişisel Bilgiler eklenirken beklenmedik bir hata oluştu..");
+                return Result.Error("Kişisel Bilgiler eklenirken beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
             }
 
             return Result.SuccessWithMessage("Kişisel Bilgiler başarıyla eklendi.");
@@ -23,7 +23,7 @@ public class PersonalInfoService(IHttpClientFactory factory) : IPersonalInfoServ
      
         catch (Exception)
         {
-            return Result.Error("Kişisel Bilgiler eklenirken beklenmedik bir hata oluştu..");
+            return Result.Error("Kişisel Bilgiler eklenirken beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
         }
     }
 
@@ -79,12 +79,12 @@ public class PersonalInfoService(IHttpClientFactory factory) : IPersonalInfoServ
                 return Result.NotFound("Güncellemek istediğiniz Kişisel Bilgiler kısmında herhangi bir bilgi bulunmuyor!..Eklemek için formu doldurabilirsiniz..");
             }
 
-            return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
+            return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu..Tekrar deneyebilirsiniz.");
         }
         
         catch (Exception)
         {
-            return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
+            return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu..Tekrar deneyebilirsiniz.");
         }
     }
 }

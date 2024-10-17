@@ -12,7 +12,6 @@ public class AuthApiDbContext : DbContext
     }
 
     public DbSet<UserEntity> Users { get; set; }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -58,11 +57,6 @@ public class AuthApiDbContext : DbContext
                    IsActive = false,
                    Role = "commenter",
                }
-
             );
-
-        
-          
     }
-
 }
