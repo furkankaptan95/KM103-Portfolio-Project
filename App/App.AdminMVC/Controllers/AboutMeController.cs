@@ -87,7 +87,7 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
             return Redirect("/about-me");
         }
 
-        catch (Exception)  // API çağrısı sırasında beklenmeyen bir hata oluşursa
+        catch (Exception)
         {
             ViewData["ErrorMessage"] = "Hakkımda bilgisi eklenirken beklenmeyen bir hata oluştu.Tekrar deneyebilirsiniz.";
             return View(model);

@@ -1,6 +1,7 @@
 ﻿using App.DTOs.BlogPostDtos;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.BlogPostsViewModels;
+using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
@@ -72,20 +73,17 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
 
             if (!result.IsSuccess)
             {
-                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+               ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
+               return View(model);
             }
-
-            else
-            {
-                TempData["Message"] = result.SuccessMessage;
-            }
-
+                
+            TempData["Message"] = result.SuccessMessage; 
             return Redirect("/all-blog-posts");
         }
         catch (Exception)
         {
-            TempData["ErrorMessage"] = "Blog Post eklenirken beklenmedik bir hata oluştu..";
-            return Redirect("/all-blog-posts");
+            ViewData["ErrorMessage"] = "Blog Post eklenirken beklenmedik bir hata oluştu..Tekrar eklemeyi deneyebilirsiniz.";
+            return View(model);
         }
     }
 
@@ -143,21 +141,26 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
 
             if (!result.IsSuccess)
             {
-                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-            }
-            else
-            {
-                TempData["Message"] = result.SuccessMessage;
-            }
+                var errorMessage = result.Errors.FirstOrDefault();
 
-            return Redirect("/all-blog-posts");
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    TempData["ErrorMessage"] = errorMessage;
+                    return Redirect("/all-blog-posts");
+                }
+
+                ViewData["ErrorMessage"] = errorMessage;
+                return View(model);
+            }
+                TempData["Message"] = result.SuccessMessage;
+                return Redirect("/all-blog-posts");
+            
         }
         catch (Exception)
         {
-            TempData["ErrorMessage"] = "Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..";
-            return Redirect("/all-blog-posts");
+            ViewData["ErrorMessage"] = "Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..Tekrar deneyebilirsiniz.";
+            return View(model);
         }
-
     }
 
     [HttpGet]
