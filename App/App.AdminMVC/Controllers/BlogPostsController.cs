@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace App.AdminMVC.Controllers;
 public class BlogPostsController(IBlogPostService blogPostService) : Controller
 {
-
     [HttpGet]
     [Route("all-blog-posts")]
     public async Task<IActionResult> AllBlogPosts()
@@ -25,8 +24,6 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
 
         var dtos = result.Value;
 
-        if(dtos.Count > 0)
-        {
            models = dtos
           .Select(item => new AllBlogPostsViewModel
           {
@@ -37,7 +34,6 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
               IsVisible = item.IsVisible,
           })
           .ToList();
-        }
 
         return View(models);
     }
@@ -51,17 +47,17 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
 
     [HttpPost]
     [Route("add-blog-post")]
-    public async Task<IActionResult> AddBlogPost([FromForm] AddBlogPostViewModel addBlogPostModel)
+    public async Task<IActionResult> AddBlogPost([FromForm] AddBlogPostViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return View(addBlogPostModel);
+            return View(model);
         }
 
         var dto = new AddBlogPostDto
         {
-            Content = addBlogPostModel.Content,
-            Title = addBlogPostModel.Title,
+            Content = model.Content,
+            Title = model.Title,
         };
 
         var result = await blogPostService.AddBlogPostAsync(dto);
@@ -77,7 +73,6 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
         }
 
         return Redirect("/all-blog-posts");
-
     }
 
     [HttpGet]
@@ -106,18 +101,18 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
 
     [HttpPost]
     [Route("update-blog-post")]
-    public async Task<IActionResult> UpdateBlogPost([FromForm] UpdateBlogPostViewModel updateBlogPostModel)
+    public async Task<IActionResult> UpdateBlogPost([FromForm] UpdateBlogPostViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return View(updateBlogPostModel);
+            return View(model);
         }
 
         var dto = new UpdateBlogPostDto
         {
-            Content = updateBlogPostModel.Content,
-            Title = updateBlogPostModel.Title,
-            Id = updateBlogPostModel.Id
+            Id = model.Id,
+            Content = model.Content,
+            Title = model.Title,
         };
 
         var result = await blogPostService.UpdateBlogPostAsync(dto);

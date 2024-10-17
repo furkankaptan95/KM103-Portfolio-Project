@@ -1,5 +1,4 @@
-﻿using App.DTOs.AboutMeDtos;
-using App.DTOs.PersonalInfoDtos;
+﻿using App.DTOs.PersonalInfoDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
@@ -24,66 +23,90 @@ public class PersonalInfoController : ControllerBase
     [HttpPost("/add-personal-info")]
     public async Task<IActionResult> AddAsync([FromBody] AddPersonalInfoDto dto)
     {
-        var validationResult = await _addValidator.ValidateAsync(dto);
-
-        if (!validationResult.IsValid)
+        try
         {
-            string errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            var validationResult = await _addValidator.ValidateAsync(dto);
+
+            if (!validationResult.IsValid)
+            {
+                string errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            }
+
+            var result = await _personalInfoService.AddPersonalInfoAsync(dto);
+
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            return StatusCode(500, result);
         }
-
-        var result = await _personalInfoService.AddPersonalInfoAsync(dto);
-
-        if (result.IsSuccess)
+        
+        catch (Exception ex)
         {
-            return Ok(result);
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
-
-        return StatusCode(500, result);
     }
 
     [HttpGet("/get-personal-info")]
     public async Task<IActionResult> GetAsync()
     {
-        var result = await _personalInfoService.GetPersonalInfoAsync();
-
-        if (result.IsSuccess)
+        try
         {
-            return Ok(result);
-        }
+            var result = await _personalInfoService.GetPersonalInfoAsync();
 
-       if (result.Status == ResultStatus.NotFound)
-       {
-            return NotFound(result);
-       }
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            if (result.Status == ResultStatus.NotFound)
+            {
+                return NotFound(result);
+            }
             return StatusCode(500, result);
+        }
+       
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
     }
 
     [HttpPut("/update-personal-info")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdatePersonalInfoDto dto)
     {
-        var validationResult = await _updateValidator.ValidateAsync(dto);
-        string errorMessage;
-
-        if (!validationResult.IsValid)
+        try
         {
-            errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+            var validationResult = await _updateValidator.ValidateAsync(dto);
+            string errorMessage;
 
-            return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            if (!validationResult.IsValid)
+            {
+                errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+
+                return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            }
+
+            var result = await _personalInfoService.UpdatePersonalInfoAsync(dto);
+
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            if (result.Status == ResultStatus.NotFound)
+            {
+                return NotFound(result);
+            }
+
+            return StatusCode(500, result);
         }
-
-        var result = await _personalInfoService.UpdatePersonalInfoAsync(dto);
-
-        if (result.IsSuccess)
+        
+        catch (Exception ex)
         {
-            return Ok(result);
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
-
-        if(result.Status == ResultStatus.NotFound)
-        {
-            return NotFound(result);
-        }
-
-        return StatusCode(500, result);
     }
 }

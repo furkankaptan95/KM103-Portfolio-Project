@@ -1,6 +1,5 @@
 ﻿using App.Data.DbContexts;
 using App.Data.Entities;
-using App.DTOs.ExperienceDtos;
 using App.DTOs.ProjectDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
@@ -10,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace App.DataAPI.Services;
 public class ProjectService(DataApiDbContext dataApiDb) : IProjectService
 {
-    public  async Task<Result> AddProjectAsync(AddProjectApiDto dto)
+    public async Task<Result> AddProjectAsync(AddProjectApiDto dto)
     {
         try
         {
@@ -26,21 +25,23 @@ public class ProjectService(DataApiDbContext dataApiDb) : IProjectService
 
             return Result.Success();
         }
-        catch (DbUpdateException dbEx)
+        catch (DbUpdateException dbUpdateEx)
         {
-            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
     public Task<Result> AddProjectAsync(AddProjectMVCDto dto)
     {
         throw new NotImplementedException();
     }
-
     public async Task<Result> ChangeProjectVisibilityAsync(int id)
     {
         try
@@ -59,16 +60,19 @@ public class ProjectService(DataApiDbContext dataApiDb) : IProjectService
 
             return Result.Success();
         }
-        catch (DbUpdateException dbEx)
+        catch (DbUpdateException dbUpdateEx)
         {
-            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
     public async Task<Result> DeleteProjectAsync(int id)
     {
         try
@@ -85,6 +89,10 @@ public class ProjectService(DataApiDbContext dataApiDb) : IProjectService
 
             return Result.Success();
         }
+        catch (DbUpdateException dbUpdateEx)
+        {
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
         catch (SqlException sqlEx)
         {
             return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
@@ -94,7 +102,6 @@ public class ProjectService(DataApiDbContext dataApiDb) : IProjectService
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
     public async Task<Result<List<AllProjectsDto>>> GetAllProjectsAsync()
     {
         try
@@ -130,7 +137,6 @@ public class ProjectService(DataApiDbContext dataApiDb) : IProjectService
             return Result<List<AllProjectsDto>>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    
     public async Task<Result<ProjectToUpdateDto>> GetByIdAsync(int id)
     {
         try
@@ -161,12 +167,10 @@ public class ProjectService(DataApiDbContext dataApiDb) : IProjectService
             return Result<ProjectToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
     public Task<Result> UpdateProjectAsync(UpdateProjectMVCDto dto)
     {
         throw new NotImplementedException();
     }
-
     public async Task<Result> UpdateProjectAsync(UpdateProjectApiDto dto)
     {
         try
@@ -191,9 +195,13 @@ public class ProjectService(DataApiDbContext dataApiDb) : IProjectService
 
             return Result.Success();
         }
-        catch (DbUpdateException dbEx)
+        catch (DbUpdateException dbUpdateEx)
         {
-            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {

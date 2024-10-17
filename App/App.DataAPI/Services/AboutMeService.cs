@@ -25,9 +25,13 @@ public class AboutMeService(DataApiDbContext dataApiDb) : IAboutMeService
 
             return Result.Success();
         }
-        catch (DbUpdateException dbEx)
+        catch (DbUpdateException dbUpdateEx)
         {
-            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
@@ -102,11 +106,14 @@ public class AboutMeService(DataApiDbContext dataApiDb) : IAboutMeService
             return Result.Success();
         }
 
-        catch (DbUpdateException dbEx)
+        catch (DbUpdateException dbUpdateEx)
         {
-            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
         }
-
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
         catch (Exception ex)
         {
             var errorMessage = $"Bir hata oluştu: {ex.Message}, Hata Kodu: {ex.HResult}";

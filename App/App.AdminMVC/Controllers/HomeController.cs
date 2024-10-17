@@ -3,7 +3,6 @@ using App.ViewModels.AdminMvc.HomeViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-
 public class HomeController(IHomeService homeService) : Controller
 {
     public async Task<IActionResult> Index()
@@ -29,10 +28,8 @@ public class HomeController(IHomeService homeService) : Controller
 
         return View(model);
     }
-
-    public async Task<IActionResult> Index2()
+    public IActionResult Index2()
     {
         return View();
     }
-
 }

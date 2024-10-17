@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace App.AdminMVC.Controllers;
 public class ExperiencesController(IExperienceService experienceService) : Controller
 {
-   
     [HttpGet]
     [Route("all-experiences")]
     public async Task<IActionResult> AllExperiences()
@@ -22,8 +21,6 @@ public class ExperiencesController(IExperienceService experienceService) : Contr
         var models = new List<AllExperiencesViewModel>();
         var dtos = result.Value;
 
-        if (dtos.Count > 0)
-        {
             models = dtos
            .Select(item => new AllExperiencesViewModel
            {
@@ -36,7 +33,6 @@ public class ExperiencesController(IExperienceService experienceService) : Contr
                IsVisible = item.IsVisible
            })
            .ToList();
-        }
 
         return View(models);
     }
@@ -50,20 +46,20 @@ public class ExperiencesController(IExperienceService experienceService) : Contr
 
     [HttpPost]
     [Route("add-experience")]
-    public async Task<IActionResult> AddExperience([FromForm] AddExperienceViewModel addExperienceModel)
+    public async Task<IActionResult> AddExperience([FromForm] AddExperienceViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return View(addExperienceModel);
+            return View(model);
         }
 
         var dto = new AddExperienceDto
         {
-            Title = addExperienceModel.Title,
-            Company = addExperienceModel.Company,
-            StartDate = addExperienceModel.StartDate,
-            EndDate = addExperienceModel.EndDate,
-            Description = addExperienceModel.Description,
+            Title = model.Title,
+            Company = model.Company,
+            StartDate = model.StartDate,
+            EndDate = model.EndDate,
+            Description = model.Description,
         };
 
         var result = await experienceService.AddExperienceAsync(dto);
@@ -109,21 +105,21 @@ public class ExperiencesController(IExperienceService experienceService) : Contr
 
     [HttpPost]
     [Route("update-experience")]
-    public async Task<IActionResult> UpdateExperience([FromForm] UpdateExperienceViewModel updateExperienceModel)
+    public async Task<IActionResult> UpdateExperience([FromForm] UpdateExperienceViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return View(updateExperienceModel);
+            return View(model);
         }
 
         var dto = new UpdateExperienceDto
         {
-            Id = updateExperienceModel.Id,
-            Description = updateExperienceModel.Description,
-            Title = updateExperienceModel.Title,
-            Company = updateExperienceModel.Company,
-            EndDate = updateExperienceModel.EndDate,
-            StartDate = updateExperienceModel.StartDate,
+            Id = model.Id,
+            Description = model.Description,
+            Title = model.Title,
+            Company = model.Company,
+            EndDate = model.EndDate,
+            StartDate = model.StartDate,
         };
 
         var result = await experienceService.UpdateExperienceAsync(dto);

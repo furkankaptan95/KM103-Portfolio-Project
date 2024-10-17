@@ -25,9 +25,13 @@ public class BlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
 
             return Result.Success();
         }
-        catch (DbUpdateException dbEx)
+        catch (DbUpdateException dbUpdateEx)
         {
-            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
@@ -53,9 +57,13 @@ public class BlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
 
             return Result.Success();
         }
-        catch (DbUpdateException dbEx)
+        catch (DbUpdateException dbUpdateEx)
         {
-            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
@@ -78,6 +86,10 @@ public class BlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
              await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
+        }
+        catch (DbUpdateException dbUpdateEx)
+        {
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
         }
         catch (SqlException sqlEx)
         {
@@ -160,6 +172,11 @@ public class BlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
         try
         {
             var entity = await dataApiDb.BlogPosts.FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+            if (entity is null)
+            {
+                return Result.NotFound();
+            }
            
             entity.Title = dto.Title;
             entity.Content = dto.Content;
@@ -170,9 +187,13 @@ public class BlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
 
             return Result.Success();
         }
-        catch (DbUpdateException dbEx)
+        catch (DbUpdateException dbUpdateEx)
         {
-            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {

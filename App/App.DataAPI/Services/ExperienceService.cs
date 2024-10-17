@@ -6,188 +6,202 @@ using Ardalis.Result;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
-namespace App.DataAPI.Services
+namespace App.DataAPI.Services;
+public class ExperienceService(DataApiDbContext dataApiDb) : IExperienceService
 {
-    public class ExperienceService(DataApiDbContext dataApiDb) : IExperienceService
+    public async Task<Result> AddExperienceAsync(AddExperienceDto dto)
     {
-        public async Task<Result> AddExperienceAsync(AddExperienceDto dto)
+        try
         {
-            try
+            var entity = new ExperienceEntity()
             {
-                var entity = new ExperienceEntity()
-                {
-                    Title = dto.Title,
-                    Company = dto.Company,
-                    StartDate = dto.StartDate,
-                    EndDate = dto.EndDate,
-                    Description = dto.Description,
-                };
+                Title = dto.Title,
+                Company = dto.Company,
+                StartDate = dto.StartDate,
+                EndDate = dto.EndDate,
+                Description = dto.Description,
+            };
 
-                await dataApiDb.Experiences.AddAsync(entity);
-                await dataApiDb.SaveChangesAsync();
+            await dataApiDb.Experiences.AddAsync(entity);
+            await dataApiDb.SaveChangesAsync();
 
-                return Result.Success();
-            }
-            catch (DbUpdateException dbEx)
-            {
-                return Result.Error("Veritabanı hatası: " + dbEx.Message);
-            }
-            catch (Exception ex)
-            {
-                return Result.Error("Bir hata oluştu: " + ex.Message);
-            }
+            return Result.Success();
         }
-
-        public async Task<Result> ChangeExperienceVisibilityAsync(int id)
+        catch (DbUpdateException dbUpdateEx)
         {
-            try
-            {
-                var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
-
-                if (entity is null)
-                {
-                    return Result.NotFound();
-                }
-
-                entity.IsVisible = !entity.IsVisible;
-
-                dataApiDb.Experiences.Update(entity);
-                await dataApiDb.SaveChangesAsync();
-
-                return Result.Success();
-            }
-            catch (DbUpdateException dbEx)
-            {
-                return Result.Error("Veritabanı hatası: " + dbEx.Message);
-            }
-            catch (Exception ex)
-            {
-                return Result.Error("Bir hata oluştu: " + ex.Message);
-            }
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
         }
-
-        public async Task<Result> DeleteExperienceAsync(int id)
+        catch (SqlException sqlEx)
         {
-            try
-            {
-                var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
-
-                if (entity is null)
-                {
-                    return Result.NotFound();
-                }
-
-                dataApiDb.Experiences.Remove(entity);
-                await dataApiDb.SaveChangesAsync();
-
-                return Result.Success();
-            }
-            catch (SqlException sqlEx)
-            {
-                return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
-            }
-            catch (Exception ex)
-            {
-                return Result.Error("Bir hata oluştu: " + ex.Message);
-            }
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
-
-        public async Task<Result<List<AllExperiencesDto>>> GetAllExperiencesAsync()
+        catch (Exception ex)
         {
-            try
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
+    }
+    public async Task<Result> ChangeExperienceVisibilityAsync(int id)
+    {
+        try
+        {
+            var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity is null)
             {
-                var dtos = new List<AllExperiencesDto>();
+                return Result.NotFound();
+            }
 
-                var entities = await dataApiDb.Experiences.ToListAsync();
+            entity.IsVisible = !entity.IsVisible;
 
-                if (entities is null)
-                {
-                    return Result<List<AllExperiencesDto>>.Success(dtos);
-                }
+            dataApiDb.Experiences.Update(entity);
+            await dataApiDb.SaveChangesAsync();
 
-                dtos = entities
-               .Select(item => new AllExperiencesDto
-               {
-                   Id = item.Id,
-                   Company = item.Company,
-                   Description = item.Description,
-                   StartDate = item.StartDate,
-                   EndDate = item.EndDate,
-                   IsVisible = item.IsVisible,
-                   Title = item.Title,
-               })
-               .ToList();
+            return Result.Success();
+        }
+        catch (DbUpdateException dbUpdateEx)
+        {
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
+    }
+    public async Task<Result> DeleteExperienceAsync(int id)
+    {
+        try
+        {
+            var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
 
+            if (entity is null)
+            {
+                return Result.NotFound();
+            }
+
+            dataApiDb.Experiences.Remove(entity);
+            await dataApiDb.SaveChangesAsync();
+
+            return Result.Success();
+        }
+        catch (DbUpdateException dbUpdateEx)
+        {
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
+    }
+    public async Task<Result<List<AllExperiencesDto>>> GetAllExperiencesAsync()
+    {
+        try
+        {
+            var dtos = new List<AllExperiencesDto>();
+
+            var entities = await dataApiDb.Experiences.ToListAsync();
+
+            if (entities is null)
+            {
                 return Result<List<AllExperiencesDto>>.Success(dtos);
             }
-            catch (SqlException sqlEx)
-            {
-                return Result<List<AllExperiencesDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
-            }
-            catch (Exception ex)
-            {
-                return Result<List<AllExperiencesDto>>.Error("Bir hata oluştu: " + ex.Message);
-            }
+
+            dtos = entities
+           .Select(item => new AllExperiencesDto
+           {
+               Id = item.Id,
+               Company = item.Company,
+               Description = item.Description,
+               StartDate = item.StartDate,
+               EndDate = item.EndDate,
+               IsVisible = item.IsVisible,
+               Title = item.Title,
+           })
+           .ToList();
+
+            return Result<List<AllExperiencesDto>>.Success(dtos);
         }
-
-        public async Task<Result<ExperienceToUpdateDto>> GetByIdAsync(int id)
+        catch (SqlException sqlEx)
         {
-            try
-            {
-                var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
-
-                if (entity is null)
-                {
-                    return Result<ExperienceToUpdateDto>.NotFound();
-                }
-
-                var dto = new ExperienceToUpdateDto
-                {
-                    Id = id,
-                    Company = entity.Company,
-                    Title = entity.Title,
-                    Description = entity.Description,
-                    StartDate = entity.StartDate,
-                    EndDate = entity.EndDate,
-                };
-
-                return Result<ExperienceToUpdateDto>.Success(dto);
-            }
-            catch (SqlException sqlEx)
-            {
-                return Result<ExperienceToUpdateDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
-            }
-            catch (Exception ex)
-            {
-                return Result<ExperienceToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
-            }
+            return Result<List<AllExperiencesDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
-
-        public async Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)
+        catch (Exception ex)
         {
-            try
-            {
-                var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == dto.Id);
+            return Result<List<AllExperiencesDto>>.Error("Bir hata oluştu: " + ex.Message);
+        }
+    }
+    public async Task<Result<ExperienceToUpdateDto>> GetByIdAsync(int id)
+    {
+        try
+        {
+            var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
 
-                entity.Company = dto.Company;
-                entity.EndDate = dto.EndDate;
-                entity.StartDate = dto.StartDate;
-                entity.Title = dto.Title;
-                entity.Description = dto.Description;
-
-                dataApiDb.Experiences.Update(entity);
-                await dataApiDb.SaveChangesAsync();
-
-                return Result.Success();
-            }
-            catch (DbUpdateException dbEx)
+            if (entity is null)
             {
-                return Result.Error("Veritabanı hatası: " + dbEx.Message);
+                return Result<ExperienceToUpdateDto>.NotFound();
             }
-            catch (Exception ex)
+
+            var dto = new ExperienceToUpdateDto
             {
-                return Result.Error("Bir hata oluştu: " + ex.Message);
+                Id = id,
+                Company = entity.Company,
+                Title = entity.Title,
+                Description = entity.Description,
+                StartDate = entity.StartDate,
+                EndDate = entity.EndDate,
+            };
+
+            return Result<ExperienceToUpdateDto>.Success(dto);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result<ExperienceToUpdateDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result<ExperienceToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
+        }
+    }
+    public async Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)
+    {
+        try
+        {
+            var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+            if (entity is null)
+            {
+                return Result.NotFound();
             }
+
+            entity.Company = dto.Company;
+            entity.EndDate = dto.EndDate;
+            entity.StartDate = dto.StartDate;
+            entity.Title = dto.Title;
+            entity.Description = dto.Description;
+
+            dataApiDb.Experiences.Update(entity);
+            await dataApiDb.SaveChangesAsync();
+
+            return Result.Success();
+        }
+        catch (DbUpdateException dbUpdateEx)
+        {
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
 }
