@@ -8,6 +8,7 @@ public class UpdateBlogPostViewModel
     [Required(ErrorMessage = "Başlık kısmı zorunludur.")]
     [MaxLength(100, ErrorMessage = "Başlık kısmı en fazla 100 karakter olabilir.")]
     public string Title { get; set; }
+
     [Required(ErrorMessage = "İçerik kısmı zorunludur.")]
     public string Content { get; set; }
 }

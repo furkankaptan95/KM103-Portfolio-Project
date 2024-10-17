@@ -10,39 +10,48 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
     [HttpGet]
     [Route("about-me")]
     public async Task<IActionResult> AboutMe()
-    { 
-        var result = await aboutMeService.GetAboutMeAsync();
-
-        if (!result.IsSuccess)
+    {
+        try
         {
-            string errorMessage = result.Errors.FirstOrDefault();
+            var result = await aboutMeService.GetAboutMeAsync();
 
-            if (result.Status == ResultStatus.NotFound)
+            if (!result.IsSuccess)
             {
-                TempData["Message"] = errorMessage;
-                return Redirect("/add-about-me");
+                string errorMessage = result.Errors.FirstOrDefault();
+
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    TempData["Message"] = errorMessage;
+                    return Redirect("/add-about-me");
+                }
+
+                TempData["ErrorMessage"] = errorMessage;
+
+                return Redirect("/home/index");
             }
 
-            TempData["ErrorMessage"] = errorMessage;
+            var dto = result.Value;
+
+            var aboutMeModel = new AboutMeViewModel
+            {
+                ImageUrl1 = dto.ImageUrl1,
+                ImageUrl2 = dto.ImageUrl2,
+                Introduction = dto.Introduction,
+            };
+
+            return View(aboutMeModel);
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Hakkımda bilgiler getirilirken beklenmeyen bir hata oluştu.";
 
             return Redirect("/home/index");
         }
-
-        var dto = result.Value;
-
-        var aboutMeModel = new AboutMeViewModel
-        {
-            ImageUrl1 = dto.ImageUrl1,
-            ImageUrl2 = dto.ImageUrl2,
-            Introduction = dto.Introduction,
-        };
-
-        return View(aboutMeModel);
     }
 
     [HttpGet]
     [Route("add-about-me")]
-    public async Task<IActionResult> AddAboutMe()
+    public IActionResult AddAboutMe()
     {
         return View();
     }
@@ -56,85 +65,118 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
             return View(model);
         }
 
-        var mvcDto = new AddAboutMeMVCDto
+        try
         {
-            Introduction = model.Introduction,
-            ImageFile1 = model.Image1,
-            ImageFile2 = model.Image2,
-        };
+            var mvcDto = new AddAboutMeMVCDto
+            {
+                Introduction = model.Introduction,
+                ImageFile1 = model.Image1,
+                ImageFile2 = model.Image2,
+            };
 
-        var result = await aboutMeService.AddAboutMeAsync(mvcDto);
+            var result = await aboutMeService.AddAboutMeAsync(mvcDto);
 
-        if(!result.IsSuccess)
-        {
-            ViewBag.ErrorMessage = result.Errors.FirstOrDefault();
-            return View();
+            if (!result.IsSuccess)
+            {
+                ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return View(model);
+            }
+
+            TempData["Message"] = result.SuccessMessage;
+
+            return Redirect("/about-me");
         }
 
-        TempData["Message"] = result.SuccessMessage;
-
-        return Redirect("/about-me");
+        catch (Exception)
+        {
+            ViewData["ErrorMessage"] = "Hakkımda bilgisi eklenirken beklenmeyen bir hata oluştu.Tekrar deneyebilirsiniz.";
+            return View(model);
+        }
     }
 
     [HttpGet]
     [Route("update-about-me")]
     public async Task<IActionResult> UpdateAboutMe()
     {
-        var result = await aboutMeService.GetAboutMeAsync();
-
-        if (!result.IsSuccess)
+        try
         {
-            var errorMessage = result.Errors.FirstOrDefault();
+            var result = await aboutMeService.GetAboutMeAsync();
 
-            if (result.Status == ResultStatus.NotFound)
+            if (!result.IsSuccess)
             {
-                TempData["Message"] = errorMessage;
-                return Redirect("/add-about-me");
+                var errorMessage = result.Errors.FirstOrDefault();
+
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    TempData["Message"] = errorMessage;
+                    return Redirect("/add-about-me");
+                }
+
+                TempData["ErrorMessage"] = errorMessage;
+                return Redirect("/about-me");
             }
 
-            TempData["ErrorMessage"] = errorMessage;
+            var dto = result.Value;
+
+            var model = new UpdateAboutMeViewModel
+            {
+                ImageUrl1 = dto.ImageUrl1,
+                ImageUrl2 = dto.ImageUrl2,
+                Introduction = dto.Introduction,
+            };
+
+            return View(model);
+        }
+        catch (Exception )  // API çağrısı sırasında beklenmeyen bir hata oluşursa
+        {
+            TempData["ErrorMessage"] = "Hakkımda bilgisi getirilirken beklenmeyen bir hata oluştu.";
             return Redirect("/about-me");
         }
-
-        var dto = result.Value;
-
-        var model = new UpdateAboutMeViewModel
-        {
-            ImageUrl1 = dto.ImageUrl1,
-            ImageUrl2 = dto.ImageUrl2,
-            Introduction = dto.Introduction,
-        };
-
-        return View(model);
     }
 
     [HttpPost]
     [Route("update-about-me")]
-    public async Task<IActionResult> UpdateAboutMe([FromForm] UpdateAboutMeViewModel updateAboutMeModel)
+    public async Task<IActionResult> UpdateAboutMe([FromForm] UpdateAboutMeViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return View(updateAboutMeModel);
+            return View(model);
         }
 
-        var dto = new UpdateAboutMeMVCDto
+        try
         {
-            ImageFile1 = updateAboutMeModel.ImageFile1,
-            ImageFile2 = updateAboutMeModel.ImageFile2,
-            Introduction = updateAboutMeModel.Introduction,
-        };
+            var dto = new UpdateAboutMeMVCDto
+            {
+                ImageFile1 = model.ImageFile1,
+                ImageFile2 = model.ImageFile2,
+                Introduction = model.Introduction,
+            };
 
-        var result = await aboutMeService.UpdateAboutMeAsync(dto);
+            var result = await aboutMeService.UpdateAboutMeAsync(dto);
 
-        if (!result.IsSuccess)
-        {
-            ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
-            return View();
+            if (!result.IsSuccess)
+            {
+                var errorMessage = result.Errors.FirstOrDefault();
+
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    TempData["ErrorMessage"] = errorMessage;
+                    return Redirect("/add-about-me");
+                }
+
+                ViewData["ErrorMessage"] = errorMessage;
+                return View(model);
+            }
+
+            TempData["Message"] = result.SuccessMessage;
+
+            return Redirect("/about-me");
         }
-
-        TempData["Message"] = result.SuccessMessage;
-
-        return Redirect("/about-me");
+        catch (Exception)
+        {
+            ViewData["ErrorMessage"] = "Hakkımda bilgisi güncellenirken beklenmeyen bir hata oluştu.Tekrar deneyebilirsiniz.";
+            return View(model);
+        }
     }
 
 }

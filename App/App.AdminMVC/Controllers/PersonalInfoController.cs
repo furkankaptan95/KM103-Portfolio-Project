@@ -11,39 +11,48 @@ public class PersonalInfoController(IPersonalInfoService personalInfoService) : 
     [Route("personal-info")]
     public async Task<IActionResult> PersonalInfo()
     {
-        var result = await personalInfoService.GetPersonalInfoAsync();
-
-        if (!result.IsSuccess)
+        try
         {
-            string errorMessage = result.Errors.FirstOrDefault();
+            var result = await personalInfoService.GetPersonalInfoAsync();
 
-            if (result.Status == ResultStatus.NotFound)
+            if (!result.IsSuccess)
             {
-                TempData["Message"] = errorMessage;
-                return Redirect("/add-personal-info");
+                string errorMessage = result.Errors.FirstOrDefault();
+
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    TempData["Message"] = errorMessage;
+                    return Redirect("/add-personal-info");
+                }
+
+                TempData["ErrorMessage"] = errorMessage;
+
+                return Redirect("/home/index");
             }
 
-            TempData["ErrorMessage"] = errorMessage;
+            var dto = result.Value;
+
+            var aboutMeModel = new PersonalInfoViewModel
+            {
+                Name = dto.Name,
+                Surname = dto.Surname,
+                About = dto.About,
+                BirthDate = dto.BirthDate,
+            };
+
+            return View(aboutMeModel);
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Kişisel bilgiler getirilirken beklenmeyen bir hata oluştu.";
 
             return Redirect("/home/index");
         }
-
-        var dto = result.Value;
-
-        var aboutMeModel = new PersonalInfoViewModel
-        {
-            Name = dto.Name,
-            Surname = dto.Surname,
-            About = dto.About,
-            BirthDate = dto.BirthDate,
-        };
-
-        return View(aboutMeModel);
     }
 
     [HttpGet]
     [Route("add-personal-info")]
-    public async Task<IActionResult> AddPersonalInfo()
+    public IActionResult AddPersonalInfo()
     {
         return View();
     }
@@ -56,59 +65,75 @@ public class PersonalInfoController(IPersonalInfoService personalInfoService) : 
         {
             return View(model);
         }
-
-        var dto = new AddPersonalInfoDto
+        try
         {
-            About = model.About,
-            Name = model.Name,
-            BirthDate = model.BirthDate,
-            Surname = model.Surname,
-        };
+            var dto = new AddPersonalInfoDto
+            {
+                About = model.About,
+                Name = model.Name,
+                BirthDate = model.BirthDate,
+                Surname = model.Surname,
+            };
 
-        var result = await personalInfoService.AddPersonalInfoAsync(dto);
+            var result = await personalInfoService.AddPersonalInfoAsync(dto);
 
-        if (!result.IsSuccess)
-        {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-            return Redirect("/home/index");
+            if (!result.IsSuccess)
+            {
+                ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return View(model);
+            }
+
+            TempData["Message"] = result.SuccessMessage;
+
+            return Redirect("/personal-info");
         }
 
-        TempData["Message"] = result.SuccessMessage;
-
-        return Redirect("/personal-info");
+        catch (Exception)
+        {
+            ViewData["ErrorMessage"] = "Kişisel Bilgiler eklenirken beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.";
+            return View(model);
+        }
     }
 
     [HttpGet]
     [Route("update-personal-info")]
     public async Task<IActionResult> UpdatePersonalInfo()
     {
-        var result = await personalInfoService.GetPersonalInfoAsync();
-
-        if (!result.IsSuccess)
+        try
         {
-            var errorMessage = result.Errors.FirstOrDefault();
+            var result = await personalInfoService.GetPersonalInfoAsync();
 
-            if (result.Status == ResultStatus.NotFound)
+            if (!result.IsSuccess)
             {
+                var errorMessage = result.Errors.FirstOrDefault();
+
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    TempData["ErrorMessage"] = errorMessage;
+                    return Redirect("/add-personal-info");
+                }
+
                 TempData["ErrorMessage"] = errorMessage;
-                return Redirect("/add-personal-info");
+                return Redirect("/personal-info");
             }
 
-            TempData["ErrorMessage"] = errorMessage;
-            return Redirect("/home/index");
+            var dto = result.Value;
+
+            var model = new UpdatePersonalInfoViewModel
+            {
+                Name = dto.Name,
+                Surname = dto.Surname,
+                BirthDate = dto.BirthDate,
+                About = dto.About,
+            };
+
+            return View(model);
         }
-
-        var dto = result.Value;
-
-        var model = new UpdatePersonalInfoViewModel
+        catch (Exception)
         {
-            Name = dto.Name,
-            Surname = dto.Surname,
-            BirthDate = dto.BirthDate,
-            About = dto.About,
-        };
-
-        return View(model);
+            TempData["ErrorMessage"] = "Kişisel Bilgiler getirilirken beklenmedik bir hata oluştu..";
+            return Redirect("/personal-info");
+        }
     }
 
     [HttpPost]
@@ -120,31 +145,42 @@ public class PersonalInfoController(IPersonalInfoService personalInfoService) : 
             return View(model);
         }
 
-        var dto = new UpdatePersonalInfoDto
+        try
         {
-           Name = model.Name,
-           Surname = model.Surname,
-           BirthDate = model.BirthDate,
-           About = model.About,
-        };
-
-        var result = await personalInfoService.UpdatePersonalInfoAsync(dto);
-
-        if (!result.IsSuccess)
-        {
-            if(result.Status == ResultStatus.NotFound)
+            var dto = new UpdatePersonalInfoDto
             {
-                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-                return Redirect("/add-personal-info");
+                Name = model.Name,
+                Surname = model.Surname,
+                BirthDate = model.BirthDate,
+                About = model.About,
+            };
+
+            var result = await personalInfoService.UpdatePersonalInfoAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                var errorMessage = result.Errors.FirstOrDefault();
+
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    TempData["ErrorMessage"] = errorMessage;
+                    return Redirect("/add-personal-info");
+                }
+
+                ViewData["ErrorMessage"] = errorMessage;
+                return View(model);
             }
 
-            ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
-            return View(model);
+            TempData["Message"] = result.SuccessMessage;
+
+            return Redirect("/personal-info");
         }
 
-        TempData["Message"] = result.SuccessMessage;
-
-        return Redirect("/personal-info");
+        catch (Exception)
+        {
+            ViewData["ErrorMessage"] = "Kişisel bilgiler güncellenirken beklenmeyen bir hata oluştu..Tekrar deneyebilirsiniz.";
+            return View(model);
+        }
     }
  
 }

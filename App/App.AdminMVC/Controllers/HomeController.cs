@@ -7,26 +7,33 @@ public class HomeController(IHomeService homeService) : Controller
 {
     public async Task<IActionResult> Index()
     {
-        var result = await homeService.GetHomeInfosAsync();
+        try
+        {
+            var result = await homeService.GetHomeInfosAsync();
 
-        if (!result.IsSuccess)
+            if (!result.IsSuccess)
+            {
+                return RedirectToAction(nameof(Index2));
+            }
+
+            var dto = result.Value;
+
+            var model = new HomeViewModel
+            {
+                BlogPostsCount = dto.BlogPostsCount,
+                EducationsCount = dto.EducationsCount,
+                ExperiencesCount = dto.ExperiencesCount,
+                CommentsCount = dto.CommentsCount,
+                UsersCount = dto.UsersCount,
+                ProjectsCount = dto.ProjectsCount,
+            };
+
+            return View(model);
+        }
+        catch (Exception)
         {
             return RedirectToAction(nameof(Index2));
         }
-
-        var dto = result.Value;
-
-        var model = new HomeViewModel
-        {
-            BlogPostsCount = dto.BlogPostsCount,
-            EducationsCount = dto.EducationsCount,
-            ExperiencesCount = dto.ExperiencesCount,
-            CommentsCount = dto.CommentsCount,
-            UsersCount = dto.UsersCount,
-            ProjectsCount = dto.ProjectsCount,
-        };
-
-        return View(model);
     }
     public IActionResult Index2()
     {

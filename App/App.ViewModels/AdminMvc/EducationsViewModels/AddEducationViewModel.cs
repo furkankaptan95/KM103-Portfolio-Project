@@ -5,7 +5,7 @@ namespace App.ViewModels.AdminMvc.EducationsViewModels;
 public class AddEducationViewModel
 {
     [Required(ErrorMessage = "Derece kısmı zorunludur.")]
-    [MaxLength(100, ErrorMessage = "Derece kısmı en fazla 100 karakter olabilir.")]
+    [MaxLength(50, ErrorMessage = "Derece kısmı en fazla 50 karakter olabilir.")]
     public string Degree { get; set; }
 
     [Required(ErrorMessage = "Okul kısmı zorunludur.")]

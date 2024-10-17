@@ -112,7 +112,7 @@ public class BlogPostService : IBlogPostService
 
         catch (Exception)
         {
-            return Result<List<AllBlogPostsDto>>.Error("Blog Post verisi alınırken beklenmedik bir hata oluştu.");
+            return Result<List<AllBlogPostsDto>>.Error("Blog Postlar getirilirken beklenmedik bir hata oluştu.");
         }
     }
     public async Task<Result<BlogPostToUpdateDto>> GetBlogPostById(int id)
