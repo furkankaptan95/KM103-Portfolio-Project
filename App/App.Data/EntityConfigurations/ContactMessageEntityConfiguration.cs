@@ -15,7 +15,7 @@ public class ContactMessageEntityConfiguration : IEntityTypeConfiguration<Contac
         builder.Property(cm => cm.Subject).IsRequired().HasColumnType("varchar(100)");
         builder.Property(cm => cm.Message).IsRequired();
         builder.Property(c => c.SentDate).IsRequired().HasColumnType("datetime");
-        builder.Property(c => c.IsRead).HasColumnType("bit");
+        builder.Property(c => c.IsRead).IsRequired().HasColumnType("bit");
         builder.Property(c => c.ReplyDate).HasColumnType("datetime");
     }
 }
