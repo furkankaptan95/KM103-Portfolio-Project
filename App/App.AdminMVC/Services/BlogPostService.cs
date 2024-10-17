@@ -43,9 +43,7 @@ public class BlogPostService : IBlogPostService
 
             string errorMessage;
 
-            var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
-
-            if (result?.Status == ResultStatus.NotFound)
+            if (apiResponse.StatusCode == HttpStatusCode.NotFound)
             {
                 errorMessage = "Görünürlüğünü değiştirmek istediğiniz Blog Post bulunamadı!..";
             }
@@ -74,9 +72,8 @@ public class BlogPostService : IBlogPostService
             }
 
             string errorMessage;
-            var errorResult = await apiResponse.Content.ReadFromJsonAsync<Result>();
 
-            if (errorResult?.Status == ResultStatus.NotFound)
+            if (apiResponse.StatusCode == HttpStatusCode.NotFound)
             {
                 errorMessage = "Silmek istediğiniz Blog Post bulunamadı!..";
             }
@@ -105,7 +102,7 @@ public class BlogPostService : IBlogPostService
 
                 if(result is null)
                 {
-                    return Result.Error("Blog Postlar getirilirken beklenmedik bir hata oluştu.");
+                    return Result<List<AllBlogPostsDto>>.Error("Blog Postlar getirilirken beklenmedik bir hata oluştu.");
                 }
 
                 return result;
@@ -115,7 +112,7 @@ public class BlogPostService : IBlogPostService
 
         catch (Exception)
         {
-            return Result.Error("Blog Post verisi alınırken beklenmedik bir hata oluştu.");
+            return Result<List<AllBlogPostsDto>>.Error("Blog Post verisi alınırken beklenmedik bir hata oluştu.");
         }
     }
     public async Task<Result<BlogPostToUpdateDto>> GetBlogPostById(int id)
@@ -130,7 +127,7 @@ public class BlogPostService : IBlogPostService
 
                 if (result is null)
                 {
-                    return Result.Error("Blog Post verisi alınırken bir hata oluştu.");
+                    return Result<BlogPostToUpdateDto>.Error("Blog Post verisi alınırken bir hata oluştu.");
                 }
 
                 return result;
@@ -138,9 +135,7 @@ public class BlogPostService : IBlogPostService
 
             string errorMessage;
 
-            var errorResult = await apiResponse.Content.ReadFromJsonAsync<Result<BlogPostToUpdateDto>>();
-
-            if (errorResult?.Status == ResultStatus.NotFound)
+            if (apiResponse.StatusCode == HttpStatusCode.NotFound)
             {
                 errorMessage = "Düzenlemek istediğiniz Blog Post bulunamadı!..";
             }
@@ -149,12 +144,12 @@ public class BlogPostService : IBlogPostService
                 errorMessage = "Blog Post verisi alınırken bir hata oluştu.";
             }
 
-            return Result.Error(errorMessage);
+            return Result<BlogPostToUpdateDto>.Error(errorMessage);
         }
         
-        catch (Exception ex)
+        catch (Exception)
         {
-            return Result.Error("Blog Post verisi alınırken beklenmedik bir hata oluştu.");
+            return Result<BlogPostToUpdateDto>.Error("Blog Post verisi alınırken beklenmedik bir hata oluştu.");
         }
     }
     public async Task<Result> UpdateBlogPostAsync(UpdateBlogPostDto dto)
@@ -175,7 +170,7 @@ public class BlogPostService : IBlogPostService
 
             return Result.SuccessWithMessage("Blog Post başarıyla güncellendi.");
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
         }

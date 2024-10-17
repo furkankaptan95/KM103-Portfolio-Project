@@ -2,6 +2,7 @@
 using App.DTOs.UserDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
+using System.Net;
 
 namespace App.AdminMVC.Services;
 public class CommentService(IHttpClientFactory factory) : ICommentService
@@ -9,64 +10,88 @@ public class CommentService(IHttpClientFactory factory) : ICommentService
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
     public async Task<Result> ApproveOrNotApproveCommentAsync(int id)
     {
-        var apiResponse = await DataApiClient.GetAsync($"(not)-approve-comment-{id}");
-
-        if (apiResponse.IsSuccessStatusCode)
+        try
         {
-            return Result.SuccessWithMessage("Yorum onay durumu başarıyla değiştirildi.");
+            var apiResponse = await DataApiClient.GetAsync($"(not)-approve-comment-{id}");
+
+            if (apiResponse.IsSuccessStatusCode)
+            {
+                return Result.SuccessWithMessage("Yorum onay durumu başarıyla değiştirildi.");
+            }
+
+            string errorMessage;
+
+            if (apiResponse.StatusCode == HttpStatusCode.NotFound)
+            {
+                errorMessage = "Onay durumunu değiştirmek istediğiniz Yorum bulunamadı!..";
+            }
+            else
+            {
+                errorMessage = "Yorumun onay durumu değiştirilirken beklenmeyen bir hata oluştu..";
+            }
+
+            return Result.Error(errorMessage);
         }
-
-        string errorMessage;
-        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
-
-        if (result.Status == ResultStatus.NotFound)
+        catch (Exception)
         {
-            errorMessage = "Onay durumunu değiştirmek istediğiniz Yorum bulunamadı!..";
+            return Result.Error("Yorumun onay durumu değiştirilirken beklenmeyen bir hata oluştu..");
         }
-        else
-        {
-            errorMessage = "Yorumun onay durumu değiştirilirken beklenmeyen bir hata oluştu..";
-        }
-
-        return Result.Error(errorMessage);
     }
-
     public async Task<Result> DeleteCommentAsync(int id)
     {
-        var apiResponse = await DataApiClient.DeleteAsync($"delete-comment-{id}");
-
-        if (apiResponse.IsSuccessStatusCode)
+        try
         {
-            return Result.SuccessWithMessage("Yorum başarıyla silindi.");
+            var apiResponse = await DataApiClient.DeleteAsync($"delete-comment-{id}");
+
+            if (apiResponse.IsSuccessStatusCode)
+            {
+                return Result.SuccessWithMessage("Yorum başarıyla silindi.");
+            }
+
+            string errorMessage;
+
+            if (apiResponse.StatusCode == HttpStatusCode.NotFound)
+            {
+                errorMessage = "Silmek istediğiniz Yorum bulunamadı!..";
+            }
+            else
+            {
+                errorMessage = "Yorum silinirken beklenmedik bir hata oluştu..";
+            }
+
+            return Result.Error(errorMessage);
         }
-
-        string errorMessage;
-        var result = await apiResponse.Content.ReadFromJsonAsync<Result>();
-
-        if (result.Status == ResultStatus.NotFound)
+        catch (Exception)
         {
-            errorMessage = "Silmek istediğiniz Yorum bulunamadı!..";
+            return Result.Error("Yorum silinirken beklenmedik bir hata oluştu..");
         }
-        else
-        {
-            errorMessage = "Yorum silinirken beklenmedik bir hata oluştu..";
-        }
-
-        return Result.Error(errorMessage);
     }
-
     public async Task<Result<List<AllCommentsDto>>> GetAllCommentsAsync()
     {
-        var apiResponse = await DataApiClient.GetAsync("all-comments");
+        try
+        {
+            var apiResponse = await DataApiClient.GetAsync("all-comments");
 
-        if (!apiResponse.IsSuccessStatusCode)
+            if (!apiResponse.IsSuccessStatusCode)
+            {
+                return Result<List<AllCommentsDto>>.Error("Yorumlar getirilirken beklenmedik bir hata oluştu..");
+            }
+
+            var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<AllCommentsDto>>>();
+
+            if(result is null)
+            {
+               return Result<List<AllCommentsDto>>.Error("Yorumlar getirilirken beklenmedik bir hata oluştu..");
+            }
+
+            return result;
+        }
+       
+        catch (Exception)
         {
             return Result<List<AllCommentsDto>>.Error("Yorumlar getirilirken beklenmedik bir hata oluştu..");
         }
-
-        return await apiResponse.Content.ReadFromJsonAsync<Result<List<AllCommentsDto>>>();
     }
-
     public Task<Result<List<UsersCommentsDto>>> GetUsersCommentsAsync(int id)
     {
         throw new NotImplementedException();

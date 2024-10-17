@@ -2,6 +2,7 @@
 using App.DTOs.FileApiDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
+using System.Net;
 
 namespace App.AdminMVC.Services;
 public class AboutMeService : IAboutMeService
@@ -11,10 +12,8 @@ public class AboutMeService : IAboutMeService
     {
         _factory = factory;
     }
-
     private HttpClient DataApiClient => _factory.CreateClient("dataApi");
     private HttpClient FileApiClient => _factory.CreateClient("fileApi");
-
     public async Task<Result> AddAboutMeAsync(AddAboutMeMVCDto dto)
     {
         try
@@ -64,12 +63,10 @@ public class AboutMeService : IAboutMeService
             return Result.Error("Hakkımda bilgileri eklenirken beklenmeyen bir hata oluştu..");
         }
     }
-
     public Task<Result> AddAboutMeAsync(AddAboutMeApiDto dto)
     {
         throw new NotImplementedException();
     }
-
     public async Task<Result<ShowAboutMeDto>> GetAboutMeAsync()
     {
         try
@@ -82,15 +79,14 @@ public class AboutMeService : IAboutMeService
 
                 if (result is null)
                 {
-                    return Result.Error("Bilgiler getirilirken beklenmeyen bir hata oluştu.");
+                    return Result<ShowAboutMeDto>.Error("Bilgiler getirilirken beklenmeyen bir hata oluştu.");
                 }
 
                 return result;
             }
             string errorMessage;
-            var errorResult = await apiResponse.Content.ReadFromJsonAsync<Result<ShowAboutMeDto>>();
 
-            if (errorResult?.Status == ResultStatus.NotFound)
+            if (apiResponse.StatusCode == HttpStatusCode.NotFound)
             {
                 errorMessage = "Hakkımda bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurabilirsiniz.";
 
@@ -103,7 +99,7 @@ public class AboutMeService : IAboutMeService
         }
         catch (Exception)
         {
-            return Result.Error("Bilgiler getirilirken beklenmeyen bir hata oluştu.");
+            return Result<ShowAboutMeDto>.Error("Bilgiler getirilirken beklenmeyen bir hata oluştu.");
         }
     }
     public Task<Result> UpdateAboutMeAsync(UpdateAboutMeApiDto dto)
@@ -159,6 +155,10 @@ public class AboutMeService : IAboutMeService
 
             if (!dataApiResponse.IsSuccessStatusCode)
             {
+                if(dataApiResponse.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return Result.NotFound("Güncellemek istediğiniz -Hakkımda- kısmında bilgi bulunmuyor.");
+                }
                 return Result.Error("Bilgiler güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
             }
 
