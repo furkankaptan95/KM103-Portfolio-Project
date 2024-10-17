@@ -7,6 +7,13 @@
     </div>
 }
 
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert custom-alert-error  mt-5">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 @if (ViewData["ErrorMessage"] is not null)
 {
     <div class="alert custom-alert-error  mt-5">
@@ -14,7 +21,7 @@
     </div>
 }
 
-<div class="container" style="margin-top:70px;">
+<div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <h2 class="text-center">Kişisel Bilgileri Güncelle</h2>
@@ -55,11 +62,11 @@
     <style>
 
         .custom-alert-success {
-            display: inline-block;
-            top: 10px; /* Varsayılan üst boşluk */
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
+            position: fixed; /* Sayfada sabit konumlandırma */
+            top: 50px; /* Ekranın üst kısmından 10px boşluk */
+            left: 60%; /* Ekranın ortasına hizalama */
+            transform: translateX(-50%); /* Ortalamak için translate */
+            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
             background-color: #dff0d8;
             color: #3c763d;
             padding: 10px 20px;
@@ -68,11 +75,11 @@
         }
 
         .custom-alert-error {
-            display: inline-block;
-            top: 10px; /* Varsayılan üst boşluk */
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
+            position: fixed; /* Sayfada sabit konumlandırma */
+            top: 50px; /* Ekranın üst kısmından 10px boşluk */
+            left: 60%; /* Ekranın ortasına hizalama */
+            transform: translateX(-50%); /* Ortalamak için translate */
+            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
             background-color: #f8d7da;
             color: #721c24;
             padding: 10px 20px;

@@ -1,5 +1,26 @@
 ﻿@model AddProjectViewModel
 
+@if (TempData["Message"] is not null)
+{
+    <div class="alert custom-alert-success mt-5">
+        @TempData["Message"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert custom-alert-error  mt-5">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (ViewData["ErrorMessage"] is not null)
+{
+    <div class="alert custom-alert-error  mt-5">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+
 <div class="container">
     <div class="form-container">
         <div class="form-title">Proje Ekle</div>
@@ -62,21 +83,30 @@
                 background-color: #0056b3;
             }
 
-        .custom-alert {
-            display: inline-block;
-            position: fixed;
-            top: 70px; /* Varsayılan üst boşluk */
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
+        .custom-alert-success {
+            position: fixed; /* Sayfada sabit konumlandırma */
+            top: 50px; /* Ekranın üst kısmından 10px boşluk */
+            left: 60%; /* Ekranın ortasına hizalama */
+            transform: translateX(-50%); /* Ortalamak için translate */
+            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
             background-color: #dff0d8;
             color: #3c763d;
             padding: 10px 20px;
             border-radius: 5px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            width: auto; /* Varsayılan genişlik */
-            max-width: 90%; /* Ekran genişliğine göre sınırlama */
-            white-space: nowrap; /* Alt satıra geçmeyi engeller */
+        }
+
+        .custom-alert-error {
+            position: fixed; /* Sayfada sabit konumlandırma */
+            top: 50px; /* Ekranın üst kısmından 10px boşluk */
+            left: 60%; /* Ekranın ortasına hizalama */
+            transform: translateX(-50%); /* Ortalamak için translate */
+            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
     </style>

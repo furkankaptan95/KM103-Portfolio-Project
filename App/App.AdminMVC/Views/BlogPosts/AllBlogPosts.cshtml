@@ -36,7 +36,7 @@
 
 else
 {
-    <div class="container mt-4">
+    <div class="container">
         <h2 class="text-center">Tüm Blog Postlar</h2>
         <table class="table table-bordered table-striped table-responsive-md mt-4">
             <thead class="thead-dark">
@@ -134,11 +134,11 @@ else
 @section Styles{
     <style>
         .custom-alert-success {
-            display: inline-block;
-            top: 10px; /* Varsayılan üst boşluk */
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
+            position: fixed; /* Sayfada sabit konumlandırma */
+            top: 50px; /* Ekranın üst kısmından 10px boşluk */
+            left: 60%; /* Ekranın ortasına hizalama */
+            transform: translateX(-50%); /* Ortalamak için translate */
+            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
             background-color: #dff0d8;
             color: #3c763d;
             padding: 10px 20px;
@@ -147,11 +147,11 @@ else
         }
 
         .custom-alert-error {
-            display: inline-block;
-            top: 10px; /* Varsayılan üst boşluk */
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
+            position: fixed; /* Sayfada sabit konumlandırma */
+            top: 50px; /* Ekranın üst kısmından 10px boşluk */
+            left: 60%; /* Ekranın ortasına hizalama */
+            transform: translateX(-50%); /* Ortalamak için translate */
+            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
             background-color: #f8d7da;
             color: #721c24;
             padding: 10px 20px;
