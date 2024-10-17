@@ -11,34 +11,43 @@ public class ProjectsController(IProjectService projectService) : Controller
     [Route("all-projects")]
     public async Task<IActionResult> AllProjects()
     {
-        var result = await projectService.GetAllProjectsAsync();
-
-        if (!result.IsSuccess)
+        try
         {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-            return Redirect("/home/index");
-        }
+            var result = await projectService.GetAllProjectsAsync();
 
-        var models = new List<AllProjectsViewModel>();
-        var dtos = result.Value;
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return Redirect("/home/index");
+            }
+
+            var models = new List<AllProjectsViewModel>();
+            var dtos = result.Value;
 
             models = dtos
            .Select(item => new AllProjectsViewModel
            {
                Id = item.Id,
                Title = item.Title,
-               ImageUrl= item.ImageUrl,
+               ImageUrl = item.ImageUrl,
                Description = item.Description,
                IsVisible = item.IsVisible
            })
            .ToList();
 
-        return View(models);
+            return View(models);
+        }
+        
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Projeler getirilirken beklenmedik bir hata oluştu..";
+            return Redirect("/home/index");
+        }
     }
 
     [HttpGet]
     [Route("add-project")]
-    public async Task<IActionResult> AddProject()
+    public IActionResult AddProject()
     {
         return View();
     }
@@ -52,51 +61,66 @@ public class ProjectsController(IProjectService projectService) : Controller
             return View(model);
         }
 
-        var dto = new AddProjectMVCDto
+        try
         {
-            ImageFile = model.ImageFile,
-            Title = model.Title,
-            Description = model.Description,
-        };
+            var dto = new AddProjectMVCDto
+            {
+                ImageFile = model.ImageFile,
+                Title = model.Title,
+                Description = model.Description,
+            };
 
-        var result = await projectService.AddProjectAsync(dto);
+            var result = await projectService.AddProjectAsync(dto);
 
-        if (!result.IsSuccess)
-        {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-        }
+            if (!result.IsSuccess)
+            {
+                ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return View(model);
+            }
 
-        else
-        {
             TempData["Message"] = result.SuccessMessage;
-        }
 
-        return Redirect("/all-projects");
+            return Redirect("/all-projects");
+        }
+        catch (Exception)
+        {
+            ViewData["ErrorMessage"] = "Proje eklenirken beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.";
+            return View(model);
+        }
     }
 
     [HttpGet]
     [Route("update-project-{id:int}")]
     public async Task<IActionResult> UpdateProject([FromRoute] int id)
     {
-        var result = await projectService.GetByIdAsync(id);
-
-        if (!result.IsSuccess)
+        try
         {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            var result = await projectService.GetByIdAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return Redirect("/all-projects");
+            }
+
+            var dto = result.Value;
+
+            var model = new UpdateProjectViewModel
+            {
+                Id = id,
+                ImageUrl = dto.ImageUrl,
+                Title = dto.Title,
+                Description = dto.Description,
+            };
+
+            return View(model);
+        }
+        
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Güncellemek istediğiniz Proje bilgileri getirilirken beklenmeyen bir hata oluştu.";
             return Redirect("/all-projects");
         }
-
-        var dto = result.Value;
-
-        var model = new UpdateProjectViewModel
-        {
-            Id = id,
-            ImageUrl = dto.ImageUrl,
-            Title = dto.Title,
-            Description = dto.Description,
-        };
-
-        return View(model);
     }
 
     [HttpPost]
@@ -108,50 +132,69 @@ public class ProjectsController(IProjectService projectService) : Controller
             return View(model);
         }
 
-        var dto = new UpdateProjectMVCDto
+        try
         {
-            Title = model.Title,
-            Description = model.Description,
-            Id = model.Id,
-            ImageFile = model.ImageFile,
-        };
-
-        var result = await projectService.UpdateProjectAsync(dto);
-
-        if (!result.IsSuccess)
-        {
-            if (result.Status == ResultStatus.NotFound)
+            var dto = new UpdateProjectMVCDto
             {
-                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-                return Redirect("/all-projects");
+                Title = model.Title,
+                Description = model.Description,
+                Id = model.Id,
+                ImageFile = model.ImageFile,
+            };
+
+            var result = await projectService.UpdateProjectAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                var errorMessage = result.Errors.FirstOrDefault();
+
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    TempData["ErrorMessage"] = errorMessage;
+                    return Redirect("/all-projects");
+                }
+
+                ViewData["ErrorMessage"] = errorMessage;
+                return View(model);
             }
 
-            ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
-            return View();
+            TempData["Message"] = result.SuccessMessage;
+
+            return Redirect("/all-projects");
         }
-
-        TempData["Message"] = result.SuccessMessage;
-
-        return Redirect("/all-projects");
+        catch (Exception)
+        {
+            ViewData["ErrorMessage"] = "Proje güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.";
+            return View(model);
+        }
     }
 
     [HttpGet]
     [Route("delete-project-{id:int}")]
     public async Task<IActionResult> DeleteProject([FromRoute] int id)
     {
-        var result = await projectService.DeleteProjectAsync(id);
-
-        if (!result.IsSuccess)
+        try
         {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-        }
+            var result = await projectService.DeleteProjectAsync(id);
 
-        else
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            }
+
+            else
+            {
+                TempData["Message"] = result.SuccessMessage;
+            }
+
+            return Redirect("/all-projects");
+        }
+       
+        catch (Exception)
         {
-            TempData["Message"] = result.SuccessMessage;
+            TempData["ErrorMessage"] = "Proje silinirken beklenmedik bir hata oluştu..";
+            return Redirect("/all-projects");
         }
-
-        return Redirect("/all-projects");
     }
 
 
@@ -159,19 +202,28 @@ public class ProjectsController(IProjectService projectService) : Controller
     [Route("change-project-visibility-{id:int}")]
     public async Task<IActionResult> ChangeProjectVisibility([FromRoute] int id)
     {
-        var result = await projectService.ChangeProjectVisibilityAsync(id);
-
-        if (!result.IsSuccess)
+        try
         {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-        }
+            var result = await projectService.ChangeProjectVisibilityAsync(id);
 
-        else
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            }
+
+            else
+            {
+                TempData["Message"] = result.SuccessMessage;
+            }
+
+            return Redirect("/all-projects");
+        }
+        
+        catch (Exception)
         {
-            TempData["Message"] = result.SuccessMessage;
+            TempData["ErrorMessage"] = "Projenin görünürlüğü değiştirilirken beklenmeyen bir hata oluştu..";
+            return Redirect("/all-projects");
         }
-
-        return Redirect("/all-projects");
     }
 
 }
