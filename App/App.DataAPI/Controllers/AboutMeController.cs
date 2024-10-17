@@ -96,6 +96,11 @@ public class AboutMeController : ControllerBase
                 return Ok(result);
             }
 
+            if(result.Status == ResultStatus.NotFound)
+            {
+                return NotFound(result);
+            }
+            
             return StatusCode(500, result);
         }
 

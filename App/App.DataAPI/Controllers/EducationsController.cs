@@ -87,6 +87,11 @@ public class EducationsController : ControllerBase
 
             if (!result.IsSuccess)
             {
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    return NotFound(result);
+                }
+
                 return StatusCode(500, result);
             }
 
