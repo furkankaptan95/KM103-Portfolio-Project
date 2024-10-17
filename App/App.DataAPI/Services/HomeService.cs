@@ -31,7 +31,15 @@ public class HomeService : IHomeService
             else
             {
                 var result = await apiResponse.Content.ReadFromJsonAsync<Result<int>>();
-                dto.UsersCount = result.Value;
+
+                if(result is null)
+                {
+                    dto.UsersCount = 0;
+                }
+                else
+                {
+                    dto.UsersCount = result.Value;
+                }
             }
 
             dto.CommentsCount = await _dataApiDb.Comments.CountAsync();

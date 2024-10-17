@@ -187,7 +187,7 @@ public class ProjectService(DataApiDbContext dataApiDb) : IProjectService
 
             if (dto.ImageUrl != null) 
             { 
-            entity.ImageUrl = dto.ImageUrl;
+                entity.ImageUrl = dto.ImageUrl;
             }
 
             dataApiDb.Projects.Update(entity);
