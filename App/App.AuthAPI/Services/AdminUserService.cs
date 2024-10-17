@@ -40,6 +40,10 @@ public class AdminUserService : IUserService
         {
             return Result.Error("Veritabanı hatası: " + dbEx.Message);
         }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
         catch (Exception ex)
         {
             return Result.Error("Bir hata oluştu: " + ex.Message);
@@ -68,7 +72,11 @@ public class AdminUserService : IUserService
                 if (dataApiResponse.IsSuccessStatusCode)
                 {
                     var result = await dataApiResponse.Content.ReadFromJsonAsync<Result<List<UsersCommentsDto>>>();
-                    userComments = result.Value;
+
+                    if (result is not null)
+                    {
+                        userComments = result.Value;
+                    }
                 }
 
                 var dto = new AllUsersDto
@@ -112,7 +120,7 @@ public class AdminUserService : IUserService
 
         catch (SqlException sqlEx)
         {
-            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<string>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
@@ -128,9 +136,9 @@ public class AdminUserService : IUserService
 
             return Result<int>.Success(usersCount);
         }
-        catch (DbUpdateException dbEx)
+        catch (SqlException sqlEx)
         {
-            return Result<int>.Error("Veritabanı hatası: " + dbEx.Message);
+            return Result<int>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
