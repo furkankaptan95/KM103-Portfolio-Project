@@ -1,6 +1,5 @@
 ﻿using App.Data.DbContexts;
 using App.DTOs.CommentDtos;
-using App.DTOs.EducationDtos;
 using App.DTOs.UserDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
@@ -18,9 +17,7 @@ public class CommentService : ICommentService
         _dataApiDb = dataApiDb;
         _factory = factory;
     }
-
     private HttpClient AuthApiClient => _factory.CreateClient("authApi");
-
     public async Task<Result> ApproveOrNotApproveCommentAsync(int id)
     {
         try
@@ -65,6 +62,10 @@ public class CommentService : ICommentService
 
             return Result.Success();
         }
+        catch (DbUpdateException dbUpdateEx)
+        {
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
         catch (SqlException sqlEx)
         {
             return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
@@ -92,7 +93,6 @@ public class CommentService : ICommentService
             {
                 string commenter;
 
-                // Eğer UnsignedCommenterName varsa onu kullan
                 if (item.UnsignedCommenterName != null)
                 {
                     commenter = item.UnsignedCommenterName;
@@ -112,7 +112,6 @@ public class CommentService : ICommentService
                         else
                         {
                             var result = await authApiResponse.Content.ReadFromJsonAsync<Result<string>>();
-
                             commenter = result.Value;
                         }
                     }
@@ -146,7 +145,6 @@ public class CommentService : ICommentService
             return Result<List<AllCommentsDto>>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
     public async Task<Result<List<UsersCommentsDto>>> GetUsersCommentsAsync(int id)
     {
         try

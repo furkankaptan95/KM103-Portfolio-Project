@@ -26,16 +26,19 @@ public class PersonalInfoService(DataApiDbContext dataApiDb) : IPersonalInfoServ
 
             return Result.Success();
         }
-        catch (DbUpdateException dbEx)
+        catch (DbUpdateException dbUpdateEx)
         {
-            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
     public async Task<Result<ShowPersonalInfoDto>> GetPersonalInfoAsync()
     {
         try
@@ -57,7 +60,6 @@ public class PersonalInfoService(DataApiDbContext dataApiDb) : IPersonalInfoServ
 
             return Result<ShowPersonalInfoDto>.Success(dto);
         }
-
         catch (SqlException sqlEx)
         {
             return Result<ShowPersonalInfoDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
@@ -69,7 +71,6 @@ public class PersonalInfoService(DataApiDbContext dataApiDb) : IPersonalInfoServ
             return Result<ShowPersonalInfoDto>.Error(errorMessage);
         }
     }
-
     public async Task<Result> UpdatePersonalInfoAsync(UpdatePersonalInfoDto dto)
     {
         try
@@ -91,12 +92,14 @@ public class PersonalInfoService(DataApiDbContext dataApiDb) : IPersonalInfoServ
 
             return Result.Success();
         }
-
-        catch (DbUpdateException dbEx)
+        catch (DbUpdateException dbUpdateEx)
         {
-            return Result.Error("Veritabanı hatası: " + dbEx.Message);
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
         }
-
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
         catch (Exception ex)
         {
             var errorMessage = $"Bir hata oluştu: {ex.Message}, Hata Kodu: {ex.HResult}";
