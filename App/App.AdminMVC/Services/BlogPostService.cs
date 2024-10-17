@@ -20,14 +20,14 @@ public class BlogPostService : IBlogPostService
 
             if (!apiResponse.IsSuccessStatusCode)
             {
-                return Result.Error("Blog Post eklenirken beklenmedik bir hata oluştu..");
+                return Result.Error("Blog Post eklenirken beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
             }
 
             return Result.SuccessWithMessage("Blog Post başarıyla eklendi.");
         }
         catch (Exception)
         {
-            return Result.Error("Blog Post eklenirken beklenmedik bir hata oluştu..");
+            return Result.Error("Blog Post eklenirken beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
         }
     }
     public async Task<Result> ChangeBlogPostVisibilityAsync(int id)
@@ -165,14 +165,14 @@ public class BlogPostService : IBlogPostService
                     return Result.Error("Güncellemek istediğiniz Blog Post bulunamadı.");
                 }
 
-                return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
+                return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
             }
 
             return Result.SuccessWithMessage("Blog Post başarıyla güncellendi.");
         }
         catch (Exception)
         {
-            return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..");
+            return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
         }
     }
 }

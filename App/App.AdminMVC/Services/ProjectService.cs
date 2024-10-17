@@ -27,14 +27,14 @@ public class ProjectService(IHttpClientFactory factory) : IProjectService
 
             if (!fileApiResponse.IsSuccessStatusCode)
             {
-                return Result.Error("Resim yüklenirken beklenmeyen bir hata oluştu.");
+                return Result.Error("Resim yüklenirken beklenmeyen bir hata oluştu.Tekrar deneyebilirsiniz.");
             }
 
             var urlDto = await fileApiResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
 
             if (urlDto is null)
             {
-                return Result.Error("Proje eklenirken beklenmeyen bir hata oluştu..");
+                return Result.Error("Proje eklenirken beklenmeyen bir hata oluştu..Tekrar deneyebilirsiniz.");
             }
 
             var apiDto = new AddProjectApiDto
@@ -51,12 +51,12 @@ public class ProjectService(IHttpClientFactory factory) : IProjectService
                 return Result.SuccessWithMessage("Proje başarıyla eklendi. ");
             }
 
-            return Result.Error("Proje eklenirken beklenmeyen bir hata oluştu..");
+            return Result.Error("Proje eklenirken beklenmeyen bir hata oluştu..Tekrar deneyebilirsiniz.");
         }
 
         catch (Exception)
         {
-            return Result.Error("Proje eklenirken beklenmeyen bir hata oluştu..");
+            return Result.Error("Proje eklenirken beklenmeyen bir hata oluştu..Tekrar deneyebilirsiniz.");
         }
     }
 
@@ -207,14 +207,14 @@ public class ProjectService(IHttpClientFactory factory) : IProjectService
 
                 if (!fileApiResponse.IsSuccessStatusCode)
                 {
-                    return Result.Error("Resim yüklenirken beklenmeyen bir hata oluştu.");
+                    return Result.Error("Resim yüklenirken beklenmeyen bir hata oluştu..Tekrar deneyebilirsiniz.");
                 }
 
                 var urlDto = await fileApiResponse.Content.ReadFromJsonAsync<ReturnUrlDto>();
 
                 if(urlDto is null)
                 {
-                    return Result.Error("Proje güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
+                    return Result.Error("Proje güncellenirken beklenmeyen bir hata oluştu..Tekrar deneyebilirsiniz.");
                 }
 
                 apiDto.ImageUrl = urlDto.ImageUrl1;
@@ -224,7 +224,7 @@ public class ProjectService(IHttpClientFactory factory) : IProjectService
 
             if (dataApiResponse.IsSuccessStatusCode)
             {
-                return Result.SuccessWithMessage(" Proje bilgileri başarılı bir şekilde güncellendi. ");
+                return Result.SuccessWithMessage("Proje bilgileri başarılı bir şekilde güncellendi.");
             }
 
             if (dataApiResponse.StatusCode ==HttpStatusCode.NotFound)
@@ -232,12 +232,12 @@ public class ProjectService(IHttpClientFactory factory) : IProjectService
                 return Result.NotFound("Güncellemek istediğiniz Proje bulunamadı!");
             }
 
-            return Result.Error("Proje güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
+            return Result.Error("Proje güncellenirken beklenmeyen bir hata oluştu.. Tekrar deneyebilirsiniz.");
         }
        
         catch (Exception)
         {
-            return Result.Error("Proje güncellenirken beklenmeyen bir hata oluştu.. Tekrar güncellemeyi deneyebilirsiniz.");
+            return Result.Error("Proje güncellenirken beklenmeyen bir hata oluştu.. Tekrar deneyebilirsiniz.");
         }
     }  
 
