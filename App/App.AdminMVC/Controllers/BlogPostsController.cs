@@ -10,37 +10,43 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
     [Route("all-blog-posts")]
     public async Task<IActionResult> AllBlogPosts()
     {
-        var models = new List<AllBlogPostsViewModel>();
-
-        var result = await blogPostService.GetAllBlogPostsAsync();
-
-        if (!result.IsSuccess)
+        try
         {
-            var errorMessage = result.Errors.FirstOrDefault();
-            TempData["ErrorMessage"] = errorMessage;
+            var models = new List<AllBlogPostsViewModel>();
 
+            var result = await blogPostService.GetAllBlogPostsAsync();
+
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return Redirect("/home/index");
+            }
+
+            var dtos = result.Value;
+
+            models = dtos
+           .Select(item => new AllBlogPostsViewModel
+           {
+               Id = item.Id,
+               Title = item.Title,
+               Content = item.Content,
+               PublishDate = item.PublishDate,
+               IsVisible = item.IsVisible,
+           })
+           .ToList();
+
+            return View(models);
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Blog Postlar getirilirken beklenmedik bir hata oluştu.";
             return Redirect("/home/index");
         }
-
-        var dtos = result.Value;
-
-           models = dtos
-          .Select(item => new AllBlogPostsViewModel
-          {
-              Id = item.Id,
-              Title = item.Title,
-              Content = item.Content,
-              PublishDate = item.PublishDate,
-              IsVisible = item.IsVisible,
-          })
-          .ToList();
-
-        return View(models);
     }
 
     [HttpGet]
     [Route("add-blog-post")]
-    public async Task<IActionResult> AddBlogPost()
+    public IActionResult AddBlogPost()
     {
         return View();
     }
@@ -54,49 +60,65 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
             return View(model);
         }
 
-        var dto = new AddBlogPostDto
+        try
         {
-            Content = model.Content,
-            Title = model.Title,
-        };
+            var dto = new AddBlogPostDto
+            {
+                Content = model.Content,
+                Title = model.Title,
+            };
 
-        var result = await blogPostService.AddBlogPostAsync(dto);
+            var result = await blogPostService.AddBlogPostAsync(dto);
 
-        if (!result.IsSuccess)
-        {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            }
+
+            else
+            {
+                TempData["Message"] = result.SuccessMessage;
+            }
+
+            return Redirect("/all-blog-posts");
         }
-
-        else
+        catch (Exception)
         {
-            TempData["Message"] = result.SuccessMessage;
+            TempData["ErrorMessage"] = "Blog Post eklenirken beklenmedik bir hata oluştu..";
+            return Redirect("/all-blog-posts");
         }
-
-        return Redirect("/all-blog-posts");
     }
 
     [HttpGet]
     [Route("update-blog-post-{id:int}")]
     public async Task<IActionResult> UpdateBlogPost([FromRoute] int id)
     {
-        var result = await blogPostService.GetBlogPostById(id);
-
-        if (!result.IsSuccess)
+        try
         {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            var result = await blogPostService.GetBlogPostById(id);
+
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return Redirect("/all-blog-posts");
+            }
+
+            var dto = result.Value;
+
+            var model = new UpdateBlogPostViewModel()
+            {
+                Id = id,
+                Content = dto.Content,
+                Title = dto.Title,
+            };
+
+            return View(model);
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Blog Post verisi alınırken bir hata oluştu.";
             return Redirect("/all-blog-posts");
         }
-
-        var dto = result.Value;
-
-        var model = new UpdateBlogPostViewModel()
-        {
-            Id = id,
-            Content = dto.Content,
-            Title = dto.Title,
-        };
-
-        return View(model);
     }
 
     [HttpPost]
@@ -108,61 +130,87 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
             return View(model);
         }
 
-        var dto = new UpdateBlogPostDto
+        try
         {
-            Id = model.Id,
-            Content = model.Content,
-            Title = model.Title,
-        };
+            var dto = new UpdateBlogPostDto
+            {
+                Id = model.Id,
+                Content = model.Content,
+                Title = model.Title,
+            };
 
-        var result = await blogPostService.UpdateBlogPostAsync(dto);
+            var result = await blogPostService.UpdateBlogPostAsync(dto);
 
-        if (!result.IsSuccess)
-        {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            }
+            else
+            {
+                TempData["Message"] = result.SuccessMessage;
+            }
+
+            return Redirect("/all-blog-posts");
         }
-        else
+        catch (Exception)
         {
-            TempData["Message"] = result.SuccessMessage;
+            TempData["ErrorMessage"] = "Güncelleme işlemi sırasında beklenmedik bir hata oluştu!..";
+            return Redirect("/all-blog-posts");
         }
 
-        return Redirect("/all-blog-posts");
     }
 
     [HttpGet]
     [Route("delete-blog-post-{id:int}")]
     public async Task<IActionResult> DeleteBlogPost([FromRoute] int id)
     {
-        var result = await blogPostService.DeleteBlogPostAsync(id);
-
-        if (!result.IsSuccess)
+        try
         {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            var result = await blogPostService.DeleteBlogPostAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            }
+
+            else
+            {
+                TempData["Message"] = result.SuccessMessage;
+            }
+
+            return Redirect("/all-blog-posts");
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Blog Post silinirken beklenmedik bir hata oluştu..";
+            return Redirect("/all-blog-posts");
         }
 
-        else
-        {
-            TempData["Message"] = result.SuccessMessage;
-        }
-
-        return Redirect("/all-blog-posts");
     }
 
     [HttpGet]
     [Route("change-blog-post-visibility-{id:int}")]
     public async Task<IActionResult> MakeBlogPostVisible([FromRoute] int id)
     {
-        var result = await blogPostService.ChangeBlogPostVisibilityAsync(id);
+        try
+        {
+            var result = await blogPostService.ChangeBlogPostVisibilityAsync(id);
 
-        if (!result.IsSuccess)
-        {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            }
+            else
+            {
+                TempData["Message"] = result.SuccessMessage;
+            }
+
+            return Redirect("/all-blog-posts");
         }
-        else
+        catch (Exception)
         {
-            TempData["Message"] = result.SuccessMessage;
+            TempData["ErrorMessage"] = "Blog Post'un görünürlüğü değiştirilirken beklenmeyen bir hata oluştu..";
+            return Redirect("/all-blog-posts");
         }
-        
-        return Redirect("/all-blog-posts");
     }
 }
