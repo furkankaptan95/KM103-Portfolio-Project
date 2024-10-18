@@ -1,4 +1,4 @@
-﻿namespace App.DTOs.ExperienceDtos;
+﻿namespace App.DTOs.ExperienceDtos.Admin;
 public class AddExperienceDto
 {
     public string Title { get; set; }

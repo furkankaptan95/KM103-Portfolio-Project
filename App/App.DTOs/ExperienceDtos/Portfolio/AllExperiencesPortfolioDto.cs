@@ -1,5 +1,5 @@
-﻿namespace App.ViewModels.PortfolioMvc;
-public class PortfolioAllExperiencesViewModel
+﻿namespace App.DTOs.ExperienceDtos.Portfolio;
+public class AllExperiencesPortfolioDto
 {
     public string Title { get; set; }
     public string Company { get; set; }

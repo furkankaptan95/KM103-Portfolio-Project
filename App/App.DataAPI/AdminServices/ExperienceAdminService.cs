@@ -1,6 +1,7 @@
 ﻿using App.Data.DbContexts;
 using App.Data.Entities;
 using App.DTOs.ExperienceDtos;
+using App.DTOs.ExperienceDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using Microsoft.Data.SqlClient;
@@ -100,21 +101,21 @@ public class ExperienceAdminService(DataApiDbContext dataApiDb) : IExperienceAdm
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result<List<AllExperiencesDto>>> GetAllExperiencesAsync()
+    public async Task<Result<List<AllExperiencesAdminDto>>> GetAllExperiencesAsync()
     {
         try
         {
-            var dtos = new List<AllExperiencesDto>();
+            var dtos = new List<AllExperiencesAdminDto>();
 
             var entities = await dataApiDb.Experiences.ToListAsync();
 
             if (entities is null)
             {
-                return Result<List<AllExperiencesDto>>.Success(dtos);
+                return Result<List<AllExperiencesAdminDto>>.Success(dtos);
             }
 
             dtos = entities
-           .Select(item => new AllExperiencesDto
+           .Select(item => new AllExperiencesAdminDto
            {
                Id = item.Id,
                Company = item.Company,
@@ -126,15 +127,15 @@ public class ExperienceAdminService(DataApiDbContext dataApiDb) : IExperienceAdm
            })
            .ToList();
 
-            return Result<List<AllExperiencesDto>>.Success(dtos);
+            return Result<List<AllExperiencesAdminDto>>.Success(dtos);
         }
         catch (SqlException sqlEx)
         {
-            return Result<List<AllExperiencesDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<List<AllExperiencesAdminDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result<List<AllExperiencesDto>>.Error("Bir hata oluştu: " + ex.Message);
+            return Result<List<AllExperiencesAdminDto>>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
     public async Task<Result<ExperienceToUpdateDto>> GetByIdAsync(int id)

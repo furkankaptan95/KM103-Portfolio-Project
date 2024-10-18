@@ -1,4 +1,5 @@
 ﻿using App.DTOs.ExperienceDtos;
+using App.DTOs.ExperienceDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using System.Net;
@@ -89,7 +90,7 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceAdminSer
         }
     }
     
-    public async Task<Result<List<AllExperiencesDto>>> GetAllExperiencesAsync()
+    public async Task<Result<List<AllExperiencesAdminDto>>> GetAllExperiencesAsync()
     {
         try
         {
@@ -97,13 +98,13 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceAdminSer
 
             if (!apiResponse.IsSuccessStatusCode)
             {
-                return Result<List<AllExperiencesDto>>.Error("Deneyimler getirilirken beklenmedik bir hata oluştu..");
+                return Result<List<AllExperiencesAdminDto>>.Error("Deneyimler getirilirken beklenmedik bir hata oluştu..");
             }
-            var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<AllExperiencesDto>>>();
+            var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<AllExperiencesAdminDto>>>();
 
             if(result is null)
             {
-                return Result<List<AllExperiencesDto>>.Error("Deneyimler getirilirken beklenmedik bir hata oluştu..");
+                return Result<List<AllExperiencesAdminDto>>.Error("Deneyimler getirilirken beklenmedik bir hata oluştu..");
             }
 
             return result;
@@ -111,7 +112,7 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceAdminSer
        
         catch (Exception)
         {
-            return Result<List<AllExperiencesDto>>.Error("Deneyimler getirilirken beklenmedik bir hata oluştu..");
+            return Result<List<AllExperiencesAdminDto>>.Error("Deneyimler getirilirken beklenmedik bir hata oluştu..");
         }
     }
 
