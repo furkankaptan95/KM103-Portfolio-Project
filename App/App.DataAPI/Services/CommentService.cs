@@ -138,7 +138,7 @@ public class CommentService : ICommentService
                     Content = item.Content,
                     CreatedAt = item.CreatedAt,
                     IsApproved = item.IsApproved,
-                    BlogPostName = item.BlogPost.Title,
+                    BlogPostName = item.BlogPost !=null ? item.BlogPost.Title : "Blog Post silindi.",
                     Commenter = commenter
                 };
 
@@ -170,7 +170,7 @@ public class CommentService : ICommentService
                 {
                     UsersCommentsDto dto = new();
 
-                    dto.BlogPostName = comment.BlogPost.Title;
+                    dto.BlogPostName = comment.BlogPost != null ? comment.BlogPost.Title : "Silindi";
                     dto.Content = comment.Content;
                     dto.CreatedAt = comment.CreatedAt;
                     dto.IsApproved = comment.IsApproved;
