@@ -1,4 +1,5 @@
 ﻿using App.DTOs.AboutMeDtos;
+using App.DTOs.AboutMeDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
@@ -10,10 +11,10 @@ namespace App.DataAPI.Controllers;
 [ApiController]
 public class AboutMeController : ControllerBase
 {
-    private readonly IAboutMeService _aboutMeService;
+    private readonly IAboutMeAdminService _aboutMeService;
     private readonly IValidator<AddAboutMeApiDto> _addValidator;
     private readonly IValidator<UpdateAboutMeApiDto> _updateValidator;
-    public AboutMeController(IAboutMeService aboutMeService, IValidator<AddAboutMeApiDto> addValidator, IValidator<UpdateAboutMeApiDto> updateValidator)
+    public AboutMeController(IAboutMeAdminService aboutMeService, IValidator<AddAboutMeApiDto> addValidator, IValidator<UpdateAboutMeApiDto> updateValidator)
     {
         _aboutMeService = aboutMeService;
         _addValidator = addValidator;

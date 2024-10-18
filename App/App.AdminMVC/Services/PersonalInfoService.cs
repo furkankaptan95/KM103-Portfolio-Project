@@ -1,10 +1,11 @@
 ﻿using App.DTOs.PersonalInfoDtos;
+using App.DTOs.PersonalInfoDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using System.Net;
 
 namespace App.AdminMVC.Services;
-public class PersonalInfoService(IHttpClientFactory factory) : IPersonalInfoService
+public class PersonalInfoService(IHttpClientFactory factory) : IPersonalInfoAdminService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
     public async Task<Result> AddPersonalInfoAsync(AddPersonalInfoDto dto)
@@ -27,7 +28,7 @@ public class PersonalInfoService(IHttpClientFactory factory) : IPersonalInfoServ
         }
     }
 
-    public async Task<Result<ShowPersonalInfoDto>> GetPersonalInfoAsync()
+    public async Task<Result<PersonalInfoAdminDto>> GetPersonalInfoAsync()
     {
         try
         {
@@ -35,10 +36,10 @@ public class PersonalInfoService(IHttpClientFactory factory) : IPersonalInfoServ
 
             if (apiResponse.IsSuccessStatusCode)
             {
-                var result = await apiResponse.Content.ReadFromJsonAsync<Result<ShowPersonalInfoDto>>();
+                var result = await apiResponse.Content.ReadFromJsonAsync<Result<PersonalInfoAdminDto>>();
                 if(result is null)
                 {
-                    return Result<ShowPersonalInfoDto>.Error("Bilgiler getirilirken beklenmeyen bir hata oluştu.");
+                    return Result<PersonalInfoAdminDto>.Error("Bilgiler getirilirken beklenmeyen bir hata oluştu.");
                 }
                 return result;
             }
@@ -49,17 +50,17 @@ public class PersonalInfoService(IHttpClientFactory factory) : IPersonalInfoServ
             {
                 errorMessage = "Kişisel bilgiler bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurabilirsiniz.";
 
-                return Result<ShowPersonalInfoDto>.NotFound(errorMessage);
+                return Result<PersonalInfoAdminDto>.NotFound(errorMessage);
             }
 
             errorMessage = "Bilgiler getirilirken beklenmeyen bir hata oluştu.";
 
-            return Result<ShowPersonalInfoDto>.Error(errorMessage);
+            return Result<PersonalInfoAdminDto>.Error(errorMessage);
         }
       
         catch (Exception)
         {
-            return Result<ShowPersonalInfoDto>.Error("Bilgiler getirilirken beklenmeyen bir hata oluştu.");
+            return Result<PersonalInfoAdminDto>.Error("Bilgiler getirilirken beklenmeyen bir hata oluştu.");
         }
     }
 

@@ -8,9 +8,9 @@ namespace App.AuthAPI.Controllers;
 [ApiController]
 public class UsersController : ControllerBase
 {
-    private readonly IUserService _userService;
+    private readonly IUserAdminService _userService;
 
-    public UsersController(IUserService userService)
+    public UsersController(IUserAdminService userService)
     {
         _userService = userService;
     }

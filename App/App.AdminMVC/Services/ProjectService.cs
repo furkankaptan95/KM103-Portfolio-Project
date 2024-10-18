@@ -1,11 +1,12 @@
 ﻿using App.DTOs.FileApiDtos;
 using App.DTOs.ProjectDtos;
+using App.DTOs.ProjectDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using System.Net;
 
 namespace App.AdminMVC.Services;
-public class ProjectService(IHttpClientFactory factory) : IProjectService
+public class ProjectService(IHttpClientFactory factory) : IProjectAdminService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
     private HttpClient FileApiClient => factory.CreateClient("fileApi");
@@ -122,7 +123,7 @@ public class ProjectService(IHttpClientFactory factory) : IProjectService
         }
     }
 
-    public async Task<Result<List<AllProjectsDto>>> GetAllProjectsAsync()
+    public async Task<Result<List<AllProjectsAdminDto>>> GetAllProjectsAsync()
     {
         try
         {
@@ -130,14 +131,14 @@ public class ProjectService(IHttpClientFactory factory) : IProjectService
 
             if (!apiResponse.IsSuccessStatusCode)
             {
-                return Result<List<AllProjectsDto>>.Error("Projeler getirilirken beklenmedik bir hata oluştu..");
+                return Result<List<AllProjectsAdminDto>>.Error("Projeler getirilirken beklenmedik bir hata oluştu..");
             }
 
-            var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<AllProjectsDto>>>();
+            var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<AllProjectsAdminDto>>>();
 
             if(result is null)
             {
-                return Result<List<AllProjectsDto>>.Error("Projeler getirilirken beklenmedik bir hata oluştu..");
+                return Result<List<AllProjectsAdminDto>>.Error("Projeler getirilirken beklenmedik bir hata oluştu..");
             }
 
             return result;
@@ -145,7 +146,7 @@ public class ProjectService(IHttpClientFactory factory) : IProjectService
        
         catch (Exception)
         {
-            return Result<List<AllProjectsDto>>.Error("Projeler getirilirken beklenmedik bir hata oluştu..");
+            return Result<List<AllProjectsAdminDto>>.Error("Projeler getirilirken beklenmedik bir hata oluştu..");
         }
     }
 

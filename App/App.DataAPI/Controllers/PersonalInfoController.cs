@@ -1,4 +1,5 @@
 ﻿using App.DTOs.PersonalInfoDtos;
+using App.DTOs.PersonalInfoDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
@@ -10,10 +11,10 @@ namespace App.DataAPI.Controllers;
 [ApiController]
 public class PersonalInfoController : ControllerBase
 {
-    private readonly IPersonalInfoService _personalInfoService;
+    private readonly IPersonalInfoAdminService _personalInfoService;
     private readonly IValidator<AddPersonalInfoDto> _addValidator;
     private readonly IValidator<UpdatePersonalInfoDto> _updateValidator;
-    public PersonalInfoController(IPersonalInfoService personalInfoService, IValidator<AddPersonalInfoDto> addValidator, IValidator<UpdatePersonalInfoDto> updateValidator)
+    public PersonalInfoController(IPersonalInfoAdminService personalInfoService, IValidator<AddPersonalInfoDto> addValidator, IValidator<UpdatePersonalInfoDto> updateValidator)
     {
         _personalInfoService = personalInfoService;
         _addValidator = addValidator;

@@ -4,7 +4,7 @@ using App.ViewModels.AdminMvc.UsersViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-public class UsersController(IUserService userService) : Controller
+public class UsersController(IUserAdminService userService) : Controller
 {
     [HttpGet]
     [Route("all-users")]

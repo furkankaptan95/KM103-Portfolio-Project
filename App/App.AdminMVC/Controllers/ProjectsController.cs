@@ -1,11 +1,12 @@
 ﻿using App.DTOs.ProjectDtos;
+using App.DTOs.ProjectDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.ProjectsViewModels;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-public class ProjectsController(IProjectService projectService) : Controller
+public class ProjectsController(IProjectAdminService projectService) : Controller
 {
     [HttpGet]
     [Route("all-projects")]

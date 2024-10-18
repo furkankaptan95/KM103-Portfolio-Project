@@ -1,4 +1,5 @@
 using App.DTOs.ProjectDtos;
+using App.DTOs.ProjectDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
@@ -12,8 +13,8 @@ public class ProjectsController : ControllerBase
 {
     private readonly IValidator<UpdateProjectApiDto> _updateValidator;
     private readonly IValidator<AddProjectApiDto> _addValidator;
-    private readonly IProjectService _projectService;
-    public ProjectsController(IValidator<UpdateProjectApiDto> updateValidator, IValidator<AddProjectApiDto> addValidator, IProjectService projectService)
+    private readonly IProjectAdminService _projectService;
+    public ProjectsController(IValidator<UpdateProjectApiDto> updateValidator, IValidator<AddProjectApiDto> addValidator, IProjectAdminService projectService)
     {
         _addValidator = addValidator;
         _updateValidator = updateValidator;

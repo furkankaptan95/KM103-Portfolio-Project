@@ -1,4 +1,4 @@
-﻿using App.DTOs.ExperienceDtos;
+﻿using App.DTOs.ExperienceDtos.Admin;
 using FluentValidation;
 
 namespace App.Core.Validators.ExperienceValidators;

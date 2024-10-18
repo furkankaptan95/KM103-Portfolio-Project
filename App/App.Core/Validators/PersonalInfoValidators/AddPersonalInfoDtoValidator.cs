@@ -1,4 +1,4 @@
-﻿using App.DTOs.PersonalInfoDtos;
+﻿using App.DTOs.PersonalInfoDtos.Admin;
 using FluentValidation;
 
 namespace App.Core.Validators.PersonalInfoValidators;

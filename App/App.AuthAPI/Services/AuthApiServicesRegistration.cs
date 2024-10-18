@@ -40,7 +40,7 @@ public static class AuthApiServicesRegistration
             options.UseSqlServer(configuration.GetConnectionString("AuthApiBaseDb"));
         });
 
-        services.AddScoped<IUserService, AdminUserService>();
+        services.AddScoped<IUserAdminService, AdminUserService>();
 
         return services;
     }

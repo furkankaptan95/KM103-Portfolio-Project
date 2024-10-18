@@ -1,11 +1,12 @@
 ﻿using App.DTOs.PersonalInfoDtos;
+using App.DTOs.PersonalInfoDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.PersonalInfoViewModels;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-public class PersonalInfoController(IPersonalInfoService personalInfoService) : Controller
+public class PersonalInfoController(IPersonalInfoAdminService personalInfoService) : Controller
 {
     [HttpGet]
     [Route("personal-info")]

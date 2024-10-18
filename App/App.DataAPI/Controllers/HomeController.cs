@@ -6,7 +6,7 @@ namespace App.DataAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class HomeController(IHomeService homeService) : ControllerBase
+public class HomeController(IHomeAdminService homeService) : ControllerBase
 {
     [HttpGet("/get-home-infos")]
     public async Task<IActionResult> GetHomeInfosAsync()

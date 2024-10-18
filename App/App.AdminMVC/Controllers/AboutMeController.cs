@@ -1,11 +1,12 @@
 ﻿using App.DTOs.AboutMeDtos;
+using App.DTOs.AboutMeDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.AboutMeViewModels;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-public class AboutMeController(IAboutMeService aboutMeService) : Controller
+public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
 {
     [HttpGet]
     [Route("about-me")]

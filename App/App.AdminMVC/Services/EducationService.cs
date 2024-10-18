@@ -1,10 +1,11 @@
 ﻿using App.DTOs.EducationDtos;
+using App.DTOs.EducationDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using System.Net;
 
 namespace App.AdminMVC.Services;
-public class EducationService(IHttpClientFactory factory) : IEducationService
+public class EducationService(IHttpClientFactory factory) : IEducationAdminService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
     public async Task<Result> AddEducationAsync(AddEducationDto dto)
@@ -89,7 +90,7 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
         }
     }
 
-    public async Task<Result<List<AllEducationsDto>>> GetAllEducationsAsync()
+    public async Task<Result<List<AllEducationsAdminDto>>> GetAllEducationsAsync()
     {
         try
         {
@@ -97,14 +98,14 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
 
             if (!apiResponse.IsSuccessStatusCode)
             {
-                return Result<List<AllEducationsDto>>.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
+                return Result<List<AllEducationsAdminDto>>.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
             }
 
-            var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<AllEducationsDto>>>();
+            var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<AllEducationsAdminDto>>>();
 
             if(result is null)
             {
-                return Result<List<AllEducationsDto>>.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
+                return Result<List<AllEducationsAdminDto>>.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
             }
 
             return result;
@@ -112,7 +113,7 @@ public class EducationService(IHttpClientFactory factory) : IEducationService
        
         catch (Exception)
         {
-            return Result<List<AllEducationsDto>>.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
+            return Result<List<AllEducationsAdminDto>>.Error("Eğitimler getirilirken beklenmedik bir hata oluştu..");
         }
     }
 

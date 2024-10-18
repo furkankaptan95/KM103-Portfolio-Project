@@ -4,7 +4,7 @@ using Ardalis.Result;
 using System.Net;
 
 namespace App.AdminMVC.Services;
-public class UserService(IHttpClientFactory factory) : IUserService
+public class UserService(IHttpClientFactory factory) : IUserAdminService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
     private HttpClient AuthApiClient => factory.CreateClient("authApi");

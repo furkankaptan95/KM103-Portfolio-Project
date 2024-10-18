@@ -1,4 +1,4 @@
-﻿using App.DTOs.BlogPostDtos;
+﻿using App.DTOs.BlogPostDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
@@ -13,8 +13,8 @@ public class BlogPostsController : ControllerBase
 {
     private readonly IValidator<AddBlogPostDto> _addValidator;
     private readonly IValidator<UpdateBlogPostDto> _updateValidator;
-    private readonly IBlogPostService _blogPostService;
-    public BlogPostsController(IValidator<AddBlogPostDto> addValidator, IValidator<UpdateBlogPostDto> updateValidator, IBlogPostService blogPostService)
+    private readonly IBlogPostAdminService _blogPostService;
+    public BlogPostsController(IValidator<AddBlogPostDto> addValidator, IValidator<UpdateBlogPostDto> updateValidator, IBlogPostAdminService blogPostService)
     {
         _addValidator = addValidator;
         _blogPostService = blogPostService;

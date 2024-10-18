@@ -1,4 +1,5 @@
 ﻿using App.DTOs.ExperienceDtos;
+using App.DTOs.ExperienceDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
@@ -10,10 +11,10 @@ namespace App.DataAPI.Controllers;
 [ApiController]
 public class ExperiencesController : ControllerBase
 {
-    private readonly IExperienceService _experiencesService;
+    private readonly IExperienceAdminService _experiencesService;
     private readonly IValidator<AddExperienceDto> _addValidator;
     private readonly IValidator<UpdateExperienceDto> _updateValidator;
-    public ExperiencesController(IExperienceService experiencesService, IValidator<AddExperienceDto> addValidator, IValidator<UpdateExperienceDto> updateValidator)
+    public ExperiencesController(IExperienceAdminService experiencesService, IValidator<AddExperienceDto> addValidator, IValidator<UpdateExperienceDto> updateValidator)
     {
         _experiencesService = experiencesService;
         _addValidator = addValidator;

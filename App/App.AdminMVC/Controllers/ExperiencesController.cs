@@ -1,11 +1,12 @@
 ﻿using App.DTOs.ExperienceDtos;
+using App.DTOs.ExperienceDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.ExperiencesViewModels;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-public class ExperiencesController(IExperienceService experienceService) : Controller
+public class ExperiencesController(IExperienceAdminService experienceService) : Controller
 {
     [HttpGet]
     [Route("all-experiences")]

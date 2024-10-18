@@ -6,11 +6,15 @@ using App.Core.Validators.PersonalInfoValidators;
 using App.Core.Validators.ProjectValidators;
 using App.Data.DbContexts;
 using App.DTOs.AboutMeDtos;
-using App.DTOs.BlogPostDtos;
+using App.DTOs.AboutMeDtos.Admin;
+using App.DTOs.BlogPostDtos.Admin;
 using App.DTOs.EducationDtos;
 using App.DTOs.ExperienceDtos;
+using App.DTOs.ExperienceDtos.Admin;
 using App.DTOs.PersonalInfoDtos;
+using App.DTOs.PersonalInfoDtos.Admin;
 using App.DTOs.ProjectDtos;
+using App.DTOs.ProjectDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -52,14 +56,14 @@ public static class AdminDataApiServicesRegistration
             options.UseSqlServer(configuration.GetConnectionString("DataApiBaseDb"));
         });
 
-        services.AddScoped<IAboutMeService, AdminAboutMeService>();
-        services.AddScoped<IBlogPostService, AdminBlogPostService>();
-        services.AddScoped<IEducationService, AdminEducationService>();
-        services.AddScoped<IExperienceService, AdminExperienceService>();
-        services.AddScoped<IPersonalInfoService, AdminPersonalInfoService>();
-        services.AddScoped<IProjectService, AdminProjectService>();
-        services.AddScoped<IHomeService, AdminHomeService>();
-        services.AddScoped<ICommentService, AdminCommentService>();
+        services.AddScoped<IAboutMeAdminService, AboutMeAdminService>();
+        services.AddScoped<IBlogPostAdminService, BlogPostAdminService>();
+        services.AddScoped<IEducationAdminService, EducationAdminService>();
+        services.AddScoped<IExperienceAdminService, ExperienceAdminService>();
+        services.AddScoped<IPersonalInfoAdminService, PersonalInfoAdminService>();
+        services.AddScoped<IProjectAdminService, ProjectAdminService>();
+        services.AddScoped<IHomeAdminService, HomeAdminService>();
+        services.AddScoped<ICommentAdminService, CommentAdminService>();
 
 
         services.AddTransient<IValidator<AddAboutMeApiDto>, AddAboutMeApiDtoValidator>();
