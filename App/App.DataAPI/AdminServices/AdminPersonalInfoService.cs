@@ -7,7 +7,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services;
-public class PersonalInfoService(DataApiDbContext dataApiDb) : IPersonalInfoService
+public class AdminPersonalInfoService(DataApiDbContext dataApiDb) : IPersonalInfoService
 {
     public async Task<Result> AddPersonalInfoAsync(AddPersonalInfoDto dto)
     {

@@ -21,11 +21,11 @@ public class ExperiencesController(IExperienceService experienceService) : Contr
                 return Redirect("/home/index");
             }
 
-            var models = new List<AllExperiencesViewModel>();
+            var models = new List<AdminAllExperiencesViewModel>();
             var dtos = result.Value;
 
             models = dtos
-           .Select(item => new AllExperiencesViewModel
+           .Select(item => new AdminAllExperiencesViewModel
            {
                Id = item.Id,
                Title = item.Title,

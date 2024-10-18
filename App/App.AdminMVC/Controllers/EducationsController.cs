@@ -22,11 +22,11 @@ public class EducationsController(IEducationService educationService) : Controll
                 return Redirect("/home/index");
             }
 
-            var models = new List<AllEducationsViewModel>();
+            var models = new List<AdminAllEducationsViewModel>();
             var dtos = result.Value;
 
             models = dtos
-           .Select(item => new AllEducationsViewModel
+           .Select(item => new AdminAllEducationsViewModel
            {
                Id = item.Id,
                School = item.School,
