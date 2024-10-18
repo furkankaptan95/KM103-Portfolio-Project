@@ -1,6 +1,7 @@
 ﻿using App.Data.DbContexts;
 using App.Data.Entities;
 using App.DTOs.EducationDtos;
+using App.DTOs.EducationDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using Microsoft.Data.SqlClient;
@@ -99,21 +100,21 @@ public class EducationAdminService(DataApiDbContext dataApiDb) : IEducationAdmin
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result<List<AllEducationsDto>>> GetAllEducationsAsync()
+    public async Task<Result<List<AllEducationsAdminDto>>> GetAllEducationsAsync()
     {
         try
         {
-            var dtos = new List<AllEducationsDto>();
+            var dtos = new List<AllEducationsAdminDto>();
 
             var entities = await dataApiDb.Educations.ToListAsync();
 
             if (entities is null)
             {
-                return Result<List<AllEducationsDto>>.Success(dtos);
+                return Result<List<AllEducationsAdminDto>>.Success(dtos);
             }
 
             dtos = entities
-           .Select(item => new AllEducationsDto
+           .Select(item => new AllEducationsAdminDto
            {
                Id = item.Id,
                Degree = item.Degree,
@@ -124,15 +125,15 @@ public class EducationAdminService(DataApiDbContext dataApiDb) : IEducationAdmin
            })
            .ToList();
 
-            return Result<List<AllEducationsDto>>.Success(dtos);
+            return Result<List<AllEducationsAdminDto>>.Success(dtos);
         }
         catch (SqlException sqlEx)
         {
-            return Result<List<AllEducationsDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<List<AllEducationsAdminDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result<List<AllEducationsDto>>.Error("Bir hata oluştu: " + ex.Message);
+            return Result<List<AllEducationsAdminDto>>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
     public async Task<Result<EducationToUpdateDto>> GetEducationByIdAsync(int id)

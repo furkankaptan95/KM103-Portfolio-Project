@@ -1,7 +1,6 @@
-﻿namespace App.DTOs.EducationDtos;
-public class EducationToUpdateDto
+﻿namespace App.ViewModels.PortfolioMvc;
+public class AllEducationsPortfolioViewModel
 {
-    public int Id { get; set; }
     public string Degree { get; set; }
     public string School { get; set; }
     public DateTime StartDate { get; set; }

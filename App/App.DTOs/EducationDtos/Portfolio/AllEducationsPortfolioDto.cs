@@ -1,5 +1,5 @@
-﻿namespace App.ViewModels.PortfolioMvc;
-public class PortfolioAllEducationsViewModel
+﻿namespace App.DTOs.EducationDtos.Portfolio;
+public class AllEducationsPortfolioDto
 {
     public string Degree { get; set; }
     public string School { get; set; }

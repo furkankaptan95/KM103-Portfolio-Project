@@ -1,5 +1,5 @@
-﻿namespace App.DTOs.EducationDtos;
-public class AllEducationsDto
+﻿namespace App.DTOs.EducationDtos.Admin;
+public class AllEducationsAdminDto
 {
     public int Id { get; set; }
     public string Degree { get; set; }
