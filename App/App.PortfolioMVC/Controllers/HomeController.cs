@@ -12,7 +12,7 @@ public class HomeController(IEducationPortfolioService educationService) : Contr
 
         var educationsResult = await educationService.GetAllEducationsAsync();
 
-        if (educationsResult.IsSuccess && educationsResult.Value.Count > 0)
+        if (educationsResult.IsSuccess)
         {
             model.Educations = new();
 
