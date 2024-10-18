@@ -7,7 +7,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services;
-public class EducationService(DataApiDbContext dataApiDb) : IEducationService
+public class AdminEducationService(DataApiDbContext dataApiDb) : IEducationService
 {
     public async Task<Result> AddEducationAsync(AddEducationDto dto)
     {

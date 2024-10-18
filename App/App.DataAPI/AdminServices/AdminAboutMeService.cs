@@ -7,7 +7,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services;
-public class AboutMeService(DataApiDbContext dataApiDb) : IAboutMeService
+public class AdminAboutMeService(DataApiDbContext dataApiDb) : IAboutMeService
 {
     public async Task<Result> AddAboutMeAsync(AddAboutMeApiDto dto)
     {

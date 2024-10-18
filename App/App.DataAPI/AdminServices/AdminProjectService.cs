@@ -7,7 +7,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services;
-public class ProjectService(DataApiDbContext dataApiDb) : IProjectService
+public class AdminProjectService(DataApiDbContext dataApiDb) : IProjectService
 {
     public async Task<Result> AddProjectAsync(AddProjectApiDto dto)
     {

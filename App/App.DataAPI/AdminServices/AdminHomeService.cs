@@ -6,11 +6,11 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services;
-public class HomeService : IHomeService
+public class AdminHomeService : IHomeService
 {
     private readonly DataApiDbContext _dataApiDb;
     private readonly IHttpClientFactory _factory;
-    public HomeService(DataApiDbContext dataApiDb, IHttpClientFactory factory)
+    public AdminHomeService(DataApiDbContext dataApiDb, IHttpClientFactory factory)
     {
         _dataApiDb = dataApiDb;
         _factory = factory;

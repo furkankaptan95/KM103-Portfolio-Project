@@ -16,7 +16,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services;
-public static class DataApiServicesRegistration
+public static class AdminDataApiServicesRegistration
 {
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
@@ -52,14 +52,14 @@ public static class DataApiServicesRegistration
             options.UseSqlServer(configuration.GetConnectionString("DataApiBaseDb"));
         });
 
-        services.AddScoped<IAboutMeService, AboutMeService>();
-        services.AddScoped<IBlogPostService, BlogPostService>();
-        services.AddScoped<IEducationService, EducationService>();
-        services.AddScoped<IExperienceService, ExperienceService>();
-        services.AddScoped<IPersonalInfoService, PersonalInfoService>();
-        services.AddScoped<IProjectService, ProjectService>();
-        services.AddScoped<IHomeService, HomeService>();
-        services.AddScoped<ICommentService, CommentService>();
+        services.AddScoped<IAboutMeService, AdminAboutMeService>();
+        services.AddScoped<IBlogPostService, AdminBlogPostService>();
+        services.AddScoped<IEducationService, AdminEducationService>();
+        services.AddScoped<IExperienceService, AdminExperienceService>();
+        services.AddScoped<IPersonalInfoService, AdminPersonalInfoService>();
+        services.AddScoped<IProjectService, AdminProjectService>();
+        services.AddScoped<IHomeService, AdminHomeService>();
+        services.AddScoped<ICommentService, AdminCommentService>();
 
 
         services.AddTransient<IValidator<AddAboutMeApiDto>, AddAboutMeApiDtoValidator>();

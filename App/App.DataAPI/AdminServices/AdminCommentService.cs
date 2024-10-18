@@ -7,12 +7,12 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services;
-public class CommentService : ICommentService
+public class AdminCommentService : ICommentService
 {
     private readonly DataApiDbContext _dataApiDb;
     private readonly IHttpClientFactory _factory;
 
-    public CommentService(DataApiDbContext dataApiDb, IHttpClientFactory factory)
+    public AdminCommentService(DataApiDbContext dataApiDb, IHttpClientFactory factory)
     {
         _dataApiDb = dataApiDb;
         _factory = factory;
