@@ -1,5 +1,5 @@
-﻿namespace App.DTOs.PersonalInfoDtos;
-public class AddPersonalInfoDto
+﻿namespace App.ViewModels.PortfolioMvc;
+public class PersonalInfoPortfolioViewModel
 {
     public string Name { get; set; }
 

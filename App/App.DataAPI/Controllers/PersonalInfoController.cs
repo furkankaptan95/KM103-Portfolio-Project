@@ -1,4 +1,5 @@
 ﻿using App.DTOs.PersonalInfoDtos;
+using App.DTOs.PersonalInfoDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;

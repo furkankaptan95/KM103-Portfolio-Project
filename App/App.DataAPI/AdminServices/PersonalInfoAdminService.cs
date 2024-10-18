@@ -1,6 +1,7 @@
 ﻿using App.Data.DbContexts;
 using App.Data.Entities;
 using App.DTOs.PersonalInfoDtos;
+using App.DTOs.PersonalInfoDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using Microsoft.Data.SqlClient;
@@ -39,7 +40,7 @@ public class PersonalInfoAdminService(DataApiDbContext dataApiDb) : IPersonalInf
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result<ShowPersonalInfoDto>> GetPersonalInfoAsync()
+    public async Task<Result<PersonalInfoAdminDto>> GetPersonalInfoAsync()
     {
         try
         {
@@ -47,10 +48,10 @@ public class PersonalInfoAdminService(DataApiDbContext dataApiDb) : IPersonalInf
 
             if (entity == null)
             {
-                return Result<ShowPersonalInfoDto>.NotFound();
+                return Result<PersonalInfoAdminDto>.NotFound();
             }
 
-            var dto = new ShowPersonalInfoDto()
+            var dto = new PersonalInfoAdminDto()
             {
                 Name = entity.Name,
                 Surname = entity.Surname,
@@ -58,17 +59,17 @@ public class PersonalInfoAdminService(DataApiDbContext dataApiDb) : IPersonalInf
                 BirthDate = entity.BirthDate,
             };
 
-            return Result<ShowPersonalInfoDto>.Success(dto);
+            return Result<PersonalInfoAdminDto>.Success(dto);
         }
         catch (SqlException sqlEx)
         {
-            return Result<ShowPersonalInfoDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<PersonalInfoAdminDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
 
         catch (Exception ex)
         {
             var errorMessage = $"Bir hata oluştu: {ex.Message}, Hata Kodu: {ex.HResult}";
-            return Result<ShowPersonalInfoDto>.Error(errorMessage);
+            return Result<PersonalInfoAdminDto>.Error(errorMessage);
         }
     }
     public async Task<Result> UpdatePersonalInfoAsync(UpdatePersonalInfoDto dto)

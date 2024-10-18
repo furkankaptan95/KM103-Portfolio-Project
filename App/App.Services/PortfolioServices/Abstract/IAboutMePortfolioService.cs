@@ -4,5 +4,5 @@ using Ardalis.Result;
 namespace App.Services.PortfolioServices.Abstract;
 public interface IAboutMePortfolioService
 {
-    Task<Result<PortfolioAboutMeDto>> GetAboutMeAsync();
+    Task<Result<AboutMePortfolioDto>> GetAboutMeAsync();
 }

@@ -12,6 +12,7 @@ using App.DTOs.EducationDtos;
 using App.DTOs.ExperienceDtos;
 using App.DTOs.ExperienceDtos.Admin;
 using App.DTOs.PersonalInfoDtos;
+using App.DTOs.PersonalInfoDtos.Admin;
 using App.DTOs.ProjectDtos;
 using App.DTOs.ProjectDtos.Admin;
 using App.Services.AdminServices.Abstract;

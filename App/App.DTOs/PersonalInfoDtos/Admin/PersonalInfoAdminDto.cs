@@ -1,5 +1,5 @@
-﻿namespace App.DTOs.PersonalInfoDtos;
-public class ShowPersonalInfoDto
+﻿namespace App.DTOs.PersonalInfoDtos.Admin;
+public class PersonalInfoAdminDto
 {
     public string Name { get; set; }
 
