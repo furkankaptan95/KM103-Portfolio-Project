@@ -68,7 +68,7 @@ public class AboutMeService : IAboutMeAdminService
     {
         throw new NotImplementedException();
     }
-    public async Task<Result<AdminAboutMeDto>> GetAboutMeAsync()
+    public async Task<Result<AboutMeAdminDto>> GetAboutMeAsync()
     {
         try
         {
@@ -76,11 +76,11 @@ public class AboutMeService : IAboutMeAdminService
 
             if (apiResponse.IsSuccessStatusCode)
             {
-                var result = await apiResponse.Content.ReadFromJsonAsync<Result<AdminAboutMeDto>>();
+                var result = await apiResponse.Content.ReadFromJsonAsync<Result<AboutMeAdminDto>>();
 
                 if (result is null)
                 {
-                    return Result<AdminAboutMeDto>.Error("Bilgiler getirilirken beklenmeyen bir hata oluştu.");
+                    return Result<AboutMeAdminDto>.Error("Bilgiler getirilirken beklenmeyen bir hata oluştu.");
                 }
 
                 return result;
@@ -91,16 +91,16 @@ public class AboutMeService : IAboutMeAdminService
             {
                 errorMessage = "Hakkımda bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurabilirsiniz.";
 
-                return Result<AdminAboutMeDto>.NotFound(errorMessage);
+                return Result<AboutMeAdminDto>.NotFound(errorMessage);
             }
 
             errorMessage = "Bilgiler getirilirken beklenmeyen bir hata oluştu.";
 
-            return Result<AdminAboutMeDto>.Error(errorMessage);
+            return Result<AboutMeAdminDto>.Error(errorMessage);
         }
         catch (Exception)
         {
-            return Result<AdminAboutMeDto>.Error("Bilgiler getirilirken beklenmeyen bir hata oluştu.");
+            return Result<AboutMeAdminDto>.Error("Bilgiler getirilirken beklenmeyen bir hata oluştu.");
         }
     }
     public Task<Result> UpdateAboutMeAsync(UpdateAboutMeApiDto dto)

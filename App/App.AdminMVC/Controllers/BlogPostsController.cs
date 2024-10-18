@@ -1,4 +1,5 @@
 ﻿using App.DTOs.BlogPostDtos;
+using App.DTOs.BlogPostDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.BlogPostsViewModels;
 using Ardalis.Result;

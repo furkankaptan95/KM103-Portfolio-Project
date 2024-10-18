@@ -1,4 +1,4 @@
-﻿namespace App.DTOs.BlogPostDtos;
+﻿namespace App.DTOs.BlogPostDtos.Admin;
 public class AddBlogPostDto
 {
     public string Title { get; set; }

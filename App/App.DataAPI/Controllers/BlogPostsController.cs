@@ -1,4 +1,4 @@
-﻿using App.DTOs.BlogPostDtos;
+﻿using App.DTOs.BlogPostDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;

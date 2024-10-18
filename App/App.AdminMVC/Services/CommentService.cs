@@ -1,4 +1,4 @@
-﻿using App.DTOs.CommentDtos;
+﻿using App.DTOs.CommentDtos.Admin;
 using App.DTOs.UserDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
@@ -66,7 +66,7 @@ public class CommentService(IHttpClientFactory factory) : ICommentAdminService
             return Result.Error("Yorum silinirken beklenmedik bir hata oluştu..");
         }
     }
-    public async Task<Result<List<AllCommentsDto>>> GetAllCommentsAsync()
+    public async Task<Result<List<AllCommentsAdminDto>>> GetAllCommentsAsync()
     {
         try
         {
@@ -74,14 +74,14 @@ public class CommentService(IHttpClientFactory factory) : ICommentAdminService
 
             if (!apiResponse.IsSuccessStatusCode)
             {
-                return Result<List<AllCommentsDto>>.Error("Yorumlar getirilirken beklenmedik bir hata oluştu..");
+                return Result<List<AllCommentsAdminDto>>.Error("Yorumlar getirilirken beklenmedik bir hata oluştu..");
             }
 
-            var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<AllCommentsDto>>>();
+            var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<AllCommentsAdminDto>>>();
 
             if(result is null)
             {
-               return Result<List<AllCommentsDto>>.Error("Yorumlar getirilirken beklenmedik bir hata oluştu..");
+               return Result<List<AllCommentsAdminDto>>.Error("Yorumlar getirilirken beklenmedik bir hata oluştu..");
             }
 
             return result;
@@ -89,7 +89,7 @@ public class CommentService(IHttpClientFactory factory) : ICommentAdminService
        
         catch (Exception)
         {
-            return Result<List<AllCommentsDto>>.Error("Yorumlar getirilirken beklenmedik bir hata oluştu..");
+            return Result<List<AllCommentsAdminDto>>.Error("Yorumlar getirilirken beklenmedik bir hata oluştu..");
         }
     }
     public Task<Result<List<UsersCommentsDto>>> GetUsersCommentsAsync(int id)

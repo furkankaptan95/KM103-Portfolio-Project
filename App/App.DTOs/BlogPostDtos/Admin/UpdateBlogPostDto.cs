@@ -1,4 +1,4 @@
-﻿namespace App.DTOs.BlogPostDtos;
+﻿namespace App.DTOs.BlogPostDtos.Admin;
 public class UpdateBlogPostDto
 {
     public int Id { get; set; }

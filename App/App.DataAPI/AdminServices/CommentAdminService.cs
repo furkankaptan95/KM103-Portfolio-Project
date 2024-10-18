@@ -1,5 +1,5 @@
 ﻿using App.Data.DbContexts;
-using App.DTOs.CommentDtos;
+using App.DTOs.CommentDtos.Admin;
 using App.DTOs.UserDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
@@ -80,17 +80,17 @@ public class CommentAdminService : ICommentAdminService
         }
     }
 
-    public async Task<Result<List<AllCommentsDto>>> GetAllCommentsAsync()
+    public async Task<Result<List<AllCommentsAdminDto>>> GetAllCommentsAsync()
     {
         try
         {
-            var dtos = new List<AllCommentsDto>();
+            var dtos = new List<AllCommentsAdminDto>();
 
             var entities = await _dataApiDb.Comments.Include(c=>c.BlogPost).ToListAsync();
 
             if (entities is null)
             {
-                return Result<List<AllCommentsDto>>.Success(dtos);
+                return Result<List<AllCommentsAdminDto>>.Success(dtos);
             }
 
             foreach (var item in entities)
@@ -132,7 +132,7 @@ public class CommentAdminService : ICommentAdminService
                     }
                 }
 
-                var dto = new AllCommentsDto
+                var dto = new AllCommentsAdminDto
                 {
                     Id = item.Id,
                     Content = item.Content,
@@ -145,15 +145,15 @@ public class CommentAdminService : ICommentAdminService
                 dtos.Add(dto);
             }
 
-            return Result<List<AllCommentsDto>>.Success(dtos);
+            return Result<List<AllCommentsAdminDto>>.Success(dtos);
         }
         catch (SqlException sqlEx)
         {
-            return Result<List<AllCommentsDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<List<AllCommentsAdminDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result<List<AllCommentsDto>>.Error("Bir hata oluştu: " + ex.Message);
+            return Result<List<AllCommentsAdminDto>>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
     public async Task<Result<List<UsersCommentsDto>>> GetUsersCommentsAsync(int id)

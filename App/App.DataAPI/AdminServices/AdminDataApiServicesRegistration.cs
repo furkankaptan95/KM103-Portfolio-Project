@@ -7,7 +7,7 @@ using App.Core.Validators.ProjectValidators;
 using App.Data.DbContexts;
 using App.DTOs.AboutMeDtos;
 using App.DTOs.AboutMeDtos.Admin;
-using App.DTOs.BlogPostDtos;
+using App.DTOs.BlogPostDtos.Admin;
 using App.DTOs.EducationDtos;
 using App.DTOs.ExperienceDtos;
 using App.DTOs.PersonalInfoDtos;

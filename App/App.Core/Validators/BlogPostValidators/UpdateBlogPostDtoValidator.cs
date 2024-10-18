@@ -1,4 +1,4 @@
-﻿using App.DTOs.BlogPostDtos;
+﻿using App.DTOs.BlogPostDtos.Admin;
 using FluentValidation;
 
 namespace App.Core.Validators.BlogPostValidators;

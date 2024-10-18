@@ -1,4 +1,4 @@
-﻿using App.DTOs.BlogPostDtos;
+﻿using App.DTOs.BlogPostDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using System.Net;
@@ -90,7 +90,7 @@ public class BlogPostService : IBlogPostAdminService
             return Result.Error("Blog Post silinirken beklenmedik bir hata oluştu..");
         }
     }
-    public async Task<Result<List<AllBlogPostsDto>>> GetAllBlogPostsAsync()
+    public async Task<Result<List<AllBlogPostsAdminDto>>> GetAllBlogPostsAsync()
     {
         try
         {
@@ -98,21 +98,21 @@ public class BlogPostService : IBlogPostAdminService
 
             if (apiResponse.IsSuccessStatusCode)
             {
-                var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<AllBlogPostsDto>>>();
+                var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<AllBlogPostsAdminDto>>>();
 
                 if(result is null)
                 {
-                    return Result<List<AllBlogPostsDto>>.Error("Blog Postlar getirilirken beklenmedik bir hata oluştu.");
+                    return Result<List<AllBlogPostsAdminDto>>.Error("Blog Postlar getirilirken beklenmedik bir hata oluştu.");
                 }
 
                 return result;
             }
-            return Result<List<AllBlogPostsDto>>.Error("Blog Postlar getirilirken beklenmedik bir hata oluştu.");
+            return Result<List<AllBlogPostsAdminDto>>.Error("Blog Postlar getirilirken beklenmedik bir hata oluştu.");
         }
 
         catch (Exception)
         {
-            return Result<List<AllBlogPostsDto>>.Error("Blog Postlar getirilirken beklenmedik bir hata oluştu.");
+            return Result<List<AllBlogPostsAdminDto>>.Error("Blog Postlar getirilirken beklenmedik bir hata oluştu.");
         }
     }
     public async Task<Result<BlogPostToUpdateDto>> GetBlogPostById(int id)

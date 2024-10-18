@@ -1,6 +1,6 @@
 ﻿using App.Data.DbContexts;
 using App.Data.Entities;
-using App.DTOs.BlogPostDtos;
+using App.DTOs.BlogPostDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using Microsoft.Data.SqlClient;
@@ -101,21 +101,21 @@ public class BlogPostAdminService(DataApiDbContext dataApiDb) : IBlogPostAdminSe
         }
     }
 
-    public async Task<Result<List<AllBlogPostsDto>>> GetAllBlogPostsAsync()
+    public async Task<Result<List<AllBlogPostsAdminDto>>> GetAllBlogPostsAsync()
     {
         try
         {
-            var dtos = new List<AllBlogPostsDto>();
+            var dtos = new List<AllBlogPostsAdminDto>();
 
             var entities = await dataApiDb.BlogPosts.ToListAsync();
             
             if(entities is null)
             {
-                return Result<List<AllBlogPostsDto>>.Success(dtos);
+                return Result<List<AllBlogPostsAdminDto>>.Success(dtos);
             }
 
              dtos = entities
-            .Select(item => new AllBlogPostsDto
+            .Select(item => new AllBlogPostsAdminDto
             {
                Id = item.Id,
                Title = item.Title,
@@ -125,15 +125,15 @@ public class BlogPostAdminService(DataApiDbContext dataApiDb) : IBlogPostAdminSe
             })
             .ToList();
 
-            return Result<List<AllBlogPostsDto>>.Success(dtos);
+            return Result<List<AllBlogPostsAdminDto>>.Success(dtos);
         }
         catch (SqlException sqlEx)
         {
-            return Result<List<AllBlogPostsDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<List<AllBlogPostsAdminDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result<List<AllBlogPostsDto>>.Error("Bir hata oluştu: " + ex.Message);
+            return Result<List<AllBlogPostsAdminDto>>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
 

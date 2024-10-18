@@ -45,7 +45,7 @@ public class AboutMeAdminService(DataApiDbContext dataApiDb) : IAboutMeAdminServ
         throw new NotImplementedException();
     }
 
-    public async Task<Result<AdminAboutMeDto>> GetAboutMeAsync()
+    public async Task<Result<AboutMeAdminDto>> GetAboutMeAsync()
     {
         try
         {
@@ -53,28 +53,28 @@ public class AboutMeAdminService(DataApiDbContext dataApiDb) : IAboutMeAdminServ
 
             if (entity == null)
             {
-                return Result<AdminAboutMeDto>.NotFound();
+                return Result<AboutMeAdminDto>.NotFound();
             }
 
-            var dto = new AdminAboutMeDto()
+            var dto = new AboutMeAdminDto()
             {
                 Introduction = entity.Introduction,
                 ImageUrl1 = entity.ImageUrl1,
                 ImageUrl2 = entity.ImageUrl2,
             };
 
-            return Result<AdminAboutMeDto>.Success(dto);
+            return Result<AboutMeAdminDto>.Success(dto);
         }
 
         catch (SqlException sqlEx)
         {
-            return Result<AdminAboutMeDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<AboutMeAdminDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
 
         catch (Exception ex)
         {
             var errorMessage = $"Bir hata oluştu: {ex.Message}, Hata Kodu: {ex.HResult}";
-            return Result<AdminAboutMeDto>.Error(errorMessage);
+            return Result<AboutMeAdminDto>.Error(errorMessage);
         }
     }
 
