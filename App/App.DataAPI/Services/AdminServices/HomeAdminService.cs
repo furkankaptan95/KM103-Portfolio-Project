@@ -5,7 +5,7 @@ using Ardalis.Result;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
-namespace App.DataAPI.Services;
+namespace App.DataAPI.Services.AdminServices;
 public class HomeAdminService : IHomeAdminService
 {
     private readonly DataApiDbContext _dataApiDb;
@@ -32,7 +32,7 @@ public class HomeAdminService : IHomeAdminService
             {
                 var result = await apiResponse.Content.ReadFromJsonAsync<Result<int>>();
 
-                if(result is null)
+                if (result is null)
                 {
                     dto.UsersCount = 0;
                 }

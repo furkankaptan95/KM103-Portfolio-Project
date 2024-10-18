@@ -6,7 +6,7 @@ using Ardalis.Result;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
-namespace App.DataAPI.Services;
+namespace App.DataAPI.Services.AdminServices;
 public class CommentAdminService : ICommentAdminService
 {
     private readonly DataApiDbContext _dataApiDb;
@@ -86,7 +86,7 @@ public class CommentAdminService : ICommentAdminService
         {
             var dtos = new List<AllCommentsAdminDto>();
 
-            var entities = await _dataApiDb.Comments.Include(c=>c.BlogPost).ToListAsync();
+            var entities = await _dataApiDb.Comments.Include(c => c.BlogPost).ToListAsync();
 
             if (entities is null)
             {
@@ -116,7 +116,7 @@ public class CommentAdminService : ICommentAdminService
                         {
                             var result = await authApiResponse.Content.ReadFromJsonAsync<Result<string>>();
 
-                            if(result is null)
+                            if (result is null)
                             {
                                 commenter = "Unknown User";
                             }
@@ -138,7 +138,7 @@ public class CommentAdminService : ICommentAdminService
                     Content = item.Content,
                     CreatedAt = item.CreatedAt,
                     IsApproved = item.IsApproved,
-                    BlogPostName = item.BlogPost !=null ? item.BlogPost.Title : "Blog Post silindi.",
+                    BlogPostName = item.BlogPost != null ? item.BlogPost.Title : "Blog Post silindi.",
                     Commenter = commenter
                 };
 
@@ -162,10 +162,10 @@ public class CommentAdminService : ICommentAdminService
         {
             var usersComments = new List<UsersCommentsDto>();
 
-            var comments = await _dataApiDb.Comments.Where(c=>c.UserId == id).Include(c=>c.BlogPost).ToListAsync();
+            var comments = await _dataApiDb.Comments.Where(c => c.UserId == id).Include(c => c.BlogPost).ToListAsync();
 
-            if(comments.Count > 0)
-            {        
+            if (comments.Count > 0)
+            {
                 foreach (var comment in comments)
                 {
                     UsersCommentsDto dto = new();

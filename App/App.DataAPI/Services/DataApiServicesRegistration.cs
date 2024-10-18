@@ -5,6 +5,8 @@ using App.Core.Validators.ExperienceValidators;
 using App.Core.Validators.PersonalInfoValidators;
 using App.Core.Validators.ProjectValidators;
 using App.Data.DbContexts;
+using App.DataAPI.Services.AdminServices;
+using App.DataAPI.Services.PortfolioServices;
 using App.DTOs.AboutMeDtos;
 using App.DTOs.AboutMeDtos.Admin;
 using App.DTOs.BlogPostDtos.Admin;
@@ -16,11 +18,12 @@ using App.DTOs.PersonalInfoDtos.Admin;
 using App.DTOs.ProjectDtos;
 using App.DTOs.ProjectDtos.Admin;
 using App.Services.AdminServices.Abstract;
+using App.Services.PortfolioServices.Abstract;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services;
-public static class AdminDataApiServicesRegistration
+public static class DataApiServicesRegistration
 {
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
@@ -58,12 +61,21 @@ public static class AdminDataApiServicesRegistration
 
         services.AddScoped<IAboutMeAdminService, AboutMeAdminService>();
         services.AddScoped<IBlogPostAdminService, BlogPostAdminService>();
+        services.AddScoped<ICommentAdminService, CommentAdminService>();
         services.AddScoped<IEducationAdminService, EducationAdminService>();
         services.AddScoped<IExperienceAdminService, ExperienceAdminService>();
         services.AddScoped<IPersonalInfoAdminService, PersonalInfoAdminService>();
         services.AddScoped<IProjectAdminService, ProjectAdminService>();
         services.AddScoped<IHomeAdminService, HomeAdminService>();
-        services.AddScoped<ICommentAdminService, CommentAdminService>();
+      
+
+        services.AddScoped<IAboutMePortfolioService, AboutMePortfolioService>();
+        services.AddScoped<IBlogPosPortfolioService, BlogPosPortfolioService>();
+        services.AddScoped<ICommentPortfolioService, CommentPortfolioService>();
+        services.AddScoped<IEducationPortfolioService, EducationPortfolioService>();
+        services.AddScoped<IExperiencePortfolioService, ExperiencePortfolioService>();
+        services.AddScoped<IPersonalInfoPortfolioService, PersonalInfoPortfolioService>();
+        services.AddScoped<IProjectPortfolioService, ProjectPortfolioService>();
 
 
         services.AddTransient<IValidator<AddAboutMeApiDto>, AddAboutMeApiDtoValidator>();

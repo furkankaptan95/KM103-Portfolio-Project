@@ -1,29 +1,28 @@
 ﻿using App.Data.DbContexts;
 using App.Data.Entities;
-using App.DTOs.ExperienceDtos;
-using App.DTOs.ExperienceDtos.Admin;
+using App.DTOs.EducationDtos;
+using App.DTOs.EducationDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
-namespace App.DataAPI.Services;
-public class ExperienceAdminService(DataApiDbContext dataApiDb) : IExperienceAdminService
+namespace App.DataAPI.Services.AdminServices;
+public class EducationAdminService(DataApiDbContext dataApiDb) : IEducationAdminService
 {
-    public async Task<Result> AddExperienceAsync(AddExperienceDto dto)
+    public async Task<Result> AddEducationAsync(AddEducationDto dto)
     {
         try
         {
-            var entity = new ExperienceEntity()
+            var entity = new EducationEntity()
             {
-                Title = dto.Title,
-                Company = dto.Company,
+                Degree = dto.Degree,
                 StartDate = dto.StartDate,
                 EndDate = dto.EndDate,
-                Description = dto.Description,
+                School = dto.School,
             };
 
-            await dataApiDb.Experiences.AddAsync(entity);
+            await dataApiDb.Educations.AddAsync(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
@@ -41,11 +40,11 @@ public class ExperienceAdminService(DataApiDbContext dataApiDb) : IExperienceAdm
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result> ChangeExperienceVisibilityAsync(int id)
+    public async Task<Result> ChangeEducationVisibilityAsync(int id)
     {
         try
         {
-            var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await dataApiDb.Educations.FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
             {
@@ -54,7 +53,7 @@ public class ExperienceAdminService(DataApiDbContext dataApiDb) : IExperienceAdm
 
             entity.IsVisible = !entity.IsVisible;
 
-            dataApiDb.Experiences.Update(entity);
+            dataApiDb.Educations.Update(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
@@ -72,18 +71,18 @@ public class ExperienceAdminService(DataApiDbContext dataApiDb) : IExperienceAdm
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result> DeleteExperienceAsync(int id)
+    public async Task<Result> DeleteEducationAsync(int id)
     {
         try
         {
-            var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await dataApiDb.Educations.FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
             {
                 return Result.NotFound();
             }
 
-            dataApiDb.Experiences.Remove(entity);
+            dataApiDb.Educations.Remove(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
@@ -101,93 +100,90 @@ public class ExperienceAdminService(DataApiDbContext dataApiDb) : IExperienceAdm
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result<List<AllExperiencesAdminDto>>> GetAllExperiencesAsync()
+    public async Task<Result<List<AllEducationsAdminDto>>> GetAllEducationsAsync()
     {
         try
         {
-            var dtos = new List<AllExperiencesAdminDto>();
+            var dtos = new List<AllEducationsAdminDto>();
 
-            var entities = await dataApiDb.Experiences.ToListAsync();
+            var entities = await dataApiDb.Educations.ToListAsync();
 
             if (entities is null)
             {
-                return Result<List<AllExperiencesAdminDto>>.Success(dtos);
+                return Result<List<AllEducationsAdminDto>>.Success(dtos);
             }
 
             dtos = entities
-           .Select(item => new AllExperiencesAdminDto
+           .Select(item => new AllEducationsAdminDto
            {
                Id = item.Id,
-               Company = item.Company,
-               Description = item.Description,
+               Degree = item.Degree,
+               School = item.School,
                StartDate = item.StartDate,
                EndDate = item.EndDate,
                IsVisible = item.IsVisible,
-               Title = item.Title,
            })
            .ToList();
 
-            return Result<List<AllExperiencesAdminDto>>.Success(dtos);
+            return Result<List<AllEducationsAdminDto>>.Success(dtos);
         }
         catch (SqlException sqlEx)
         {
-            return Result<List<AllExperiencesAdminDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<List<AllEducationsAdminDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result<List<AllExperiencesAdminDto>>.Error("Bir hata oluştu: " + ex.Message);
+            return Result<List<AllEducationsAdminDto>>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result<ExperienceToUpdateDto>> GetByIdAsync(int id)
+    public async Task<Result<EducationToUpdateDto>> GetEducationByIdAsync(int id)
     {
         try
         {
-            var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await dataApiDb.Educations.FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
             {
-                return Result<ExperienceToUpdateDto>.NotFound();
+                return Result<EducationToUpdateDto>.NotFound();
             }
 
-            var dto = new ExperienceToUpdateDto
+            var dto = new EducationToUpdateDto
             {
                 Id = id,
-                Company = entity.Company,
-                Title = entity.Title,
-                Description = entity.Description,
+                School = entity.School,
+                Degree = entity.Degree,
                 StartDate = entity.StartDate,
                 EndDate = entity.EndDate,
             };
 
-            return Result<ExperienceToUpdateDto>.Success(dto);
+            return Result<EducationToUpdateDto>.Success(dto);
         }
         catch (SqlException sqlEx)
         {
-            return Result<ExperienceToUpdateDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<EducationToUpdateDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result<ExperienceToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
+            return Result<EducationToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)
+    public async Task<Result> UpdateEducationAsync(UpdateEducationDto dto)
     {
         try
         {
-            var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == dto.Id);
+            var entity = await dataApiDb.Educations.FirstOrDefaultAsync(x => x.Id == dto.Id);
 
             if (entity is null)
             {
                 return Result.NotFound();
             }
 
-            entity.Company = dto.Company;
+            entity.School = dto.School;
             entity.EndDate = dto.EndDate;
             entity.StartDate = dto.StartDate;
-            entity.Title = dto.Title;
-            entity.Description = dto.Description;
+            entity.Degree = dto.Degree;
 
-            dataApiDb.Experiences.Update(entity);
+            dataApiDb.Educations.Update(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();

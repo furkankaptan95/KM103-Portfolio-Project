@@ -7,7 +7,7 @@ using Ardalis.Result;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
-namespace App.DataAPI.Services;
+namespace App.DataAPI.Services.AdminServices;
 public class PersonalInfoAdminService(DataApiDbContext dataApiDb) : IPersonalInfoAdminService
 {
     public async Task<Result> AddPersonalInfoAsync(AddPersonalInfoDto dto)

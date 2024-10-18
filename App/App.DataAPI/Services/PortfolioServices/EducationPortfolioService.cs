@@ -5,7 +5,7 @@ using Ardalis.Result;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
-namespace App.DataAPI.PortfolioServices;
+namespace App.DataAPI.Services.PortfolioServices;
 public class EducationPortfolioService(DataApiDbContext dataApiDb) : IEducationPortfolioService
 {
     public async Task<Result<List<AllEducationsPortfolioDto>>> GetAllEducationsAsync()
