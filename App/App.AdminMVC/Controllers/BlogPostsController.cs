@@ -13,7 +13,7 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
     {
         try
         {
-            var models = new List<AllBlogPostsViewModel>();
+            var models = new List<AdminAllBlogPostsViewModel>();
 
             var result = await blogPostService.GetAllBlogPostsAsync();
 
@@ -26,7 +26,7 @@ public class BlogPostsController(IBlogPostService blogPostService) : Controller
             var dtos = result.Value;
 
             models = dtos
-           .Select(item => new AllBlogPostsViewModel
+           .Select(item => new AdminAllBlogPostsViewModel
            {
                Id = item.Id,
                Title = item.Title,

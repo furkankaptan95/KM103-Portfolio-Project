@@ -1,5 +1,5 @@
 ﻿namespace App.ViewModels.AdminMvc.ExperiencesViewModels;
-public class AllExperiencesViewModel
+public class AdminAllExperiencesViewModel
 {
     public int Id { get; set; }
     public string Title { get; set; }

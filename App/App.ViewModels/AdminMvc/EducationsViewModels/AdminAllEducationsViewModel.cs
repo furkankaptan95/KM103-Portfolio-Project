@@ -1,5 +1,5 @@
 ﻿namespace App.ViewModels.AdminMvc.EducationsViewModels;
-public class AllEducationsViewModel
+public class AdminAllEducationsViewModel
 {
     public int Id { get; set; }
     public string Degree { get; set; }

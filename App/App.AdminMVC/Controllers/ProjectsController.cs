@@ -21,11 +21,11 @@ public class ProjectsController(IProjectService projectService) : Controller
                 return Redirect("/home/index");
             }
 
-            var models = new List<AllProjectsViewModel>();
+            var models = new List<AdminAllProjectsViewModel>();
             var dtos = result.Value;
 
             models = dtos
-           .Select(item => new AllProjectsViewModel
+           .Select(item => new AdminAllProjectsViewModel
            {
                Id = item.Id,
                Title = item.Title,

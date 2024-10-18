@@ -32,7 +32,7 @@ public class AboutMeController(IAboutMeService aboutMeService) : Controller
 
             var dto = result.Value;
 
-            var aboutMeModel = new AboutMeViewModel
+            var aboutMeModel = new AdminAboutMeViewModel
             {
                 ImageUrl1 = dto.ImageUrl1,
                 ImageUrl2 = dto.ImageUrl2,

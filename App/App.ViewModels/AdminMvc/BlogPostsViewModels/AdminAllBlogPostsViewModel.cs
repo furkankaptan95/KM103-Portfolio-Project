@@ -1,5 +1,5 @@
 ﻿namespace App.ViewModels.AdminMvc.BlogPostsViewModels;
-public class AllBlogPostsViewModel
+public class AdminAllBlogPostsViewModel
 {
     public int Id { get; set; }
     public string Title { get; set; }
