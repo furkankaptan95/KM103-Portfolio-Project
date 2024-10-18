@@ -1,4 +1,4 @@
-﻿using App.DTOs.ProjectDtos;
+﻿using App.DTOs.ProjectDtos.Admin;
 using FluentValidation;
 
 namespace App.Core.Validators.ProjectValidators;

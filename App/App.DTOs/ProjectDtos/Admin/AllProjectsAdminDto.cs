@@ -1,5 +1,5 @@
 ﻿namespace App.DTOs.ProjectDtos;
-public class AllProjectsDto
+public class AllProjectsAdminDto
 {
     public int Id { get; set; }
     public string Title { get; set; }

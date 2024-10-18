@@ -1,6 +1,7 @@
 ﻿using App.Data.DbContexts;
 using App.Data.Entities;
 using App.DTOs.ProjectDtos;
+using App.DTOs.ProjectDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using Microsoft.Data.SqlClient;
@@ -102,21 +103,21 @@ public class ProjectAdminService(DataApiDbContext dataApiDb) : IProjectAdminServ
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result<List<AllProjectsDto>>> GetAllProjectsAsync()
+    public async Task<Result<List<AllProjectsAdminDto>>> GetAllProjectsAsync()
     {
         try
         {
-            var dtos = new List<AllProjectsDto>();
+            var dtos = new List<AllProjectsAdminDto>();
 
             var entities = await dataApiDb.Projects.ToListAsync();
 
             if (entities is null)
             {
-                return Result<List<AllProjectsDto>>.Success(dtos);
+                return Result<List<AllProjectsAdminDto>>.Success(dtos);
             }
 
             dtos = entities
-           .Select(item => new AllProjectsDto
+           .Select(item => new AllProjectsAdminDto
            {
                Id = item.Id,
                ImageUrl = item.ImageUrl,
@@ -126,15 +127,15 @@ public class ProjectAdminService(DataApiDbContext dataApiDb) : IProjectAdminServ
            })
            .ToList();
 
-            return Result<List<AllProjectsDto>>.Success(dtos);
+            return Result<List<AllProjectsAdminDto>>.Success(dtos);
         }
         catch (SqlException sqlEx)
         {
-            return Result<List<AllProjectsDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<List<AllProjectsAdminDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result<List<AllProjectsDto>>.Error("Bir hata oluştu: " + ex.Message);
+            return Result<List<AllProjectsAdminDto>>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
     public async Task<Result<ProjectToUpdateDto>> GetByIdAsync(int id)

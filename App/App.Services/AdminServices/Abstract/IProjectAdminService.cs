@@ -1,10 +1,11 @@
 ﻿using App.DTOs.ProjectDtos;
+using App.DTOs.ProjectDtos.Admin;
 using Ardalis.Result;
 
 namespace App.Services.AdminServices.Abstract;
 public interface IProjectAdminService
 {
-    Task<Result<List<AllProjectsDto>>> GetAllProjectsAsync();
+    Task<Result<List<AllProjectsAdminDto>>> GetAllProjectsAsync();
     Task<Result> AddProjectAsync(AddProjectApiDto dto);
     Task<Result> AddProjectAsync(AddProjectMVCDto dto);
     Task<Result> UpdateProjectAsync(UpdateProjectMVCDto dto);

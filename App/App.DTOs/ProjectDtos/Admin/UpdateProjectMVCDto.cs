@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace App.DTOs.ProjectDtos;
+namespace App.DTOs.ProjectDtos.Admin;
 public class UpdateProjectMVCDto
 {
     public int Id { get; set; }

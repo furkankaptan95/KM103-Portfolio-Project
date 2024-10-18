@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace App.DTOs.ProjectDtos;
+namespace App.DTOs.ProjectDtos.Admin;
 public class AddProjectMVCDto
 {
     public string Title { get; set; }
