@@ -1,6 +1,7 @@
 ﻿using App.DTOs.ExperienceDtos;
 using App.DTOs.ExperienceDtos.Admin;
 using App.Services.AdminServices.Abstract;
+using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -11,14 +12,16 @@ namespace App.DataAPI.Controllers;
 [ApiController]
 public class ExperiencesController : ControllerBase
 {
-    private readonly IExperienceAdminService _experiencesService;
-    private readonly IValidator<AddExperienceDto> _addValidator;
+    private readonly IExperienceAdminService _experiencesAdminService;
+	private readonly IExperiencePortfolioService _experiencesPortfolioService;
+	private readonly IValidator<AddExperienceDto> _addValidator;
     private readonly IValidator<UpdateExperienceDto> _updateValidator;
-    public ExperiencesController(IExperienceAdminService experiencesService, IValidator<AddExperienceDto> addValidator, IValidator<UpdateExperienceDto> updateValidator)
+    public ExperiencesController(IExperienceAdminService experiencesAdminService, IValidator<AddExperienceDto> addValidator, IValidator<UpdateExperienceDto> updateValidator, IExperiencePortfolioService experiencesPortfolioService)
     {
-        _experiencesService = experiencesService;
+        _experiencesAdminService = experiencesAdminService;
         _addValidator = addValidator;
         _updateValidator = updateValidator;
+        _experiencesPortfolioService = experiencesPortfolioService;
     }
 
     [HttpPost("/add-experience")]
@@ -34,7 +37,7 @@ public class ExperiencesController : ControllerBase
                 return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
             }
 
-            var result = await _experiencesService.AddExperienceAsync(dto);
+            var result = await _experiencesAdminService.AddExperienceAsync(dto);
 
             if (!result.IsSuccess)
             {
@@ -55,7 +58,7 @@ public class ExperiencesController : ControllerBase
     {
         try 
         {
-            var result = await _experiencesService.GetAllExperiencesAsync();
+            var result = await _experiencesAdminService.GetAllExperiencesAsync();
 
             if (!result.IsSuccess)
             {
@@ -71,7 +74,28 @@ public class ExperiencesController : ControllerBase
         }
     }
 
-    [HttpPut("/update-experience")]
+	[HttpGet("/portfolio-all-experiences")]
+	public async Task<IActionResult> GetAllPortfolioAsync()
+	{
+		try
+		{
+			var result = await _experiencesPortfolioService.GetAllExperiencesAsync();
+
+			if (!result.IsSuccess)
+			{
+				return StatusCode(500, result);
+			}
+
+			return Ok(result);
+		}
+
+		catch (Exception ex)
+		{
+			return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+		}
+	}
+
+	[HttpPut("/update-experience")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateExperienceDto dto)
     {
         try
@@ -84,7 +108,7 @@ public class ExperiencesController : ControllerBase
                 return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
             }
 
-            var result = await _experiencesService.UpdateExperienceAsync(dto);
+            var result = await _experiencesAdminService.UpdateExperienceAsync(dto);
 
             if (!result.IsSuccess)
             {
@@ -115,7 +139,7 @@ public class ExperiencesController : ControllerBase
 
         try
         {
-            var result = await _experiencesService.GetByIdAsync(id);
+            var result = await _experiencesAdminService.GetByIdAsync(id);
 
             if (!result.IsSuccess)
             {
@@ -146,7 +170,7 @@ public class ExperiencesController : ControllerBase
 
         try
         {
-            var result = await _experiencesService.DeleteExperienceAsync(id);
+            var result = await _experiencesAdminService.DeleteExperienceAsync(id);
 
             if (!result.IsSuccess)
             {
@@ -177,7 +201,7 @@ public class ExperiencesController : ControllerBase
 
         try
         {
-            var result = await _experiencesService.ChangeExperienceVisibilityAsync(id);
+            var result = await _experiencesAdminService.ChangeExperienceVisibilityAsync(id);
 
             if (!result.IsSuccess)
             {
