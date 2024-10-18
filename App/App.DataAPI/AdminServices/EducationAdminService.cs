@@ -1,26 +1,27 @@
 ﻿using App.Data.DbContexts;
 using App.Data.Entities;
-using App.DTOs.BlogPostDtos;
+using App.DTOs.EducationDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services;
-public class AdminBlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
+public class EducationAdminService(DataApiDbContext dataApiDb) : IEducationAdminService
 {
-    public async Task<Result> AddBlogPostAsync(AddBlogPostDto dto)
+    public async Task<Result> AddEducationAsync(AddEducationDto dto)
     {
         try
         {
-            var entity = new BlogPostEntity()
+            var entity = new EducationEntity()
             {
-               Title = dto.Title,
-               Content = dto.Content,
-               PublishDate = DateTime.Now,
+               Degree = dto.Degree,
+               StartDate = dto.StartDate,
+               EndDate = dto.EndDate,
+               School = dto.School,
             };
 
-            await dataApiDb.BlogPosts.AddAsync(entity);
+            await dataApiDb.Educations.AddAsync(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
@@ -38,21 +39,20 @@ public class AdminBlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
-    public async Task<Result> ChangeBlogPostVisibilityAsync(int id)
+    public async Task<Result> ChangeEducationVisibilityAsync(int id)
     {
         try
         {
-            var entity = await dataApiDb.BlogPosts.FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await dataApiDb.Educations.FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
             {
                 return Result.NotFound();
             }
 
-           entity.IsVisible = !entity.IsVisible;
+            entity.IsVisible = !entity.IsVisible;
 
-            dataApiDb.BlogPosts.Update(entity);
+            dataApiDb.Educations.Update(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
@@ -70,20 +70,19 @@ public class AdminBlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
-    public async Task<Result> DeleteBlogPostAsync(int id)
+    public async Task<Result> DeleteEducationAsync(int id)
     {
         try
         {
-            var entity = await dataApiDb.BlogPosts.FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await dataApiDb.Educations.FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
             {
                 return Result.NotFound();
             }
 
-             dataApiDb.BlogPosts.Remove(entity);
-             await dataApiDb.SaveChangesAsync();
+            dataApiDb.Educations.Remove(entity);
+            await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
         }
@@ -100,90 +99,91 @@ public class AdminBlogPostService(DataApiDbContext dataApiDb) : IBlogPostService
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
-    public async Task<Result<List<AllBlogPostsDto>>> GetAllBlogPostsAsync()
+    public async Task<Result<List<AllEducationsDto>>> GetAllEducationsAsync()
     {
         try
         {
-            var dtos = new List<AllBlogPostsDto>();
+            var dtos = new List<AllEducationsDto>();
 
-            var entities = await dataApiDb.BlogPosts.ToListAsync();
-            
-            if(entities is null)
+            var entities = await dataApiDb.Educations.ToListAsync();
+
+            if (entities is null)
             {
-                return Result<List<AllBlogPostsDto>>.Success(dtos);
+                return Result<List<AllEducationsDto>>.Success(dtos);
             }
 
-             dtos = entities
-            .Select(item => new AllBlogPostsDto
-            {
+            dtos = entities
+           .Select(item => new AllEducationsDto
+           {
                Id = item.Id,
-               Title = item.Title,
-               Content = item.Content,
-               PublishDate = item.PublishDate,
+               Degree = item.Degree,
+               School = item.School,
+               StartDate = item.StartDate,
+               EndDate = item.EndDate,
                IsVisible = item.IsVisible,
-            })
-            .ToList();
+           })
+           .ToList();
 
-            return Result<List<AllBlogPostsDto>>.Success(dtos);
+            return Result<List<AllEducationsDto>>.Success(dtos);
         }
         catch (SqlException sqlEx)
         {
-            return Result<List<AllBlogPostsDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<List<AllEducationsDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result<List<AllBlogPostsDto>>.Error("Bir hata oluştu: " + ex.Message);
+            return Result<List<AllEducationsDto>>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
-    public async Task<Result<BlogPostToUpdateDto>> GetBlogPostById(int id)
+    public async Task<Result<EducationToUpdateDto>> GetEducationByIdAsync(int id)
     {
         try
-        {       
-            var entity = await dataApiDb.BlogPosts.FirstOrDefaultAsync(x=>x.Id == id);
+        {
+            var entity = await dataApiDb.Educations.FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
             {
-                return Result<BlogPostToUpdateDto>.NotFound();
+                return Result<EducationToUpdateDto>.NotFound();
             }
 
-            var dto = new BlogPostToUpdateDto
+            var dto = new EducationToUpdateDto
             {
                 Id = id,
-                Title = entity.Title,
-                Content = entity.Content,
+                School = entity.School,
+                Degree = entity.Degree,
+                StartDate = entity.StartDate,
+                EndDate = entity.EndDate,
             };
 
-            return Result<BlogPostToUpdateDto>.Success(dto);
+            return Result<EducationToUpdateDto>.Success(dto);
         }
         catch (SqlException sqlEx)
         {
-            return Result<BlogPostToUpdateDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<EducationToUpdateDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result<BlogPostToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
+            return Result<EducationToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
-    public async Task<Result> UpdateBlogPostAsync(UpdateBlogPostDto dto)
+    public async Task<Result> UpdateEducationAsync(UpdateEducationDto dto)
     {
         try
         {
-            var entity = await dataApiDb.BlogPosts.FirstOrDefaultAsync(x => x.Id == dto.Id);
+            var entity = await dataApiDb.Educations.FirstOrDefaultAsync(x => x.Id == dto.Id);
 
             if (entity is null)
-            {
+            { 
                 return Result.NotFound();
             }
-           
-            entity.Title = dto.Title;
-            entity.Content = dto.Content;
-            entity.UpdatedAt = DateTime.Now;
 
-             dataApiDb.BlogPosts.Update(entity);
-             await dataApiDb.SaveChangesAsync();
+            entity.School = dto.School;
+            entity.EndDate = dto.EndDate;
+            entity.StartDate = dto.StartDate;
+            entity.Degree = dto.Degree;
+
+            dataApiDb.Educations.Update(entity);
+            await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
         }

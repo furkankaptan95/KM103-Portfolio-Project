@@ -2,7 +2,7 @@
 using Ardalis.Result;
 
 namespace App.Services.AdminServices.Abstract;
-public interface IProjectService
+public interface IProjectAdminService
 {
     Task<Result<List<AllProjectsDto>>> GetAllProjectsAsync();
     Task<Result> AddProjectAsync(AddProjectApiDto dto);

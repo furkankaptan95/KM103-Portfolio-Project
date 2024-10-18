@@ -2,7 +2,7 @@
 using Ardalis.Result;
 
 namespace App.Services.AdminServices.Abstract;
-public interface IUserService
+public interface IUserAdminService
 {
     Task<Result<List<AllUsersDto>>> GetAllUsersAsync();
     Task<Result> ChangeActivenessOfUserAsync(int id);

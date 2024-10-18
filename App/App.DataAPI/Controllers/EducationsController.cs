@@ -10,10 +10,10 @@ namespace App.DataAPI.Controllers;
 [ApiController]
 public class EducationsController : ControllerBase
 {
-    private readonly IEducationService _educationService;
+    private readonly IEducationAdminService _educationService;
     private readonly IValidator<AddEducationDto> _addValidator;
     private readonly IValidator<UpdateEducationDto> _updateValidator;
-    public EducationsController(IEducationService educationService, IValidator<AddEducationDto> addValidator, IValidator<UpdateEducationDto> updateValidator)
+    public EducationsController(IEducationAdminService educationService, IValidator<AddEducationDto> addValidator, IValidator<UpdateEducationDto> updateValidator)
     {
         _educationService = educationService;
         _addValidator = addValidator;

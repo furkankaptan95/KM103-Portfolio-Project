@@ -4,7 +4,7 @@ using Ardalis.Result;
 using System.Net;
 
 namespace App.AdminMVC.Services;
-public class ExperienceService(IHttpClientFactory factory) : IExperienceService
+public class ExperienceService(IHttpClientFactory factory) : IExperienceAdminService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
     public async Task<Result> AddExperienceAsync(AddExperienceDto dto)

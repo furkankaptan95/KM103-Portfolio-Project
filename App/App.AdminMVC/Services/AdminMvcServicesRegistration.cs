@@ -43,15 +43,15 @@ public static class AdminMvcServicesRegistration
             c.BaseAddress = new Uri(authApiUrl);
         });
 
-        services.AddScoped<IAboutMeService, AboutMeService>();
-        services.AddScoped<IBlogPostService, BlogPostService>();
-        services.AddScoped<IEducationService, EducationService>();
-        services.AddScoped<IExperienceService, ExperienceService>();
-        services.AddScoped<IPersonalInfoService, PersonalInfoService>();
-        services.AddScoped<IProjectService, ProjectService>();
-        services.AddScoped<IHomeService, HomeService>();
-        services.AddScoped<ICommentService, CommentService>();
-        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IAboutMeAdminService, AboutMeService>();
+        services.AddScoped<IBlogPostAdminService, BlogPostService>();
+        services.AddScoped<IEducationAdminService, EducationService>();
+        services.AddScoped<IExperienceAdminService, ExperienceService>();
+        services.AddScoped<IPersonalInfoAdminService, PersonalInfoService>();
+        services.AddScoped<IProjectAdminService, ProjectService>();
+        services.AddScoped<IHomeAdminService, HomeService>();
+        services.AddScoped<ICommentAdminService, CommentService>();
+        services.AddScoped<IUserAdminService, UserService>();
 
         return services;
 

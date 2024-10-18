@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace App.DTOs.AboutMeDtos;
+namespace App.DTOs.AboutMeDtos.Admin;
 public class AddAboutMeMVCDto
 {
     public string Introduction { get; set; }

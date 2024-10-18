@@ -6,7 +6,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.AuthAPI.Services;
-public class AdminUserService : IUserService
+public class AdminUserService : IUserAdminService
 {
     private readonly IHttpClientFactory _factory;
     private readonly AuthApiDbContext _authApiDb;

@@ -4,7 +4,7 @@ using Ardalis.Result;
 using System.Net;
 
 namespace App.AdminMVC.Services;
-public class BlogPostService : IBlogPostService
+public class BlogPostService : IBlogPostAdminService
 {
     private readonly IHttpClientFactory _factory;
     public BlogPostService(IHttpClientFactory factory)

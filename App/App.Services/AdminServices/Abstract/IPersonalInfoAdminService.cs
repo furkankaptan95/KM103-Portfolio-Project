@@ -2,7 +2,7 @@
 using Ardalis.Result;
 
 namespace App.Services.AdminServices.Abstract;
-public interface IPersonalInfoService
+public interface IPersonalInfoAdminService
 {
     Task<Result> AddPersonalInfoAsync(AddPersonalInfoDto dto);
     Task<Result<ShowPersonalInfoDto>> GetPersonalInfoAsync();

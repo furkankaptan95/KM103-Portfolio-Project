@@ -2,7 +2,7 @@
 using Ardalis.Result;
 
 namespace App.Services.AdminServices.Abstract;
-public interface IHomeService
+public interface IHomeAdminService
 {
     Task<Result<HomeDto>> GetHomeInfosAsync();
 }

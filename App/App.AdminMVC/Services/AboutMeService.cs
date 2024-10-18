@@ -1,11 +1,12 @@
 ﻿using App.DTOs.AboutMeDtos;
+using App.DTOs.AboutMeDtos.Admin;
 using App.DTOs.FileApiDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using System.Net;
 
 namespace App.AdminMVC.Services;
-public class AboutMeService : IAboutMeService
+public class AboutMeService : IAboutMeAdminService
 {
     private readonly IHttpClientFactory _factory;
     public AboutMeService(IHttpClientFactory factory)
@@ -67,7 +68,7 @@ public class AboutMeService : IAboutMeService
     {
         throw new NotImplementedException();
     }
-    public async Task<Result<ShowAboutMeDto>> GetAboutMeAsync()
+    public async Task<Result<AdminAboutMeDto>> GetAboutMeAsync()
     {
         try
         {
@@ -75,11 +76,11 @@ public class AboutMeService : IAboutMeService
 
             if (apiResponse.IsSuccessStatusCode)
             {
-                var result = await apiResponse.Content.ReadFromJsonAsync<Result<ShowAboutMeDto>>();
+                var result = await apiResponse.Content.ReadFromJsonAsync<Result<AdminAboutMeDto>>();
 
                 if (result is null)
                 {
-                    return Result<ShowAboutMeDto>.Error("Bilgiler getirilirken beklenmeyen bir hata oluştu.");
+                    return Result<AdminAboutMeDto>.Error("Bilgiler getirilirken beklenmeyen bir hata oluştu.");
                 }
 
                 return result;
@@ -90,16 +91,16 @@ public class AboutMeService : IAboutMeService
             {
                 errorMessage = "Hakkımda bölümüne henüz bir şey eklemediniz. Eklemek için gerekli alanları doldurabilirsiniz.";
 
-                return Result<ShowAboutMeDto>.NotFound(errorMessage);
+                return Result<AdminAboutMeDto>.NotFound(errorMessage);
             }
 
             errorMessage = "Bilgiler getirilirken beklenmeyen bir hata oluştu.";
 
-            return Result<ShowAboutMeDto>.Error(errorMessage);
+            return Result<AdminAboutMeDto>.Error(errorMessage);
         }
         catch (Exception)
         {
-            return Result<ShowAboutMeDto>.Error("Bilgiler getirilirken beklenmeyen bir hata oluştu.");
+            return Result<AdminAboutMeDto>.Error("Bilgiler getirilirken beklenmeyen bir hata oluştu.");
         }
     }
     public Task<Result> UpdateAboutMeAsync(UpdateAboutMeApiDto dto)

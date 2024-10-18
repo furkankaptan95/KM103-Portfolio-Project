@@ -1,27 +1,26 @@
 ﻿using App.Data.DbContexts;
 using App.Data.Entities;
-using App.DTOs.EducationDtos;
+using App.DTOs.ProjectDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services;
-public class AdminEducationService(DataApiDbContext dataApiDb) : IEducationService
+public class ProjectAdminService(DataApiDbContext dataApiDb) : IProjectAdminService
 {
-    public async Task<Result> AddEducationAsync(AddEducationDto dto)
+    public async Task<Result> AddProjectAsync(AddProjectApiDto dto)
     {
         try
         {
-            var entity = new EducationEntity()
+            var entity = new ProjectEntity()
             {
-               Degree = dto.Degree,
-               StartDate = dto.StartDate,
-               EndDate = dto.EndDate,
-               School = dto.School,
+                Title  = dto.Title,
+                Description = dto.Description,
+                ImageUrl = dto.ImageUrl,
             };
 
-            await dataApiDb.Educations.AddAsync(entity);
+            await dataApiDb.Projects.AddAsync(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
@@ -39,11 +38,15 @@ public class AdminEducationService(DataApiDbContext dataApiDb) : IEducationServi
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result> ChangeEducationVisibilityAsync(int id)
+    public Task<Result> AddProjectAsync(AddProjectMVCDto dto)
+    {
+        throw new NotImplementedException();
+    }
+    public async Task<Result> ChangeProjectVisibilityAsync(int id)
     {
         try
         {
-            var entity = await dataApiDb.Educations.FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await dataApiDb.Projects.FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
             {
@@ -52,7 +55,7 @@ public class AdminEducationService(DataApiDbContext dataApiDb) : IEducationServi
 
             entity.IsVisible = !entity.IsVisible;
 
-            dataApiDb.Educations.Update(entity);
+            dataApiDb.Projects.Update(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
@@ -70,18 +73,18 @@ public class AdminEducationService(DataApiDbContext dataApiDb) : IEducationServi
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result> DeleteEducationAsync(int id)
+    public async Task<Result> DeleteProjectAsync(int id)
     {
         try
         {
-            var entity = await dataApiDb.Educations.FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await dataApiDb.Projects.FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
             {
                 return Result.NotFound();
             }
 
-            dataApiDb.Educations.Remove(entity);
+            dataApiDb.Projects.Remove(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
@@ -99,90 +102,95 @@ public class AdminEducationService(DataApiDbContext dataApiDb) : IEducationServi
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result<List<AllEducationsDto>>> GetAllEducationsAsync()
+    public async Task<Result<List<AllProjectsDto>>> GetAllProjectsAsync()
     {
         try
         {
-            var dtos = new List<AllEducationsDto>();
+            var dtos = new List<AllProjectsDto>();
 
-            var entities = await dataApiDb.Educations.ToListAsync();
+            var entities = await dataApiDb.Projects.ToListAsync();
 
             if (entities is null)
             {
-                return Result<List<AllEducationsDto>>.Success(dtos);
+                return Result<List<AllProjectsDto>>.Success(dtos);
             }
 
             dtos = entities
-           .Select(item => new AllEducationsDto
+           .Select(item => new AllProjectsDto
            {
                Id = item.Id,
-               Degree = item.Degree,
-               School = item.School,
-               StartDate = item.StartDate,
-               EndDate = item.EndDate,
+               ImageUrl = item.ImageUrl,
+               Description = item.Description,
                IsVisible = item.IsVisible,
+               Title = item.Title,
            })
            .ToList();
 
-            return Result<List<AllEducationsDto>>.Success(dtos);
+            return Result<List<AllProjectsDto>>.Success(dtos);
         }
         catch (SqlException sqlEx)
         {
-            return Result<List<AllEducationsDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<List<AllProjectsDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result<List<AllEducationsDto>>.Error("Bir hata oluştu: " + ex.Message);
+            return Result<List<AllProjectsDto>>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result<EducationToUpdateDto>> GetEducationByIdAsync(int id)
+    public async Task<Result<ProjectToUpdateDto>> GetByIdAsync(int id)
     {
         try
         {
-            var entity = await dataApiDb.Educations.FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await dataApiDb.Projects.FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
             {
-                return Result<EducationToUpdateDto>.NotFound();
+                return Result<ProjectToUpdateDto>.NotFound();
             }
 
-            var dto = new EducationToUpdateDto
+            var dto = new ProjectToUpdateDto
             {
                 Id = id,
-                School = entity.School,
-                Degree = entity.Degree,
-                StartDate = entity.StartDate,
-                EndDate = entity.EndDate,
+                ImageUrl = entity.ImageUrl,
+                Title = entity.Title,
+                Description = entity.Description,
             };
 
-            return Result<EducationToUpdateDto>.Success(dto);
+            return Result<ProjectToUpdateDto>.Success(dto);
         }
         catch (SqlException sqlEx)
         {
-            return Result<EducationToUpdateDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<ProjectToUpdateDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result<EducationToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
+            return Result<ProjectToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result> UpdateEducationAsync(UpdateEducationDto dto)
+    public Task<Result> UpdateProjectAsync(UpdateProjectMVCDto dto)
+    {
+        throw new NotImplementedException();
+    }
+    public async Task<Result> UpdateProjectAsync(UpdateProjectApiDto dto)
     {
         try
         {
-            var entity = await dataApiDb.Educations.FirstOrDefaultAsync(x => x.Id == dto.Id);
+            var entity = await dataApiDb.Projects.FirstOrDefaultAsync(x => x.Id == dto.Id);
 
-            if (entity is null)
-            { 
+            if (entity == null)
+            {
                 return Result.NotFound();
             }
 
-            entity.School = dto.School;
-            entity.EndDate = dto.EndDate;
-            entity.StartDate = dto.StartDate;
-            entity.Degree = dto.Degree;
+            entity.Title = dto.Title;
+            entity.Description = dto.Description;
 
-            dataApiDb.Educations.Update(entity);
+            if (dto.ImageUrl != null) 
+            { 
+                entity.ImageUrl = dto.ImageUrl;
+            }
+
+            dataApiDb.Projects.Update(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();

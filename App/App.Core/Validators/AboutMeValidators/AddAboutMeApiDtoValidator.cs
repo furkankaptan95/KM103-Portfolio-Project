@@ -1,4 +1,4 @@
-﻿using App.DTOs.AboutMeDtos;
+﻿using App.DTOs.AboutMeDtos.Admin;
 using FluentValidation;
 
 namespace App.Core.Validators.AboutMeValidators;

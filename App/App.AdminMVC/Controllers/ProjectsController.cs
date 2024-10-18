@@ -5,7 +5,7 @@ using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-public class ProjectsController(IProjectService projectService) : Controller
+public class ProjectsController(IProjectAdminService projectService) : Controller
 {
     [HttpGet]
     [Route("all-projects")]

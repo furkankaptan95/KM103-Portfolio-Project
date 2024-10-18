@@ -1,27 +1,27 @@
 ﻿using App.Data.DbContexts;
 using App.Data.Entities;
-using App.DTOs.PersonalInfoDtos;
+using App.DTOs.AboutMeDtos;
+using App.DTOs.AboutMeDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services;
-public class AdminPersonalInfoService(DataApiDbContext dataApiDb) : IPersonalInfoService
+public class AboutMeAdminService(DataApiDbContext dataApiDb) : IAboutMeAdminService
 {
-    public async Task<Result> AddPersonalInfoAsync(AddPersonalInfoDto dto)
+    public async Task<Result> AddAboutMeAsync(AddAboutMeApiDto dto)
     {
         try
         {
-            var entity = new PersonalInfoEntity()
+            var entity = new AboutMeEntity()
             {
-                About = dto.About,
-                Name = dto.Name,
-                Surname = dto.Surname,
-                BirthDate = dto.BirthDate,
+                Introduction = dto.Introduction,
+                ImageUrl1 = dto.ImageUrl1,
+                ImageUrl2 = dto.ImageUrl2,
             };
 
-            await dataApiDb.PersonalInfos.AddAsync(entity);
+            await dataApiDb.AboutMes.AddAsync(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
@@ -39,59 +39,74 @@ public class AdminPersonalInfoService(DataApiDbContext dataApiDb) : IPersonalInf
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result<ShowPersonalInfoDto>> GetPersonalInfoAsync()
+
+    public Task<Result> AddAboutMeAsync(AddAboutMeMVCDto dto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<AdminAboutMeDto>> GetAboutMeAsync()
     {
         try
         {
-            var entity = await dataApiDb.PersonalInfos.FirstOrDefaultAsync();
+            var entity = await dataApiDb.AboutMes.FirstOrDefaultAsync();
 
             if (entity == null)
             {
-                return Result<ShowPersonalInfoDto>.NotFound();
+                return Result<AdminAboutMeDto>.NotFound();
             }
 
-            var dto = new ShowPersonalInfoDto()
+            var dto = new AdminAboutMeDto()
             {
-                Name = entity.Name,
-                Surname = entity.Surname,
-                About = entity.About,
-                BirthDate = entity.BirthDate,
+                Introduction = entity.Introduction,
+                ImageUrl1 = entity.ImageUrl1,
+                ImageUrl2 = entity.ImageUrl2,
             };
 
-            return Result<ShowPersonalInfoDto>.Success(dto);
+            return Result<AdminAboutMeDto>.Success(dto);
         }
+
         catch (SqlException sqlEx)
         {
-            return Result<ShowPersonalInfoDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<AdminAboutMeDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
 
         catch (Exception ex)
         {
             var errorMessage = $"Bir hata oluştu: {ex.Message}, Hata Kodu: {ex.HResult}";
-            return Result<ShowPersonalInfoDto>.Error(errorMessage);
+            return Result<AdminAboutMeDto>.Error(errorMessage);
         }
     }
-    public async Task<Result> UpdatePersonalInfoAsync(UpdatePersonalInfoDto dto)
+
+    public async Task<Result> UpdateAboutMeAsync(UpdateAboutMeApiDto dto)
     {
         try
         {
-            var entity = await dataApiDb.PersonalInfos.FirstOrDefaultAsync();
+            var entity = await dataApiDb.AboutMes.FirstOrDefaultAsync();
 
             if (entity == null)
             {
                 return Result.NotFound();
             }
 
-            entity.Name = dto.Name;
-            entity.Surname = dto.Surname;
-            entity.About = dto.About;
-            entity.BirthDate = dto.BirthDate;
+            entity.Introduction = dto.Introduction;
 
-            dataApiDb.PersonalInfos.Update(entity);
+            if (dto.ImageUrl1 != null) 
+            {
+                entity.ImageUrl1 = dto.ImageUrl1;
+            }
+
+            if (dto.ImageUrl2 != null)
+            {
+                entity.ImageUrl2 = dto.ImageUrl2;
+            }
+
+            dataApiDb.AboutMes.Update(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
         }
+
         catch (DbUpdateException dbUpdateEx)
         {
             return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
@@ -105,5 +120,10 @@ public class AdminPersonalInfoService(DataApiDbContext dataApiDb) : IPersonalInf
             var errorMessage = $"Bir hata oluştu: {ex.Message}, Hata Kodu: {ex.HResult}";
             return Result.Error(errorMessage);
         }
+    }
+
+    public Task<Result> UpdateAboutMeAsync(UpdateAboutMeMVCDto dto)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -12,8 +12,8 @@ public class ProjectsController : ControllerBase
 {
     private readonly IValidator<UpdateProjectApiDto> _updateValidator;
     private readonly IValidator<AddProjectApiDto> _addValidator;
-    private readonly IProjectService _projectService;
-    public ProjectsController(IValidator<UpdateProjectApiDto> updateValidator, IValidator<AddProjectApiDto> addValidator, IProjectService projectService)
+    private readonly IProjectAdminService _projectService;
+    public ProjectsController(IValidator<UpdateProjectApiDto> updateValidator, IValidator<AddProjectApiDto> addValidator, IProjectAdminService projectService)
     {
         _addValidator = addValidator;
         _updateValidator = updateValidator;

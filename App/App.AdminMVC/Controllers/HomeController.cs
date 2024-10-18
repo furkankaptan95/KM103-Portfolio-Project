@@ -3,7 +3,7 @@ using App.ViewModels.AdminMvc.HomeViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-public class HomeController(IHomeService homeService) : Controller
+public class HomeController(IHomeAdminService homeService) : Controller
 {
     public async Task<IActionResult> Index()
     {

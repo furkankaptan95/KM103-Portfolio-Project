@@ -2,7 +2,7 @@
 using Ardalis.Result;
 
 namespace App.Services.AdminServices.Abstract;
-public interface IBlogPostService
+public interface IBlogPostAdminService
 {
     Task<Result<List<AllBlogPostsDto>>> GetAllBlogPostsAsync();
     Task<Result> AddBlogPostAsync(AddBlogPostDto dto);

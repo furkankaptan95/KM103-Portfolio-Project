@@ -8,8 +8,8 @@ namespace App.DataAPI.Controllers;
 [ApiController]
 public class CommentsController : ControllerBase
 {
-    private readonly ICommentService _commentService;
-    public CommentsController(ICommentService commentService)
+    private readonly ICommentAdminService _commentService;
+    public CommentsController(ICommentAdminService commentService)
     {
         _commentService = commentService;
     }

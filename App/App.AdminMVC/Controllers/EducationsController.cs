@@ -5,7 +5,7 @@ using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-public class EducationsController(IEducationService educationService) : Controller
+public class EducationsController(IEducationAdminService educationService) : Controller
 {
 
     [HttpGet]

@@ -5,7 +5,7 @@ using Ardalis.Result;
 using System.Net;
 
 namespace App.AdminMVC.Services;
-public class CommentService(IHttpClientFactory factory) : ICommentService
+public class CommentService(IHttpClientFactory factory) : ICommentAdminService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
     public async Task<Result> ApproveOrNotApproveCommentAsync(int id)

@@ -5,7 +5,7 @@ using Ardalis.Result;
 using System.Net;
 
 namespace App.AdminMVC.Services;
-public class ProjectService(IHttpClientFactory factory) : IProjectService
+public class ProjectService(IHttpClientFactory factory) : IProjectAdminService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
     private HttpClient FileApiClient => factory.CreateClient("fileApi");

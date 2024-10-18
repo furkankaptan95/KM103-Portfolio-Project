@@ -2,7 +2,7 @@
 using Ardalis.Result;
 
 namespace App.Services.AdminServices.Abstract;
-public interface IExperienceService
+public interface IExperienceAdminService
 {
     Task<Result<List<AllExperiencesDto>>> GetAllExperiencesAsync();
     Task<Result> AddExperienceAsync(AddExperienceDto dto);

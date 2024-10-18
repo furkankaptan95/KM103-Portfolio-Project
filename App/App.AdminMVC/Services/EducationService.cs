@@ -4,7 +4,7 @@ using Ardalis.Result;
 using System.Net;
 
 namespace App.AdminMVC.Services;
-public class EducationService(IHttpClientFactory factory) : IEducationService
+public class EducationService(IHttpClientFactory factory) : IEducationAdminService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
     public async Task<Result> AddEducationAsync(AddEducationDto dto)

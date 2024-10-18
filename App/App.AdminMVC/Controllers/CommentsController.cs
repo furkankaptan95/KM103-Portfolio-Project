@@ -3,7 +3,7 @@ using App.ViewModels.AdminMvc.CommentsViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
-public class CommentsController(ICommentService commentService) : Controller
+public class CommentsController(ICommentAdminService commentService) : Controller
 {
     [HttpGet]
     [Route("all-comments")]

@@ -4,7 +4,7 @@ using Ardalis.Result;
 using System.Net;
 
 namespace App.AdminMVC.Services;
-public class PersonalInfoService(IHttpClientFactory factory) : IPersonalInfoService
+public class PersonalInfoService(IHttpClientFactory factory) : IPersonalInfoAdminService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
     public async Task<Result> AddPersonalInfoAsync(AddPersonalInfoDto dto)

@@ -2,7 +2,7 @@
 using Ardalis.Result;
 
 namespace App.Services.AdminServices.Abstract;
-public interface IEducationService
+public interface IEducationAdminService
 {
     Task<Result<List<AllEducationsDto>>> GetAllEducationsAsync();
     Task<Result> AddEducationAsync(AddEducationDto dto);

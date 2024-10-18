@@ -1,28 +1,26 @@
 ﻿using App.Data.DbContexts;
 using App.Data.Entities;
-using App.DTOs.ExperienceDtos;
+using App.DTOs.BlogPostDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services;
-public class AdminExperienceService(DataApiDbContext dataApiDb) : IExperienceService
+public class BlogPostAdminService(DataApiDbContext dataApiDb) : IBlogPostAdminService
 {
-    public async Task<Result> AddExperienceAsync(AddExperienceDto dto)
+    public async Task<Result> AddBlogPostAsync(AddBlogPostDto dto)
     {
         try
         {
-            var entity = new ExperienceEntity()
+            var entity = new BlogPostEntity()
             {
-                Title = dto.Title,
-                Company = dto.Company,
-                StartDate = dto.StartDate,
-                EndDate = dto.EndDate,
-                Description = dto.Description,
+               Title = dto.Title,
+               Content = dto.Content,
+               PublishDate = DateTime.Now,
             };
 
-            await dataApiDb.Experiences.AddAsync(entity);
+            await dataApiDb.BlogPosts.AddAsync(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
@@ -40,20 +38,21 @@ public class AdminExperienceService(DataApiDbContext dataApiDb) : IExperienceSer
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result> ChangeExperienceVisibilityAsync(int id)
+
+    public async Task<Result> ChangeBlogPostVisibilityAsync(int id)
     {
         try
         {
-            var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await dataApiDb.BlogPosts.FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
             {
                 return Result.NotFound();
             }
 
-            entity.IsVisible = !entity.IsVisible;
+           entity.IsVisible = !entity.IsVisible;
 
-            dataApiDb.Experiences.Update(entity);
+            dataApiDb.BlogPosts.Update(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
@@ -71,19 +70,20 @@ public class AdminExperienceService(DataApiDbContext dataApiDb) : IExperienceSer
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result> DeleteExperienceAsync(int id)
+
+    public async Task<Result> DeleteBlogPostAsync(int id)
     {
         try
         {
-            var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await dataApiDb.BlogPosts.FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
             {
                 return Result.NotFound();
             }
 
-            dataApiDb.Experiences.Remove(entity);
-            await dataApiDb.SaveChangesAsync();
+             dataApiDb.BlogPosts.Remove(entity);
+             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
         }
@@ -100,94 +100,90 @@ public class AdminExperienceService(DataApiDbContext dataApiDb) : IExperienceSer
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result<List<AllExperiencesDto>>> GetAllExperiencesAsync()
+
+    public async Task<Result<List<AllBlogPostsDto>>> GetAllBlogPostsAsync()
     {
         try
         {
-            var dtos = new List<AllExperiencesDto>();
+            var dtos = new List<AllBlogPostsDto>();
 
-            var entities = await dataApiDb.Experiences.ToListAsync();
-
-            if (entities is null)
+            var entities = await dataApiDb.BlogPosts.ToListAsync();
+            
+            if(entities is null)
             {
-                return Result<List<AllExperiencesDto>>.Success(dtos);
+                return Result<List<AllBlogPostsDto>>.Success(dtos);
             }
 
-            dtos = entities
-           .Select(item => new AllExperiencesDto
-           {
+             dtos = entities
+            .Select(item => new AllBlogPostsDto
+            {
                Id = item.Id,
-               Company = item.Company,
-               Description = item.Description,
-               StartDate = item.StartDate,
-               EndDate = item.EndDate,
-               IsVisible = item.IsVisible,
                Title = item.Title,
-           })
-           .ToList();
+               Content = item.Content,
+               PublishDate = item.PublishDate,
+               IsVisible = item.IsVisible,
+            })
+            .ToList();
 
-            return Result<List<AllExperiencesDto>>.Success(dtos);
+            return Result<List<AllBlogPostsDto>>.Success(dtos);
         }
         catch (SqlException sqlEx)
         {
-            return Result<List<AllExperiencesDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<List<AllBlogPostsDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result<List<AllExperiencesDto>>.Error("Bir hata oluştu: " + ex.Message);
+            return Result<List<AllBlogPostsDto>>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result<ExperienceToUpdateDto>> GetByIdAsync(int id)
+
+    public async Task<Result<BlogPostToUpdateDto>> GetBlogPostById(int id)
     {
         try
-        {
-            var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
+        {       
+            var entity = await dataApiDb.BlogPosts.FirstOrDefaultAsync(x=>x.Id == id);
 
             if (entity is null)
             {
-                return Result<ExperienceToUpdateDto>.NotFound();
+                return Result<BlogPostToUpdateDto>.NotFound();
             }
 
-            var dto = new ExperienceToUpdateDto
+            var dto = new BlogPostToUpdateDto
             {
                 Id = id,
-                Company = entity.Company,
                 Title = entity.Title,
-                Description = entity.Description,
-                StartDate = entity.StartDate,
-                EndDate = entity.EndDate,
+                Content = entity.Content,
             };
 
-            return Result<ExperienceToUpdateDto>.Success(dto);
+            return Result<BlogPostToUpdateDto>.Success(dto);
         }
         catch (SqlException sqlEx)
         {
-            return Result<ExperienceToUpdateDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<BlogPostToUpdateDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result<ExperienceToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
+            return Result<BlogPostToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)
+
+    public async Task<Result> UpdateBlogPostAsync(UpdateBlogPostDto dto)
     {
         try
         {
-            var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == dto.Id);
+            var entity = await dataApiDb.BlogPosts.FirstOrDefaultAsync(x => x.Id == dto.Id);
 
             if (entity is null)
             {
                 return Result.NotFound();
             }
-
-            entity.Company = dto.Company;
-            entity.EndDate = dto.EndDate;
-            entity.StartDate = dto.StartDate;
+           
             entity.Title = dto.Title;
-            entity.Description = dto.Description;
+            entity.Content = dto.Content;
+            entity.UpdatedAt = DateTime.Now;
 
-            dataApiDb.Experiences.Update(entity);
-            await dataApiDb.SaveChangesAsync();
+             dataApiDb.BlogPosts.Update(entity);
+             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
         }

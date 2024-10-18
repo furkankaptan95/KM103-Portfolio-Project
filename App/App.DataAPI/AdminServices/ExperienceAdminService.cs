@@ -1,26 +1,28 @@
 ﻿using App.Data.DbContexts;
 using App.Data.Entities;
-using App.DTOs.ProjectDtos;
+using App.DTOs.ExperienceDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services;
-public class AdminProjectService(DataApiDbContext dataApiDb) : IProjectService
+public class ExperienceAdminService(DataApiDbContext dataApiDb) : IExperienceAdminService
 {
-    public async Task<Result> AddProjectAsync(AddProjectApiDto dto)
+    public async Task<Result> AddExperienceAsync(AddExperienceDto dto)
     {
         try
         {
-            var entity = new ProjectEntity()
+            var entity = new ExperienceEntity()
             {
-                Title  = dto.Title,
+                Title = dto.Title,
+                Company = dto.Company,
+                StartDate = dto.StartDate,
+                EndDate = dto.EndDate,
                 Description = dto.Description,
-                ImageUrl = dto.ImageUrl,
             };
 
-            await dataApiDb.Projects.AddAsync(entity);
+            await dataApiDb.Experiences.AddAsync(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
@@ -38,15 +40,11 @@ public class AdminProjectService(DataApiDbContext dataApiDb) : IProjectService
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public Task<Result> AddProjectAsync(AddProjectMVCDto dto)
-    {
-        throw new NotImplementedException();
-    }
-    public async Task<Result> ChangeProjectVisibilityAsync(int id)
+    public async Task<Result> ChangeExperienceVisibilityAsync(int id)
     {
         try
         {
-            var entity = await dataApiDb.Projects.FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
             {
@@ -55,7 +53,7 @@ public class AdminProjectService(DataApiDbContext dataApiDb) : IProjectService
 
             entity.IsVisible = !entity.IsVisible;
 
-            dataApiDb.Projects.Update(entity);
+            dataApiDb.Experiences.Update(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
@@ -73,18 +71,18 @@ public class AdminProjectService(DataApiDbContext dataApiDb) : IProjectService
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result> DeleteProjectAsync(int id)
+    public async Task<Result> DeleteExperienceAsync(int id)
     {
         try
         {
-            var entity = await dataApiDb.Projects.FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
             {
                 return Result.NotFound();
             }
 
-            dataApiDb.Projects.Remove(entity);
+            dataApiDb.Experiences.Remove(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
@@ -102,95 +100,93 @@ public class AdminProjectService(DataApiDbContext dataApiDb) : IProjectService
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result<List<AllProjectsDto>>> GetAllProjectsAsync()
+    public async Task<Result<List<AllExperiencesDto>>> GetAllExperiencesAsync()
     {
         try
         {
-            var dtos = new List<AllProjectsDto>();
+            var dtos = new List<AllExperiencesDto>();
 
-            var entities = await dataApiDb.Projects.ToListAsync();
+            var entities = await dataApiDb.Experiences.ToListAsync();
 
             if (entities is null)
             {
-                return Result<List<AllProjectsDto>>.Success(dtos);
+                return Result<List<AllExperiencesDto>>.Success(dtos);
             }
 
             dtos = entities
-           .Select(item => new AllProjectsDto
+           .Select(item => new AllExperiencesDto
            {
                Id = item.Id,
-               ImageUrl = item.ImageUrl,
+               Company = item.Company,
                Description = item.Description,
+               StartDate = item.StartDate,
+               EndDate = item.EndDate,
                IsVisible = item.IsVisible,
                Title = item.Title,
            })
            .ToList();
 
-            return Result<List<AllProjectsDto>>.Success(dtos);
+            return Result<List<AllExperiencesDto>>.Success(dtos);
         }
         catch (SqlException sqlEx)
         {
-            return Result<List<AllProjectsDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<List<AllExperiencesDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result<List<AllProjectsDto>>.Error("Bir hata oluştu: " + ex.Message);
+            return Result<List<AllExperiencesDto>>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public async Task<Result<ProjectToUpdateDto>> GetByIdAsync(int id)
+    public async Task<Result<ExperienceToUpdateDto>> GetByIdAsync(int id)
     {
         try
         {
-            var entity = await dataApiDb.Projects.FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity is null)
             {
-                return Result<ProjectToUpdateDto>.NotFound();
+                return Result<ExperienceToUpdateDto>.NotFound();
             }
 
-            var dto = new ProjectToUpdateDto
+            var dto = new ExperienceToUpdateDto
             {
                 Id = id,
-                ImageUrl = entity.ImageUrl,
+                Company = entity.Company,
                 Title = entity.Title,
                 Description = entity.Description,
+                StartDate = entity.StartDate,
+                EndDate = entity.EndDate,
             };
 
-            return Result<ProjectToUpdateDto>.Success(dto);
+            return Result<ExperienceToUpdateDto>.Success(dto);
         }
         catch (SqlException sqlEx)
         {
-            return Result<ProjectToUpdateDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<ExperienceToUpdateDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result<ProjectToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
+            return Result<ExperienceToUpdateDto>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-    public Task<Result> UpdateProjectAsync(UpdateProjectMVCDto dto)
-    {
-        throw new NotImplementedException();
-    }
-    public async Task<Result> UpdateProjectAsync(UpdateProjectApiDto dto)
+    public async Task<Result> UpdateExperienceAsync(UpdateExperienceDto dto)
     {
         try
         {
-            var entity = await dataApiDb.Projects.FirstOrDefaultAsync(x => x.Id == dto.Id);
+            var entity = await dataApiDb.Experiences.FirstOrDefaultAsync(x => x.Id == dto.Id);
 
-            if (entity == null)
+            if (entity is null)
             {
                 return Result.NotFound();
             }
 
+            entity.Company = dto.Company;
+            entity.EndDate = dto.EndDate;
+            entity.StartDate = dto.StartDate;
             entity.Title = dto.Title;
             entity.Description = dto.Description;
 
-            if (dto.ImageUrl != null) 
-            { 
-                entity.ImageUrl = dto.ImageUrl;
-            }
-
-            dataApiDb.Projects.Update(entity);
+            dataApiDb.Experiences.Update(entity);
             await dataApiDb.SaveChangesAsync();
 
             return Result.Success();
