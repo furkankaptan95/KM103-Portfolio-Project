@@ -14,10 +14,11 @@ public class BlogPostEntityConfiguration : IEntityTypeConfiguration<BlogPostEnti
         builder.Property(bp => bp.Content).IsRequired();
         builder.Property(bp => bp.PublishDate).IsRequired().HasColumnType("datetime");
         builder.Property(bp => bp.UpdatedAt).HasColumnType("datetime");
+        builder.Property(bp=>bp.IsVisible).IsRequired().HasColumnType("bit");
 
         builder.HasMany(bp => bp.Comments)
             .WithOne(c => c.BlogPost)
             .HasForeignKey(c => c.BlogPostId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

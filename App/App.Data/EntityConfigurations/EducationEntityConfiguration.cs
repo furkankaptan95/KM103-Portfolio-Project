@@ -14,5 +14,6 @@ public class EducationEntityConfiguration : IEntityTypeConfiguration<EducationEn
         builder.Property(e=>e.School).IsRequired().HasColumnType("varchar(100)");
         builder.Property(e => e.StartDate).IsRequired().HasColumnType("datetime");
         builder.Property(e => e.EndDate).HasColumnType("datetime");
+        builder.Property(e => e.IsVisible).IsRequired().HasColumnType("bit");
     }
 }

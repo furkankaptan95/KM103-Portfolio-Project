@@ -13,5 +13,6 @@ public class ProjectEntityConfiguration : IEntityTypeConfiguration<ProjectEntity
         builder.Property(p => p.Title).IsRequired().HasColumnType("varchar(100)");
         builder.Property(p => p.Description).IsRequired();
         builder.Property(p => p.ImageUrl).IsRequired().HasColumnType("varchar(255)");
+        builder.Property(e => e.IsVisible).IsRequired().HasColumnType("bit");
     }
 }

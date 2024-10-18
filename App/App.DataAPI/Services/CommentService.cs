@@ -40,6 +40,10 @@ public class CommentService : ICommentService
         {
             return Result.Error("Veritabanı hatası: " + dbEx.Message);
         }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
         catch (Exception ex)
         {
             return Result.Error("Bir hata oluştu: " + ex.Message);
@@ -99,7 +103,6 @@ public class CommentService : ICommentService
                 }
                 else
                 {
-                    
                     if (item.UserId.HasValue)
                     {
                         var authApiResponse = await AuthApiClient.GetAsync($"get-commenter-username-{item.UserId}");
@@ -112,7 +115,15 @@ public class CommentService : ICommentService
                         else
                         {
                             var result = await authApiResponse.Content.ReadFromJsonAsync<Result<string>>();
-                            commenter = result.Value;
+
+                            if(result is null)
+                            {
+                                commenter = "Unknown User";
+                            }
+                            else
+                            {
+                                commenter = result.Value;
+                            }
                         }
                     }
                     else
@@ -127,7 +138,7 @@ public class CommentService : ICommentService
                     Content = item.Content,
                     CreatedAt = item.CreatedAt,
                     IsApproved = item.IsApproved,
-                    BlogPostName = item.BlogPost.Title,
+                    BlogPostName = item.BlogPost !=null ? item.BlogPost.Title : "Blog Post silindi.",
                     Commenter = commenter
                 };
 
@@ -159,7 +170,7 @@ public class CommentService : ICommentService
                 {
                     UsersCommentsDto dto = new();
 
-                    dto.BlogPostName = comment.BlogPost.Title;
+                    dto.BlogPostName = comment.BlogPost != null ? comment.BlogPost.Title : "Silindi";
                     dto.Content = comment.Content;
                     dto.CreatedAt = comment.CreatedAt;
                     dto.IsApproved = comment.IsApproved;

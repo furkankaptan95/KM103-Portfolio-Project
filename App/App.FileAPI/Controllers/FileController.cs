@@ -1,6 +1,5 @@
 ﻿using App.DTOs.FileApiDtos;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.FileAPI.Controllers;
@@ -25,9 +24,7 @@ public class FileController : ControllerBase
         }
         catch (Exception ex)
         {
-            // Hata kaydı yapabilir veya uygun bir hata mesajı dönebilirsin
             Console.WriteLine($"Dizin oluşturulurken hata oluştu: {ex.Message}");
-            // Hata yönetimi için başka bir çözüm düşünebilirsin.
         }
     }
 
