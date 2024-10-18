@@ -7,7 +7,7 @@ using Ardalis.Result;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
-namespace App.DataAPI.Services;
+namespace App.DataAPI.Services.AdminServices;
 public class AboutMeAdminService(DataApiDbContext dataApiDb) : IAboutMeAdminService
 {
     public async Task<Result> AddAboutMeAsync(AddAboutMeApiDto dto)
@@ -91,7 +91,7 @@ public class AboutMeAdminService(DataApiDbContext dataApiDb) : IAboutMeAdminServ
 
             entity.Introduction = dto.Introduction;
 
-            if (dto.ImageUrl1 != null) 
+            if (dto.ImageUrl1 != null)
             {
                 entity.ImageUrl1 = dto.ImageUrl1;
             }

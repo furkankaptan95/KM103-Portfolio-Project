@@ -1,0 +1,50 @@
+﻿@model List<AllEducationsPortfolioViewModel>
+
+<section class="ftco-section" id="services-section">
+	<div class="container">
+		<div class="row justify-content-center py-5 mt-5">
+			<div class="col-md-12 heading-section text-center ftco-animate">
+				<h1 class="big big-2">Eğitimler</h1>
+				<h2 class="mb-4">Eğitimlerim</h2>
+				<p style="color:wheat;">Üniversite ve diğer özel kurumlardaki eğitim geçmişime göz atabilirsinz.</p>
+			</div>
+		</div>
+		<div class="row">
+			@if(Model!=null && Model.Any())
+			{
+				@foreach (var education in Model)
+				{
+					<div class="col-md-6 text-center d-flex ftco-animate">
+						<a href="#services-section" class="services-1">
+
+							<div class="m-3">
+								<i>
+									<i>@education.StartDate.ToString("yyyy") - @(education.EndDate?.ToString("yyyy") ?? "Devam Ediyor")</i>
+								</i>
+							</div>
+							<div class="desc">
+								<h3 class="mb-5">@education.School</h3>
+							</div>
+							<div class="desc">
+								<h3 class="mb-5">@education.Degree</h3>
+							</div>
+						</a>
+					</div>
+				}
+			}
+			else if (Model != null && Model.Count == 0)
+			{
+				<div class="col-12 text-center">
+					<h3 class="mt-5">Şu Anda Eğitim Bilgisi Bulunmuyor</h3>
+				</div>
+			}
+			else
+			{
+				<div class="col-12 text-center">
+					<h3 class="mt-5">Şu Anda Eğitim Bilgisine Ulaşılamıyor</h3>
+				</div>
+			}
+			
+		</div>
+	</div>
+</section>

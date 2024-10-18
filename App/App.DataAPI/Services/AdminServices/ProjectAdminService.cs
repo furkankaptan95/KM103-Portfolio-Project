@@ -7,7 +7,7 @@ using Ardalis.Result;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
-namespace App.DataAPI.Services;
+namespace App.DataAPI.Services.AdminServices;
 public class ProjectAdminService(DataApiDbContext dataApiDb) : IProjectAdminService
 {
     public async Task<Result> AddProjectAsync(AddProjectApiDto dto)
@@ -16,7 +16,7 @@ public class ProjectAdminService(DataApiDbContext dataApiDb) : IProjectAdminServ
         {
             var entity = new ProjectEntity()
             {
-                Title  = dto.Title,
+                Title = dto.Title,
                 Description = dto.Description,
                 ImageUrl = dto.ImageUrl,
             };
@@ -186,8 +186,8 @@ public class ProjectAdminService(DataApiDbContext dataApiDb) : IProjectAdminServ
             entity.Title = dto.Title;
             entity.Description = dto.Description;
 
-            if (dto.ImageUrl != null) 
-            { 
+            if (dto.ImageUrl != null)
+            {
                 entity.ImageUrl = dto.ImageUrl;
             }
 

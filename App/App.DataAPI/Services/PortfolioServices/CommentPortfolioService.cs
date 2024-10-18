@@ -2,7 +2,7 @@
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 
-namespace App.DataAPI.PortfolioServices;
+namespace App.DataAPI.Services.PortfolioServices;
 public class CommentPortfolioService : ICommentPortfolioService
 {
     public Task<Result> AddCommentlAsync(AddCommentDto dto)

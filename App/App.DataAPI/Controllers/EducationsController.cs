@@ -1,5 +1,6 @@
 ﻿using App.DTOs.EducationDtos;
 using App.Services.AdminServices.Abstract;
+using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -10,14 +11,16 @@ namespace App.DataAPI.Controllers;
 [ApiController]
 public class EducationsController : ControllerBase
 {
-    private readonly IEducationAdminService _educationService;
+    private readonly IEducationAdminService _educationAdminService;
+    private readonly IEducationPortfolioService _educationPortfolioService;
     private readonly IValidator<AddEducationDto> _addValidator;
     private readonly IValidator<UpdateEducationDto> _updateValidator;
-    public EducationsController(IEducationAdminService educationService, IValidator<AddEducationDto> addValidator, IValidator<UpdateEducationDto> updateValidator)
+    public EducationsController(IEducationAdminService educationAdminService, IValidator<AddEducationDto> addValidator, IValidator<UpdateEducationDto> updateValidator, IEducationPortfolioService educationPortfolioService)
     {
-        _educationService = educationService;
+        _educationAdminService = educationAdminService;
         _addValidator = addValidator;
         _updateValidator = updateValidator;
+        _educationPortfolioService = educationPortfolioService;
     }
 
     [HttpGet("/all-educations")]
@@ -25,7 +28,28 @@ public class EducationsController : ControllerBase
     {
         try
         {
-            var result = await _educationService.GetAllEducationsAsync();
+            var result = await _educationAdminService.GetAllEducationsAsync();
+
+            if (!result.IsSuccess)
+            {
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
+    }
+
+    [HttpGet("/portfolio-all-educations")]
+    public async Task<IActionResult> GetAllPortfolioAsync()
+    {
+        try
+        {
+            var result = await _educationPortfolioService.GetAllEducationsAsync();
 
             if (!result.IsSuccess)
             {
@@ -54,7 +78,7 @@ public class EducationsController : ControllerBase
                 return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
             }
 
-            var result = await _educationService.AddEducationAsync(dto);
+            var result = await _educationAdminService.AddEducationAsync(dto);
 
             if (!result.IsSuccess)
             {
@@ -83,7 +107,7 @@ public class EducationsController : ControllerBase
                 return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
             }
 
-            var result = await _educationService.UpdateEducationAsync(dto);
+            var result = await _educationAdminService.UpdateEducationAsync(dto);
 
             if (!result.IsSuccess)
             {
@@ -114,7 +138,7 @@ public class EducationsController : ControllerBase
 
         try
         {
-            var result = await _educationService.GetEducationByIdAsync(id);
+            var result = await _educationAdminService.GetEducationByIdAsync(id);
 
             if (!result.IsSuccess)
             {
@@ -145,7 +169,7 @@ public class EducationsController : ControllerBase
 
         try
         {
-            var result = await _educationService.DeleteEducationAsync(id);
+            var result = await _educationAdminService.DeleteEducationAsync(id);
 
             if (!result.IsSuccess)
             {
@@ -176,7 +200,7 @@ public class EducationsController : ControllerBase
 
         try
         {
-            var result = await _educationService.ChangeEducationVisibilityAsync(id);
+            var result = await _educationAdminService.ChangeEducationVisibilityAsync(id);
 
             if (!result.IsSuccess)
             {
