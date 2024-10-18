@@ -1,8 +1,8 @@
-﻿using App.DTOs.ExperienceDtos.Admin;
+﻿using App.DTOs.ExperienceDtos.Portfolio;
 using Ardalis.Result;
 
 namespace App.Services.PortfolioServices.Abstract;
 public interface IExperiencePortfolioService
 {
-    Task<Result<List<AllExperiencesAdminDto>>> GetAllExperiencesAsync();
+    Task<Result<List<AllExperiencesPortfolioDto>>> GetAllExperiencesAsync();
 }
