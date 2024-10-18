@@ -1,35 +1,25 @@
+using App.DTOs.EducationDtos.Portfolio;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 namespace App.PortfolioMVC.Controllers;
 
-public class HomeController(IEducationPortfolioService educationService) : Controller
+public class HomeController(IHomePortfolioService homeService) : Controller
 {
     public async Task<IActionResult> Index()
     {
         var model = new HomeIndexViewModel();
 
-        var educationsResult = await educationService.GetAllEducationsAsync();
+       var result = await homeService.GetHomeInfosAsync();
 
-        if (educationsResult.IsSuccess)
+        if (result.IsSuccess)
         {
-            model.Educations = new();
+            model = result.Value;
+			return View(model);
+		}
 
-            foreach(var education in educationsResult.Value)
-            {
-                var educationToAdd = new AllEducationsPortfolioViewModel();
-
-                educationToAdd.StartDate = education.StartDate;
-                educationToAdd.EndDate = education.EndDate;
-                educationToAdd.Degree = education.Degree;
-                educationToAdd.School = education.School;
-
-                model.Educations.Add(educationToAdd);
-            }
-        }
-
-        return View(model);
-    }
-
+		return View(model);
+	}
 }
