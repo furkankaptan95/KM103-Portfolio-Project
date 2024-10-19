@@ -1,11 +1,12 @@
 ﻿using App.DTOs.EducationDtos.Portfolio;
 using App.DTOs.ExperienceDtos.Portfolio;
+using App.DTOs.ProjectDtos.Portfolio;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc;
 using Ardalis.Result;
 
 namespace App.PortfolioMVC.Services;
-public class HomePortfolioService(IEducationPortfolioService educationService,IExperiencePortfolioService experienceService) : IHomePortfolioService
+public class HomePortfolioService(IEducationPortfolioService educationService,IExperiencePortfolioService experienceService,IProjectPortfolioService projectService) : IHomePortfolioService
 {
 	public async Task<Result<HomeIndexViewModel>> GetHomeInfosAsync()
 	{
@@ -13,6 +14,7 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 
         var educationsResult = await educationService.GetAllEducationsAsync();
         var experienceResult = await experienceService.GetAllExperiencesAsync();
+		var projectResult = await projectService.GetAllProjectsAsync();
 
         if (educationsResult.IsSuccess)
         {
@@ -22,8 +24,12 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 		{
 			model.Experiences = Experiences(experienceResult.Value);
 		}
+        if (experienceResult.IsSuccess)
+        {
+            model.Projects = Projects(projectResult.Value);
+        }
 
-		return Result<HomeIndexViewModel>.Success(model);
+        return Result<HomeIndexViewModel>.Success(model);
 	}
 
 	private static List<AllEducationsPortfolioViewModel> Educations(List<AllEducationsPortfolioDto> dtos)
@@ -62,4 +68,21 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 		}
 		return models;
 	}
+
+	private static List<AllProjectsPortfolioViewModel> Projects(List<AllProjectsPortfolioDto> dtos)
+	{
+		var models = new List<AllProjectsPortfolioViewModel>();
+
+		foreach(var project in dtos)
+		{
+			var projectToAdd = new AllProjectsPortfolioViewModel();
+
+			projectToAdd.Title = project.Title;
+			projectToAdd.Description = project.Description;
+			projectToAdd.ImageUrl = project.ImageUrl;
+
+			models.Add(projectToAdd);
+		}
+		return models;
+    }
 }

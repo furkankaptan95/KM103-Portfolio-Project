@@ -3,10 +3,33 @@ using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 
 namespace App.PortfolioMVC.Services;
-public class ProjectPortfolioService : IProjectPortfolioService
+public class ProjectPortfolioService(IHttpClientFactory factory) : IProjectPortfolioService
 {
-    public Task<Result<List<AllProjectsPortfolioDto>>> GetAllProjectsAsync()
+    private HttpClient DataApiClient => factory.CreateClient("dataApi");
+    public async Task<Result<List<AllProjectsPortfolioDto>>> GetAllProjectsAsync()
     {
-        throw new NotImplementedException();
+        try
+        {
+            var apiResponse = await DataApiClient.GetAsync("all-projects");
+
+            if (!apiResponse.IsSuccessStatusCode)
+            {
+                return Result<List<AllProjectsPortfolioDto>>.Error("Projeler getirilirken beklenmedik bir hata oluştu..");
+            }
+
+            var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<AllProjectsPortfolioDto>>>();
+
+            if (result is null)
+            {
+                return Result<List<AllProjectsPortfolioDto>>.Error("Projeler getirilirken beklenmedik bir hata oluştu..");
+            }
+
+            return result;
+        }
+
+        catch (Exception)
+        {
+            return Result<List<AllProjectsPortfolioDto>>.Error("Projeler getirilirken beklenmedik bir hata oluştu..");
+        }
     }
 }

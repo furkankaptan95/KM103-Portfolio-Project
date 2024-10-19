@@ -1,8 +1,6 @@
-using App.DTOs.EducationDtos.Portfolio;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
 
 namespace App.PortfolioMVC.Controllers;
 
