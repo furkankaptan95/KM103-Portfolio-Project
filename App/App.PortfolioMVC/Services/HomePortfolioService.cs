@@ -1,12 +1,13 @@
 ﻿using App.DTOs.EducationDtos.Portfolio;
 using App.DTOs.ExperienceDtos.Portfolio;
+using App.DTOs.PersonalInfoDtos.Portfolio;
 using App.DTOs.ProjectDtos.Portfolio;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc;
 using Ardalis.Result;
 
 namespace App.PortfolioMVC.Services;
-public class HomePortfolioService(IEducationPortfolioService educationService,IExperiencePortfolioService experienceService,IProjectPortfolioService projectService) : IHomePortfolioService
+public class HomePortfolioService(IEducationPortfolioService educationService,IExperiencePortfolioService experienceService,IProjectPortfolioService projectService,IPersonalInfoPortfolioService personalInfoService) : IHomePortfolioService
 {
 	public async Task<Result<HomeIndexViewModel>> GetHomeInfosAsync()
 	{
@@ -15,6 +16,7 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
         var educationsResult = await educationService.GetAllEducationsAsync();
         var experienceResult = await experienceService.GetAllExperiencesAsync();
 		var projectResult = await projectService.GetAllProjectsAsync();
+		var personalInfoResult = await personalInfoService.GetPersonalInfoAsync();
 
         if (educationsResult.IsSuccess)
         {
@@ -28,6 +30,15 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
         {
             model.Projects = Projects(projectResult.Value);
         }
+		if (personalInfoResult.IsSuccess)
+		{
+			model.PersonalInfo = PersonalInfo(personalInfoResult.Value);
+		}
+		else if (personalInfoResult.Status == ResultStatus.NotFound)
+		{
+			model.PersonalInfo = new();
+		}
+
 
         return Result<HomeIndexViewModel>.Success(model);
 	}
@@ -85,4 +96,15 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 		}
 		return models;
     }
+	private static PersonalInfoPortfolioViewModel PersonalInfo(PersonalInfoPortfolioDto dto)
+	{
+		var model = new PersonalInfoPortfolioViewModel();
+
+		model.About = dto.About;
+		model.Name = dto.Name;
+		model.Surname = dto.Surname;
+		model.BirthDate = dto.BirthDate;
+
+		return model;
+	}
 }

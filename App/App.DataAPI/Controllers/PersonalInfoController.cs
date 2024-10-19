@@ -1,6 +1,7 @@
 ﻿using App.DTOs.PersonalInfoDtos;
 using App.DTOs.PersonalInfoDtos.Admin;
 using App.Services.AdminServices.Abstract;
+using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -11,14 +12,16 @@ namespace App.DataAPI.Controllers;
 [ApiController]
 public class PersonalInfoController : ControllerBase
 {
-    private readonly IPersonalInfoAdminService _personalInfoService;
-    private readonly IValidator<AddPersonalInfoDto> _addValidator;
+    private readonly IPersonalInfoAdminService _personalInfoAdminService;
+	private readonly IPersonalInfoPortfolioService _personalInfoPortfolioService;
+	private readonly IValidator<AddPersonalInfoDto> _addValidator;
     private readonly IValidator<UpdatePersonalInfoDto> _updateValidator;
-    public PersonalInfoController(IPersonalInfoAdminService personalInfoService, IValidator<AddPersonalInfoDto> addValidator, IValidator<UpdatePersonalInfoDto> updateValidator)
+    public PersonalInfoController(IPersonalInfoAdminService personalInfoAdminService, IValidator<AddPersonalInfoDto> addValidator, IValidator<UpdatePersonalInfoDto> updateValidator,IPersonalInfoPortfolioService personalInfoPortfolioService)
     {
-        _personalInfoService = personalInfoService;
+		_personalInfoAdminService = personalInfoAdminService;
         _addValidator = addValidator;
         _updateValidator = updateValidator;
+        _personalInfoPortfolioService = personalInfoPortfolioService;
     }
 
     [HttpPost("/add-personal-info")]
@@ -34,7 +37,7 @@ public class PersonalInfoController : ControllerBase
                 return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
             }
 
-            var result = await _personalInfoService.AddPersonalInfoAsync(dto);
+            var result = await _personalInfoAdminService.AddPersonalInfoAsync(dto);
 
             if (result.IsSuccess)
             {
@@ -55,7 +58,7 @@ public class PersonalInfoController : ControllerBase
     {
         try
         {
-            var result = await _personalInfoService.GetPersonalInfoAsync();
+            var result = await _personalInfoAdminService.GetPersonalInfoAsync();
 
             if (result.IsSuccess)
             {
@@ -75,7 +78,32 @@ public class PersonalInfoController : ControllerBase
         }
     }
 
-    [HttpPut("/update-personal-info")]
+	[HttpGet("/portfolio-get-personal-info")]
+	public async Task<IActionResult> GetPortfolioAsync()
+	{
+		try
+		{
+			var result = await _personalInfoPortfolioService.GetPersonalInfoAsync();
+
+			if (result.IsSuccess)
+			{
+				return Ok(result);
+			}
+
+			if (result.Status == ResultStatus.NotFound)
+			{
+				return NotFound(result);
+			}
+			return StatusCode(500, result);
+		}
+
+		catch (Exception ex)
+		{
+			return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+		}
+	}
+
+	[HttpPut("/update-personal-info")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdatePersonalInfoDto dto)
     {
         try
@@ -90,7 +118,7 @@ public class PersonalInfoController : ControllerBase
                 return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
             }
 
-            var result = await _personalInfoService.UpdatePersonalInfoAsync(dto);
+            var result = await _personalInfoAdminService.UpdatePersonalInfoAsync(dto);
 
             if (result.IsSuccess)
             {
