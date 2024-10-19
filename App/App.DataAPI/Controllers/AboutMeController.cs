@@ -1,6 +1,7 @@
 ﻿using App.DTOs.AboutMeDtos;
 using App.DTOs.AboutMeDtos.Admin;
 using App.Services.AdminServices.Abstract;
+using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -11,14 +12,16 @@ namespace App.DataAPI.Controllers;
 [ApiController]
 public class AboutMeController : ControllerBase
 {
-    private readonly IAboutMeAdminService _aboutMeService;
+    private readonly IAboutMeAdminService _aboutMeAdminService;
+    private readonly IAboutMePortfolioService _aboutMePortfolioService;
     private readonly IValidator<AddAboutMeApiDto> _addValidator;
     private readonly IValidator<UpdateAboutMeApiDto> _updateValidator;
-    public AboutMeController(IAboutMeAdminService aboutMeService, IValidator<AddAboutMeApiDto> addValidator, IValidator<UpdateAboutMeApiDto> updateValidator)
+    public AboutMeController(IAboutMeAdminService aboutMeAdminService, IValidator<AddAboutMeApiDto> addValidator, IValidator<UpdateAboutMeApiDto> updateValidator, IAboutMePortfolioService aboutMePortfolioService)
     {
-        _aboutMeService = aboutMeService;
+        _aboutMeAdminService = aboutMeAdminService;
         _addValidator = addValidator;
         _updateValidator = updateValidator;
+        _aboutMePortfolioService = aboutMePortfolioService;
     }
 
     [HttpGet("/get-about-me")]
@@ -26,7 +29,31 @@ public class AboutMeController : ControllerBase
     {
         try
         {
-            var result = await _aboutMeService.GetAboutMeAsync();
+            var result = await _aboutMeAdminService.GetAboutMeAsync();
+
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            if (result.Status == ResultStatus.NotFound)
+            {
+                return NotFound(result);
+            }
+            return StatusCode(500, result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
+    }
+
+    [HttpGet("/portfolio-get-about-me")]
+    public async Task<IActionResult> GetAboutMePortfolioAsync()
+    {
+        try
+        {
+            var result = await _aboutMePortfolioService.GetAboutMeAsync();
 
             if (result.IsSuccess)
             {
@@ -59,7 +86,7 @@ public class AboutMeController : ControllerBase
                 return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
             }
 
-            var result = await _aboutMeService.AddAboutMeAsync(dto);
+            var result = await _aboutMeAdminService.AddAboutMeAsync(dto);
 
             if (result.IsSuccess)
             {
@@ -90,7 +117,7 @@ public class AboutMeController : ControllerBase
                 return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
             }
 
-            var result = await _aboutMeService.UpdateAboutMeAsync(dto);
+            var result = await _aboutMeAdminService.UpdateAboutMeAsync(dto);
 
             if (result.IsSuccess)
             {

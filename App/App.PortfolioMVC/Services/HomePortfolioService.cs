@@ -1,4 +1,5 @@
-﻿using App.DTOs.EducationDtos.Portfolio;
+using App.DTOs.AboutMeDtos.Porfolio;
+using App.DTOs.EducationDtos.Portfolio;
 using App.DTOs.ExperienceDtos.Portfolio;
 using App.DTOs.PersonalInfoDtos.Portfolio;
 using App.DTOs.ProjectDtos.Portfolio;
@@ -7,7 +8,7 @@ using App.ViewModels.PortfolioMvc;
 using Ardalis.Result;
 
 namespace App.PortfolioMVC.Services;
-public class HomePortfolioService(IEducationPortfolioService educationService,IExperiencePortfolioService experienceService,IProjectPortfolioService projectService,IPersonalInfoPortfolioService personalInfoService) : IHomePortfolioService
+public class HomePortfolioService(IEducationPortfolioService educationService,IExperiencePortfolioService experienceService,IProjectPortfolioService projectService,IPersonalInfoPortfolioService personalInfoService,IAboutMePortfolioService aboutMeService) : IHomePortfolioService
 {
 	public async Task<Result<HomeIndexViewModel>> GetHomeInfosAsync()
 	{
@@ -16,20 +17,29 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
         var educationsResult = await educationService.GetAllEducationsAsync();
         var experienceResult = await experienceService.GetAllExperiencesAsync();
 		var projectResult = await projectService.GetAllProjectsAsync();
+		var aboutMeResult = await aboutMeService.GetAboutMeAsync();
 		var personalInfoResult = await personalInfoService.GetPersonalInfoAsync();
-
-        if (educationsResult.IsSuccess)
-        {
-            model.Educations = Educations(educationsResult.Value);
-        }
+    
+    if (educationsResult.IsSuccess)
+    {
+        model.Educations = Educations(educationsResult.Value);
+    }
 		if (experienceResult.IsSuccess)
 		{
 			model.Experiences = Experiences(experienceResult.Value);
 		}
-        if (experienceResult.IsSuccess)
-        {
-            model.Projects = Projects(projectResult.Value);
-        }
+    if (experienceResult.IsSuccess)
+    {
+        model.Projects = Projects(projectResult.Value);
+    }
+		if (aboutMeResult.IsSuccess)
+		{
+			model.AboutMe = AboutMe(aboutMeResult.Value);
+		}
+    else if (aboutMeResult.Status == ResultStatus.NotFound)
+		{
+			model.AboutMe = new();
+		}
 		if (personalInfoResult.IsSuccess)
 		{
 			model.PersonalInfo = PersonalInfo(personalInfoResult.Value);
@@ -38,8 +48,7 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 		{
 			model.PersonalInfo = new();
 		}
-
-
+    
         return Result<HomeIndexViewModel>.Success(model);
 	}
 
@@ -96,6 +105,13 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 		}
 		return models;
     }
+	private static AboutMePortfolioViewModel AboutMe(AboutMePortfolioDto dto)
+	{
+		var model = new AboutMePortfolioViewModel();
+
+		model.Introduction = dto.Introduction;
+		model.ImageUrl1 = dto.ImageUrl1;
+		model.ImageUrl2 = dto.ImageUrl2;
 	private static PersonalInfoPortfolioViewModel PersonalInfo(PersonalInfoPortfolioDto dto)
 	{
 		var model = new PersonalInfoPortfolioViewModel();
@@ -104,7 +120,7 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 		model.Name = dto.Name;
 		model.Surname = dto.Surname;
 		model.BirthDate = dto.BirthDate;
-
+    
 		return model;
 	}
 }

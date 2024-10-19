@@ -14,14 +14,14 @@ public class ProjectPortfolioService(IHttpClientFactory factory) : IProjectPortf
 
             if (!apiResponse.IsSuccessStatusCode)
             {
-                return Result<List<AllProjectsPortfolioDto>>.Error("Projeler getirilirken beklenmedik bir hata oluştu..");
+                return Result<List<AllProjectsPortfolioDto>>.Error();
             }
 
             var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<AllProjectsPortfolioDto>>>();
 
             if (result is null)
             {
-                return Result<List<AllProjectsPortfolioDto>>.Error("Projeler getirilirken beklenmedik bir hata oluştu..");
+                return Result<List<AllProjectsPortfolioDto>>.Error();
             }
 
             return result;
@@ -29,7 +29,7 @@ public class ProjectPortfolioService(IHttpClientFactory factory) : IProjectPortf
 
         catch (Exception)
         {
-            return Result<List<AllProjectsPortfolioDto>>.Error("Projeler getirilirken beklenmedik bir hata oluştu..");
+            return Result<List<AllProjectsPortfolioDto>>.Error();
         }
     }
 }

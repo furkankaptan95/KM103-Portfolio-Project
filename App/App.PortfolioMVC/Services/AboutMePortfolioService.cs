@@ -3,10 +3,31 @@ using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 
 namespace App.PortfolioMVC.Services;
-public class AboutMePortfolioService : IAboutMePortfolioService
+public class AboutMePortfolioService(IHttpClientFactory factory) : IAboutMePortfolioService
 {
-    public Task<Result<AboutMePortfolioDto>> GetAboutMeAsync()
+    private HttpClient DataApiClient => factory.CreateClient("dataApi");
+    public async Task<Result<AboutMePortfolioDto>> GetAboutMeAsync()
     {
-        throw new NotImplementedException();
+        try
+        {
+            var apiResponse = await DataApiClient.GetAsync("portfolio-get-about-me");
+
+            if (apiResponse.IsSuccessStatusCode)
+            {
+                var result = await apiResponse.Content.ReadFromJsonAsync<Result<AboutMePortfolioDto>>();
+
+                if (result is null)
+                {
+                    return Result<AboutMePortfolioDto>.Error();
+                }
+                return result;
+            }   
+
+            return Result<AboutMePortfolioDto>.Error();
+        }
+        catch (Exception)
+        {
+            return Result<AboutMePortfolioDto>.Error();
+        }
     }
 }
