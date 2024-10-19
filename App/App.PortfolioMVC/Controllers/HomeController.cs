@@ -1,3 +1,4 @@
+using App.DTOs.ContactMessageDtos.Portfolio;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc;
 using Microsoft.AspNetCore.Mvc;
@@ -21,14 +22,4 @@ public class HomeController(IHomePortfolioService homeService) : Controller
 		return View(model);
 	}
 
-    [HttpPost]
-    public async Task<IActionResult> ContactMessage(AddContactMessageViewModel model)
-    {
-        if (!ModelState.IsValid)
-        {
-            return RedirectToAction("Index");
-        }
-
-        return RedirectToAction("Index");
-    }
 }

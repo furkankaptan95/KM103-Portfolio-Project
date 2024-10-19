@@ -4,7 +4,7 @@ namespace App.ViewModels.PortfolioMvc;
 public class AddContactMessageViewModel
 {
     [Required(ErrorMessage = "İsim kısmı zorunludur.")]
-    [RegularExpression(@"\S+", ErrorMessage = "İsim kısmı boşluk olamaz.")]
+    [RegularExpression(@"^.*\S.*$", ErrorMessage = "İsim sadece boşluk olamaz.")]
     [MaxLength(50, ErrorMessage = "İsim en fazla 50 karakter olabilir.")]
     public string Name { get; set; }
 
@@ -14,9 +14,10 @@ public class AddContactMessageViewModel
     public string Email { get; set; }
 
     [MaxLength(100, ErrorMessage = "Konu en fazla 100 karakter olabilir.")]
+    [RegularExpression(@"^.*\S.*$", ErrorMessage = "Konu sadece boşluk olamaz.")]
     public string? Subject { get; set; }
 
     [Required(ErrorMessage = "Mesaj kısmı zorunludur.")]
-    [RegularExpression(@"\S+", ErrorMessage = "Mesaj kısmı boşluk olamaz.")]
+    [RegularExpression(@"^.*\S.*$", ErrorMessage = "Mesaj sadece boşluk olamaz.")]
     public string Message { get; set; }
 }

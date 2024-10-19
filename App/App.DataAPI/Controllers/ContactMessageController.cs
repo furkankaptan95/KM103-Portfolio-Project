@@ -17,7 +17,7 @@ public class ContactMessageController : ControllerBase
         _contactMessagePortfolioService = contactMessagePortfolioService;
         _validator = validator;
     }
-    [HttpPost("/add-contact-messgae")]
+    [HttpPost("/add-contact-message")]
     public async Task<IActionResult> AddAsync([FromBody] AddContactMessageDto dto)
     {
         try
