@@ -20,4 +20,15 @@ public class HomeController(IHomePortfolioService homeService) : Controller
 
 		return View(model);
 	}
+
+    [HttpPost]
+    public async Task<IActionResult> ContactMessage(AddContactMessageViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return RedirectToAction("Index");
+        }
+
+
+    }
 }
