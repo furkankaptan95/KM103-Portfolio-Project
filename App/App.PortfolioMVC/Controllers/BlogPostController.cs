@@ -12,6 +12,8 @@ public class BlogPostController(IBlogPosPortfolioService blogPostService) : Cont
 	[Route("blog-post-{id:int}")]
 	public async Task<IActionResult> BlogPost([FromRoute] int id)
     {
+		BlogPostPagePortfolioViewModel blogPostPageModel = new BlogPostPagePortfolioViewModel();
+
 		SingleBlogPostViewModel model = null;
 
 		var result = await blogPostService.GetBlogPostById(id);
@@ -38,15 +40,19 @@ public class BlogPostController(IBlogPosPortfolioService blogPostService) : Cont
 			model.Content = dto.Content;
 			model.Comments = commentsModel;
 
-			return View(model);
+            blogPostPageModel.BlogPost = model;
+
+
+            return View(blogPostPageModel);
 		}
 
 		if(result.Status == ResultStatus.NotFound)
 		{
 			model = new();
-			return View(model);
+			blogPostPageModel.BlogPost = model;
+			return View(blogPostPageModel);
 		}
 
-        return View(model);
+        return View(blogPostPageModel);
     }
 }

@@ -1,75 +1,76 @@
-﻿@model SingleBlogPostViewModel
+﻿@model BlogPostPagePortfolioViewModel
+
+@{
+    ViewData["BlogPostId"] = Model.BlogPost.Id;
+}
 
 <section class="ftco-section">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 ftco-animate">
-                <!-- Breadcrumbs Eklendi -->
-                <p class="breadcrumbs">
-                    <span class="mr-2"><a href="/">Anasayfa <i class="ion-ios-arrow-forward"></i></a></span>
-                    <span class="mr-2"><a href="/#blog-section">Blog Post <i class="ion-ios-arrow-forward"></i></a></span>
-                    <span>@Model.Title<i class="ion-ios-arrow-forward"></i></span>
-                </p>
-                <h2 class="mb-3">@Model.Title</h2>
-                <p>
-                    @Model.Content
-                </p>
-                <div class="tag-widget post-tag-container mb-5 mt-5">
-                </div>
 
-                <div class="about-author d-flex p-4 bg-dark">
-                    <div class="bio mr-5">
-                        <img src="images/person_1.jpg" alt="Image placeholder" class="img-fluid mb-4">
+                @if (Model.BlogPost is not null && Model.BlogPost.Content is not null)
+                {
+                    <p class="breadcrumbs">
+                        <span class="mr-2"><a href="/">Anasayfa <i class="ion-ios-arrow-forward"></i></a></span>
+                        <span class="mr-2"><a href="/#blog-section">Blog Post <i class="ion-ios-arrow-forward"></i></a></span>
+                        <span>@Model.BlogPost.Title<i class="ion-ios-arrow-forward"></i></span>
+                    </p>
+                    <h2 class="mb-3">@Model.BlogPost.Title</h2>
+                    <p>
+                        @Model.BlogPost.Content
+                    </p>
+                    <div class="tag-widget post-tag-container mb-5 mt-5">
                     </div>
-                    <div class="desc">
-                        <h3>George Washington</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia delectus aut, sunt placeat nam vero culpa sapiente consectetur similique, inventore eos fugit cupiditate numquam!</p>
+
+                    <div class="about-author d-flex p-4 bg-dark">
+                        <div class="bio mr-5">
+                            <img src="images/person_1.jpg" alt="Image placeholder" class="img-fluid mb-4">
+                        </div>
+                        <div class="desc">
+                            <h3>George Washington</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia delectus aut, sunt placeat nam vero culpa sapiente consectetur similique, inventore eos fugit cupiditate numquam!</p>
+                        </div>
                     </div>
-                </div>
 
 
-                <div class="pt-5 mt-5">
-                    <h3 class="mb-5">@Model.Comments.Count Yorum</h3>
-                    <ul class="comment-list">
+                    <div class="pt-5 mt-5">
+                        <h3 class="mb-5">@Model.BlogPost.Comments.Count Yorum</h3>
 
-                        @foreach(var comment in Model.Comments)
-                        {
-                            <li class="comment">
-                                <div class="vcard bio">
-                                    <img src="images/person_1.jpg" alt="Image placeholder">
-                                </div>
-                                <div class="comment-body">
-                                    <h3>@comment.Commenter</h3>
-                                    <div class="meta">@comment.CreatedAt.ToString("dd MMMM yyyy HH:mm")</div>
-                                    <p>@comment.Content</p>
-                                </div>
-                            </li>
-                        }
-                    </ul>
-                    <!-- END comment-list -->
+                        <partial name="Partials/Comments.cshtml" model="Model.BlogPost.Comments">
 
-                    <div class="comment-form-wrap pt-5">
-                        <h3 class="mb-5">Yorum Yapın</h3>
-                        <form action="#" class="p-5 bg-dark">
-                            <div class="form-group">
-                                <label for="name">İsim</label>
-                                <input type="text" class="form-control" id="name">
-                            </div>
-                            <div class="form-group">
-                                <label for="message">Mesaj</label>
-                                <textarea name="" id="message" cols="30" rows="10" class="form-control"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn py-3 px-4 btn-primary">Gönder</button>
-                            </div>
-                            <div class="form-group">
-                                <p class="text-muted mt-2" style="font-size: 14px;">*Yorumunuz Yönetici onayından sonra yayınlanacaktır.</p>
-                            </div>
-                        </form>
+                        <partial name="Partials/CommentForm.cshtml" model="Model.UnsignedComment">
+
                     </div>
-                </div>
+                }
+                else if (Model.BlogPost is not null && Model.BlogPost.Content is null)
+                {
+                    <p class="breadcrumbs">
+                        <span class="mr-2"><a href="/">Anasayfa <i class="ion-ios-arrow-forward"></i></a></span>
+                        <span class="mr-2"><a href="/#blog-section">Blog Post <i class="ion-ios-arrow-forward"></i></a></span>
+                        <span>Bulunamadı</span>
+                    </p>
 
-            </div> <!-- .col-md-8 -->
+                    <div class="col-12 text-center">
+                        <h3 class="mt-5">Görüntülemek istediğiniz Blog Post bulunamadı.</h3>
+                    </div>
+                }
+                else
+                {
+                    <p class="breadcrumbs">
+                        <span class="mr-2"><a href="/">Anasayfa <i class="ion-ios-arrow-forward"></i></a></span>
+                        <span class="mr-2"><a href="/#blog-section">Blog Post <i class="ion-ios-arrow-forward"></i></a></span>
+                        <span>Ulaşılamadı</span>
+                    </p>
+
+                    <div class="col-12 text-center">
+                        <h3 class="mt-5">Görüntülemek istediğiniz Blog Post'a ulaşılamadı.</h3>
+                    </div>
+                }
+
+            </div>
+
+
             <div class="col-lg-4 sidebar ftco-animate">
              
                 <div class="sidebar-box ftco-animate">
@@ -114,7 +115,7 @@
 
         </div>
     </div>
-</section> <!-- .section -->
+</section>
 
 
 @section Styles{
@@ -122,4 +123,8 @@
    
 
     </style>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }
