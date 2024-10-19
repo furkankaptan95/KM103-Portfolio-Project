@@ -1,5 +1,6 @@
 ﻿using App.DTOs.BlogPostDtos.Admin;
 using App.Services.AdminServices.Abstract;
+using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +14,15 @@ public class BlogPostsController : ControllerBase
 {
     private readonly IValidator<AddBlogPostDto> _addValidator;
     private readonly IValidator<UpdateBlogPostDto> _updateValidator;
-    private readonly IBlogPostAdminService _blogPostService;
-    public BlogPostsController(IValidator<AddBlogPostDto> addValidator, IValidator<UpdateBlogPostDto> updateValidator, IBlogPostAdminService blogPostService)
+    private readonly IBlogPostAdminService _blogPostAdminService;
+	private readonly IBlogPosPortfolioService _blogPostPortfolioService;
+
+	public BlogPostsController(IValidator<AddBlogPostDto> addValidator, IValidator<UpdateBlogPostDto> updateValidator, IBlogPostAdminService blogPostAdminService, IBlogPosPortfolioService blogPostPortfolioService)
     {
         _addValidator = addValidator;
-        _blogPostService = blogPostService;
+		_blogPostAdminService = blogPostAdminService;
         _updateValidator = updateValidator;
+        _blogPostPortfolioService = blogPostPortfolioService;
     }
 
     [HttpPost("/add-blog-post")]
@@ -34,7 +38,7 @@ public class BlogPostsController : ControllerBase
                 return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
             }
 
-            var result = await _blogPostService.AddBlogPostAsync(dto);
+            var result = await _blogPostAdminService.AddBlogPostAsync(dto);
 
             if (result.IsSuccess)
             {
@@ -54,7 +58,7 @@ public class BlogPostsController : ControllerBase
     {
         try
         {
-            var result = await _blogPostService.GetAllBlogPostsAsync();
+            var result = await _blogPostAdminService.GetAllBlogPostsAsync();
 
             if (!result.IsSuccess)
             {
@@ -71,7 +75,7 @@ public class BlogPostsController : ControllerBase
 
 
     [HttpGet("/blog-post-{id:int}")]
-    public async Task<IActionResult> GetById([FromRoute] int id)
+    public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
     {
         if (id <= 0)
         {
@@ -80,7 +84,7 @@ public class BlogPostsController : ControllerBase
 
         try
         {
-            var result = await _blogPostService.GetBlogPostById(id);
+            var result = await _blogPostAdminService.GetBlogPostById(id);
 
             if (!result.IsSuccess)
             {
@@ -100,7 +104,37 @@ public class BlogPostsController : ControllerBase
         }
     }
 
-    [HttpPut("/update-blog-post")]
+	[HttpGet("/portfolio-blog-post-{id:int}")]
+	public async Task<IActionResult> GetByIdPortfolioAsync([FromRoute] int id)
+	{
+		if (id <= 0)
+		{
+			return BadRequest(Result.Error("Geçersiz ID bilgisi."));
+		}
+
+		try
+		{
+			var result = await _blogPostPortfolioService.GetBlogPostById(id);
+
+			if (!result.IsSuccess)
+			{
+				if (result.Status == ResultStatus.NotFound)
+				{
+					return NotFound(result);
+				}
+
+				return StatusCode(500, result);
+			}
+
+			return Ok(result);
+		}
+		catch (Exception ex)
+		{
+			return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
+		}
+	}
+
+	[HttpPut("/update-blog-post")]
     public async Task<IActionResult> UpdateBlogPostAsync([FromBody] UpdateBlogPostDto dto)
     {
         try
@@ -113,7 +147,7 @@ public class BlogPostsController : ControllerBase
                 return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
             }
 
-            var result = await _blogPostService.UpdateBlogPostAsync(dto);
+            var result = await _blogPostAdminService.UpdateBlogPostAsync(dto);
 
             if (!result.IsSuccess)
             {
@@ -144,7 +178,7 @@ public class BlogPostsController : ControllerBase
 
         try
         {
-            var result = await _blogPostService.DeleteBlogPostAsync(id);
+            var result = await _blogPostAdminService.DeleteBlogPostAsync(id);
 
             if (!result.IsSuccess)
             {
@@ -175,7 +209,7 @@ public class BlogPostsController : ControllerBase
 
         try
         {
-            var result = await _blogPostService.ChangeBlogPostVisibilityAsync(id);
+            var result = await _blogPostAdminService.ChangeBlogPostVisibilityAsync(id);
 
             if (!result.IsSuccess)
             {
