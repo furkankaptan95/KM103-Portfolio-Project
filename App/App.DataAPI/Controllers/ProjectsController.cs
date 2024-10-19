@@ -1,6 +1,7 @@
 using App.DTOs.ProjectDtos;
 using App.DTOs.ProjectDtos.Admin;
 using App.Services.AdminServices.Abstract;
+using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +14,14 @@ public class ProjectsController : ControllerBase
 {
     private readonly IValidator<UpdateProjectApiDto> _updateValidator;
     private readonly IValidator<AddProjectApiDto> _addValidator;
-    private readonly IProjectAdminService _projectService;
-    public ProjectsController(IValidator<UpdateProjectApiDto> updateValidator, IValidator<AddProjectApiDto> addValidator, IProjectAdminService projectService)
+    private readonly IProjectAdminService _projectAdminService;
+    private readonly IProjectPortfolioService _projectPortfolioService;
+    public ProjectsController(IValidator<UpdateProjectApiDto> updateValidator, IValidator<AddProjectApiDto> addValidator, IProjectAdminService projectAdminService,IProjectPortfolioService projectPortfolioService)
     {
         _addValidator = addValidator;
         _updateValidator = updateValidator;
-        _projectService = projectService;
+        _projectAdminService = projectAdminService;
+        _projectPortfolioService = projectPortfolioService;
     }
 
     [HttpGet("/all-projects")]
@@ -26,7 +29,7 @@ public class ProjectsController : ControllerBase
     {
         try
         {
-            var result = await _projectService.GetAllProjectsAsync();
+            var result = await _projectAdminService.GetAllProjectsAsync();
 
             if (!result.IsSuccess)
             {
@@ -36,6 +39,27 @@ public class ProjectsController : ControllerBase
             return Ok(result);
         }
         
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluþtu: {ex.Message}"));
+        }
+    }
+
+    [HttpGet("/porfolio-all-projects")]
+    public async Task<IActionResult> GetAllPortfolioAsync()
+    {
+        try
+        {
+            var result = await _projectPortfolioService.GetAllProjectsAsync();
+
+            if (!result.IsSuccess)
+            {
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+
         catch (Exception ex)
         {
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluþtu: {ex.Message}"));
@@ -55,7 +79,7 @@ public class ProjectsController : ControllerBase
                 return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
             }
 
-            var result = await _projectService.AddProjectAsync(dto);
+            var result = await _projectAdminService.AddProjectAsync(dto);
 
             if (!result.IsSuccess)
             {
@@ -83,7 +107,7 @@ public class ProjectsController : ControllerBase
 
         try
         {
-            var result = await _projectService.DeleteProjectAsync(id);
+            var result = await _projectAdminService.DeleteProjectAsync(id);
 
             if (!result.IsSuccess)
             {
@@ -117,7 +141,7 @@ public class ProjectsController : ControllerBase
                 return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
             }
 
-            var result = await _projectService.UpdateProjectAsync(dto);
+            var result = await _projectAdminService.UpdateProjectAsync(dto);
 
             if (!result.IsSuccess)
             {
@@ -148,7 +172,7 @@ public class ProjectsController : ControllerBase
 
         try
         {
-            var result = await _projectService.GetByIdAsync(id);
+            var result = await _projectAdminService.GetByIdAsync(id);
 
             if (!result.IsSuccess)
             {
@@ -179,7 +203,7 @@ public class ProjectsController : ControllerBase
 
         try
         {
-            var result = await _projectService.ChangeProjectVisibilityAsync(id);
+            var result = await _projectAdminService.ChangeProjectVisibilityAsync(id);
 
             if (!result.IsSuccess)
             {
