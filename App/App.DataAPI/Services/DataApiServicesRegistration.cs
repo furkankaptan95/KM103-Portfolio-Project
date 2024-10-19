@@ -78,6 +78,7 @@ public static class DataApiServicesRegistration
         services.AddScoped<IExperiencePortfolioService, ExperiencePortfolioService>();
         services.AddScoped<IPersonalInfoPortfolioService, PersonalInfoPortfolioService>();
         services.AddScoped<IProjectPortfolioService, ProjectPortfolioService>();
+        services.AddScoped<IContactMessagePortfolioService, ContactMessagePortfolioService>();
 
 
         services.AddTransient<IValidator<AddAboutMeApiDto>, AddAboutMeApiDtoValidator>();

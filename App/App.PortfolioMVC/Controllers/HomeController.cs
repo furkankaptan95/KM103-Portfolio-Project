@@ -29,6 +29,6 @@ public class HomeController(IHomePortfolioService homeService) : Controller
             return RedirectToAction("Index");
         }
 
-
+        return RedirectToAction("Index");
     }
 }
