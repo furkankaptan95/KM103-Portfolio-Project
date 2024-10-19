@@ -1,0 +1,18 @@
+﻿@model List<BlogPostCommentsPortfolioViewModel>
+
+<ul class="comment-list">
+
+    @foreach (var comment in Model)
+    {
+        <li class="comment">
+            <div class="vcard bio">
+                <img src="images/person_1.jpg" alt="Image placeholder">
+            </div>
+            <div class="comment-body">
+                <h3>@comment.Commenter</h3>
+                <div class="meta">@comment.CreatedAt.ToString("dd MMMM yyyy HH:mm")</div>
+                <p>@comment.Content</p>
+            </div>
+        </li>
+    }
+</ul>

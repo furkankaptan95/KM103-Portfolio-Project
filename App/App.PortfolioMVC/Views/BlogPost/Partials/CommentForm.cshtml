@@ -1,0 +1,34 @@
+﻿@model UnSignedAddCommentViewModel
+
+@{
+    var blogPostId = ViewData["BlogPostId"] as int?;
+}
+
+<div class="comment-form-wrap pt-5">
+    <h3 class="mb-5">Yorum Yapın</h3>
+    <form asp-controller="Comment" asp-action="AddComment" method="post" class="p-5 bg-dark">
+        <!-- BlogPostId hidden olarak gönderiliyor -->
+        <input asp-for="BlogPostId" type="hidden" value="@blogPostId" />
+
+        <div class="form-group">
+            <label asp-for="UnsignedCommenterName" class="control-label">İsim</label>
+            <input asp-for="UnsignedCommenterName" class="form-control" placeholder="İsminiz" />
+            <span asp-validation-for="UnsignedCommenterName" style="color:wheat;"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Content" class="form-label">İçerik</label>
+            <textarea asp-for="Content" rows="6" class="form-control" placeholder="Yorumunuz.."></textarea>
+            <span asp-validation-for="Content"  style="color:wheat;"></span>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn py-3 px-4 btn-primary">Gönder</button>
+        </div>
+
+        <div class="form-group">
+            <p class="text-muted mt-2" style="font-size: 14px;">*Yorumunuz Yönetici onayından sonra yayınlanacaktır.</p>
+        </div>
+    </form>
+
+</div>

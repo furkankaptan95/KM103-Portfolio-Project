@@ -8,4 +8,5 @@ public class SingleBlogPostViewModel
     public string Content { get; set; }
     public DateTime PublishDate { get; set; }
     public List<BlogPostCommentsPortfolioViewModel>? Comments { get; set; }
+   
 }
