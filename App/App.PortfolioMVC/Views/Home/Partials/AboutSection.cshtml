@@ -1,37 +1,56 @@
-﻿<section class="ftco-about img ftco-section ftco-no-pb" id="about-section">
+﻿@model PersonalInfoPortfolioViewModel
+
+<section class="ftco-about img ftco-section ftco-no-pb" id="about-section">
 	<div class="container">
 		<div class="row d-flex">
-			<div class="col-md-6 col-lg-5 d-flex">
-				<div class="img-about img d-flex align-items-stretch">
-					<div class="overlay"></div>
-					<div class="img d-flex align-self-stretch align-items-center" style="background-image:url(images/bg_1.png);">
+
+			@if(Model is not null&& Model.About is not null)
+			{
+				<div class="col-md-6 col-lg-5 d-flex">
+					<div class="img-about img d-flex align-items-stretch">
+						<div class="overlay"></div>
+						<div class="img d-flex align-self-stretch align-items-center" style="background-image:url(images/bg_1.png);">
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="col-md-6 col-lg-7 pl-lg-5 pb-5">
-				<div class="row justify-content-start pb-3">
-					<div class="col-md-12 heading-section ftco-animate">
-						<h1 class="big">Hakkımda</h1>
-						<h2 class="mb-4">Hakkımda</h2>
-						<p>A small river named Duden flows by their place and supplies it with the necessary regelialia.A small river named Duden flows by their place and supplies it with the necessary regelialia.A small river named Duden flows by their place and supplies it with the necessary regelialia.A small river named Duden flows by their place and supplies it with the necessary regelialia.A small river named Duden flows by their place and supplies it with the necessary regelialia.A small river named Duden flows by their place and supplies it with the necessary regelialia.A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-						<ul class="about-info mt-4 px-md-0 px-2">
-							<li class="d-flex"><span>İsmim:</span> <span>Clark Thompson</span></li>
-							<li class="d-flex align-items-center"><span>Doğum Tarihim:</span> <span>January 01, 1987</span></li>
-							<li class="d-flex"><span>Yaşadığım Yer:</span> <span>San Francisco CA 97987 USA</span></li>
-							<li class="d-flex"><span>Mail Adresim:</span> <span>clarkthomp@gmail.com</span></li>
-						</ul>
+				<div class="col-md-6 col-lg-7 pl-lg-5 pb-5">
+					<div class="row justify-content-start pb-3">
+						<div class="col-md-12 heading-section ftco-animate">
+							<h1 class="big">Hakkımda</h1>
+							<h2 class="mb-4">Hakkımda</h2>
+							<p>@Model.About</p>
+							<ul class="about-info mt-4 px-md-0 px-2">
+								<li class="d-flex"><span>İsmim:</span> <span>@Model.Name @Model.Surname</span></li>
+								<li class="d-flex align-items-center"><span>Doğum Tarihim:</span> <span>@Model.BirthDate.ToString("dd MMMM yyyy HH:mm")</span></li>
+								<li class="d-flex"><span>Yaşadığım Yer:</span> <span>İstanbul/Avrupa Yakası</span></li>
+								<li class="d-flex"><span>Mail Adresim:</span> <span>iamfurkan86@gmail.com</span></li>
+							</ul>
+						</div>
+					</div>
+					<div class="counter-wrap ftco-animate d-flex mt-md-3">
+						<div class="text">
+							<p class="mb-4">
+								<span class="number" data-number="5">0</span>
+								<span>Tamamlanan Proje</span>
+							</p>
+							<p><a href="#" class="btn btn-primary py-3 px-3">Özgeçmişimi İndirin</a></p>
+						</div>
 					</div>
 				</div>
-				<div class="counter-wrap ftco-animate d-flex mt-md-3">
-					<div class="text">
-						<p class="mb-4">
-							<span class="number" data-number="5">0</span>
-							<span>Tamamlanan Proje</span>
-						</p>
-						<p><a href="#" class="btn btn-primary py-3 px-3">Özgeçmişimi İndirin</a></p>
-					</div>
+			}
+			else if(Model is not null && Model.About is null)
+			{
+				<div class="col-12 text-center">
+					<h3 class="mt-5">Şu Anda Kişisel Bilgiler Bulunmuyor</h3>
 				</div>
-			</div>
+			}
+			else
+			{
+				<div class="col-12 text-center">
+					<h3 class="mt-5">Şu Anda Kişisel Bilgilere Ulaşılamıyor</h3>
+				</div>
+			}
+			
 		</div>
 	</div>
 </section>
