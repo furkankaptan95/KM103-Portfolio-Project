@@ -52,7 +52,9 @@ public static class PortfolioMvcServicesRegistration
         services.AddScoped<IPersonalInfoPortfolioService, PersonalInfoPortfolioService>();
         services.AddScoped<IProjectPortfolioService, ProjectPortfolioService>();
 		services.AddScoped<IHomePortfolioService, HomePortfolioService>();
+        services.AddScoped<IContactMessagePortfolioService, ContactMessagePortfolioService>();
 
-		return services;
+
+        return services;
     }
 }

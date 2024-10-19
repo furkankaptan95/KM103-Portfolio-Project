@@ -1,3 +1,4 @@
+using App.DTOs.ContactMessageDtos.Portfolio;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc;
 using Microsoft.AspNetCore.Mvc;
@@ -20,4 +21,5 @@ public class HomeController(IHomePortfolioService homeService) : Controller
 
 		return View(model);
 	}
+
 }
