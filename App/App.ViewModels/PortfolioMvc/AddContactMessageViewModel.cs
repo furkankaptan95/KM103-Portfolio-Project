@@ -10,7 +10,7 @@ public class AddContactMessageViewModel
     [EmailAddress(ErrorMessage = "Geçerli bir email adresi giriniz.")]
     public string Email { get; set; }
 
-    public string Subject { get; set; }
+    public string? Subject { get; set; }
 
     [Required(ErrorMessage = "Mesaj kısmı zorunludur.")]
     public string Message { get; set; }

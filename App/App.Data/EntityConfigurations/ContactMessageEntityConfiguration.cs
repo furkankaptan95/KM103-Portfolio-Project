@@ -12,7 +12,7 @@ public class ContactMessageEntityConfiguration : IEntityTypeConfiguration<Contac
 
         builder.Property(cm=>cm.Name).IsRequired().HasColumnType("varchar(50)");
         builder.Property(cm => cm.Email).IsRequired().HasColumnType("varchar(100)");
-        builder.Property(cm => cm.Subject).IsRequired().HasColumnType("varchar(100)");
+        builder.Property(cm => cm.Subject).HasColumnType("varchar(100)");
         builder.Property(cm => cm.Message).IsRequired();
         builder.Property(c => c.SentDate).IsRequired().HasColumnType("datetime");
         builder.Property(c => c.IsRead).IsRequired().HasColumnType("bit");
