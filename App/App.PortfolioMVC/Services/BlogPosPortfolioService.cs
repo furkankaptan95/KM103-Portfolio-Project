@@ -7,7 +7,7 @@ namespace App.PortfolioMVC.Services;
 public class BlogPosPortfolioService(IHttpClientFactory factory) : IBlogPosPortfolioService
 {
 	private HttpClient DataApiClient => factory.CreateClient("dataApi");
-	public Task<Result<List<AllBlogPostsPortfolioDto>>> GetAllBlogPostsAsync()
+	public Task<Result<List<HomeBlogPostsPortfolioDto>>> GetHomeBlogPostsAsync()
 	{
 		throw new NotImplementedException();
 	}
