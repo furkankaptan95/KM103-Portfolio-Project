@@ -14,9 +14,6 @@ public class UpdateAboutMeApiDtoValidator : AbstractValidator<UpdateAboutMeApiDt
             .Must(name => name == null || !string.IsNullOrWhiteSpace(name))
           .WithMessage("Image2Url kısmı boş olamaz.");
 
-        RuleFor(x => x.ImageUrl2)
-             .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Image2Url kısmı boş olamaz.");
-
         RuleFor(x => x.Introduction)
              .MaximumLength(100).WithMessage("Giriş maksimum 100 karakter olabilir.")
              .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Giriş kısmı boş olamaz.");
