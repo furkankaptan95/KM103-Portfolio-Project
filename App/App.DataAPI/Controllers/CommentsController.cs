@@ -2,6 +2,7 @@
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.DataAPI.Controllers;
@@ -12,10 +13,14 @@ public class CommentsController : ControllerBase
 {
     private readonly ICommentAdminService _commentAdminService;
     private readonly ICommentPortfolioService _commentPortfolioService;
-    public CommentsController(ICommentAdminService commentAdminService,ICommentPortfolioService commentPortfolioService)
+    private readonly IValidator<AddCommentSignedDto> _addCommentSignedDtoValidator;
+    private readonly IValidator<AddCommentUnsignedDto> _addCommentUnsignedDtoValidator;
+    public CommentsController(ICommentAdminService commentAdminService,ICommentPortfolioService commentPortfolioService, IValidator<AddCommentSignedDto> addCommentSignedDtoValidator, IValidator<AddCommentUnsignedDto> addCommentUnsignedDtoValidator)
     {
         _commentAdminService = commentAdminService;
         _commentPortfolioService = commentPortfolioService;
+        _addCommentSignedDtoValidator = addCommentSignedDtoValidator;
+        _addCommentUnsignedDtoValidator = addCommentUnsignedDtoValidator;
     }
 
     [HttpGet("/all-comments")]
@@ -126,19 +131,48 @@ public class CommentsController : ControllerBase
     }
 
     [HttpPost("/add-comment-unsigned")]
-    public async Task<IActionResult> AddAsync([FromBody] AddCommentUnsignedDto dto)
+    public async Task<IActionResult> AddUnsignedAsync([FromBody] AddCommentUnsignedDto dto)
     {
         try
         {
-            //var validationResult = await _addValidator.ValidateAsync(dto);
+            var validationResult = await _addCommentUnsignedDtoValidator.ValidateAsync(dto);
 
-            //if (!validationResult.IsValid)
-            //{
-            //    var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            //    return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
-            //}
+            if (!validationResult.IsValid)
+            {
+                var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            }
 
             var result = await _commentPortfolioService.AddCommentUnsignedAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
+    }
+
+    [HttpPost("/add-comment-signed")]
+    public async Task<IActionResult> AddSignedAsync([FromBody] AddCommentSignedDto dto)
+    {
+        try
+        {
+            var validationResult = await _addCommentSignedDtoValidator.ValidateAsync(dto);
+
+            if (!validationResult.IsValid)
+            {
+                var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            }
+
+            var result = await _commentPortfolioService.AddCommentSignedAsync(dto);
 
             if (!result.IsSuccess)
             {

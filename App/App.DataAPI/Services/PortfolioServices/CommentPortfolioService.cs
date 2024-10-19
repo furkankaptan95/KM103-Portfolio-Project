@@ -19,9 +19,34 @@ public class CommentPortfolioService : ICommentPortfolioService
 	}
 	private HttpClient AuthApiClient => _factory.CreateClient("authApi");
 
-    public Task<Result> AddCommentSignedAsync(AddCommentSignedDto dto)
+    public async Task<Result> AddCommentSignedAsync(AddCommentSignedDto dto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var entity = new CommentEntity()
+            {
+                Content = dto.Content,
+                BlogPostId = dto.BlogPostId,
+                UserId = dto.UserId,
+            };
+
+            await _dataApiDb.Comments.AddAsync(entity);
+            await _dataApiDb.SaveChangesAsync();
+
+            return Result.Success();
+        }
+        catch (DbUpdateException dbUpdateEx)
+        {
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
     }
 
     public async Task<Result> AddCommentUnsignedAsync(AddCommentUnsignedDto dto)

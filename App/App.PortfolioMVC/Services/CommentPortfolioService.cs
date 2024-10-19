@@ -3,16 +3,47 @@ using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 
 namespace App.PortfolioMVC.Services;
-public class CommentPortfolioService : ICommentPortfolioService
+public class CommentPortfolioService(IHttpClientFactory factory) : ICommentPortfolioService
 {
-    public Task<Result> AddCommentSignedAsync(AddCommentSignedDto dto)
+    private HttpClient DataApiClient => factory.CreateClient("dataApi");
+    public async Task<Result> AddCommentSignedAsync(AddCommentSignedDto dto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var apiResponse = await DataApiClient.PostAsJsonAsync("add-comment-signed", dto);
+
+            if (!apiResponse.IsSuccessStatusCode)
+            {
+                return Result.Error("Yorumunuz alınırken beklenmedik bir problem oluştu..");
+            }
+
+            return Result.SuccessWithMessage("Yorumunuz başarıyla alınıp yönetici onayına sunuldu.");
+        }
+
+        catch (Exception)
+        {
+            return Result.Error("Yorumunuz alınırken beklenmedik bir problem oluştu..");
+        }
     }
 
-    public Task<Result> AddCommentUnsignedAsync(AddCommentUnsignedDto dto)
+    public async Task<Result> AddCommentUnsignedAsync(AddCommentUnsignedDto dto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var apiResponse = await DataApiClient.PostAsJsonAsync("add-comment-unsigned", dto);
+
+            if (!apiResponse.IsSuccessStatusCode)
+            {
+                return Result.Error("Yorumunuz alınırken beklenmedik bir problem oluştu..");
+            }
+
+            return Result.SuccessWithMessage("Yorumunuz başarıyla alınıp yönetici onayına sunuldu.");
+        }
+
+        catch (Exception)
+        {
+            return Result.Error("Yorumunuz alınırken beklenmedik bir problem oluştu..");
+        }
     }
 
     public Task<Result<List<BlogPostCommentsPortfolioDto>>> GetBlogPostCommentsAsync(int id)

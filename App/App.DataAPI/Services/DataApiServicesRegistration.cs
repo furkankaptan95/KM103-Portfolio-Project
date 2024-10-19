@@ -1,5 +1,6 @@
 ﻿using App.Core.Validators.AboutMeValidators;
 using App.Core.Validators.BlogPostValidators;
+using App.Core.Validators.CommentValidators;
 using App.Core.Validators.EducationValidators;
 using App.Core.Validators.ExperienceValidators;
 using App.Core.Validators.PersonalInfoValidators;
@@ -10,6 +11,7 @@ using App.DataAPI.Services.PortfolioServices;
 using App.DTOs.AboutMeDtos;
 using App.DTOs.AboutMeDtos.Admin;
 using App.DTOs.BlogPostDtos.Admin;
+using App.DTOs.CommentDtos.Portfolio;
 using App.DTOs.EducationDtos;
 using App.DTOs.ExperienceDtos;
 using App.DTOs.ExperienceDtos.Admin;
@@ -90,6 +92,9 @@ public static class DataApiServicesRegistration
         services.AddTransient<IValidator<UpdatePersonalInfoDto>, UpdatePersonalInfoDtoValidator>();
         services.AddTransient<IValidator<UpdateProjectApiDto>, UpdateProjectApiDtoValidator>();
         services.AddTransient<IValidator<AddProjectApiDto>, AddProjectApiDtoValidator>();
+        services.AddTransient<IValidator<AddCommentSignedDto>, AddCommentSignedDtoValidator>();
+        services.AddTransient<IValidator<AddCommentUnsignedDto>, AddCommentUnsignedDtoValidator>();
+
 
         return services;
     }
