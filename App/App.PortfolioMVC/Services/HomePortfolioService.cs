@@ -1,14 +1,16 @@
 using App.DTOs.AboutMeDtos.Porfolio;
+using App.DTOs.BlogPostDtos.Porfolio;
 using App.DTOs.EducationDtos.Portfolio;
 using App.DTOs.ExperienceDtos.Portfolio;
 using App.DTOs.PersonalInfoDtos.Portfolio;
 using App.DTOs.ProjectDtos.Portfolio;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc;
+using App.ViewModels.PortfolioMvc.BlogPostsViewModels;
 using Ardalis.Result;
 
 namespace App.PortfolioMVC.Services;
-public class HomePortfolioService(IEducationPortfolioService educationService,IExperiencePortfolioService experienceService,IProjectPortfolioService projectService,IPersonalInfoPortfolioService personalInfoService,IAboutMePortfolioService aboutMeService) : IHomePortfolioService
+public class HomePortfolioService(IEducationPortfolioService educationService,IExperiencePortfolioService experienceService,IProjectPortfolioService projectService,IPersonalInfoPortfolioService personalInfoService,IAboutMePortfolioService aboutMeService,IBlogPostPortfolioService blogPostService) : IHomePortfolioService
 {
 	public async Task<Result<HomeIndexViewModel>> GetHomeInfosAsync()
 	{
@@ -19,6 +21,7 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 		var projectResult = await projectService.GetAllProjectsAsync();
 		var aboutMeResult = await aboutMeService.GetAboutMeAsync();
 		var personalInfoResult = await personalInfoService.GetPersonalInfoAsync();
+		var blogPostResult = await blogPostService.GetHomeBlogPostsAsync();
     
 		if (educationsResult.IsSuccess)
 		{
@@ -48,7 +51,11 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 		{
 			model.PersonalInfo = new();
 		}
-    
+        if (blogPostResult.IsSuccess)
+        {
+            model.BlogPosts = BlogPosts(blogPostResult.Value);
+        }
+
         return Result<HomeIndexViewModel>.Success(model);
 	}
 
@@ -88,7 +95,6 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 		}
 		return models;
 	}
-
 	private static List<AllProjectsPortfolioViewModel> Projects(List<AllProjectsPortfolioDto> dtos)
 	{
 		var models = new List<AllProjectsPortfolioViewModel>();
@@ -115,7 +121,6 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 
 		return model;
 	}
-
 	private static PersonalInfoPortfolioViewModel PersonalInfo(PersonalInfoPortfolioDto dto)
 	{
 		var model = new PersonalInfoPortfolioViewModel();
@@ -127,4 +132,23 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
     
 		return model;
 	}
+	private static List<HomeBlogPostsPortfolioViewModel> BlogPosts(List<HomeBlogPostsPortfolioDto> dtos)
+	{
+		var models =new List<HomeBlogPostsPortfolioViewModel>();
+
+        foreach (var blogPost in dtos)
+        {
+            var blogPostToAdd = new HomeBlogPostsPortfolioViewModel();
+
+            blogPostToAdd.Title = blogPost.Title;
+			blogPostToAdd.Content = blogPost.Content;
+			blogPostToAdd.Id = blogPost.Id;
+			blogPostToAdd.PublishDate = blogPost.PublishDate;
+			blogPostToAdd.CommentsCount = blogPost.CommentsCount;
+
+            models.Add(blogPostToAdd);
+        }
+        return models;
+    }
+
 }

@@ -6,7 +6,7 @@ using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.PortfolioMVC.Controllers;
-public class BlogPostController(IBlogPosPortfolioService blogPostService) : Controller
+public class BlogPostController(IBlogPostPortfolioService blogPostService) : Controller
 {
 	[HttpGet]
 	[Route("blog-post-{id:int}")]

@@ -4,7 +4,7 @@ using Ardalis.Result;
 using System.Net;
 
 namespace App.PortfolioMVC.Services;
-public class BlogPosPortfolioService(IHttpClientFactory factory) : IBlogPosPortfolioService
+public class BlogPosPortfolioService(IHttpClientFactory factory) : IBlogPostPortfolioService
 {
 	private HttpClient DataApiClient => factory.CreateClient("dataApi");
 	public async Task<Result<List<HomeBlogPostsPortfolioDto>>> GetHomeBlogPostsAsync()

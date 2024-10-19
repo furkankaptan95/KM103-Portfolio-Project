@@ -15,9 +15,9 @@ public class BlogPostsController : ControllerBase
     private readonly IValidator<AddBlogPostDto> _addValidator;
     private readonly IValidator<UpdateBlogPostDto> _updateValidator;
     private readonly IBlogPostAdminService _blogPostAdminService;
-	private readonly IBlogPosPortfolioService _blogPostPortfolioService;
+	private readonly IBlogPostPortfolioService _blogPostPortfolioService;
 
-	public BlogPostsController(IValidator<AddBlogPostDto> addValidator, IValidator<UpdateBlogPostDto> updateValidator, IBlogPostAdminService blogPostAdminService, IBlogPosPortfolioService blogPostPortfolioService)
+	public BlogPostsController(IValidator<AddBlogPostDto> addValidator, IValidator<UpdateBlogPostDto> updateValidator, IBlogPostAdminService blogPostAdminService, IBlogPostPortfolioService blogPostPortfolioService)
     {
         _addValidator = addValidator;
 		_blogPostAdminService = blogPostAdminService;
