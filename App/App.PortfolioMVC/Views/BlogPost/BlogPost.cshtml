@@ -2,6 +2,7 @@
 
 @{
     ViewData["BlogPostId"] = Model.BlogPost.Id;
+    ViewData["UserId"] = 1;
 }
 
 <section class="ftco-section">
@@ -39,7 +40,8 @@
 
                         <partial name="Partials/Comments.cshtml" model="Model.BlogPost.Comments">
 
-                        <partial name="Partials/CommentForm.cshtml" model="Model.UnsignedComment">
+                        <partial name="Partials/UnsignedCommentForm.cshtml" model="Model.UnsignedComment">
+                        <partial name="Partials/SignedCommentForm.cshtml" model="Model.SignedComment">
 
                     </div>
                 }
