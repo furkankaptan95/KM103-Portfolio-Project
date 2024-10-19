@@ -73,6 +73,26 @@ public class BlogPostsController : ControllerBase
         }
     }
 
+    [HttpGet("/home-blog-posts")]
+    public async Task<IActionResult> GetHomeBlogPosts()
+    {
+        try
+        {
+            var result = await _blogPostPortfolioService.GetHomeBlogPostsAsync();
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
+    }
+
 
     [HttpGet("/blog-post-{id:int}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
