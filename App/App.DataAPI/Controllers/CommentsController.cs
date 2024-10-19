@@ -2,6 +2,7 @@
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.DataAPI.Controllers;
@@ -12,10 +13,14 @@ public class CommentsController : ControllerBase
 {
     private readonly ICommentAdminService _commentAdminService;
     private readonly ICommentPortfolioService _commentPortfolioService;
-    public CommentsController(ICommentAdminService commentAdminService,ICommentPortfolioService commentPortfolioService)
+    private readonly IValidator<AddCommentSignedDto> _addCommentSignedDtoValidator;
+    private readonly IValidator<AddCommentUnsignedDto> _addCommentUnsignedDtoValidator;
+    public CommentsController(ICommentAdminService commentAdminService,ICommentPortfolioService commentPortfolioService, IValidator<AddCommentSignedDto> addCommentSignedDtoValidator, IValidator<AddCommentUnsignedDto> addCommentUnsignedDtoValidator)
     {
         _commentAdminService = commentAdminService;
         _commentPortfolioService = commentPortfolioService;
+        _addCommentSignedDtoValidator = addCommentSignedDtoValidator;
+        _addCommentUnsignedDtoValidator = addCommentUnsignedDtoValidator;
     }
 
     [HttpGet("/all-comments")]
@@ -130,13 +135,13 @@ public class CommentsController : ControllerBase
     {
         try
         {
-            //var validationResult = await _addValidator.ValidateAsync(dto);
+            var validationResult = await _addCommentUnsignedDtoValidator.ValidateAsync(dto);
 
-            //if (!validationResult.IsValid)
-            //{
-            //    var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            //    return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
-            //}
+            if (!validationResult.IsValid)
+            {
+                var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            }
 
             var result = await _commentPortfolioService.AddCommentUnsignedAsync(dto);
 
@@ -159,13 +164,13 @@ public class CommentsController : ControllerBase
     {
         try
         {
-            //var validationResult = await _addValidator.ValidateAsync(dto);
+            var validationResult = await _addCommentSignedDtoValidator.ValidateAsync(dto);
 
-            //if (!validationResult.IsValid)
-            //{
-            //    var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            //    return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
-            //}
+            if (!validationResult.IsValid)
+            {
+                var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            }
 
             var result = await _commentPortfolioService.AddCommentSignedAsync(dto);
 
