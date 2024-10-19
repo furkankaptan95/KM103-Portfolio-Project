@@ -7,10 +7,31 @@ namespace App.PortfolioMVC.Services;
 public class BlogPosPortfolioService(IHttpClientFactory factory) : IBlogPosPortfolioService
 {
 	private HttpClient DataApiClient => factory.CreateClient("dataApi");
-	public Task<Result<List<HomeBlogPostsPortfolioDto>>> GetHomeBlogPostsAsync()
+	public async Task<Result<List<HomeBlogPostsPortfolioDto>>> GetHomeBlogPostsAsync()
 	{
-		throw new NotImplementedException();
-	}
+        try
+        {
+            var apiResponse = await DataApiClient.GetAsync("home-blog-posts");
+
+            if (apiResponse.IsSuccessStatusCode)
+            {
+                var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<HomeBlogPostsPortfolioDto>>>();
+
+                if (result is null)
+                {
+                    return Result<List<HomeBlogPostsPortfolioDto>>.Error();
+                }
+
+                return result;
+            }
+            return Result<List<HomeBlogPostsPortfolioDto>>.Error();
+        }
+
+        catch (Exception)
+        {
+            return Result<List<HomeBlogPostsPortfolioDto>>.Error();
+        }
+    }
 
 	public async Task<Result<SingleBlogPostDto>> GetBlogPostById(int id)
 	{
