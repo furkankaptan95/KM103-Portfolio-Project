@@ -1,6 +1,5 @@
 ﻿using App.Data.DbContexts;
 using App.Data.Entities;
-using App.DTOs.CommentDtos.Admin;
 using App.DTOs.CommentDtos.Portfolio;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
@@ -19,7 +18,13 @@ public class CommentPortfolioService : ICommentPortfolioService
 		_factory = factory;
 	}
 	private HttpClient AuthApiClient => _factory.CreateClient("authApi");
-	public async Task<Result> AddCommentAsync(AddCommentDto dto)
+
+    public Task<Result> AddCommentSignedAsync(AddCommentSignedDto dto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result> AddCommentUnsignedAsync(AddCommentUnsignedDto dto)
     {
         try
         {
@@ -28,7 +33,6 @@ public class CommentPortfolioService : ICommentPortfolioService
               Content = dto.Content,
 			  BlogPostId = dto.BlogPostId,
 			  UnsignedCommenterName = dto.UnsignedCommenterName,
-			  UserId = dto.UserId,
             };
 
             await _dataApiDb.Comments.AddAsync(entity);
