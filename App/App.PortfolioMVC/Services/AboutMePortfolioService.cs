@@ -1,6 +1,7 @@
 ﻿using App.DTOs.AboutMeDtos.Porfolio;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
+using System.Net;
 
 namespace App.PortfolioMVC.Services;
 public class AboutMePortfolioService(IHttpClientFactory factory) : IAboutMePortfolioService
@@ -21,7 +22,12 @@ public class AboutMePortfolioService(IHttpClientFactory factory) : IAboutMePortf
                     return Result<AboutMePortfolioDto>.Error();
                 }
                 return result;
-            }   
+            }
+            
+            if (apiResponse.StatusCode == HttpStatusCode.NotFound)
+            {
+				return Result<AboutMePortfolioDto>.NotFound();
+			}
 
             return Result<AboutMePortfolioDto>.Error();
         }
