@@ -126,7 +126,7 @@ public class CommentsController : ControllerBase
     }
 
     [HttpPost("/add-comment-unsigned")]
-    public async Task<IActionResult> AddAsync([FromBody] AddCommentUnsignedDto dto)
+    public async Task<IActionResult> AddUnsignedAsync([FromBody] AddCommentUnsignedDto dto)
     {
         try
         {
@@ -139,6 +139,35 @@ public class CommentsController : ControllerBase
             //}
 
             var result = await _commentPortfolioService.AddCommentUnsignedAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
+    }
+
+    [HttpPost("/add-comment-signed")]
+    public async Task<IActionResult> AddSignedAsync([FromBody] AddCommentSignedDto dto)
+    {
+        try
+        {
+            //var validationResult = await _addValidator.ValidateAsync(dto);
+
+            //if (!validationResult.IsValid)
+            //{
+            //    var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+            //    return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            //}
+
+            var result = await _commentPortfolioService.AddCommentSignedAsync(dto);
 
             if (!result.IsSuccess)
             {
