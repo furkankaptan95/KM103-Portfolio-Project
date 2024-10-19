@@ -18,7 +18,8 @@ public class AddContactMessageDtoValidator : AbstractValidator<AddContactMessage
             .MaximumLength(100).WithMessage("Email kısmı en fazla 100 karakter olabilir.");
 
         RuleFor(x => x.Subject)
-            .MaximumLength(100).WithMessage("Konu kısmı en fazla 100 karakter olabilir.");
+            .MaximumLength(100).WithMessage("Konu kısmı en fazla 100 karakter olabilir.")
+            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Konu kısmı boşluk olamaz.");
 
         RuleFor(x => x.Message)
             .NotEmpty().WithMessage("Mesaj kısmı zorunludur.")

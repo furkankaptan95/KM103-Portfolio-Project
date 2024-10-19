@@ -21,6 +21,8 @@ public class AboutMePortfolioService(DataApiDbContext dataApiDb) : IAboutMePortf
 
             var dto = new AboutMePortfolioDto()
             {
+                Field =entity.Field,
+                FullName =entity.FullName,
                 Introduction = entity.Introduction,
                 ImageUrl1 = entity.ImageUrl1,
                 ImageUrl2 = entity.ImageUrl2,
