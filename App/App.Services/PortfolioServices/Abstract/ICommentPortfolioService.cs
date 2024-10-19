@@ -4,5 +4,6 @@ using Ardalis.Result;
 namespace App.Services.PortfolioServices.Abstract;
 public interface ICommentPortfolioService
 {
-    Task<Result> AddCommentlAsync(AddCommentDto dto);
+    Task<Result> AddCommentAsync(AddCommentDto dto);
+	Task<Result<List<BlogPostCommentsPortfolioDto>>> GetBlogPostCommentsAsync(int id);
 }

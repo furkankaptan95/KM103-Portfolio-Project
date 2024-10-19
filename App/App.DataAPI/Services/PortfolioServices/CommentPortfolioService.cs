@@ -5,8 +5,13 @@ using Ardalis.Result;
 namespace App.DataAPI.Services.PortfolioServices;
 public class CommentPortfolioService : ICommentPortfolioService
 {
-    public Task<Result> AddCommentlAsync(AddCommentDto dto)
+    public Task<Result> AddCommentAsync(AddCommentDto dto)
     {
         throw new NotImplementedException();
     }
+
+	public Task<Result<List<BlogPostCommentsPortfolioDto>>> GetBlogPostCommentsAsync(int id)
+	{
+		throw new NotImplementedException();
+	}
 }
