@@ -12,7 +12,7 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 {
 	public async Task<Result<HomeIndexViewModel>> GetHomeInfosAsync()
 	{
-		 var model = new HomeIndexViewModel();
+		var model = new HomeIndexViewModel();
 
         var educationsResult = await educationService.GetAllEducationsAsync();
         var experienceResult = await experienceService.GetAllExperiencesAsync();
@@ -20,23 +20,23 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 		var aboutMeResult = await aboutMeService.GetAboutMeAsync();
 		var personalInfoResult = await personalInfoService.GetPersonalInfoAsync();
     
-    if (educationsResult.IsSuccess)
-    {
-        model.Educations = Educations(educationsResult.Value);
-    }
+		if (educationsResult.IsSuccess)
+		{
+            model.Educations = Educations(educationsResult.Value);
+		}
 		if (experienceResult.IsSuccess)
 		{
 			model.Experiences = Experiences(experienceResult.Value);
+	    }
+		if (experienceResult.IsSuccess)
+		{
+			model.Projects = Projects(projectResult.Value);
 		}
-    if (experienceResult.IsSuccess)
-    {
-        model.Projects = Projects(projectResult.Value);
-    }
 		if (aboutMeResult.IsSuccess)
 		{
 			model.AboutMe = AboutMe(aboutMeResult.Value);
-		}
-    else if (aboutMeResult.Status == ResultStatus.NotFound)
+	    }
+		else if (aboutMeResult.Status == ResultStatus.NotFound)
 		{
 			model.AboutMe = new();
 		}
@@ -112,6 +112,10 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 		model.Introduction = dto.Introduction;
 		model.ImageUrl1 = dto.ImageUrl1;
 		model.ImageUrl2 = dto.ImageUrl2;
+
+		return model;
+	}
+
 	private static PersonalInfoPortfolioViewModel PersonalInfo(PersonalInfoPortfolioDto dto)
 	{
 		var model = new PersonalInfoPortfolioViewModel();
