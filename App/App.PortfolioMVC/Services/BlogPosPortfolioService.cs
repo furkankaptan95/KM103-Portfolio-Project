@@ -4,13 +4,34 @@ using Ardalis.Result;
 using System.Net;
 
 namespace App.PortfolioMVC.Services;
-public class BlogPosPortfolioService(IHttpClientFactory factory) : IBlogPosPortfolioService
+public class BlogPosPortfolioService(IHttpClientFactory factory) : IBlogPostPortfolioService
 {
 	private HttpClient DataApiClient => factory.CreateClient("dataApi");
-	public Task<Result<List<AllBlogPostsPortfolioDto>>> GetAllBlogPostsAsync()
+	public async Task<Result<List<HomeBlogPostsPortfolioDto>>> GetHomeBlogPostsAsync()
 	{
-		throw new NotImplementedException();
-	}
+        try
+        {
+            var apiResponse = await DataApiClient.GetAsync("home-blog-posts");
+
+            if (apiResponse.IsSuccessStatusCode)
+            {
+                var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<HomeBlogPostsPortfolioDto>>>();
+
+                if (result is null)
+                {
+                    return Result<List<HomeBlogPostsPortfolioDto>>.Error();
+                }
+
+                return result;
+            }
+            return Result<List<HomeBlogPostsPortfolioDto>>.Error();
+        }
+
+        catch (Exception)
+        {
+            return Result<List<HomeBlogPostsPortfolioDto>>.Error();
+        }
+    }
 
 	public async Task<Result<SingleBlogPostDto>> GetBlogPostById(int id)
 	{

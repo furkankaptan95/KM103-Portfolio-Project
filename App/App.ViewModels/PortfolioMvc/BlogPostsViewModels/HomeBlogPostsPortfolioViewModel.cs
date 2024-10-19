@@ -1,5 +1,5 @@
 ﻿namespace App.ViewModels.PortfolioMvc.BlogPostsViewModels;
-public class AllBlogPostsPortfolioViewModel
+public class HomeBlogPostsPortfolioViewModel
 {
     public int Id { get; set; }
     public string Title { get; set; }

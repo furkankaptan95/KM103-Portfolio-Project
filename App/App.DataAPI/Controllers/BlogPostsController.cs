@@ -15,9 +15,9 @@ public class BlogPostsController : ControllerBase
     private readonly IValidator<AddBlogPostDto> _addValidator;
     private readonly IValidator<UpdateBlogPostDto> _updateValidator;
     private readonly IBlogPostAdminService _blogPostAdminService;
-	private readonly IBlogPosPortfolioService _blogPostPortfolioService;
+	private readonly IBlogPostPortfolioService _blogPostPortfolioService;
 
-	public BlogPostsController(IValidator<AddBlogPostDto> addValidator, IValidator<UpdateBlogPostDto> updateValidator, IBlogPostAdminService blogPostAdminService, IBlogPosPortfolioService blogPostPortfolioService)
+	public BlogPostsController(IValidator<AddBlogPostDto> addValidator, IValidator<UpdateBlogPostDto> updateValidator, IBlogPostAdminService blogPostAdminService, IBlogPostPortfolioService blogPostPortfolioService)
     {
         _addValidator = addValidator;
 		_blogPostAdminService = blogPostAdminService;
@@ -59,6 +59,26 @@ public class BlogPostsController : ControllerBase
         try
         {
             var result = await _blogPostAdminService.GetAllBlogPostsAsync();
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
+    }
+
+    [HttpGet("/home-blog-posts")]
+    public async Task<IActionResult> GetHomeBlogPosts()
+    {
+        try
+        {
+            var result = await _blogPostPortfolioService.GetHomeBlogPostsAsync();
 
             if (!result.IsSuccess)
             {

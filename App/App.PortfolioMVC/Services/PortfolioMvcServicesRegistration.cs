@@ -45,7 +45,7 @@ public static class PortfolioMvcServicesRegistration
         });
 
         services.AddScoped<IAboutMePortfolioService, AboutMePortfolioService>();
-        services.AddScoped<IBlogPosPortfolioService, BlogPosPortfolioService>();
+        services.AddScoped<IBlogPostPortfolioService, BlogPosPortfolioService>();
         services.AddScoped<ICommentPortfolioService, CommentPortfolioService>();
         services.AddScoped<IEducationPortfolioService, EducationPortfolioService>();
         services.AddScoped<IExperiencePortfolioService, ExperiencePortfolioService>();

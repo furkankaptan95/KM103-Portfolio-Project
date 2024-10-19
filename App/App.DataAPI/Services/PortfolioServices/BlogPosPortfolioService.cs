@@ -7,11 +7,42 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services.PortfolioServices;
-public class BlogPosPortfolioService(DataApiDbContext dataApiDb,ICommentPortfolioService commentPortfolioService) : IBlogPosPortfolioService
+public class BlogPosPortfolioService(DataApiDbContext dataApiDb,ICommentPortfolioService commentPortfolioService) : IBlogPostPortfolioService
 {
-	public Task<Result<List<AllBlogPostsPortfolioDto>>> GetAllBlogPostsAsync()
+	public async Task<Result<List<HomeBlogPostsPortfolioDto>>> GetHomeBlogPostsAsync()
 	{
-		throw new NotImplementedException();
+		try
+        {
+            var dtos = new List<HomeBlogPostsPortfolioDto>();
+
+            var entities = await dataApiDb.BlogPosts.Include(b=>b.Comments).Take(3).ToListAsync();
+
+            if (entities is null)
+            {
+                return Result<List<HomeBlogPostsPortfolioDto>>.Success(dtos);
+            }
+
+            dtos = entities
+           .Select(item => new HomeBlogPostsPortfolioDto
+           {
+               Id = item.Id,
+               Title = item.Title,
+               Content = item.Content,
+               PublishDate = item.PublishDate,
+			   CommentsCount = item.Comments.Count,
+           })
+           .ToList();
+
+            return Result<List<HomeBlogPostsPortfolioDto>>.Success(dtos);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result<List<HomeBlogPostsPortfolioDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result<List<HomeBlogPostsPortfolioDto>>.Error("Bir hata oluştu: " + ex.Message);
+        }
 	}
 
 	public async Task<Result<SingleBlogPostDto>> GetBlogPostById(int id)
