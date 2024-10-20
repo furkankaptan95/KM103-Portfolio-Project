@@ -1,5 +1,9 @@
 ﻿@model HomeIndexViewModel
 
+@{
+    ViewData["ContactImageUrl"] = Model.AboutMe.ImageUrl2;
+}
+
 @if (TempData["Message"] is not null)
 {
     <div class="alert custom-alert-success mt-5">

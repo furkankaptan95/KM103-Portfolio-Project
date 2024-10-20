@@ -11,7 +11,7 @@ public class ContactMessageController(IContactMessagePortfolioService contactMes
     {
         if (!ModelState.IsValid)
         {
-            return Redirect("/");
+            return Redirect("/#contact-section");
         }
 
         var dto = new AddContactMessageDto
@@ -27,10 +27,10 @@ public class ContactMessageController(IContactMessagePortfolioService contactMes
         if (!result.IsSuccess)
         {
             TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-            return Redirect("/");
+            return Redirect("/#contact-section");
         }
 
         TempData["Message"] = result.SuccessMessage;
-        return Redirect("/");
+        return Redirect("/#contact-section");
     }
 }

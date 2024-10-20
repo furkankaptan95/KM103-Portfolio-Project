@@ -8,9 +8,8 @@ public class AddContactMessageDtoValidator : AbstractValidator<AddContactMessage
     {
         
         RuleFor(x => x.Name)
-            .NotEmpty().WithMessage("İsim kısmı zorunludur.")
             .MaximumLength(50).WithMessage("İsim kısmı en fazla 50 karakter olabilir.")
-            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("İsim kısmı boşluk olamaz.");
+            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("İsim kısmı boş olamaz.");
 
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email kısmı zorunludur.")
@@ -19,10 +18,10 @@ public class AddContactMessageDtoValidator : AbstractValidator<AddContactMessage
 
         RuleFor(x => x.Subject)
             .MaximumLength(100).WithMessage("Konu kısmı en fazla 100 karakter olabilir.")
-            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Konu kısmı boşluk olamaz.");
+            .Must(name => name == null || !string.IsNullOrWhiteSpace(name)).WithMessage("Konu kısmı boşluk olamaz.");
 
         RuleFor(x => x.Message)
             .NotEmpty().WithMessage("Mesaj kısmı zorunludur.")
-            .Must(message => !string.IsNullOrWhiteSpace(message)).WithMessage("Mesaj kısmı boşluk olamaz.");
+            .Must(message => !string.IsNullOrWhiteSpace(message)).WithMessage("Mesaj kısmı boş olamaz.");
     }
 }
