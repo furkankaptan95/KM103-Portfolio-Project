@@ -87,8 +87,36 @@ public class ContactMessageAdminService(DataApiDbContext dataApiDb) : IContactMe
             }
         }
     
-    public Task<Result> ReplyContactMessageAsync(ReplyContactMessageDto dto)
+    public async Task<Result> ReplyContactMessageAsync(ReplyContactMessageDto dto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var entity = await dataApiDb.ContactMessages.FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+            if (entity is null)
+            {
+                return Result.NotFound();
+            }
+
+            entity.Reply = dto.ReplyMessage;
+            entity.ReplyDate = DateTime.Now;
+
+            dataApiDb.ContactMessages.Update(entity);
+            await dataApiDb.SaveChangesAsync();
+
+            return Result.Success();
+        }
+        catch (DbUpdateException dbUpdateEx)
+        {
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
     }
 }
