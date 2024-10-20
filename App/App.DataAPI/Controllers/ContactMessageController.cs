@@ -1,4 +1,6 @@
 ﻿using App.DataAPI.Services.AdminServices;
+using App.DTOs.BlogPostDtos.Admin;
+using App.DTOs.ContactMessageDtos.Admin;
 using App.DTOs.ContactMessageDtos.Portfolio;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
@@ -100,5 +102,39 @@ public class ContactMessageController : ControllerBase
         {
             return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
         }
+    }
+
+    [HttpPut("/reply-contact-message")]
+    public async Task<IActionResult> ReplyAsync([FromBody] ReplyContactMessageDto dto)
+    {
+        try
+        {
+            //var validationResult = await _updateValidator.ValidateAsync(dto);
+
+            //if (!validationResult.IsValid)
+            //{
+            //    var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+            //    return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            //}
+
+            var result = await _contactMessageAdminService.ReplyContactMessageAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    return NotFound(result);
+                }
+
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
+        }
+
     }
 }
