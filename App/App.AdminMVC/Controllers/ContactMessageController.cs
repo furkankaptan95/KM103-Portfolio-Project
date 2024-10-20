@@ -1,6 +1,4 @@
-﻿using App.AdminMVC.Services;
-using App.Services.AdminServices.Abstract;
-using App.ViewModels.AdminMvc.BlogPostsViewModels;
+﻿using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.ContactMessagesViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -78,8 +76,15 @@ public class ContactMessageController(IContactMessageAdminService contactMessage
         catch (Exception)
         {
             TempData["ErrorMessage"] = "Mesaj verisi alınırken bir hata oluştu.";
-            return Redirect("/all-blog-posts");
+            return Redirect("/all-contact-messages");
         }
+    }
+
+    [HttpPost]
+    [Route("reply-message")]
+    public async Task<IActionResult> ReplyContactMessage([FromForm] ReplyContactMessageViewModel model)
+    {
+        return View(model);
     }
 
 }

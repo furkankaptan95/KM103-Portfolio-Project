@@ -42,10 +42,19 @@
             @Model.Message
         </div>
 
-        <!-- Düzenle Butonu -->
-        <div class="text-right">
-            <a href="/update-personal-info" class="btn btn-primary">Düzenle</a>
-        </div>
+        <form action="/reply-message" method="post">
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <label asp-for="ReplyMessage" class="control-label">Yanıt</label>
+                <input asp-for="ReplyMessage" class="form-control" placeholder="Yanıtınızı buraya yazınız.." />
+                <span asp-validation-for="ReplyMessage" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-4">Yanıtı Gönder</button>
+        </form>
+
     </div>
 </div>
 
