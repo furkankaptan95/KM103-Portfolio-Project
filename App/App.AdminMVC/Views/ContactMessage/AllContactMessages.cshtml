@@ -1,4 +1,4 @@
-﻿@model List<AllCommentsViewModel>
+﻿@model List<AllContactMessagesViewModel>
 
 @if (TempData["Message"] is not null)
 {
@@ -23,75 +23,84 @@
 
 @if (Model.Count == 0)
 {
-    <h2 class="text-center my-4" style="font-weight: 600; color: #333;">Yorumlar</h2>
+    <h2 class="text-center my-4" style="font-weight: 600; color: #333;">Mesajlar</h2>
 
     <div class="alert alert-info text-center mt-5 p-4" style="border-radius: 10px;">
-        <h4 class="font-weight-bold">Şu anda görüntülenecek bir Yorum bulunmuyor.</h4>
+        <h4 class="font-weight-bold">Şu anda görüntülenecek bir Mesaj bulunmuyor.</h4>
     </div>
 }
 
 else
 {
     <div class="container">
-        <h2 class="text-center">Yorumlar</h2>
+        <h2 class="text-center">Mesajlar</h2>
         <table class="table table-bordered table-striped table-responsive-md mt-4">
             <thead class="thead-dark">
                 <tr>
-                    <th class="text-center">Yorumcu</th>
-                    <th class="text-center">İçerik</th>
-                    <th class="text-center">Blog Post</th>
-                    <th class="text-center">Yapılma Tarihi</th>
-                    <th class="text-center">Yorumu Silme</th>
-                    <th class="text-center">Onay Durumu</th>
-                    <th class="text-center">Onayla / Onayı geri al</th>
+                    <th class="text-center">Gönderen</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">Başlık</th>
+                    <th class="text-center">Mesaj</th>
+                    <th class="text-center">Tarih</th>
+                    <th class="text-center">Okundu Mu?</th>
+                    <th class="text-center">Yanıt</th>
+                    <th class="text-center">Yanıt Tarihi</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var comment in Model)
+                @foreach (var contactMessage in Model)
                 {
                     <tr>
-                        <td class="text-center">@comment.Commenter</td>
+                        <td class="text-center">@contactMessage.Name</td>
+                        <td class="text-center">@contactMessage.Email</td>
+                        <td class="text-center">@contactMessage.Subject</td>
                         <td class="text-center">
-                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@comment.Id" aria-haspopup="true" aria-expanded="false">Yorumu Görüntüle</button>
+                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@contactMessage.Id" aria-haspopup="true" aria-expanded="false">Mesajı Görüntüle</button>
                         </td>
-                        <td class="text-center">@comment.BlogPostName</td>
-                        <td class="text-center">@comment.CreatedAt.ToString("dd MMMM yyyy HH:mm")</td>
+                        <td class="text-center">@contactMessage.SentDate.ToString("dd MMMM yyyy HH:mm")</td>
                         <td class="text-center">
-                            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal-@comment.Id">Yorumu Sil</button>
-                        </td>
-                        <td class="text-center">
-                            @if (comment.IsApproved)
+                            @if (contactMessage.IsRead)
                             {
-                                <span>Onaylandı ✅</span>
+                                <span>Okundu ✅</span>
                             }
                             else
                             {
-                                <span>Onaylanmadı ❌</span>
+                                <span>Okunmadı ❌</span>
                             }
                         </td>
                         <td class="text-center">
-                            @if (comment.IsApproved)
+                            @if (contactMessage.Reply is null)
                             {
-                                <a href="/(not)-approve-comment-@comment.Id" class="btn btn-sm btn-secondary">Onayı geri al</a>
+                                <a href="/(not)-approve-comment-@contactMessage.Id" class="btn btn-sm btn-secondary">Hemen Yanıtla</a>
                             }
                             else
                             {
-                                <a href="/(not)-approve-comment-@comment.Id" class="btn btn-sm btn-success">Onayla</a>
+                           
+                                <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalReply-@contactMessage.Id" aria-haspopup="true" aria-expanded="false">Yanıtı Görüntüle</button>
+                           
                             }
                         </td>
+                        @if(contactMessage.ReplyDate is not null)
+                        {
+                            <td class="text-center">@contactMessage.ReplyDate?.ToString("dd MMMM yyyy HH:mm")</td>
+                        }
+                        else
+                        {
+                            <td class="text-center">-</td>
+                        }
                     </tr>
 
-                    <div class="modal fade" id="modal-@comment.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabel-@comment.Id" aria-hidden="true">
+                    <div class="modal fade" id="modal-@contactMessage.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabel-@contactMessage.Id" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="modalLabel-@comment.Id">@comment.Commenter</h5>
+                                    <h5 class="modal-title" id="modalLabel-@contactMessage.Id">@contactMessage.Name</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>@comment.Content</p>
+                                    <p>@contactMessage.Message</p>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
@@ -100,24 +109,21 @@ else
                         </div>
                     </div>
 
-                    <!-- Silme Onay Modalı -->
-                    <div class="modal fade" id="deleteModal-@comment.Id" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel-@comment.Id" aria-hidden="true">
+
+                    <div class="modal fade" id="modalReply-@contactMessage.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabelReply-@contactMessage.Id" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="deleteModalLabel-@comment.Id">Silme Onayı</h5>
+                                    <h5 class="modal-title" id="modalLabelReply-@contactMessage.Id">Yanıtım</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <b>@comment.Commenter</b> adlı yorumcunun yorumunu silmek istediğinize emin misiniz?
+                                    <p>@contactMessage.Reply</p>
                                 </div>
                                 <div class="modal-footer">
-                                    <form action="/delete-comment-@comment.Id" method="get">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
-                                        <button type="submit" class="btn btn-danger">Sil</button>
-                                    </form>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
                                 </div>
                             </div>
                         </div>
