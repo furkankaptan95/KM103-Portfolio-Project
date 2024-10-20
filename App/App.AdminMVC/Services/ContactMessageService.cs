@@ -81,8 +81,27 @@ public class ContactMessageService(IHttpClientFactory factory) : IContactMessage
         }
     }
 
-    public Task<Result> ReplyContactMessageAsync(ReplyContactMessageDto dto)
+    public async Task<Result> ReplyContactMessageAsync(ReplyContactMessageDto dto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var apiResponse = await DataApiClient.PutAsJsonAsync("reply-contact-message", dto);
+
+            if (!apiResponse.IsSuccessStatusCode)
+            {
+                if (apiResponse.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return Result.Error("Yanıt vermek istediğiniz Mesaj bulunamadı.");
+                }
+
+                return Result.Error("Yanıt verme işlemi sırasında beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
+            }
+
+            return Result.SuccessWithMessage("Yanıt başarıyla gönderildi.");
+        }
+        catch (Exception)
+        {
+            return Result.Error("Yanıt verme işlemi sırasında beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
+        }
     }
 }
