@@ -1,0 +1,186 @@
+﻿@model List<AllContactMessagesViewModel>
+
+@if (TempData["Message"] is not null)
+{
+    <div class="alert custom-alert-success mt-5">
+        @TempData["Message"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert custom-alert-error  mt-5">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (ViewData["ErrorMessage"] is not null)
+{
+    <div class="alert custom-alert-error  mt-5">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+
+@if (Model.Count == 0)
+{
+    <h2 class="text-center my-4" style="font-weight: 600; color: #333;">Mesajlar</h2>
+
+    <div class="alert alert-info text-center mt-5 p-4" style="border-radius: 10px;">
+        <h4 class="font-weight-bold">Şu anda görüntülenecek bir Mesaj bulunmuyor.</h4>
+    </div>
+}
+
+else
+{
+    <div class="container">
+        <h2 class="text-center">Mesajlar</h2>
+        <table class="table table-bordered table-striped table-responsive-md mt-4">
+            <thead class="thead-dark">
+                <tr>
+                    <th class="text-center">Gönderen</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">Başlık</th>
+                    <th class="text-center">Mesaj</th>
+                    <th class="text-center">Tarih</th>
+                    <th class="text-center">Okundu Mu?</th>
+                    <th class="text-center">Yanıt</th>
+                    <th class="text-center">Yanıt Tarihi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var contactMessage in Model)
+                {
+                    <tr>
+                        <td class="text-center">@contactMessage.Name</td>
+                        <td class="text-center">@contactMessage.Email</td>
+                        <td class="text-center">@contactMessage.Subject</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@contactMessage.Id" aria-haspopup="true" aria-expanded="false">Mesajı Görüntüle</button>
+                        </td>
+                        <td class="text-center">@contactMessage.SentDate.ToString("dd MMMM yyyy HH:mm")</td>
+                        <td class="text-center">
+                            @if (contactMessage.IsRead)
+                            {
+                                <span>Okundu ✅</span>
+                            }
+                            else
+                            {
+                                <span>Okunmadı ❌</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            @if (contactMessage.Reply is null)
+                            {
+                                <a href="/(not)-approve-comment-@contactMessage.Id" class="btn btn-sm btn-secondary">Hemen Yanıtla</a>
+                            }
+                            else
+                            {
+                           
+                                <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalReply-@contactMessage.Id" aria-haspopup="true" aria-expanded="false">Yanıtı Görüntüle</button>
+                           
+                            }
+                        </td>
+                        @if(contactMessage.ReplyDate is not null)
+                        {
+                            <td class="text-center">@contactMessage.ReplyDate?.ToString("dd MMMM yyyy HH:mm")</td>
+                        }
+                        else
+                        {
+                            <td class="text-center">-</td>
+                        }
+                    </tr>
+
+                    <div class="modal fade" id="modal-@contactMessage.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabel-@contactMessage.Id" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalLabel-@contactMessage.Id">@contactMessage.Name</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>@contactMessage.Message</p>
+                                </div>
+                                @if (contactMessage.IsRead)
+                                {
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                                        <span class="badge bg-success text-white" style="padding: 10px 20px; display: inline-block;">Mesaj Okundu</span>
+
+
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="modal-footer">
+                                        <form action="/make-message-read-@contactMessage.Id" method="get">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                                            <button type="submit" class="btn btn-warning">Okundu Olarak İşaretle</button>
+                                        </form>
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="modal fade" id="modalReply-@contactMessage.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabelReply-@contactMessage.Id" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalLabelReply-@contactMessage.Id">Yanıtım</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>@contactMessage.Reply</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@section Styles {
+    <style>
+        .custom-alert-success {
+            position: fixed; /* Sayfada sabit konumlandırma */
+            top: 50px; /* Ekranın üst kısmından 10px boşluk */
+            left: 55%; /* Ekranın ortasına hizalama */
+            transform: translateX(-50%); /* Ortalamak için translate */
+            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-alert-error {
+            position: fixed; /* Sayfada sabit konumlandırma */
+            top: 50px; /* Ekranın üst kısmından 10px boşluk */
+            left: 55%; /* Ekranın ortasına hizalama */
+            transform: translateX(-50%); /* Ortalamak için translate */
+            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table td {
+            vertical-align: middle; /* Tüm tablo hücrelerini dikey olarak ortalar */
+        }
+    </style>
+}
+

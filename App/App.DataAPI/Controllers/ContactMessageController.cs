@@ -1,4 +1,5 @@
 ﻿using App.DTOs.ContactMessageDtos.Portfolio;
+using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
@@ -11,11 +12,13 @@ namespace App.DataAPI.Controllers;
 public class ContactMessageController : ControllerBase
 {
     private readonly IContactMessagePortfolioService _contactMessagePortfolioService;
+    private readonly IContactMessageAdminService _contactMessageAdminService;
     private readonly IValidator<AddContactMessageDto> _validator;
-    public ContactMessageController(IContactMessagePortfolioService contactMessagePortfolioService, IValidator<AddContactMessageDto> validator)
+    public ContactMessageController(IContactMessagePortfolioService contactMessagePortfolioService, IValidator<AddContactMessageDto> validator,IContactMessageAdminService contactMessageAdminService)
     {
         _contactMessagePortfolioService = contactMessagePortfolioService;
         _validator = validator;
+        _contactMessageAdminService = contactMessageAdminService;
     }
     [HttpPost("/add-contact-message")]
     public async Task<IActionResult> AddAsync([FromBody] AddContactMessageDto dto)
@@ -39,6 +42,27 @@ public class ContactMessageController : ControllerBase
             }
 
             return StatusCode(500, result);
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
+    }
+
+    [HttpGet("/all-contact-messages")]
+    public async Task<IActionResult> GetAllAsync()
+    {
+        try
+        {
+            var result = await _contactMessageAdminService.GetAllContactMessagesAsync();
+
+            if (!result.IsSuccess)
+            {
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
         }
 
         catch (Exception ex)

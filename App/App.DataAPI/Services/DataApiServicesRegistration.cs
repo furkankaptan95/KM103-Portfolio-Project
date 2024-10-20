@@ -71,7 +71,9 @@ public static class DataApiServicesRegistration
         services.AddScoped<IPersonalInfoAdminService, PersonalInfoAdminService>();
         services.AddScoped<IProjectAdminService, ProjectAdminService>();
         services.AddScoped<IHomeAdminService, HomeAdminService>();
-      
+        services.AddScoped<IContactMessageAdminService, ContactMessageAdminService>();
+
+
 
         services.AddScoped<IAboutMePortfolioService, AboutMePortfolioService>();
         services.AddScoped<IBlogPostPortfolioService, BlogPosPortfolioService>();
