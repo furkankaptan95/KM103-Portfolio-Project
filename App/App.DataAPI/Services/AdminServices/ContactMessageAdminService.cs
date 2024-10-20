@@ -1,5 +1,4 @@
 ﻿using App.Data.DbContexts;
-using App.DTOs.BlogPostDtos.Admin;
 using App.DTOs.ContactMessageDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
@@ -9,9 +8,36 @@ using Microsoft.EntityFrameworkCore;
 namespace App.DataAPI.Services.AdminServices;
 public class ContactMessageAdminService(DataApiDbContext dataApiDb) : IContactMessageAdminService
 {
-    public Task<Result> ChangeIsReadAsync(int id)
+    public async Task<Result> ChangeIsReadAsync(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var entity = await dataApiDb.ContactMessages.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity is null)
+            {
+                return Result.NotFound();
+            }
+
+            entity.IsRead = true;
+
+            dataApiDb.ContactMessages.Update(entity);
+            await dataApiDb.SaveChangesAsync();
+
+            return Result.Success();
+        }
+        catch (DbUpdateException dbUpdateEx)
+        {
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
+        }
     }
 
     public async Task<Result<List<AllContactMessagesDto>>> GetAllContactMessagesAsync()
