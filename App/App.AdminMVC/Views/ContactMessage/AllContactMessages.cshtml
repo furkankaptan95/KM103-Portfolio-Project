@@ -102,9 +102,25 @@ else
                                 <div class="modal-body">
                                     <p>@contactMessage.Message</p>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
-                                </div>
+                                @if (contactMessage.IsRead)
+                                {
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                                        <span class="badge bg-success text-white" style="padding: 10px 20px; display: inline-block;">Mesaj Okundu</span>
+
+
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="modal-footer">
+                                        <form action="/make-message-read-@contactMessage.Id" method="get">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                                            <button type="submit" class="btn btn-warning">Okundu Olarak İşaretle</button>
+                                        </form>
+                                    </div>
+                                }
+
                             </div>
                         </div>
                     </div>
