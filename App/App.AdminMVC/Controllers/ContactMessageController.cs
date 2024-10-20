@@ -1,6 +1,4 @@
-﻿using App.AdminMVC.Services;
-using App.DTOs.BlogPostDtos.Admin;
-using App.DTOs.ContactMessageDtos.Admin;
+﻿using App.DTOs.ContactMessageDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.ContactMessagesViewModels;
 using Ardalis.Result;
@@ -129,6 +127,33 @@ public class ContactMessageController(IContactMessageAdminService contactMessage
             return View(model);
         }
 
+    }
+
+    [HttpGet]
+    [Route("make-message-read-{id:int}")]
+    public async Task<IActionResult> MakeMessageRead([FromRoute] int id)
+    {
+        try
+        {
+            var result = await contactMessageService.ChangeIsReadAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            }
+
+            else
+            {
+                TempData["Message"] = result.SuccessMessage;
+            }
+
+            return Redirect("/all-contact-messages");
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Mesaj okundu olarak işaretlenirken beklenmeyen bir hata oluştu..";
+            return Redirect("/all-contact-messages");
+        }
     }
 
 }
