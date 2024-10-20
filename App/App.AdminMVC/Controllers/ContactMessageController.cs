@@ -47,7 +47,7 @@ public class ContactMessageController(IContactMessageAdminService contactMessage
 
     [HttpGet]
     [Route("reply-contact-message-{id:int}")]
-    public async Task<IActionResult> ReplyMessage([FromRoute] int id)
+    public async Task<IActionResult> ReplyContactMessage([FromRoute] int id)
     {
         try
         {
@@ -63,7 +63,7 @@ public class ContactMessageController(IContactMessageAdminService contactMessage
 
             var model = new ReplyContactMessageViewModel()
             {
-                MessageId = id,
+                Id = id,
                 SentDate = dto.SentDate,
                 Subject = dto.Subject,
                 Name = dto.Name,
