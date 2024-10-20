@@ -1,5 +1,9 @@
-﻿using App.Services.AdminServices.Abstract;
+﻿using App.AdminMVC.Services;
+using App.DTOs.BlogPostDtos.Admin;
+using App.DTOs.ContactMessageDtos.Admin;
+using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.ContactMessagesViewModels;
+using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
@@ -61,7 +65,8 @@ public class ContactMessageController(IContactMessageAdminService contactMessage
 
             var dto = result.Value;
 
-            var model = new ReplyContactMessageViewModel()
+            var model = new ReplyViewModel();
+            var modelGet = new GetContactMessageViewModel
             {
                 Id = id,
                 SentDate = dto.SentDate,
@@ -70,6 +75,8 @@ public class ContactMessageController(IContactMessageAdminService contactMessage
                 Message = dto.Message,
                 Email = dto.Email,
             };
+           
+            model.GetModel = modelGet;
 
             return View(model);
         }
@@ -82,9 +89,46 @@ public class ContactMessageController(IContactMessageAdminService contactMessage
 
     [HttpPost]
     [Route("reply-message")]
-    public async Task<IActionResult> ReplyContactMessage([FromForm] ReplyContactMessageViewModel model)
+    public async Task<IActionResult> ReplyContactMessage([FromForm] ReplyViewModel model)
     {
-        return View(model);
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        try
+        {
+            var dto = new ReplyContactMessageDto
+            {
+                Id = model.ReplyModel.Id,
+                ReplyMessage = model.ReplyModel.ReplyMessage,
+            };
+
+            var result = await contactMessageService.ReplyContactMessageAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                var errorMessage = result.Errors.FirstOrDefault();
+
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    TempData["ErrorMessage"] = errorMessage;
+                    return Redirect("/all-contact-messages");
+                }
+
+                ViewData["ErrorMessage"] = errorMessage;
+                return View(model);
+            }
+            TempData["Message"] = result.SuccessMessage;
+            return Redirect("/all-contact-messages");
+
+        }
+        catch (Exception)
+        {
+            ViewData["ErrorMessage"] = "Yanıt verme işlemi sırasında beklenmedik bir hata oluştu!..Tekrar deneyebilirsiniz.";
+            return View(model);
+        }
+
     }
 
 }

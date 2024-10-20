@@ -1,4 +1,4 @@
-﻿@model ReplyContactMessageViewModel
+﻿@model ReplyViewModel
 
 @if (TempData["Message"] is not null)
 {
@@ -26,30 +26,36 @@
         <h2 class="profile-title">Mesaj Bigileri</h2>
         <hr>
         <div class="profile-detail mb-3">
-            <span class="profile-label">İsim: </span> @Model.Name
+            <span class="profile-label">İsim: </span> @Model.GetModel.Name
         </div>
         <div class="profile-detail mb-3">
-            <span class="profile-label">Email: </span> @Model.Email
+            <span class="profile-label">Email: </span> @Model.GetModel.Email
         </div>
         <div class="profile-detail mb-3">
-            <span class="profile-label">Konu: </span> @Model.Subject
+            <span class="profile-label">Konu: </span> @Model.GetModel.Subject
         </div>
         <div class="profile-detail mb-3">
-            <span class="profile-label">Tarih: </span> @Model.SentDate?.ToString("dd MMMM yyyy HH:mm")
+            <span class="profile-label">Tarih: </span> @Model.GetModel.SentDate.ToString("dd MMMM yyyy HH:mm")
         </div>
         <div class="profile-detail mb-3">
             <span class="profile-label">Mesaj İçeriği: </span>
-            @Model.Message
+            @Model.GetModel.Message
         </div>
 
         <form action="/reply-message" method="post">
 
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="@Model.GetModel.Name" />
+            <input type="hidden" asp-for="@Model.GetModel.Email" />
+            <input type="hidden" asp-for="@Model.GetModel.Subject" />
+            <input type="hidden" asp-for="@Model.GetModel.SentDate" />
+            <input type="hidden" asp-for="@Model.GetModel.Message" />
+            <input type="hidden" asp-for="@Model.GetModel.Id" />
+            <input type="hidden" asp-for="@Model.ReplyModel.Id" value="@Model.GetModel.Id" />
 
             <div class="form-group">
-                <label asp-for="ReplyMessage" class="control-label">Yanıt</label>
-                <input asp-for="ReplyMessage" class="form-control" placeholder="Yanıtınızı buraya yazınız.." />
-                <span asp-validation-for="ReplyMessage" class="text-danger"></span>
+                <label asp-for="@Model.ReplyModel.ReplyMessage" class="form-label">Giriş</label>
+                <textarea asp-for="@Model.ReplyModel.ReplyMessage" rows="6" class="form-control" placeholder="Yanıtınızı buraya yazınız.."></textarea>
+                <span asp-validation-for="@Model.ReplyModel.ReplyMessage" class="text-danger"></span>
             </div>
 
             <button type="submit" class="btn btn-primary mt-4">Yanıtı Gönder</button>
@@ -135,8 +141,5 @@
 }
 
 @section Scripts {
-    <!-- Bootstrap JS, Popper.js, and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
 }
