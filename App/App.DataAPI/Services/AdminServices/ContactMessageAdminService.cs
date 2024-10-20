@@ -1,4 +1,5 @@
 ﻿using App.Data.DbContexts;
+using App.DTOs.BlogPostDtos.Admin;
 using App.DTOs.ContactMessageDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
@@ -53,11 +54,39 @@ public class ContactMessageAdminService(DataApiDbContext dataApiDb) : IContactMe
         }
     }
 
-    public Task<Result<ContactMessageToReplyDto>> GetContactMessageByIdAsync(int id)
+    public async Task<Result<ContactMessageToReplyDto>> GetContactMessageByIdAsync(int id)
     {
-        throw new NotImplementedException();
-    }
+            try
+            {
+                var entity = await dataApiDb.ContactMessages.FirstOrDefaultAsync(x => x.Id == id);
 
+                if (entity is null)
+                {
+                    return Result<ContactMessageToReplyDto>.NotFound();
+                }
+
+                var dto = new ContactMessageToReplyDto
+                {
+                    Id = id,
+                    Email = entity.Email,
+                    Subject = entity.Subject,
+                    Message = entity.Message,
+                    SentDate = entity.SentDate,
+                    Name = entity.Name,
+                };
+
+                return Result<ContactMessageToReplyDto>.Success(dto);
+            }
+            catch (SqlException sqlEx)
+            {
+                return Result<ContactMessageToReplyDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            }
+            catch (Exception ex)
+            {
+                return Result<ContactMessageToReplyDto>.Error("Bir hata oluştu: " + ex.Message);
+            }
+        }
+    
     public Task<Result> ReplyContactMessageAsync(ReplyContactMessageDto dto)
     {
         throw new NotImplementedException();
