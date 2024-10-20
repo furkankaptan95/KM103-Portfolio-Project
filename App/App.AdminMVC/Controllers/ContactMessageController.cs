@@ -44,4 +44,47 @@ public class ContactMessageController(IContactMessageAdminService contactMessage
             return Redirect("/home/index");
         }
     }
+
+    [HttpGet]
+    [Route("reply-contact-message-{id:int}")]
+    public async Task<IActionResult> ReplyContactMessage([FromRoute] int id)
+    {
+        try
+        {
+            var result = await contactMessageService.GetContactMessageByIdAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return Redirect("/all-contact-messages");
+            }
+
+            var dto = result.Value;
+
+            var model = new ReplyContactMessageViewModel()
+            {
+                Id = id,
+                SentDate = dto.SentDate,
+                Subject = dto.Subject,
+                Name = dto.Name,
+                Message = dto.Message,
+                Email = dto.Email,
+            };
+
+            return View(model);
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Mesaj verisi alınırken bir hata oluştu.";
+            return Redirect("/all-contact-messages");
+        }
+    }
+
+    [HttpPost]
+    [Route("reply-message")]
+    public async Task<IActionResult> ReplyContactMessage([FromForm] ReplyContactMessageViewModel model)
+    {
+        return View(model);
+    }
+
 }

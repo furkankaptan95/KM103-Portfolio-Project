@@ -1,4 +1,5 @@
-﻿using App.DTOs.ContactMessageDtos.Portfolio;
+﻿using App.DataAPI.Services.AdminServices;
+using App.DTOs.ContactMessageDtos.Portfolio;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
@@ -68,6 +69,36 @@ public class ContactMessageController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
+    }
+
+    [HttpGet("/get-contact-message-{id:int}")]
+    public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
+    {
+        if (id <= 0)
+        {
+            return BadRequest(Result.Error("Geçersiz ID bilgisi."));
+        }
+
+        try
+        {
+            var result = await _contactMessageAdminService.GetContactMessageByIdAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    return NotFound(result);
+                }
+
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
         }
     }
 }
