@@ -2,7 +2,7 @@
 using Ardalis.Result;
 
 namespace App.Services.AdminServices.Abstract;
-public interface IContactMessageService
+public interface IContactMessageAdminService
 {
     Task<Result<List<AllContactMessagesDto>>> GetAllContactMessagesAsync();
     Task<Result> ReplyContactMessageAsync(ReplyContactMessageDto dto);

@@ -52,6 +52,8 @@ public static class AdminMvcServicesRegistration
         services.AddScoped<IHomeAdminService, HomeService>();
         services.AddScoped<ICommentAdminService, CommentService>();
         services.AddScoped<IUserAdminService, UserService>();
+        services.AddScoped<IContactMessageAdminService, ContactMessageService>();
+
 
         return services;
 
