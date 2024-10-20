@@ -14,7 +14,7 @@ public class ContactMessagePortfolioService(IHttpClientFactory factory) : IConta
 
             if (!apiResponse.IsSuccessStatusCode)
             {
-                return Result.Error("İletişim Formu gönderilirken beklenmedik bir problem oluştu..");
+                return Result.Error("İletişim Formu gönderilirken beklenmedik bir hata oluştu..");
             }
 
             return Result.SuccessWithMessage("İletişim Formu başarıyla gönderildi.");
@@ -22,7 +22,7 @@ public class ContactMessagePortfolioService(IHttpClientFactory factory) : IConta
 
         catch (Exception)
         {
-            return Result.Error("İletişim Formu gönderilirken beklenmedik bir problem oluştu..");
+            return Result.Error("İletişim Formu gönderilirken beklenmedik bir hata oluştu..");
         }
     }
 }

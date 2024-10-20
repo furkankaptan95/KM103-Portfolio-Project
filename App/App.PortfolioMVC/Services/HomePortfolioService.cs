@@ -115,6 +115,8 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 	{
 		var model = new AboutMePortfolioViewModel();
 
+		model.FullName = dto.FullName;
+		model.Field = dto.Field;
 		model.Introduction = dto.Introduction;
 		model.ImageUrl1 = dto.ImageUrl1;
 		model.ImageUrl2 = dto.ImageUrl2;

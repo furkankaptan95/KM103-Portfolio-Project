@@ -1,5 +1,10 @@
 ﻿@model AddContactMessageViewModel
 
+@{
+    var imgUrl = ViewData["ContactImageUrl"];
+}
+
+
 <section class="ftco-section contact-section ftco-no-pb" id="contact-section">
     <div class="container">
         <div class="row justify-content-center mb-5 pb-3">
@@ -25,8 +30,8 @@
                     <div class="icon d-flex align-items-center justify-content-center">
                         <span class="icon-globe"></span>
                     </div>
-                    <h3 class="mb-4">LINKEDIN</h3>
-                    <p><a href="#">yoursite.com</a></p>
+                    <h3 class="mb-4"><a style="color:white;" href="https://www.linkedin.com/in/furkan-kaptan-0b5339258/">LINKEDIN</a></h3>
+                    
                 </div>
             </div>
         </div>
@@ -69,7 +74,7 @@
             </div>
 
             <div class="col-md-6 d-flex">
-                <div class="img" style="background-image: url(images/about.jpg);"></div>
+                <div class="img" style="background-image: url(@($"https://localhost:7085/uploads/{imgUrl}"));"></div>
             </div>
         </div>
     </div>

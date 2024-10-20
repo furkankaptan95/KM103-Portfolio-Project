@@ -35,6 +35,8 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
 
             var aboutMeModel = new AdminAboutMeViewModel
             {
+                FullName = dto.FullName,
+                Field = dto.Field,
                 ImageUrl1 = dto.ImageUrl1,
                 ImageUrl2 = dto.ImageUrl2,
                 Introduction = dto.Introduction,
@@ -70,6 +72,8 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
         {
             var mvcDto = new AddAboutMeMVCDto
             {
+                Field = model.Field,
+                FullName = model.FullName,
                 Introduction = model.Introduction,
                 ImageFile1 = model.Image1,
                 ImageFile2 = model.Image2,
@@ -121,6 +125,8 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
 
             var model = new UpdateAboutMeViewModel
             {
+                Field = dto.Field,
+                FullName = dto.FullName,
                 ImageUrl1 = dto.ImageUrl1,
                 ImageUrl2 = dto.ImageUrl2,
                 Introduction = dto.Introduction,
@@ -148,6 +154,8 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
         {
             var dto = new UpdateAboutMeMVCDto
             {
+                FullName = model.FullName,
+                Field = model.Field,
                 ImageFile1 = model.ImageFile1,
                 ImageFile2 = model.ImageFile2,
                 Introduction = model.Introduction,

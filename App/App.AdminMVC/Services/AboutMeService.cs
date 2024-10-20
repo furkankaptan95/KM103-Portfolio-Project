@@ -48,6 +48,8 @@ public class AboutMeService : IAboutMeAdminService
                 ImageUrl1 = urlDto.ImageUrl1,
                 ImageUrl2 = urlDto.ImageUrl2,
                 Introduction = dto.Introduction,
+                Field = dto.Field,
+                FullName = dto.FullName,
             };
 
             var apiResponse = await DataApiClient.PostAsJsonAsync("add-about-me", apiDto);
@@ -114,6 +116,8 @@ public class AboutMeService : IAboutMeAdminService
             var updateApiDto = new UpdateAboutMeApiDto()
             {
                 Introduction = dto.Introduction,
+                Field = dto.Field,
+                FullName = dto.FullName,
             };
 
             using var content = new MultipartFormDataContent();

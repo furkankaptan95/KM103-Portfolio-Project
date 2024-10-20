@@ -1,4 +1,3 @@
-using App.DTOs.ContactMessageDtos.Portfolio;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +8,7 @@ public class HomeController(IHomePortfolioService homeService) : Controller
 {
     public async Task<IActionResult> Index()
     {
-        var model = new HomeIndexViewModel();
+       var model = new HomeIndexViewModel();
 
        var result = await homeService.GetHomeInfosAsync();
 

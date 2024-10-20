@@ -16,6 +16,8 @@ public class AboutMeAdminService(DataApiDbContext dataApiDb) : IAboutMeAdminServ
         {
             var entity = new AboutMeEntity()
             {
+                FullName = dto.FullName,
+                Field = dto.Field,
                 Introduction = dto.Introduction,
                 ImageUrl1 = dto.ImageUrl1,
                 ImageUrl2 = dto.ImageUrl2,
@@ -58,6 +60,8 @@ public class AboutMeAdminService(DataApiDbContext dataApiDb) : IAboutMeAdminServ
 
             var dto = new AboutMeAdminDto()
             {
+                FullName = entity.FullName,
+                Field = entity.Field,
                 Introduction = entity.Introduction,
                 ImageUrl1 = entity.ImageUrl1,
                 ImageUrl2 = entity.ImageUrl2,
@@ -89,6 +93,8 @@ public class AboutMeAdminService(DataApiDbContext dataApiDb) : IAboutMeAdminServ
                 return Result.NotFound();
             }
 
+            entity.FullName = dto.FullName;
+            entity.Field = dto.Field;
             entity.Introduction = dto.Introduction;
 
             if (dto.ImageUrl1 != null)

@@ -1,5 +1,4 @@
 ﻿using App.Services.PortfolioServices.Abstract;
-using App.ViewModels.AdminMvc.EducationsViewModels;
 using App.ViewModels.PortfolioMvc.BlogPostsViewModels;
 using App.ViewModels.PortfolioMvc.CommentsViewModels;
 using Ardalis.Result;
