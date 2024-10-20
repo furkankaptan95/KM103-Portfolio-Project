@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views\ContactMessage\ReplyContactMessage.cshtml" />
+    <Content Remove="Views\ContactMessage\ReplyMessage.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,15 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <UpToDateCheckInput Remove="Views\ContactMessage\ReplyContactMessage.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Views\ContactMessage\ReplyContactMessage.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Views\ContactMessage\ReplyContactMessage.cshtml" />
+    <None Include="Views\ContactMessage\ReplyMessage.cshtml" />
   </ItemGroup>
 
 </Project>
