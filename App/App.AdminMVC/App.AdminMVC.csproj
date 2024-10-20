@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\ContactMessage\ReplyContactMessage.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
   </ItemGroup>
@@ -15,6 +19,18 @@
     <ProjectReference Include="..\App.Data\App.Data.csproj" />
     <ProjectReference Include="..\App.Services\App.Services.csproj" />
     <ProjectReference Include="..\App.ViewModels\App.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\ContactMessage\ReplyContactMessage.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\ContactMessage\ReplyContactMessage.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\ContactMessage\ReplyContactMessage.cshtml" />
   </ItemGroup>
 
 </Project>

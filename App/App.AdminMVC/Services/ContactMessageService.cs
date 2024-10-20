@@ -41,6 +41,11 @@ public class ContactMessageService(IHttpClientFactory factory) : IContactMessage
         }
     }
 
+    public Task<Result<ContactMessageToReplyDto>> GetContactMessageByIdAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<Result> ReplyContactMessageAsync(ReplyContactMessageDto dto)
     {
         throw new NotImplementedException();
