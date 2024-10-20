@@ -1,4 +1,5 @@
-﻿using App.DTOs.ContactMessageDtos.Admin;
+﻿using App.DataAPI.Services.AdminServices;
+using App.DTOs.ContactMessageDtos.Admin;
 using App.DTOs.ContactMessageDtos.Portfolio;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
@@ -137,5 +138,35 @@ public class ContactMessageController : ControllerBase
             return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
         }
 
+    }
+
+    [HttpGet("/make-message-read-{id:int}")]
+    public async Task<IActionResult> MakeMessageReadAsync([FromRoute] int id)
+    {
+        if (id <= 0)
+        {
+            return BadRequest(Result.Error("Geçersiz ID bilgisi."));
+        }
+
+        try
+        {
+            var result = await _contactMessageAdminService.ChangeIsReadAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                if (result.Status == ResultStatus.NotFound)
+
+                {
+                    return NotFound(result);
+                }
+                return StatusCode(500, result);
+            }
+            return Ok(result);
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
+        }
     }
 }
