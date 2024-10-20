@@ -1,6 +1,5 @@
 ﻿namespace App.AdminMVC.Services;
 
-using App.DTOs.BlogPostDtos.Admin;
 using App.DTOs.ContactMessageDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
@@ -11,9 +10,35 @@ using System.Threading.Tasks;
 public class ContactMessageService(IHttpClientFactory factory) : IContactMessageAdminService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
-    public Task<Result> ChangeIsReadAsync(int id)
+    public async Task<Result> ChangeIsReadAsync(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var apiResponse = await DataApiClient.GetAsync($"make-message-read-{id}");
+
+            if (apiResponse.IsSuccessStatusCode)
+            {
+                return Result.SuccessWithMessage("Mesaj okundu olarak işaretlendi.");
+            }
+
+            string errorMessage;
+
+            if (apiResponse.StatusCode == HttpStatusCode.NotFound)
+            {
+                errorMessage = "Okundu olarak işaretlemek istediğiniz Mesaj bulunamadı!..";
+            }
+            else
+            {
+                errorMessage = "Mesaj okundu olarak işaretlenirken beklenmeyen bir hata oluştu..";
+            }
+
+            return Result.Error(errorMessage);
+        }
+
+        catch (Exception)
+        {
+            return Result.Error("Mesaj okundu olarak işaretlenirken beklenmeyen bir hata oluştu..");
+        }
     }
 
     public async Task<Result<List<AllContactMessagesDto>>> GetAllContactMessagesAsync()
