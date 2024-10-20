@@ -1,6 +1,4 @@
-﻿using App.DataAPI.Services.AdminServices;
-using App.DTOs.BlogPostDtos.Admin;
-using App.DTOs.ContactMessageDtos.Admin;
+﻿using App.DTOs.ContactMessageDtos.Admin;
 using App.DTOs.ContactMessageDtos.Portfolio;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
@@ -16,19 +14,22 @@ public class ContactMessageController : ControllerBase
 {
     private readonly IContactMessagePortfolioService _contactMessagePortfolioService;
     private readonly IContactMessageAdminService _contactMessageAdminService;
-    private readonly IValidator<AddContactMessageDto> _validator;
-    public ContactMessageController(IContactMessagePortfolioService contactMessagePortfolioService, IValidator<AddContactMessageDto> validator,IContactMessageAdminService contactMessageAdminService)
+    private readonly IValidator<AddContactMessageDto> _addValidator;
+    private readonly IValidator<ReplyContactMessageDto> _replyValidator;
+
+    public ContactMessageController(IContactMessagePortfolioService contactMessagePortfolioService, IValidator<AddContactMessageDto> addValidator,IContactMessageAdminService contactMessageAdminService, IValidator<ReplyContactMessageDto> replyValidator)
     {
         _contactMessagePortfolioService = contactMessagePortfolioService;
-        _validator = validator;
+        _addValidator = addValidator;
         _contactMessageAdminService = contactMessageAdminService;
+        _replyValidator = replyValidator;
     }
     [HttpPost("/add-contact-message")]
     public async Task<IActionResult> AddAsync([FromBody] AddContactMessageDto dto)
     {
         try
         {
-            var validationResult = await _validator.ValidateAsync(dto);
+            var validationResult = await _addValidator.ValidateAsync(dto);
             string errorMessage;
 
             if (!validationResult.IsValid)
@@ -109,13 +110,13 @@ public class ContactMessageController : ControllerBase
     {
         try
         {
-            //var validationResult = await _updateValidator.ValidateAsync(dto);
+            var validationResult = await _replyValidator.ValidateAsync(dto);
 
-            //if (!validationResult.IsValid)
-            //{
-            //    var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            //    return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
-            //}
+            if (!validationResult.IsValid)
+            {
+                var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            }
 
             var result = await _contactMessageAdminService.ReplyContactMessageAsync(dto);
 

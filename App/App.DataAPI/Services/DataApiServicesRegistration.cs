@@ -13,6 +13,7 @@ using App.DTOs.AboutMeDtos;
 using App.DTOs.AboutMeDtos.Admin;
 using App.DTOs.BlogPostDtos.Admin;
 using App.DTOs.CommentDtos.Portfolio;
+using App.DTOs.ContactMessageDtos.Admin;
 using App.DTOs.ContactMessageDtos.Portfolio;
 using App.DTOs.EducationDtos;
 using App.DTOs.ExperienceDtos;
@@ -100,6 +101,8 @@ public static class DataApiServicesRegistration
         services.AddTransient<IValidator<AddCommentSignedDto>, AddCommentSignedDtoValidator>();
         services.AddTransient<IValidator<AddCommentUnsignedDto>, AddCommentUnsignedDtoValidator>();
         services.AddTransient<IValidator<AddContactMessageDto>, AddContactMessageDtoValidator>();
+        services.AddTransient<IValidator<ReplyContactMessageDto>, ReplyContactMessageDtoValidator>();
+        
 
         return services;
     }
