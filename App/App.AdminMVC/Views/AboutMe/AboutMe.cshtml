@@ -1,74 +1,89 @@
 ﻿@model AdminAboutMeViewModel
 
 @{
-    if (TempData["Message"] is not null)
-    {
-        <div class="alert custom-alert-success mt-5">
-            @TempData["Message"]
-        </div>
-    }
-
-    if (TempData["ErrorMessage"] is not null)
-    {
-        <div class="alert custom-alert-error mt-5">
-            @TempData["ErrorMessage"]
-        </div>
-    }
-
-    if (ViewData["ErrorMessage"] is not null)
-    {
-        <div class="alert custom-alert-error mt-5">
-            @ViewData["ErrorMessage"]
-        </div>
-    }
+    ViewData["Title"] = "Hakkımda";
 }
 
-<div class="row mb-5">
-<div class="col-md">
-    <div class="card mb-3">
-        <div class="row g-0 m-5">
-                <div class="col-md-4">
-
-                    <div class="card-body">
-                        <div class="card shadow-none bg-transparent border border-info mb-3 mt-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Giriş</h5>
-                                <p class="card-text">@Model.Introduction</p>
-                            </div>
-                        </div>
-                        <div class="card shadow-none bg-transparent border border-info mb-3 mt-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Tam İsim</h5>
-                                <p class="card-text">@Model.FullName</p>
-                            </div>
-                        </div>
-                        <div class="card shadow-none bg-transparent border border-info mb-3 mt-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Alan</h5>
-                                <p class="card-text">@Model.Field</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <div class="col-md-4">
-                    <img class="card-img" src="@($"https://localhost:7085/uploads/{Model.ImageUrl1}")" />
+<div class="container">
+    <div class="profile-card">
+        <h2 class="profile-title">Hakkımda</h2>
+        <hr>
+        <div class="profile-detail mb-3">
+            <span class="profile-label">Tanıtım: </span> @Model.Introduction
+        </div>
+        <div class="profile-detail mb-3">
+            <span class="profile-label">Tam İsim: </span> @Model.FullName
+        </div>
+        <div class="profile-detail mb-3">
+            <span class="profile-label">Uzmanlık Alanı: </span> @Model.Field
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-md-6 text-center mb-3">
+               
+                <img src="@($"https://localhost:7085/uploads/{Model.ImageUrl1}")" 
+                     class="img-thumbnail" 
+                     alt="Mevcut 1. Fotoğraf" 
+                     style="max-width: 100%; max-height: 250px; height: auto;">
             </div>
-                <div class="col-md-4">
-                    <img class="card-img" src="@($"https://localhost:7085/uploads/{Model.ImageUrl2}")" />
-                </div>
+            <div class="col-md-6 text-center">
+                <img src="@($"https://localhost:7085/uploads/{Model.ImageUrl2}")" 
+                     class="img-thumbnail" 
+                     alt="Mevcut 2. Fotoğraf" 
+                     style="max-width: 100%; max-height: 250px; height: auto;">
+            </div>
+        </div>
+
+        <!-- Düzenle Butonu -->
+        <div class="text-right">
+            <a href="/update-about-me" class="btn btn-primary">Düzenle</a>
         </div>
     </div>
 </div>
-</div>
 
-@section Styles{
+@section Styles {
     <style>
+        .profile-card {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 20px auto;
+        }
 
-        .card-img {
-            max-height: 350px; /* Maksimum yükseklik 150px */
-            width: auto; /* Genişliği otomatik ayarlar */
-            height: auto; /* Yüksekliği otomatik ayarlar */
-            object-fit: cover; /* Orantılı kesim */
+        .profile-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #343a40;
+        }
+
+        .profile-detail {
+            font-size: 16px;
+            color: #495057;
+        }
+
+        .profile-label {
+            font-weight: bold;
+            color: #6c757d;
+        }
+
+        .btn {
+            font-size: 14px;
+        }
+
+        @@media (max-width: 576px) {
+            .profile-card {
+                padding: 15px;
+            }
+
+            .profile-title {
+                font-size: 20px;
+            }
+
+            .profile-detail {
+                font-size: 14px;
+            }
         }
     </style>
 }

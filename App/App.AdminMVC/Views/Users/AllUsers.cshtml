@@ -1,29 +1,5 @@
 ﻿@model List<AllUsersViewModel>
 
-@{
-    if (TempData["Message"] is not null)
-    {
-        <div class="alert custom-alert-success mt-5">
-            @TempData["Message"]
-        </div>
-    }
-
-    if (TempData["ErrorMessage"] is not null)
-    {
-        <div class="alert custom-alert-error mt-5">
-            @TempData["ErrorMessage"]
-        </div>
-    }
-
-    if (ViewData["ErrorMessage"] is not null)
-    {
-        <div class="alert custom-alert-error mt-5">
-            @ViewData["ErrorMessage"]
-        </div>
-    }
-}
-
-
     <h2 class="text-center my-4" style="font-weight: 600; color: #333;">Kullanıcılar</h2>
 
     <div class="table-responsive text-nowrap" style="padding-bottom:100px;">
@@ -43,16 +19,16 @@
                 {
                     <tr>
                     <td>
-                        <img src="@($"https://localhost:7085/uploads/{user.ImageUrl}")" class="img-thumbnail" style="max-width: 100px; height: auto; display: block; margin: auto;">
+                        <img src="@($"https://localhost:7085/uploads/{user.ImageUrl}")" class="img-thumbnail" style="max-width: 100px; height: auto; display: block;">
                     </td>
                         <td>@user.Username</td>
                         <td>@user.Email</td>
 
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@user.Id" aria-haspopup="true" aria-expanded="false">Yorumları Görüntüle</button>
+                    <td>
+                        <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal-@user.Id" aria-haspopup="true" aria-expanded="false">Yorumları Görüntüle</button>
                     </td>
 
-                    <td class="text-center">
+                    <td>
                         @if (user.IsActive)
                         {
                             <span>Aktif ✅</span>
@@ -62,7 +38,7 @@
                             <span>Aktif değil ❌</span>
                         }
                     </td>
-                    <td class="text-center">
+                    <td>
                         @if (user.IsActive)
                         {
                             <a href="/change-user-activeness-@user.Id" class="btn btn-sm btn-secondary">İnaktif yap</a>
@@ -80,12 +56,12 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="modalLabel-@user.Id">@user.Username</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="comments-section">
-                                <h6 class="ml-3 mb-3">Yorumlar:</h6>
+                                <h6 class="mb-3" style="margin-left:10px;">Yorumlar:</h6>
                                 <div class="comment-list">
 
                                     @if (user.Comments.Count == 0)
@@ -121,7 +97,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
                             </div>
                         </div>
                     </div>
@@ -134,39 +110,6 @@
 
 @section Styles {
     <style>
-        .custom-alert-success {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 55%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #dff0d8;
-            color: #3c763d;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .custom-alert-error {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 55%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .modal-body {
-            max-height: 60vh; /* Modal yüksekliğini sınırlamak için */
-        }
-
-            .modal-body p {
-                white-space: normal; /* Metni alt satıra geçirir */
-            }
 
         .comments-section {
             margin-top: 20px;
@@ -194,12 +137,6 @@
         .comment-status {
             font-weight: bold;
             margin-top: 5px;
-        }
-
-        @@media (max-width: 576px) {
-            .comment {
-                padding: 5px 0;
-            }
         }
     </style>
 }

@@ -1,26 +1,5 @@
 ﻿@model UpdateProjectViewModel
 
-@if (TempData["Message"] is not null)
-{
-    <div class="alert custom-alert-success mt-5">
-        @TempData["Message"]
-    </div>
-}
-
-@if (TempData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @TempData["ErrorMessage"]
-    </div>
-}
-
-@if (ViewData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @ViewData["ErrorMessage"]
-    </div>
-}
-
 <div class="container">
     <div class="form-container">
         <div class="form-title">Projeyi Güncelle</div>
@@ -29,14 +8,14 @@
 
             <input type="hidden" asp-for="Id" />
 
-            <div class="mb-3">
-                <label asp-for="Title" class="form-label">Başlık</label>
+            <div class="mb-3 mt-3">
+                <label asp-for="Title" class="form-label mb-1">Başlık</label>
                 <input asp-for="Title" class="form-control" placeholder="Başlığı buraya yazınız" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Description" class="form-label">Açıklama</label>
+                <label asp-for="Description" class="form-label mb-1">Açıklama</label>
                 <textarea asp-for="Description" rows="7" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger" data-valmsg-replace="true"></span>
             </div>
@@ -47,7 +26,7 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="ImageFile" class="form-label">Yeni Fotoğraf</label>
+                <label asp-for="ImageFile" class="form-label mb-1">Yeni Fotoğraf</label>
                 <p>Fotoğrafı değiştirmek istiyorsanız yeni fotoğraf yükleyiniz.</p>
                 <p>** Yeni fotoğraf yüklemezseniz fotoğraf aynı kalacaktır.</p>
                 <input asp-for="ImageFile" class="form-control" type="file" accept="image/*">
@@ -59,8 +38,6 @@
 
     </div>
 </div>
-
-
 
 @section Styles {
     <style>
@@ -89,30 +66,5 @@
                 background-color: #0056b3;
             }
 
-        .custom-alert-success {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 55%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #dff0d8;
-            color: #3c763d;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .custom-alert-error {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 55%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
     </style>
 }
