@@ -90,7 +90,11 @@ public class ContactMessageService(IHttpClientFactory factory) : IContactMessage
 
             if (apiResponse.StatusCode == HttpStatusCode.NotFound)
             {
-                errorMessage = "Düzenlemek istediğiniz Mesaj bulunamadı!..";
+                errorMessage = "Yanıtlamak istediğiniz Mesaj bulunamadı!..";
+            }
+            else if(apiResponse.StatusCode == HttpStatusCode.Conflict)
+            {
+                errorMessage = "Mesajı daha önce zaten yanıtladınız!..";
             }
             else
             {
