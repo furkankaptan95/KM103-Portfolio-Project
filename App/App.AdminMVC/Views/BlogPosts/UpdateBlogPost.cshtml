@@ -1,28 +1,5 @@
 ﻿@model UpdateBlogPostViewModel
 
-@{
-    if (TempData["Message"] is not null)
-    {
-        <div class="alert custom-alert-success mt-5">
-            @TempData["Message"]
-        </div>
-    }
-
-    if (TempData["ErrorMessage"] is not null)
-    {
-        <div class="alert custom-alert-error mt-5">
-            @TempData["ErrorMessage"]
-        </div>
-    }
-
-    if (ViewData["ErrorMessage"] is not null)
-    {
-        <div class="alert custom-alert-error mt-5">
-            @ViewData["ErrorMessage"]
-        </div>
-    }
-}
-
 <div class="row justify-content-center">
     <div class="col-md-5">
         <div class="card mb-4">
@@ -36,13 +13,13 @@
 
                     <input type="hidden" asp-for="Id" />
 
-                    <div class="mb-3">
-                        <label asp-for="Title" class="control-label">Başlık</label>
+                    <div class="mb-3 mt-3">
+                        <label asp-for="Title" class="control-label mb-1">Başlık</label>
                         <input asp-for="Title" class="form-control" placeholder="Başlığı buraya yazınız" />
                         <span asp-validation-for="Title" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
-                        <label asp-for="Content" class="control-label">İçerik</label>
+                        <label asp-for="Content" class="control-label mb-1">İçerik</label>
                         <textarea asp-for="Content" class="form-control" rows="10" placeholder="Post içeriğini buraya yazınız"></textarea>
                         <span asp-validation-for="Content" class="text-danger"></span>
                     </div>
@@ -53,35 +30,3 @@
         </div>
     </div>
 </div>
-
-
-@section Styles {
-    <style>
-        .custom-alert-success {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 55%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #dff0d8;
-            color: #3c763d;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .custom-alert-error {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 55%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-    </style>
-}
-

@@ -6,19 +6,41 @@
       data-assets-path="~/assets/"
       data-template="vertical-menu-template-free">
 <head>
-    <partial name="Partials/PageHead.cshtml">
+    <partial name="Partials/PageHead.cshtml" />
         @await RenderSectionAsync("Styles", required: false)
 </head>
 
 <body>
+    @{
+        if (TempData["Message"] is not null)
+        {
+            <div class="alert custom-alert-success mt-5">
+                @TempData["Message"]
+            </div>
+        }
+
+        if (TempData["ErrorMessage"] is not null)
+        {
+            <div class="alert custom-alert-error mt-5">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        if (ViewData["ErrorMessage"] is not null)
+        {
+            <div class="alert custom-alert-error mt-5">
+                @ViewData["ErrorMessage"]
+            </div>
+        }
+    }
 
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
 
-            <partial name="Partials/Menu.cshtml">
+            <partial name="Partials/Menu.cshtml" />
                 <div class="layout-page">
 
-                    <partial name="Partials/Navbar.cshtml">
+                    <partial name="Partials/Navbar.cshtml" />
 
                         <div class="content-wrapper">
 
@@ -28,7 +50,7 @@
 
                             </div>
 
-                            <partial name="Partials/Footer.cshtml">
+                            <partial name="Partials/Footer.cshtml" />
 
                                 <div class="content-backdrop fade"></div>
 
@@ -41,7 +63,7 @@
         <div class="layout-overlay layout-menu-toggle"></div>
     </div>
 
-    <partial name="Partials/PageScripts.cshtml">
+    <partial name="Partials/PageScripts.cshtml" />     
         @await RenderSectionAsync("Scripts", required: false)
 
 </body>
