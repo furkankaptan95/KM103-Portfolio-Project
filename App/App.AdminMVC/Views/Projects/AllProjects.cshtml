@@ -1,26 +1,7 @@
 ﻿@model List<AdminAllProjectsViewModel>
 
 @{
-    if (TempData["Message"] is not null)
-    {
-        <div class="alert custom-alert-success mt-5">
-            @TempData["Message"]
-        </div>
-    }
-
-    if (TempData["ErrorMessage"] is not null)
-    {
-        <div class="alert custom-alert-error mt-5">
-            @TempData["ErrorMessage"]
-        </div>
-    }
-
-    if (ViewData["ErrorMessage"] is not null)
-    {
-        <div class="alert custom-alert-error mt-5">
-            @ViewData["ErrorMessage"]
-        </div>
-    }
+    ViewData["Title"] = "Projeler";
 }
 
 @if (Model.Count == 0)
@@ -38,7 +19,10 @@
 
 else
 {
-    <h2 class="text-center my-4" style="font-weight: 600; color: #333;">Projeler</h2>
+    <div class="d-flex justify-content-between align-items-center my-4">
+        <h2 class="text-start" style="font-weight: 600; color: #333;">Projeler</h2>
+        <a href="/add-experience" class="btn btn-success">Proje Ekle</a>
+    </div>
 
     <div class="table-responsive text-nowrap" style="padding-bottom:100px;">
         <table class="table card-table">
@@ -56,12 +40,12 @@ else
                 {
                     <tr>
                         <td style="text-align:center;">
-                            <img src="@($"https://localhost:7085/uploads/{project.ImageUrl}")" alt="@project.Title" class="img-thumbnail" style="max-width: 100px; height: auto; display: block; margin: auto;">
+                            <img src="@($"https://localhost:7085/uploads/{project.ImageUrl}")" alt="@project.Title" class="img-thumbnail" style="max-width: 100px; height: auto; display: block;">
                         </td>
 
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@project.Title</strong></td>
                         <td>
-                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@project.Id" aria-haspopup="true" aria-expanded="false">Açıklamayı Görüntüle</button>
+                        <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal-@project.Id" aria-haspopup="true" aria-expanded="false">Açıklamayı Görüntüle</button>
                         </td>
                         <td>
                             @if (project.IsVisible)
@@ -100,7 +84,7 @@ else
 
                                     <a class="dropdown-item" href="/update-project-@project.Id"><i class="bx bx-edit-alt me-1"></i> Düzenle</a>
 
-                                    <a class="dropdown-item" data-toggle="modal" data-target="#deleteModal-@project.Id"><i class="bx bx-trash me-1"></i> Sil</a>
+                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal-@project.Id"><i class="bx bx-trash me-1"></i> Sil</a>
                                 </div>
                             </div>
                         </td>
@@ -112,7 +96,7 @@ else
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="modalLabel-@project.Id">@project.Title</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
@@ -120,7 +104,7 @@ else
                                     <p>@project.Description</p>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
                                 </div>
                             </div>
                         </div>
@@ -132,7 +116,7 @@ else
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="deleteModalLabel-@project.Id">Silme Onayı</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
@@ -141,7 +125,7 @@ else
                                 </div>
                                 <div class="modal-footer">
                                     <form action="/delete-project-@project.Id" method="get">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
                                         <button type="submit" class="btn btn-danger">Sil</button>
                                     </form>
                                 </div>
@@ -153,46 +137,6 @@ else
         </table>
     </div>
 }
-
-@section Styles {
-    <style>
-        .custom-alert-success {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 55%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #dff0d8;
-            color: #3c763d;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .custom-alert-error {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 55%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .modal-body {
-            max-height: 60vh; /* Modal yüksekliğini sınırlamak için */
-        }
-
-            .modal-body p {
-                white-space: normal; /* Metni alt satıra geçirir */
-            }
-    </style>
-}
-
-
 
 
 

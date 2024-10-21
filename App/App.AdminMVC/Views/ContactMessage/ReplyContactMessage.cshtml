@@ -1,24 +1,7 @@
 ﻿@model ReplyViewModel
 
-@if (TempData["Message"] is not null)
-{
-    <div class="alert custom-alert-success mt-5">
-        @TempData["Message"]
-    </div>
-}
-
-@if (TempData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @TempData["ErrorMessage"]
-    </div>
-}
-
-@if (ViewData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @ViewData["ErrorMessage"]
-    </div>
+@{
+    ViewData["Title"] = "Mesaj-Yanıt";
 }
 
 <div class="container">
@@ -68,7 +51,6 @@
 </div>
 
 @section Styles {
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .message-content {
     max-height: 250px; /* Yüksekliği sınırlandırmak için */
@@ -77,33 +59,6 @@
     background-color: #f1f1f1; /* Arka plan rengi ekleyebiliriz */
     border-radius: 10px; /* Kenarlara hafif yuvarlaklık verir */
 }
-
-        .custom-alert-success {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 55%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #dff0d8;
-            color: #3c763d;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .custom-alert-error {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 55%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
 
         .profile-card {
             background-color: #f8f9fa;
@@ -148,8 +103,4 @@
             }
         }
     </style>
-}
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
 }

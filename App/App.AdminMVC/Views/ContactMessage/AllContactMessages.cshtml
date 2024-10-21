@@ -1,28 +1,8 @@
 ﻿@model List<AllContactMessagesViewModel>
 
 @{
-    if (TempData["Message"] is not null)
-    {
-        <div class="alert custom-alert-success mt-5">
-            @TempData["Message"]
-        </div>
-    }
-
-    if (TempData["ErrorMessage"] is not null)
-    {
-        <div class="alert custom-alert-error mt-5">
-            @TempData["ErrorMessage"]
-        </div>
-    }
-
-    if (ViewData["ErrorMessage"] is not null)
-    {
-        <div class="alert custom-alert-error mt-5">
-            @ViewData["ErrorMessage"]
-        </div>
-    }
+    ViewData["Title"] = "Mesajlar";
 }
-
 
 @if (Model.Count == 0)
 {
@@ -32,7 +12,6 @@
         <h4 class="font-weight-bold">Şu anda görüntülenecek bir Mesaj bulunmuyor.</h4>
     </div>
 }
-
 
 else
 {
@@ -64,7 +43,7 @@ else
                             @contactMessage.Subject
                         </td>
                         <td>
-                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@contactMessage.Id" aria-haspopup="true" aria-expanded="false">Mesajı Görüntüle</button>
+                            <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal-@contactMessage.Id" aria-haspopup="true" aria-expanded="false">Mesajı Görüntüle</button>
                         </td>
                         <td>
                             @contactMessage.SentDate.ToString("dd MMMM yyyy HH:mm")
@@ -87,7 +66,7 @@ else
                             else
                             {
 
-                                <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalReply-@contactMessage.Id" aria-haspopup="true" aria-expanded="false">Yanıtı Görüntüle</button>
+                                <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modalReply-@contactMessage.Id" aria-haspopup="true" aria-expanded="false">Yanıtı Görüntüle</button>
 
                             }
                         </td>
@@ -106,7 +85,7 @@ else
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="modalLabel-@contactMessage.Id">@contactMessage.Name</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
@@ -116,7 +95,7 @@ else
                                 @if (contactMessage.IsRead)
                                 {
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
                                         <span class="badge bg-success text-white" style="padding: 10px 20px; display: inline-block;">Mesaj Okundu</span>
 
 
@@ -126,7 +105,7 @@ else
                                 {
                                     <div class="modal-footer">
                                         <form action="/make-message-read-@contactMessage.Id" method="get">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
                                             <button type="submit" class="btn btn-warning">Okundu Olarak İşaretle</button>
                                         </form>
                                     </div>
@@ -142,7 +121,7 @@ else
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="modalLabelReply-@contactMessage.Id">Yanıtım</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
@@ -150,7 +129,7 @@ else
                                     <p>@contactMessage.Reply</p>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
                                 </div>
                             </div>
                         </div>
@@ -160,43 +139,3 @@ else
         </table>
     </div>
 }
-
-@section Styles {
-    <style>
-        .custom-alert-success {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 55%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #dff0d8;
-            color: #3c763d;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .custom-alert-error {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 55%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .modal-body {
-            max-height: 60vh; /* Modal yüksekliğini sınırlamak için */
-        }
-
-            .modal-body p {
-                white-space: normal; /* Metni alt satıra geçirir */
-            }
-    </style>
-}
-
-

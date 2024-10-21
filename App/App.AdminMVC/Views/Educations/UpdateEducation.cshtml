@@ -1,26 +1,7 @@
 ﻿@model UpdateEducationViewModel
 
 @{
-    if (TempData["Message"] is not null)
-    {
-        <div class="alert custom-alert-success mt-5">
-            @TempData["Message"]
-        </div>
-    }
-
-    if (TempData["ErrorMessage"] is not null)
-    {
-        <div class="alert custom-alert-error mt-5">
-            @TempData["ErrorMessage"]
-        </div>
-    }
-
-    if (ViewData["ErrorMessage"] is not null)
-    {
-        <div class="alert custom-alert-error mt-5">
-            @ViewData["ErrorMessage"]
-        </div>
-    }
+    ViewData["Title"] = "Eğitim - Güncelle";
 }
 
 <div class="row justify-content-center">
@@ -36,26 +17,26 @@
 
                     <input asp-for="Id" type="hidden" />
 
-                    <div class="mb-3">
-                        <label asp-for="School" class="control-label">Okul</label>
+                    <div class="mb-3 mt-3">
+                        <label asp-for="School" class="form-label mb-1">Okul</label>
                         <input asp-for="School" class="form-control" placeholder="Okul bilgisini buraya yazınız" />
                         <span asp-validation-for="School" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Degree" class="control-label">Derece</label>
+                        <label asp-for="Degree" class="form-label mb-1">Derece</label>
                         <input asp-for="Degree" class="form-control" placeholder="Derece bilgisini buraya yazınız" />
                         <span asp-validation-for="Degree" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="StartDate" class="control-label">Başlangıç Tarihi</label>
+                        <label asp-for="StartDate" class="form-label mb-1">Başlangıç Tarihi</label>
                         <input asp-for="StartDate" class="form-control" type="datetime-local" />
                         <span asp-validation-for="StartDate" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="EndDate" class="control-label">Bitiş Tarihi</label>
+                        <label asp-for="EndDate" class="form-label mb-1">Bitiş Tarihi</label>
                         <input asp-for="EndDate" class="form-control" type="datetime-local" />
                         <span asp-validation-for="EndDate" class="text-danger"></span>
                     </div>
@@ -66,34 +47,3 @@
         </div>
     </div>
 </div>
-
-
-@section Styles {
-    <style>
-        .custom-alert-success {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 55%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #dff0d8;
-            color: #3c763d;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .custom-alert-error {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 55%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-    </style>
-}
