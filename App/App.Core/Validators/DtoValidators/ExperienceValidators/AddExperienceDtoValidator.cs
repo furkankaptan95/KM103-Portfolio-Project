@@ -1,7 +1,7 @@
 ﻿using App.DTOs.ExperienceDtos.Admin;
 using FluentValidation;
 
-namespace App.Core.Validators.ExperienceValidators;
+namespace App.Core.Validators.DtoValidators.ExperienceValidators;
 public class AddExperienceDtoValidator : AbstractValidator<AddExperienceDto>
 {
     public AddExperienceDtoValidator()
@@ -27,12 +27,12 @@ public class AddExperienceDtoValidator : AbstractValidator<AddExperienceDto>
     }
     private bool BeAValidEndDate(DateTime? date)
     {
-        return date.HasValue && date.Value != default(DateTime);
+        return date.HasValue && date.Value != default;
     }
 
     private bool BeAValidStartDate(DateTime date)
     {
-        return date != default(DateTime);
+        return date != default;
     }
 
 }

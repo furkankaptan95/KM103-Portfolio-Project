@@ -1,7 +1,7 @@
 ﻿using App.DTOs.AboutMeDtos;
 using FluentValidation;
 
-namespace App.Core.Validators.AboutMeValidators;
+namespace App.Core.Validators.DtoValidators.AboutMeValidators;
 public class UpdateAboutMeApiDtoValidator : AbstractValidator<UpdateAboutMeApiDto>
 {
     public UpdateAboutMeApiDtoValidator()

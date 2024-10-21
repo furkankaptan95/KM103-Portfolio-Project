@@ -1,7 +1,7 @@
 ﻿using App.DTOs.ContactMessageDtos.Admin;
 using FluentValidation;
 
-namespace App.Core.Validators.ContactMessageValidators;
+namespace App.Core.Validators.DtoValidators.ContactMessageValidators;
 public class ReplyContactMessageDtoValidator : AbstractValidator<ReplyContactMessageDto>
 {
     public ReplyContactMessageDtoValidator()
@@ -11,6 +11,6 @@ public class ReplyContactMessageDtoValidator : AbstractValidator<ReplyContactMes
             .GreaterThan(0).WithMessage("Id 0'dan büyük olmalıdır.");
 
         RuleFor(x => x.ReplyMessage)
-           .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Mesaj kısmı boş olamaz.");  
+           .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Mesaj kısmı boş olamaz.");
     }
 }

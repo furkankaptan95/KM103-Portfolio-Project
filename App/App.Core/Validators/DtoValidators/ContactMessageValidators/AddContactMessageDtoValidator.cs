@@ -1,12 +1,12 @@
 ﻿using App.DTOs.ContactMessageDtos.Portfolio;
 using FluentValidation;
 
-namespace App.Core.Validators.ContactMessageValidators;
+namespace App.Core.Validators.DtoValidators.ContactMessageValidators;
 public class AddContactMessageDtoValidator : AbstractValidator<AddContactMessageDto>
 {
     public AddContactMessageDtoValidator()
     {
-        
+
         RuleFor(x => x.Name)
             .MaximumLength(50).WithMessage("İsim kısmı en fazla 50 karakter olabilir.")
             .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("İsim kısmı boş olamaz.");

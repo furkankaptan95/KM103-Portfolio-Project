@@ -1,7 +1,7 @@
 ﻿using App.DTOs.PersonalInfoDtos;
 using FluentValidation;
 
-namespace App.Core.Validators.PersonalInfoValidators;
+namespace App.Core.Validators.DtoValidators.PersonalInfoValidators;
 public class UpdatePersonalInfoDtoValidator : AbstractValidator<UpdatePersonalInfoDto>
 {
     public UpdatePersonalInfoDtoValidator()

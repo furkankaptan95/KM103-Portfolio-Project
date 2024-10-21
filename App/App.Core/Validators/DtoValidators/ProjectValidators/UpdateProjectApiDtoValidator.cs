@@ -1,7 +1,7 @@
 ﻿using App.DTOs.ProjectDtos;
 using FluentValidation;
 
-namespace App.Core.Validators.ProjectValidators;
+namespace App.Core.Validators.DtoValidators.ProjectValidators;
 public class UpdateProjectApiDtoValidator : AbstractValidator<UpdateProjectApiDto>
 {
     public UpdateProjectApiDtoValidator()
