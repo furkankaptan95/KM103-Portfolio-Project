@@ -94,6 +94,10 @@ public class ContactMessageController : ControllerBase
                 {
                     return NotFound(result);
                 }
+                else if(result.Status == ResultStatus.Conflict)
+                {
+                    return Conflict(result);
+                }
 
                 return StatusCode(500, result);
             }

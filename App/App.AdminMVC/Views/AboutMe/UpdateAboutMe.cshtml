@@ -13,24 +13,23 @@
             </div>
             <div class="card-body">
 
-                <form action="/update-about-me" method="post" enctype="multipart/form-data">
-
+                <form action="/update-about-me" method="post" enctype="multipart/form-data" id="updateAboutMeForm">
                     <div class="mb-3 mt-3">
                         <label asp-for="Introduction" class="form-label mb-1">Giriş</label>
-                        <textarea asp-for="Introduction" rows="6" class="form-control"></textarea>
-                        <span asp-validation-for="Introduction" class="text-danger"></span>
+                        <textarea asp-for="Introduction" rows="6" class="form-control" id="Introduction"></textarea>
+                        <span class="text-danger" id="introductionError"></span>
                     </div>
                     <div class="mb-3">
                         <label asp-for="FullName" class="control-label mb-1">Tam İsim</label>
-                        <input asp-for="FullName" class="form-control" />
-                        <span asp-validation-for="FullName" class="text-danger"></span>
+                        <input asp-for="FullName" class="form-control" id="FullName" />
+                        <span class="text-danger" id="fullNameError"></span>
                     </div>
                     <div class="mb-3">
                         <label asp-for="Field" class="control-label mb-1">Alan</label>
-                        <input asp-for="Field" class="form-control" />
-                        <span asp-validation-for="Field" class="text-danger"></span>
+                        <input asp-for="Field" class="form-control" id="Field" />
+                        <span class="text-danger" id="fieldError"></span>
                     </div>
-               
+
                     <div class="container">
                         <div class="row mb-3">
                             <div class="col-12 col-md-6 mb-3 d-flex justify-content-center">
@@ -48,22 +47,20 @@
                         </div>
                     </div>
 
-
-
                     <div class="mb-3">
                         <label asp-for="ImageFile1" class="form-label mb-1">Yeni 1. Fotoğraf</label>
-                        <p style ="font-size:14px;">İlk fotoğrafınızı değiştirmek istiyorsanız fotoğraf dosyası yükleyiniz.</p>
+                        <p style="font-size:14px;">İlk fotoğrafınızı değiştirmek istiyorsanız fotoğraf dosyası yükleyiniz.</p>
                         <p style="font-size:12px;">**Yüklemezseniz 1. fotoğrafınız aynı kalacaktır.</p>
-                        <input asp-for="ImageFile1" class="form-control" type="file" accept="image/*">
-                        <span asp-validation-for="ImageFile1" class="text-danger" data-valmsg-replace="true"></span>
+                        <input asp-for="ImageFile1" class="form-control" type="file" accept="image/*" id="ImageFile1">
+                        <span class="text-danger" id="imageFile1Error"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="ImageFile2" class="form-label mb-1">Yeni 2. Fotoğraf</label>
                         <p style="font-size:14px;">İkinci fotoğrafınızı değiştirmek istiyorsanız fotoğraf dosyası yükleyiniz.</p>
                         <p style="font-size:12px;">**Yüklemezseniz 2. fotoğrafınız aynı kalacaktır.</p>
-                        <input asp-for="ImageFile2" class="form-control" type="file" accept="image/*">
-                        <span asp-validation-for="ImageFile2" class="text-danger" data-valmsg-replace="true"></span>
+                        <input asp-for="ImageFile2" class="form-control" type="file" accept="image/*" id="ImageFile2">
+                        <span class="text-danger" id="imageFile2Error"></span>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Güncelle</button>
@@ -72,3 +69,76 @@
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#updateAboutMeForm').on('submit', function (e) {
+                let isValid = true;
+
+                // Giriş validasyonu
+                const introduction = $('#Introduction').val().trim();
+                if (introduction.length === 0) {
+                    $('#introductionError').text('Giriş kısmı boş olamaz.');
+                    isValid = false;
+                } else if (introduction.length > 100) {
+                    $('#introductionError').text('Giriş kısmı maksimum 100 karakter olmalıdır.');
+                    isValid = false;
+                } else {
+                    $('#introductionError').text('');
+                }
+
+                // Tam isim validasyonu
+                const fullName = $('#FullName').val().trim();
+                if (fullName.length === 0) {
+                    $('#fullNameError').text('Tam isim kısmı boş olamaz.');
+                    isValid = false;
+                } else if (fullName.length > 100) {
+                    $('#fullNameError').text('Tam isim kısmı maksimum 100 karakter olmalıdır.');
+                    isValid = false;
+                } else {
+                    $('#fullNameError').text('');
+                }
+
+                // Alan validasyonu
+                const field = $('#Field').val().trim();
+                if (field.length === 0) {
+                    $('#fieldError').text('Alan kısmı boş olamaz.');
+                    isValid = false;
+                } else if (field.length > 50) {
+                    $('#fieldError').text('Alan kısmı maksimum 50 karakter olmalıdır.');
+                    isValid = false;
+                } else {
+                    $('#fieldError').text('');
+                }
+
+                // Image 1 validasyonu
+                const imageFile1 = $('#ImageFile1')[0].files[0];
+                if (imageFile1 && !isValidImage(imageFile1)) {
+                    $('#imageFile1Error').text('Lütfen geçerli bir resim dosyası (jpg, jpeg, png, gif) yükleyiniz.');
+                    isValid = false;
+                } else {
+                    $('#imageFile1Error').text('');
+                }
+
+                // Image 2 validasyonu
+                const imageFile2 = $('#ImageFile2')[0].files[0];
+                if (imageFile2 && !isValidImage(imageFile2)) {
+                    $('#imageFile2Error').text('Lütfen geçerli bir resim dosyası (jpg, jpeg, png, gif) yükleyiniz.');
+                    isValid = false;
+                } else {
+                    $('#imageFile2Error').text('');
+                }
+
+                if (!isValid) {
+                    e.preventDefault(); // Formun gönderilmesini engelle
+                }
+            });
+
+            function isValidImage(file) {
+                const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+                return allowedExtensions.exec(file.name);
+            }
+        });
+    </script>
+}

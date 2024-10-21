@@ -10,4 +10,5 @@ public interface IAboutMeAdminService
     Task<Result<AboutMeAdminDto>> GetAboutMeAsync();
     Task<Result> UpdateAboutMeAsync(UpdateAboutMeMVCDto dto);
     Task<Result> UpdateAboutMeAsync(UpdateAboutMeApiDto dto);
+    Task<Result<bool>> CheckAboutMeAsync();
 }

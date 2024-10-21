@@ -13,24 +13,63 @@
             </div>
             <div class="card-body">
 
-                <form action="/update-blog-post" method="post">
-
+                <form id="updateBlogPostForm" action="/update-blog-post" method="post">
                     <input type="hidden" asp-for="Id" />
 
                     <div class="mb-3 mt-3">
                         <label asp-for="Title" class="form-label mb-1">Başlık</label>
                         <input asp-for="Title" class="form-control" placeholder="Başlığı buraya yazınız" />
-                        <span asp-validation-for="Title" class="text-danger"></span>
+                        <span id="titleError" class="text-danger"></span> <!-- Hata mesajı için ID eklenmiştir -->
                     </div>
                     <div class="mb-3">
                         <label asp-for="Content" class="form-label mb-1">İçerik</label>
                         <textarea asp-for="Content" class="form-control" rows="10" placeholder="Post içeriğini buraya yazınız"></textarea>
-                        <span asp-validation-for="Content" class="text-danger"></span>
+                        <span id="contentError" class="text-danger"></span> <!-- Hata mesajı için ID eklenmiştir -->
                     </div>
 
                     <button type="submit" class="btn btn-primary">Güncelle</button>
                 </form>
+
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        document.getElementById('updateBlogPostForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Formun gönderilmesini engelle
+
+            // Hata mesajlarını temizle
+            document.getElementById('titleError').innerText = '';
+            document.getElementById('contentError').innerText = '';
+
+            // Değerleri al
+            const title = document.getElementById('Title').value.trim();
+            const content = document.getElementById('Content').value.trim();
+
+            let hasError = false;
+
+            // Başlık validasyonu
+            if (!title) { // Boş veya yalnızca boşluk karakterleri kontrolü
+                document.getElementById('titleError').innerText = 'Başlık kısmı boş olamaz.';
+                hasError = true;
+            } else if (title.length > 100) {
+                document.getElementById('titleError').innerText = 'Başlık maksimum 100 karakter olabilir.';
+                hasError = true;
+            }
+
+            // İçerik validasyonu
+            if (!content) { // Boş veya yalnızca boşluk karakterleri kontrolü
+                document.getElementById('contentError').innerText = 'İçerik kısmı boş olamaz.';
+                hasError = true;
+            }
+
+            // Hatalar yoksa formu gönder
+            if (!hasError) {
+                // Formu sunucuya gönder
+                this.submit(); // Bu satırı kullanarak formu gönder
+            }
+        });
+    </script>
+}

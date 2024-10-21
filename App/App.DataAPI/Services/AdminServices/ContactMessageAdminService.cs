@@ -91,6 +91,11 @@ public class ContactMessageAdminService(DataApiDbContext dataApiDb) : IContactMe
                     return Result<ContactMessageToReplyDto>.NotFound();
                 }
 
+                if(entity.ReplyDate is not null)
+                {
+                    return Result<ContactMessageToReplyDto>.Conflict();
+                }
+
                 var dto = new ContactMessageToReplyDto
                 {
                     Id = id,

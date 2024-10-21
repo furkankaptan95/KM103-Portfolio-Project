@@ -16,7 +16,6 @@ public class UpdateBlogPostDtoValidator : AbstractValidator<UpdateBlogPostDto>
 			.MaximumLength(100).WithMessage("Başlık maksimum 100 karakter olabilir.");
 
 		RuleFor(x => x.Content)
-		   .NotEmpty().WithMessage("İçerik kısmı boş olamaz.")
 		   .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("İçerik kısmı boş olamaz.");
 	}
 }

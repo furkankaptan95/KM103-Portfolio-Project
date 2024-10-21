@@ -28,8 +28,7 @@
         </div>
 
 
-        <form action="/reply-message" method="post">
-
+        <form id="replyForm" action="/reply-message" method="post">
             <input type="hidden" asp-for="@Model.GetModel.Name" />
             <input type="hidden" asp-for="@Model.GetModel.Email" />
             <input type="hidden" asp-for="@Model.GetModel.Subject" />
@@ -41,7 +40,7 @@
             <div class="form-group">
                 <label asp-for="@Model.ReplyModel.ReplyMessage" class="form-label">Giriş</label>
                 <textarea asp-for="@Model.ReplyModel.ReplyMessage" rows="6" class="form-control" placeholder="Yanıtınızı buraya yazınız.."></textarea>
-                <span asp-validation-for="@Model.ReplyModel.ReplyMessage" class="text-danger"></span>
+                <span id="replyMessageError" class="text-danger"></span> <!-- Hata mesajı için boş bir span -->
             </div>
 
             <button type="submit" class="btn btn-primary mt-3">Yanıtı Gönder</button>
@@ -103,4 +102,20 @@
             }
         }
     </style>
+}
+
+@section Scripts{
+    <script>
+        document.getElementById('replyForm').addEventListener('submit', function (event) {
+            const replyMessage = document.querySelector('textarea[name="ReplyModel.ReplyMessage"]').value.trim();
+            const errorMessage = document.getElementById('replyMessageError');
+
+            if (!replyMessage) {
+                errorMessage.textContent = "Yanıt mesajı boş olamaz.";
+                event.preventDefault(); // Formun gönderilmesini engelle
+            } else {
+                errorMessage.textContent = ""; // Hata mesajını temizle
+            }
+        });
+    </script>
 }
