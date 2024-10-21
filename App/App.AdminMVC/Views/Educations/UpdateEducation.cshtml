@@ -20,30 +20,103 @@
                     <div class="mb-3 mt-3">
                         <label asp-for="School" class="form-label mb-1">Okul</label>
                         <input asp-for="School" class="form-control" placeholder="Okul bilgisini buraya yazınız" />
-                        <span asp-validation-for="School" class="text-danger"></span>
+                        <span id="SchoolError" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="Degree" class="form-label mb-1">Derece</label>
                         <input asp-for="Degree" class="form-control" placeholder="Derece bilgisini buraya yazınız" />
-                        <span asp-validation-for="Degree" class="text-danger"></span>
+                        <span id="DegreeError" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="StartDate" class="form-label mb-1">Başlangıç Tarihi</label>
                         <input asp-for="StartDate" class="form-control" type="datetime-local" />
-                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                        <span id="StartDateError" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="EndDate" class="form-label mb-1">Bitiş Tarihi</label>
                         <input asp-for="EndDate" class="form-control" type="datetime-local" />
-                        <span asp-validation-for="EndDate" class="text-danger"></span>
+                        <span id="EndDateError" class="text-danger"></span>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Güncelle</button>
                 </form>
+
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.querySelector('form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Formun gönderilmesini engelle
+
+            // Hata mesajlarını temizle
+            document.getElementById('SchoolError').innerText = '';
+            document.getElementById('DegreeError').innerText = '';
+            document.getElementById('StartDateError').innerText = '';
+            document.getElementById('EndDateError').innerText = '';
+
+            // Değerleri al
+            const school = document.querySelector('input[name="School"]').value.trim();
+            const degree = document.querySelector('input[name="Degree"]').value.trim();
+            const startDate = document.querySelector('input[name="StartDate"]').value;
+            const endDate = document.querySelector('input[name="EndDate"]').value;
+
+            let hasError = false;
+
+            // Okul validasyonu
+            if (!school) {
+                document.getElementById('SchoolError').innerText = 'Okul kısmı zorunludur.';
+                hasError = true;
+            } else if (school.length > 100) {
+                document.getElementById('SchoolError').innerText = 'Okul maksimum 100 karakter olabilir.';
+                hasError = true;
+            }
+
+            // Derece validasyonu
+            if (!degree) {
+                document.getElementById('DegreeError').innerText = 'Derece kısmı zorunludur.';
+                hasError = true;
+            } else if (degree.length > 50) {
+                document.getElementById('DegreeError').innerText = 'Derece maksimum 50 karakter olabilir.';
+                hasError = true;
+            }
+
+            // Başlangıç Tarihi validasyonu
+            if (!startDate) {
+                document.getElementById('StartDateError').innerText = 'Başlangıç tarihi zorunludur.';
+                hasError = true;
+            } else {
+                const start = new Date(startDate);
+                if (isNaN(start.getTime())) {
+                    document.getElementById('StartDateError').innerText = 'Geçerli bir başlangıç tarihi giriniz.';
+                    hasError = true;
+                }
+            }
+
+            // Bitiş Tarihi validasyonu
+            if (endDate) {
+                const end = new Date(endDate);
+                if (isNaN(end.getTime())) {
+                    document.getElementById('EndDateError').innerText = 'Geçerli bir bitiş tarihi giriniz.';
+                    hasError = true;
+                } else {
+                    const start = new Date(startDate);
+                    if (end < start) {
+                        document.getElementById('EndDateError').innerText = 'Bitiş tarihi başlangıç tarihinden önce olamaz.';
+                        hasError = true;
+                    }
+                }
+            }
+
+            // Hatalar yoksa formu gönder
+            if (!hasError) {
+                this.submit(); // Formu gönder
+            }
+        });
+    </script>
+}
