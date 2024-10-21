@@ -162,7 +162,7 @@ public class BlogPostService : IBlogPostAdminService
             {
                 if (apiResponse.StatusCode == HttpStatusCode.NotFound)
                 {
-                    return Result.Error("Güncellemek istediğiniz Blog Post bulunamadı.");
+                    return Result.NotFound("Güncellemek istediğiniz Blog Post bulunamadı.");
                 }
 
                 return Result.Error("Güncelleme işlemi sırasında beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");

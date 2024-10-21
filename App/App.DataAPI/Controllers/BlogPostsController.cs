@@ -234,7 +234,6 @@ public class BlogPostsController : ControllerBase
             if (!result.IsSuccess)
             {
                 if (result.Status == ResultStatus.NotFound)
-
                 {
                     return NotFound(result);
                 }

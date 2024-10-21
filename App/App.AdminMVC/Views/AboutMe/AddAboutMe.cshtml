@@ -4,7 +4,6 @@
     ViewData["Title"] = "Hakkımda - Ekle";
 }
 
-
 <div class="row justify-content-center">
     <div class="col-md-5">
         <div class="card mb-4">
@@ -13,38 +12,116 @@
                 <small class="text-muted float-end">Ekleme</small>
             </div>
             <div class="card-body">
-
                 <form action="/add-about-me" method="post" enctype="multipart/form-data">
-
                     <div class="mb-3 mt-3">
                         <label asp-for="Introduction" class="form-label mb-1">Giriş</label>
                         <textarea asp-for="Introduction" rows="6" class="form-control"></textarea>
-                        <span asp-validation-for="Introduction" class="text-danger"></span>
+                        <span id="IntroductionError" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label asp-for="FullName" class="form-label mb-1">Tam İsim</label>
                         <input asp-for="FullName" class="form-control" />
-                        <span asp-validation-for="FullName" class="text-danger"></span>
+                        <span id="FullNameError" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label asp-for="Field" class="form-label mb-1">Alan</label>
                         <input asp-for="Field" class="form-control" />
-                        <span asp-validation-for="Field" class="text-danger"></span>
+                        <span id="FieldError" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label asp-for="Image1" class="form-label mb-1">1. Fotoğraf</label>
                         <input asp-for="Image1" class="form-control" type="file" accept="image/*">
-                        <span asp-validation-for="Image1" class="text-danger"></span>
+                        <span id="Image1Error" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label asp-for="Image2" class="form-label mb-1">2. Fotoğraf</label>
                         <input asp-for="Image2" class="form-control" type="file" accept="image/*">
-                        <span asp-validation-for="Image2" class="text-danger"></span>
+                        <span id="Image2Error" class="text-danger"></span>
                     </div>
-                    
                     <button type="submit" class="btn btn-primary">Ekle</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        document.querySelector('form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Formun gönderilmesini engelle
+
+            // Hata mesajlarını temizle
+            document.getElementById('IntroductionError').innerText = '';
+            document.getElementById('FullNameError').innerText = '';
+            document.getElementById('FieldError').innerText = '';
+            document.getElementById('Image1Error').innerText = '';
+            document.getElementById('Image2Error').innerText = '';
+
+            // Değerleri al
+            const introduction = document.querySelector('textarea[name="Introduction"]').value.trim();
+            const fullName = document.querySelector('input[name="FullName"]').value.trim();
+            const field = document.querySelector('input[name="Field"]').value.trim();
+            const image1 = document.querySelector('input[name="Image1"]').files[0];
+            const image2 = document.querySelector('input[name="Image2"]').files[0];
+
+            let hasError = false;
+
+            // Giriş validasyonu
+            if (!introduction) {
+                document.getElementById('IntroductionError').innerText = 'Giriş kısmı boş olamaz.';
+                hasError = true;
+            } else if (introduction.length > 100) {
+                document.getElementById('IntroductionError').innerText = 'Giriş maksimum 100 karakter olabilir.';
+                hasError = true;
+            }
+
+            // Tam isim validasyonu
+            if (!fullName) {
+                document.getElementById('FullNameError').innerText = 'Tam isim kısmı boş olamaz.';
+                hasError = true;
+            } else if (fullName.length > 100) {
+                document.getElementById('FullNameError').innerText = 'Tam isim maksimum 100 karakter olabilir.';
+                hasError = true;
+            }
+
+            // Alan validasyonu
+            if (!field) {
+                document.getElementById('FieldError').innerText = 'Alan kısmı boş olamaz.';
+                hasError = true;
+            } else if (field.length > 50) {
+                document.getElementById('FieldError').innerText = 'Alan maksimum 50 karakter olabilir.';
+                hasError = true;
+            }
+
+            // Resim1 validasyonu
+            if (!image1) {
+                document.getElementById('Image1Error').innerText = '1. Resim kısmı boş olamaz.';
+                hasError = true;
+            } else if (!isValidImage(image1)) {
+                document.getElementById('Image1Error').innerText = '1. Resim için geçerli bir dosya yükleyiniz.';
+                hasError = true;
+            }
+
+            // Resim2 validasyonu
+            if (!image2) {
+                document.getElementById('Image2Error').innerText = '2. Resim kısmı boş olamaz.';
+                hasError = true;
+            } else if (!isValidImage(image2)) {
+                document.getElementById('Image2Error').innerText = '2. Resim için geçerli bir dosya yükleyiniz.';
+                hasError = true;
+            }
+
+            // Hatalar yoksa formu gönder
+            if (!hasError) {
+                this.submit(); // Formu gönder
+            }
+        });
+
+        function isValidImage(file) {
+            const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+            const extension = file.name.split('.').pop().toLowerCase();
+            return allowedExtensions.includes(extension);
+        }
+    </script>
+
+}

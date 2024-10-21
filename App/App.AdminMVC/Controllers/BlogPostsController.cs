@@ -1,5 +1,4 @@
-﻿using App.DTOs.BlogPostDtos;
-using App.DTOs.BlogPostDtos.Admin;
+﻿using App.DTOs.BlogPostDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.BlogPostsViewModels;
 using Ardalis.Result;
@@ -149,7 +148,6 @@ public class BlogPostsController(IBlogPostAdminService blogPostService) : Contro
                     TempData["ErrorMessage"] = errorMessage;
                     return Redirect("/all-blog-posts");
                 }
-
                 ViewData["ErrorMessage"] = errorMessage;
                 return View(model);
             }
