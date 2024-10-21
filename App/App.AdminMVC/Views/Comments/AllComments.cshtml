@@ -1,28 +1,5 @@
 ﻿@model List<AllCommentsViewModel>
 
-@{
-    if (TempData["Message"] is not null)
-    {
-        <div class="alert custom-alert-success mt-5">
-            @TempData["Message"]
-        </div>
-    }
-
-    if (TempData["ErrorMessage"] is not null)
-    {
-        <div class="alert custom-alert-error mt-5">
-            @TempData["ErrorMessage"]
-        </div>
-    }
-
-    if (ViewData["ErrorMessage"] is not null)
-    {
-        <div class="alert custom-alert-error mt-5">
-            @ViewData["ErrorMessage"]
-        </div>
-    }
-}
-
 @if (Model.Count == 0)
 {
     <h2 class="text-center my-4" style="font-weight: 600; color: #333;">Yorumlar</h2>
@@ -138,61 +115,4 @@ else
             </tbody>
         </table>
     </div>
-}
-
-@section Styles {
-    <style>
-        .custom-alert-success {
-            position: fixed;
-            top: 50px;
-            left: 55%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            background-color: #dff0d8;
-            color: #3c763d;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .custom-alert-error {
-            position: fixed;
-            top: 50px;
-            left: 55%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .modal-body {
-            max-height: 60vh;
-            overflow-y: auto;
-        }
-
-            .modal-body p {
-                white-space: normal;
-            }
-
-        .modal-header .close {
-            border: none; /* Kenarları kaldır */
-            background: transparent; /* Arka planı kaldır */
-            color: darkkhaki; /* Renk */
-            font-size: 1.5rem; /* Boyut */
-            cursor: pointer; /* İmleci el yap */
-            transition: color 0.3s; /* Geçiş efekti */
-        }
-
-            .modal-header .close:hover {
-                color: red; /* Hover rengi */
-            }
-
-            .modal-header .close span {
-                font-weight: bold; /* Kalın yazı */
-            }
-
-    </style>
 }
