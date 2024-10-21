@@ -1,25 +1,28 @@
 ﻿@model List<AllContactMessagesViewModel>
 
-@if (TempData["Message"] is not null)
-{
-    <div class="alert custom-alert-success mt-5">
-        @TempData["Message"]
-    </div>
+@{
+    if (TempData["Message"] is not null)
+    {
+        <div class="alert custom-alert-success mt-5">
+            @TempData["Message"]
+        </div>
+    }
+
+    if (TempData["ErrorMessage"] is not null)
+    {
+        <div class="alert custom-alert-error mt-5">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    if (ViewData["ErrorMessage"] is not null)
+    {
+        <div class="alert custom-alert-error mt-5">
+            @ViewData["ErrorMessage"]
+        </div>
+    }
 }
 
-@if (TempData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @TempData["ErrorMessage"]
-    </div>
-}
-
-@if (ViewData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @ViewData["ErrorMessage"]
-    </div>
-}
 
 @if (Model.Count == 0)
 {
@@ -30,35 +33,43 @@
     </div>
 }
 
+
 else
 {
-    <div class="container">
-        <h2 class="text-center">Mesajlar</h2>
-        <table class="table table-bordered table-striped table-responsive-md mt-4">
-            <thead class="thead-dark">
+    <h2 class="text-center my-4" style="font-weight: 600; color: #333;">Mesajlar</h2>
+
+    <div class="table-responsive text-nowrap" style="padding-bottom:100px;">
+        <table class="table card-table">
+            <thead>
                 <tr>
-                    <th class="text-center">Gönderen</th>
-                    <th class="text-center">Email</th>
-                    <th class="text-center">Başlık</th>
-                    <th class="text-center">Mesaj</th>
-                    <th class="text-center">Tarih</th>
-                    <th class="text-center">Okundu Mu?</th>
-                    <th class="text-center">Yanıt</th>
-                    <th class="text-center">Yanıt Tarihi</th>
+                    <th>Gönderen</th>
+                    <th>Email</th>
+                    <th>Başlık</th>
+                    <th>Mesaj</th>
+                    <th>Tarih</th>
+                    <th>Okundu Mu?</th>
+                    <th>Yanıt</th>
+                    <th>Yanıt Tarihi</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="table-border-bottom-0">
                 @foreach (var contactMessage in Model)
                 {
                     <tr>
-                        <td class="text-center">@contactMessage.Name</td>
-                        <td class="text-center">@contactMessage.Email</td>
-                        <td class="text-center">@contactMessage.Subject</td>
-                        <td class="text-center">
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@contactMessage.Name</strong></td>
+                        <td>
+                            @contactMessage.Email
+                        </td>
+                        <td>
+                            @contactMessage.Subject
+                        </td>
+                        <td>
                             <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@contactMessage.Id" aria-haspopup="true" aria-expanded="false">Mesajı Görüntüle</button>
                         </td>
-                        <td class="text-center">@contactMessage.SentDate.ToString("dd MMMM yyyy HH:mm")</td>
-                        <td class="text-center">
+                        <td>
+                            @contactMessage.SentDate.ToString("dd MMMM yyyy HH:mm")
+                        </td>
+                        <td>
                             @if (contactMessage.IsRead)
                             {
                                 <span>Okundu ✅</span>
@@ -68,19 +79,19 @@ else
                                 <span>Okunmadı ❌</span>
                             }
                         </td>
-                        <td class="text-center">
+                        <td>
                             @if (contactMessage.Reply is null)
                             {
                                 <a href="/reply-contact-message-@contactMessage.Id" class="btn btn-sm btn-secondary">Hemen Yanıtla</a>
                             }
                             else
                             {
-                           
+
                                 <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalReply-@contactMessage.Id" aria-haspopup="true" aria-expanded="false">Yanıtı Görüntüle</button>
-                           
+
                             }
                         </td>
-                        @if(contactMessage.ReplyDate is not null)
+                        @if (contactMessage.ReplyDate is not null)
                         {
                             <td class="text-center">@contactMessage.ReplyDate?.ToString("dd MMMM yyyy HH:mm")</td>
                         }
@@ -178,9 +189,14 @@ else
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .table td {
-            vertical-align: middle; /* Tüm tablo hücrelerini dikey olarak ortalar */
+        .modal-body {
+            max-height: 60vh; /* Modal yüksekliğini sınırlamak için */
         }
+
+            .modal-body p {
+                white-space: normal; /* Metni alt satıra geçirir */
+            }
     </style>
 }
+
 

@@ -1,66 +1,78 @@
 ﻿@model UpdateExperienceViewModel
 
-@if (TempData["Message"] is not null)
-{
-    <div class="alert custom-alert-success mt-5">
-        @TempData["Message"]
-    </div>
+@{
+    if (TempData["Message"] is not null)
+    {
+        <div class="alert custom-alert-success mt-5">
+            @TempData["Message"]
+        </div>
+    }
+
+    if (TempData["ErrorMessage"] is not null)
+    {
+        <div class="alert custom-alert-error mt-5">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    if (ViewData["ErrorMessage"] is not null)
+    {
+        <div class="alert custom-alert-error mt-5">
+            @ViewData["ErrorMessage"]
+        </div>
+    }
 }
 
-@if (TempData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @TempData["ErrorMessage"]
-    </div>
-}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Deneyim</h5>
+                <small class="text-muted float-end">Güncelleme</small>
+            </div>
+            <div class="card-body">
 
-@if (ViewData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @ViewData["ErrorMessage"]
-    </div>
-}
+                <form action="/update-experience" method="post">
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h2 class="text-center">Deneyimi Güncelle</h2>
-            <form action="/update-experience" method="post">
-                <input type="hidden" asp-for="Id" />
-                <div class="form-group">
-                    <label asp-for="Title" class="control-label">Başlık</label>
-                    <input asp-for="Title" class="form-control" placeholder="Başlık bilgisini buraya yazınız" />
-                    <span asp-validation-for="Title" class="text-danger"></span>
-                </div>
-                <div class="form-group mt-3">
-                    <label asp-for="Company" class="control-label">Firma</label>
-                    <input asp-for="Company" class="form-control" placeholder="Firma bilgisini buraya yazınız" />
-                    <span asp-validation-for="Company" class="text-danger"></span>
-                </div>
+                    <input type="hidden" asp-for="Id" />
 
-                <div class="mb-3">
-                    <label asp-for="Description" class="form-label">Açıklama</label>
-                    <textarea asp-for="Description" rows="4" class="form-control"></textarea>
-                    <span asp-validation-for="Description" class="text-danger" data-valmsg-replace="true"></span>
-                </div>
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label">Başlık</label>
+                        <input asp-for="Title" class="form-control" placeholder="Başlık bilgisini buraya yazınız" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
 
-                <div class="form-group mt-3">
-                    <label asp-for="StartDate" class="control-label">Başlangıç Tarihi</label>
-                    <input asp-for="StartDate" class="form-control" type="datetime-local" />
-                    <span asp-validation-for="StartDate" class="text-danger"></span>
-                </div>
+                    <div class="mb-3">
+                        <label asp-for="Company" class="form-label">Firma</label>
+                        <input asp-for="Company" class="form-control" placeholder="Firma bilgisini buraya yazınız" />
+                        <span asp-validation-for="Company" class="text-danger"></span>
+                    </div>
 
-                <div class="form-group mt-3">
-                    <label asp-for="EndDate" class="control-label">Bitiş Tarihi</label>
-                    <input asp-for="EndDate" class="form-control" type="datetime-local" />
-                    <span asp-validation-for="EndDate" class="text-danger"></span>
-                </div>
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Açıklama</label>
+                        <textarea asp-for="Description" rows="4" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger" data-valmsg-replace="true"></span>
+                    </div>
 
-                <button type="submit" class="btn btn-primary mt-4">Güncelle</button>
-            </form>
+                    <div class="mb-3">
+                        <label asp-for="StartDate" class="form-label">Başlangıç Tarihi</label>
+                        <input asp-for="StartDate" class="form-control" type="datetime-local" />
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="EndDate" class="form-label">Bitiş Tarihi</label>
+                        <input asp-for="EndDate" class="form-control" type="datetime-local" />
+                        <span asp-validation-for="EndDate" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Güncelle</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
 
 @section Styles {
     <style>
@@ -93,6 +105,3 @@
 }
 
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

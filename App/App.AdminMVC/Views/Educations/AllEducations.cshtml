@@ -1,25 +1,28 @@
 ﻿@model List<AdminAllEducationsViewModel>
 
-@if (TempData["Message"] is not null)
-{
-    <div class="alert custom-alert-success mt-5">
-        @TempData["Message"]
-    </div>
+@{
+    if (TempData["Message"] is not null)
+    {
+        <div class="alert custom-alert-success mt-5">
+            @TempData["Message"]
+        </div>
+    }
+
+    if (TempData["ErrorMessage"] is not null)
+    {
+        <div class="alert custom-alert-error mt-5">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    if (ViewData["ErrorMessage"] is not null)
+    {
+        <div class="alert custom-alert-error mt-5">
+            @ViewData["ErrorMessage"]
+        </div>
+    }
 }
 
-@if (TempData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @TempData["ErrorMessage"]
-    </div>
-}
-
-@if (ViewData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @ViewData["ErrorMessage"]
-    </div>
-}
 
 @if (Model.Count == 0)
 {
@@ -36,42 +39,38 @@
 
 else
 {
-    <div class="container">
-        <h2 class="text-center">Eğitimler</h2>
-        <table class="table table-bordered table-striped table-responsive-md mt-4">
-            <thead class="thead-dark">
+    <h2 class="text-center my-4" style="font-weight: 600; color: #333;">Eğitimler</h2>
+
+    <div class="table-responsive text-nowrap" style="padding-bottom:100px;">
+        <table class="table card-table">
+            <thead>
                 <tr>
-                    <th class="text-center">Okul</th>
-                    <th class="text-center">Derece</th>
-                    <th class="text-center">Başlangıç Tarihi</th>
-                    <th class="text-center">Bitiş Tarihi</th>
-                    <th class="text-center">İşlemler</th>
-                    <th class="text-center">Görünürlük</th>
-                    <th class="text-center">Görünür Yap / Gizle</th>
+                    <th>Okul</th>
+                    <th>Derece</th>
+                    <th>Başlangıç Tarihi</th>
+                    <th>Bitiş Tarihi</th>
+                    <th>Görünürlük</th>
+                    <th>İşlemler</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="table-border-bottom-0">
                 @foreach (var education in Model)
                 {
                     <tr>
-                        <td class="text-center">@education.School</td>
-                        <td class="text-center">@education.Degree</td>
-                        <td class="text-center">@education.StartDate.ToString("dd MMM yyyy")</td>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@education.School</strong></td>
+                        <td>@education.Degree</td>
+                        <td>@education.StartDate.ToString("dd MMM yyyy")</td>
                         @if (@education.EndDate is null)
                         {
-                           <td>
-                               <span> Devam Ediyor </span>
-                           </td>
+                            <td>
+                                <span> Devam Ediyor </span>
+                            </td>
                         }
                         else
                         {
-                        <td class="text-center">@education.EndDate?.ToString("dd MMM yyyy")</td>
+                            <td>@education.EndDate?.ToString("dd MMM yyyy")</td>
                         }
-                        <td class="text-center">
-                            <a href="/update-education-@education.Id" class="btn btn-sm btn-primary">Düzenle</a>
-                            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal-@education.Id">Sil</button>
-                        </td>
-                        <td class="text-center">
+                        <td>
                             @if (education.IsVisible)
                             {
                                 <span>Görünür ✅</span>
@@ -81,16 +80,35 @@ else
                                 <span>Gizli ❌</span>
                             }
                         </td>
-                        <td class="text-center">
-                            @if (education.IsVisible)
-                            {
-                                <a href="/change-education-visibility-@education.Id" class="btn btn-sm btn-secondary">Gizle</a>
-                            }
-                            else
-                            {
-                                <a href="/change-education-visibility-@education.Id" class="btn btn-sm btn-success">Görünür Yap</a>
-                            }
+                        <td>
+                            <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu">
+
+                                    @if (education.IsVisible)
+                                    {
+                                        <a class="dropdown-item" href="/change-education-visibility-@education.Id">
+                                            <i class='bx bx-hide'></i>
+                                            Gizle
+                                        </a>
+
+                                    }
+                                    else
+                                    {
+
+                                        <a class="dropdown-item" href="/change-education-visibility-@education.Id">
+                                            <i class='bx bx-show'></i>
+                                            Görünür Yap
+                                        </a>
+                                    }
+                                    <a class="dropdown-item" href="/update-education-@education.Id"><i class="bx bx-edit-alt me-1"></i> Düzenle</a>
+                                    <a class="dropdown-item" data-toggle="modal" data-target="#deleteModal-@education.Id"><i class="bx bx-trash me-1"></i> Sil</a>
+                                </div>
+                            </div>
                         </td>
+
                     </tr>
 
                     <!-- Silme Onay Modalı -->
@@ -104,7 +122,7 @@ else
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <b>@education.School</b> kurumundaki eğitimi silmek istediğinize emin misiniz?
+                                    <p><b>@education.School</b> kurumundaki eğitimi silmek istediğinize emin misiniz?</p>
                                 </div>
                                 <div class="modal-footer">
                                     <form action="/delete-education-@education.Id" method="get">
@@ -115,6 +133,7 @@ else
                             </div>
                         </div>
                     </div>
+
                 }
             </tbody>
         </table>
@@ -148,8 +167,15 @@ else
             border-radius: 5px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
+        .modal-body {
+            max-height: 60vh; /* Modal yüksekliğini sınırlamak için */
+        }
+
+            .modal-body p {
+                white-space: normal; /* Metni alt satıra geçirir */
+            }
     </style>
 }
-
 
 

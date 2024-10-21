@@ -39,8 +39,11 @@
         </div>
         <div class="profile-detail mb-3">
             <span class="profile-label">Mesaj İçeriği: </span>
-            @Model.GetModel.Message
+            <div class="message-content mt-3">
+                <p>@Model.GetModel.Message</p>
+            </div>
         </div>
+
 
         <form action="/reply-message" method="post">
 
@@ -58,7 +61,7 @@
                 <span asp-validation-for="@Model.ReplyModel.ReplyMessage" class="text-danger"></span>
             </div>
 
-            <button type="submit" class="btn btn-primary mt-4">Yanıtı Gönder</button>
+            <button type="submit" class="btn btn-primary mt-3">Yanıtı Gönder</button>
         </form>
 
     </div>
@@ -67,6 +70,13 @@
 @section Styles {
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        .message-content {
+    max-height: 250px; /* Yüksekliği sınırlandırmak için */
+    overflow-y: auto; /* Dikey kaydırma çubuğunu aktif eder */
+    padding: 10px; /* İçerik ile kenarlar arasında boşluk bırakır */
+    background-color: #f1f1f1; /* Arka plan rengi ekleyebiliriz */
+    border-radius: 10px; /* Kenarlara hafif yuvarlaklık verir */
+}
 
         .custom-alert-success {
             position: fixed; /* Sayfada sabit konumlandırma */
