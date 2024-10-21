@@ -11,10 +11,14 @@ public class UpdateProjectApiDtoValidator : AbstractValidator<UpdateProjectApiDt
              .GreaterThan(0).WithMessage("Id 0'dan büyük olmalıdır.");
 
         RuleFor(x => x.Title)
-            .NotEmpty().WithMessage("Başlık kısmı boş olamaz.")
-             .MaximumLength(100).WithMessage("Başlık en fazla 100 karakter olabilir.");
+           .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Başlık kısmı boş olamaz.")
+           .MaximumLength(100).WithMessage("Başlık en fazla 100 karakter olabilir.");
 
         RuleFor(x => x.Description)
-            .NotEmpty().WithMessage("Açıklama kısmı boş olamaz.");
+            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Açıklama kısmı boş olamaz.");
+
+        RuleFor(x => x.ImageUrl)
+            .Must(name => name == null || !string.IsNullOrWhiteSpace(name))
+          .WithMessage("ImageUrl kısmı boşluk olamaz.");
     }
 }

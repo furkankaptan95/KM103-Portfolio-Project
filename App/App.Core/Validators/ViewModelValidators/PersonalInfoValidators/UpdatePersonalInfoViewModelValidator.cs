@@ -1,14 +1,14 @@
-﻿using App.DTOs.PersonalInfoDtos.Admin;
+﻿using App.ViewModels.AdminMvc.PersonalInfoViewModels;
 using FluentValidation;
 
-namespace App.Core.Validators.DtoValidators.PersonalInfoValidators;
-public class AddPersonalInfoDtoValidator : AbstractValidator<AddPersonalInfoDto>
+namespace App.Core.Validators.ViewModelValidators.PersonalInfoValidators;
+public class UpdatePersonalInfoViewModelValidator : AbstractValidator<UpdatePersonalInfoViewModel>
 {
-    public AddPersonalInfoDtoValidator()
+    public UpdatePersonalInfoViewModelValidator()
     {
         RuleFor(x => x.About)
-         .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Hakkımda kısmı boş olamaz.")
-          .MaximumLength(300).WithMessage("Hakkımda kısmı maksimum 300 karakter olabilir.");
+        .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Hakkımda kısmı boş olamaz.")
+         .MaximumLength(300).WithMessage("Hakkımda kısmı maksimum 300 karakter olabilir.");
 
         RuleFor(x => x.Name)
            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("İsim kısmı boş olamaz.")

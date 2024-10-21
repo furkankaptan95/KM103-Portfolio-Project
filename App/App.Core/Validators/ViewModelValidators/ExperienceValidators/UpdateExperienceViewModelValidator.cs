@@ -1,11 +1,16 @@
-﻿using App.DTOs.ExperienceDtos.Admin;
+﻿using App.ViewModels.AdminMvc.ExperiencesViewModels;
 using FluentValidation;
 
-namespace App.Core.Validators.DtoValidators.ExperienceValidators;
-public class AddExperienceDtoValidator : AbstractValidator<AddExperienceDto>
+namespace App.Core.Validators.ViewModelValidators.ExperienceValidators;
+
+public class UpdateExperienceViewModelValidator : AbstractValidator<UpdateExperienceViewModel>
 {
-    public AddExperienceDtoValidator()
+    public UpdateExperienceViewModelValidator()
     {
+        RuleFor(x => x.Id)
+            .NotEmpty().WithMessage("Id bilgisi boş olamaz.")
+             .GreaterThan(0).WithMessage("Id 0'dan büyük olmalıdır.");
+
         RuleFor(x => x.Title)
          .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Başlık kısmı boş olamaz.")
           .MaximumLength(100).WithMessage("Başlık maksimum 100 karakter olabilir.");
@@ -23,8 +28,8 @@ public class AddExperienceDtoValidator : AbstractValidator<AddExperienceDto>
 
         RuleFor(x => x.EndDate)
     .Must(BeAValidEndDate).When(x => x.EndDate.HasValue).WithMessage("Geçerli bir tarih olmalı."); // Değer girildiyse kontrol et
-
     }
+
     private bool BeAValidEndDate(DateTime? date)
     {
         return date.HasValue && date.Value != default;
@@ -34,5 +39,4 @@ public class AddExperienceDtoValidator : AbstractValidator<AddExperienceDto>
     {
         return date != default;
     }
-
 }

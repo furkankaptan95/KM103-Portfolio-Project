@@ -1,10 +1,10 @@
-﻿using App.DTOs.PersonalInfoDtos.Admin;
+﻿using App.ViewModels.AdminMvc.PersonalInfoViewModels;
 using FluentValidation;
 
-namespace App.Core.Validators.DtoValidators.PersonalInfoValidators;
-public class AddPersonalInfoDtoValidator : AbstractValidator<AddPersonalInfoDto>
+namespace App.Core.Validators.ViewModelValidators.PersonalInfoValidators;
+public class AddPersonalInfoViewModelValidator : AbstractValidator<AddPersonalInfoViewModel>
 {
-    public AddPersonalInfoDtoValidator()
+    public AddPersonalInfoViewModelValidator()
     {
         RuleFor(x => x.About)
          .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Hakkımda kısmı boş olamaz.")

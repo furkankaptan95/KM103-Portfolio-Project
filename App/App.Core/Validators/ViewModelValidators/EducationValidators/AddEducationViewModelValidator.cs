@@ -1,14 +1,14 @@
-﻿using App.DTOs.EducationDtos;
+﻿using App.ViewModels.AdminMvc.EducationsViewModels;
 using FluentValidation;
 
-namespace App.Core.Validators.DtoValidators.EducationValidators;
-public class AddEducationDtoValidator : AbstractValidator<AddEducationDto>
+namespace App.Core.Validators.ViewModelValidators.EducationValidators;
+public class AddEducationViewModelValidator : AbstractValidator<AddEducationViewModel>
 {
-    public AddEducationDtoValidator()
+    public AddEducationViewModelValidator()
     {
         RuleFor(x => x.Degree)
-           .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Derece kısmı boş olamaz.")
-           .MaximumLength(50).WithMessage("Derece maksimum 50 karakter olabilir.");
+            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Derece kısmı boş olamaz.")
+            .MaximumLength(50).WithMessage("Derece maksimum 50 karakter olabilir.");
 
         RuleFor(x => x.School)
             .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Okul kısmı boş olamaz.")

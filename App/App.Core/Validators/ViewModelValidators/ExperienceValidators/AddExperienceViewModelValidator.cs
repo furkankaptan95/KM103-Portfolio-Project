@@ -1,14 +1,14 @@
-﻿using App.DTOs.ExperienceDtos.Admin;
+﻿using App.ViewModels.AdminMvc.ExperiencesViewModels;
 using FluentValidation;
 
-namespace App.Core.Validators.DtoValidators.ExperienceValidators;
-public class AddExperienceDtoValidator : AbstractValidator<AddExperienceDto>
+namespace App.Core.Validators.ViewModelValidators.ExperienceValidators;
+public class AddExperienceViewModelValidator : AbstractValidator<AddExperienceViewModel>
 {
-    public AddExperienceDtoValidator()
+    public AddExperienceViewModelValidator()
     {
         RuleFor(x => x.Title)
-         .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Başlık kısmı boş olamaz.")
-          .MaximumLength(100).WithMessage("Başlık maksimum 100 karakter olabilir.");
+          .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Başlık kısmı boş olamaz.")
+           .MaximumLength(100).WithMessage("Başlık maksimum 100 karakter olabilir.");
 
         RuleFor(x => x.Company)
            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Şirket kısmı boş olamaz.")

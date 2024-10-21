@@ -8,11 +8,11 @@ public class UpdateAboutMeApiDtoValidator : AbstractValidator<UpdateAboutMeApiDt
     {
         RuleFor(x => x.ImageUrl1)
            .Must(name => name == null || !string.IsNullOrWhiteSpace(name))
-           .WithMessage("Image1Url kısmı boş olamaz.");
+           .WithMessage("Image1Url kısmı boşluk olamaz.");
 
         RuleFor(x => x.ImageUrl2)
             .Must(name => name == null || !string.IsNullOrWhiteSpace(name))
-          .WithMessage("Image2Url kısmı boş olamaz.");
+          .WithMessage("Image2Url kısmı boşluk olamaz.");
 
         RuleFor(x => x.Introduction)
              .MaximumLength(100).WithMessage("Giriş maksimum 100 karakter olabilir.")
