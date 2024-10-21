@@ -1,52 +1,58 @@
 ﻿@model List<AllUsersViewModel>
 
-@if (TempData["Message"] is not null)
-{
-    <div class="alert custom-alert-success mt-5">
-        @TempData["Message"]
-    </div>
+@{
+    if (TempData["Message"] is not null)
+    {
+        <div class="alert custom-alert-success mt-5">
+            @TempData["Message"]
+        </div>
+    }
+
+    if (TempData["ErrorMessage"] is not null)
+    {
+        <div class="alert custom-alert-error mt-5">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    if (ViewData["ErrorMessage"] is not null)
+    {
+        <div class="alert custom-alert-error mt-5">
+            @ViewData["ErrorMessage"]
+        </div>
+    }
 }
 
-@if (TempData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @TempData["ErrorMessage"]
-    </div>
-}
 
-@if (ViewData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @ViewData["ErrorMessage"]
-    </div>
-}
+    <h2 class="text-center my-4" style="font-weight: 600; color: #333;">Kullanıcılar</h2>
 
-<div class="container">
-    <h2 class="text-center">Kullanıcılar</h2>
-    <table class="table table-bordered table-striped table-responsive-md mt-4">
-        <thead class="thead-dark">
-            <tr>
-                <th class="text-center">Resim</th>
-                <th class="text-center">Kullanıcı adı</th>
-                <th class="text-center">Email</th>
-                <th class="text-center">Yorumlar</th>
-                <th class="text-center">Aktiflik</th>
-                <th class="text-center">Aktive et/ Deaktive et</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in Model)
-            {
+    <div class="table-responsive text-nowrap" style="padding-bottom:100px;">
+        <table class="table card-table">
+            <thead>
                 <tr>
+                    <th>Resim</th>
+                    <th>Kullanıcı adı</th>
+                    <th>Email</th>
+                    <th>Yorumlar</th>
+                    <th>Aktiflik</th>
+                    <th>Aktive et/ Deaktive et</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+                @foreach (var user in Model)
+                {
+                    <tr>
                     <td>
                         <img src="@($"https://localhost:7085/uploads/{user.ImageUrl}")" class="img-thumbnail" style="max-width: 100px; height: auto; display: block; margin: auto;">
-                    </td class="text-center">
-                    <td class="text-center">@user.Username</td>
-                    <td class="text-center">@user.Email</td>
+                    </td>
+                        <td>@user.Username</td>
+                        <td>@user.Email</td>
+
                     <td class="text-center">
                         <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-@user.Id" aria-haspopup="true" aria-expanded="false">Yorumları Görüntüle</button>
                     </td>
-                    <td  class="text-center">
+
+                    <td class="text-center">
                         @if (user.IsActive)
                         {
                             <span>Aktif ✅</span>
@@ -66,7 +72,8 @@
                             <a href="/change-user-activeness-@user.Id" class="btn btn-sm btn-success">Aktif Yap</a>
                         }
                     </td>
-                </tr>
+
+                    </tr>
 
                 <div class="modal fade" id="modal-@user.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabel-@user.Id" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -81,36 +88,36 @@
                                 <h6 class="ml-3 mb-3">Yorumlar:</h6>
                                 <div class="comment-list">
 
-                                    @if(user.Comments.Count == 0)
+                                    @if (user.Comments.Count == 0)
                                     {
                                         <div class="mt-3 mb-3 ml-3">
-                                        <span >Kullanıcı henüz yorum yapmadı.</span>
+                                            <span>Kullanıcı henüz yorum yapmadı.</span>
                                         </div>
                                     }
                                     else
                                     {
-                                       @foreach (var comment in user.Comments)
-                                    {
-                                        <div class="comment">
-                                            <div class="comment-content">
-                                                <strong>Blog Post -> " @comment.BlogPostName "</strong>
-                                                <p class="mt-2">" @comment.Content "</p>
+                                        @foreach (var comment in user.Comments)
+                                        {
+                                            <div class="comment">
+                                                <div class="comment-content">
+                                                    <strong>Blog Post -> " @comment.BlogPostName "</strong>
+                                                    <p class="mt-2">" @comment.Content "</p>
+                                                </div>
+                                                <small class="text-muted">Yorum Tarihi: @comment.CreatedAt.ToString("dd MMMM yyyy HH:mm")</small>
+                                                <p class="comment-status">
+                                                    @if (comment.IsApproved)
+                                                    {
+                                                        <span class="text-success">Onaylı</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-danger">Onaylı Değil</span>
+                                                    }
+                                                </p>
                                             </div>
-                                            <small class="text-muted">Yorum Tarihi: @comment.CreatedAt.ToString("dd MMMM yyyy HH:mm")</small>
-                                            <p class="comment-status">
-                                                @if (comment.IsApproved)
-                                                {
-                                                    <span class="text-success">Onaylı</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="text-danger">Onaylı Değil</span>
-                                                }
-                                            </p>
-                                        </div>
-                                    } 
+                                        }
                                     }
-                                    
+
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -119,15 +126,15 @@
                         </div>
                     </div>
                 </div>
-            }
-        </tbody>
-    </table>
-</div>
+                }
+            </tbody>
+        </table>
+    </div>
 
-@section Styles{
+
+@section Styles {
     <style>
-
-           .custom-alert-success {
+        .custom-alert-success {
             position: fixed; /* Sayfada sabit konumlandırma */
             top: 50px; /* Ekranın üst kısmından 10px boşluk */
             left: 55%; /* Ekranın ortasına hizalama */
@@ -153,21 +160,22 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .table td {
-            vertical-align: middle; /* Tüm tablo hücrelerini dikey olarak ortalar */
-        }
-        .table td {
-            vertical-align: middle; /* Tüm tablo hücrelerini dikey olarak ortalar */
+        .modal-body {
+            max-height: 60vh; /* Modal yüksekliğini sınırlamak için */
         }
 
-           .comments-section {
-        margin-top: 20px;
-    }
+            .modal-body p {
+                white-space: normal; /* Metni alt satıra geçirir */
+            }
 
-    .comment-list {
-        border-top: 1px solid #dee2e6;
-        padding-top: 10px;
-    }
+        .comments-section {
+            margin-top: 20px;
+        }
+
+        .comment-list {
+            border-top: 1px solid #dee2e6;
+            padding-top: 10px;
+        }
 
         .comment {
             padding: 10px 0;
@@ -175,25 +183,24 @@
             padding-left: 15px; /* Yorumlara soldan boşluk ekledim */
         }
 
-    .comment:last-child {
-        border-bottom: none;
-    }
+            .comment:last-child {
+                border-bottom: none;
+            }
 
-    .comment-content {
-        margin-bottom: 5px;
-    }
-
-    .comment-status {
-        font-weight: bold;
-        margin-top: 5px;
-    }
-
-    @@media (max-width: 576px) {
-        .comment {
-            padding: 5px 0;
+        .comment-content {
+            margin-bottom: 5px;
         }
-    }
 
+        .comment-status {
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        @@media (max-width: 576px) {
+            .comment {
+                padding: 5px 0;
+            }
+        }
     </style>
 }
 
