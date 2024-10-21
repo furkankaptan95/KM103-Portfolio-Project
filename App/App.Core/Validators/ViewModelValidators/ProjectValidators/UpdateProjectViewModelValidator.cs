@@ -2,7 +2,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 
-namespace App.Core.Validators.DtoValidators.ProjectValidators;
+namespace App.Core.Validators.ViewModelValidators.ProjectValidators;
 public class UpdateProjectViewModelValidator : AbstractValidator<UpdateProjectViewModel>
 {
     public UpdateProjectViewModelValidator()
