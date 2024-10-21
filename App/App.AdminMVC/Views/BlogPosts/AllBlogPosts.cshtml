@@ -81,7 +81,7 @@ else
                                     @if (post.IsVisible)
                                     {
                                         <a class="dropdown-item" href="/change-blog-post-visibility-@post.Id">
-                                            <i class='bx bx-swap'></i>
+                                            <i class='bx bx-hide'></i>
                                             Gizle
                                         </a>
 
@@ -90,7 +90,7 @@ else
                                     {
 
                                         <a class="dropdown-item" href="/change-blog-post-visibility-@post.Id">
-                                            <i class='bx bx-swap'></i>
+                                            <i class='bx bx-show'></i>
                                             Görünür Yap
                                         </a>
                                     }
@@ -134,7 +134,7 @@ else
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <b>@post.Title</b> başlıklı blog postu silmek istediğinize emin misiniz?
+                                    <p><b>@post.Title</b> başlıklı blog postu silmek istediğinize emin misiniz?</p>
                                 </div>
                                 <div class="modal-footer">
                                     <form action="/delete-blog-post-@post.Id" method="get">
