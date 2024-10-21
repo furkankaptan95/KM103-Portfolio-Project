@@ -46,7 +46,7 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
         }
         catch (Exception)
         {
-            TempData["ErrorMessage"] = "Hakkımda bilgiler getirilirken beklenmeyen bir hata oluştu.";
+            TempData["ErrorMessage"] = "Hakkımda kısmındaki bilgiler getirilirken beklenmeyen bir hata oluştu.";
 
             return Redirect("/home/index");
         }
@@ -54,9 +54,35 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
 
     [HttpGet]
     [Route("add-about-me")]
-    public IActionResult AddAboutMe()
+    public async Task<IActionResult> AddAboutMe()
     {
-        return View();
+        try
+        {
+            var result = await aboutMeService.CheckAboutMeAsync();
+
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = "Ekleme ekranı getirilirken beklenmedik bir hata oluştu..";
+
+                return Redirect("/home/index");
+            }
+
+            if (result.Value == false)
+            {
+                return View();
+            }
+
+            TempData["ErrorMessage"] = "Hakkımda kısmına daha önceden zaten ekleme yapılmış!..";
+
+            return Redirect("/about-me");
+        }
+        catch (Exception)
+        {
+
+            TempData["ErrorMessage"] = "Ekleme ekranı getirilirken beklenmedik bir hata oluştu..";
+
+            return Redirect("/home/index");
+        }
     }
 
     [HttpPost]
@@ -94,7 +120,7 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
 
         catch (Exception)
         {
-            ViewData["ErrorMessage"] = "Hakkımda bilgisi eklenirken beklenmeyen bir hata oluştu.Tekrar deneyebilirsiniz.";
+            ViewData["ErrorMessage"] = "Hakkımda kısmı eklenirken beklenmeyen bir hata oluştu.Tekrar deneyebilirsiniz.";
             return View(model);
         }
     }
@@ -134,9 +160,9 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
 
             return View(model);
         }
-        catch (Exception )  // API çağrısı sırasında beklenmeyen bir hata oluşursa
+        catch (Exception )
         {
-            TempData["ErrorMessage"] = "Hakkımda bilgisi getirilirken beklenmeyen bir hata oluştu.";
+            TempData["ErrorMessage"] = "Hakkımda kısmı getirilirken beklenmeyen bir hata oluştu.";
             return Redirect("/about-me");
         }
     }
@@ -183,7 +209,7 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
         }
         catch (Exception)
         {
-            ViewData["ErrorMessage"] = "Hakkımda bilgisi güncellenirken beklenmeyen bir hata oluştu.Tekrar deneyebilirsiniz.";
+            ViewData["ErrorMessage"] = "Hakkımda kısmı güncellenirken beklenmeyen bir hata oluştu.Tekrar deneyebilirsiniz.";
             return View(model);
         }
     }

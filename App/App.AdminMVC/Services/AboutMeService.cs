@@ -70,6 +70,33 @@ public class AboutMeService : IAboutMeAdminService
     {
         throw new NotImplementedException();
     }
+
+    public async Task<Result<bool>> CheckAboutMeAsync()
+    {
+        try
+        {
+            var apiResponse = await DataApiClient.GetAsync("check-about-me");
+
+            if (apiResponse.IsSuccessStatusCode)
+            {
+                var result = await apiResponse.Content.ReadFromJsonAsync<Result<bool>>();
+
+                if (result is null)
+                {
+                    return Result<bool>.Error();
+                }
+
+                return result;
+            }
+
+            return Result<bool>.Error();
+        }
+        catch (Exception)
+        {
+            return Result<bool>.Error();
+        }
+    }
+
     public async Task<Result<AboutMeAdminDto>> GetAboutMeAsync()
     {
         try

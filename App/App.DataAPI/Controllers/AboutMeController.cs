@@ -24,6 +24,26 @@ public class AboutMeController : ControllerBase
         _aboutMePortfolioService = aboutMePortfolioService;
     }
 
+    [HttpGet("/check-about-me")]
+    public async Task<IActionResult> CheckAboutMeAsync()
+    {
+        try
+        {
+            var result = await _aboutMeAdminService.CheckAboutMeAsync();
+
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            return StatusCode(500, result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
+    }
+
     [HttpGet("/get-about-me")]
     public async Task<IActionResult> GetAboutMeAsync()
     {
