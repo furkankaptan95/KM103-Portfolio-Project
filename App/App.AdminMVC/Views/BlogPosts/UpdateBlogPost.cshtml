@@ -14,12 +14,12 @@
                     <input type="hidden" asp-for="Id" />
 
                     <div class="mb-3 mt-3">
-                        <label asp-for="Title" class="control-label mb-1">Başlık</label>
+                        <label asp-for="Title" class="form-label mb-1">Başlık</label>
                         <input asp-for="Title" class="form-control" placeholder="Başlığı buraya yazınız" />
                         <span asp-validation-for="Title" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
-                        <label asp-for="Content" class="control-label mb-1">İçerik</label>
+                        <label asp-for="Content" class="form-label mb-1">İçerik</label>
                         <textarea asp-for="Content" class="form-control" rows="10" placeholder="Post içeriğini buraya yazınız"></textarea>
                         <span asp-validation-for="Content" class="text-danger"></span>
                     </div>

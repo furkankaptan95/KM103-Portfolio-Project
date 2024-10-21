@@ -12,25 +12,25 @@
                 <form action="/add-education" method="post">
 
                     <div class="mb-3 mt-3">
-                        <label asp-for="School" class="control-label mb-1">Okul</label>
+                        <label asp-for="School" class="form-label mb-1">Okul</label>
                         <input asp-for="School" class="form-control" placeholder="Okul bilgisini buraya yazınız" />
                         <span asp-validation-for="School" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Degree" class="control-label mb-1">Derece</label>
+                        <label asp-for="Degree" class="form-label mb-1">Derece</label>
                         <input asp-for="Degree" class="form-control" placeholder="Derece bilgisini buraya yazınız" />
                         <span asp-validation-for="Degree" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="StartDate" class="control-label mb-1">Başlangıç Tarihi</label>
+                        <label asp-for="StartDate" class="form-label mb-1">Başlangıç Tarihi</label>
                         <input asp-for="StartDate" class="form-control" type="datetime-local" />
                         <span asp-validation-for="StartDate" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="EndDate" class="control-label mb-1">Bitiş Tarihi</label>
+                        <label asp-for="EndDate" class="form-label mb-1">Bitiş Tarihi</label>
                         <input asp-for="EndDate" class="form-control" type="datetime-local" />
                         <span asp-validation-for="EndDate" class="text-danger"></span>
                     </div>

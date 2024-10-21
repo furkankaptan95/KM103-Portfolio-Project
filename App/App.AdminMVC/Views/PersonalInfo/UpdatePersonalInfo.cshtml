@@ -1,26 +1,5 @@
 ﻿@model UpdatePersonalInfoViewModel
 
-@if (TempData["Message"] is not null)
-{
-    <div class="alert custom-alert-success mt-5">
-        @TempData["Message"]
-    </div>
-}
-
-@if (TempData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @TempData["ErrorMessage"]
-    </div>
-}
-
-@if (ViewData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @ViewData["ErrorMessage"]
-    </div>
-}
-
 <div class="row justify-content-center">
     <div class="col-md-5">
         <div class="card mb-4">
@@ -32,23 +11,23 @@
 
                 <form action="/update-personal-info" method="post">
 
-                    <div class="mb-3">
-                        <label asp-for="Name" class="control-label">İsim</label>
+                    <div class="mb-3 mt-3">
+                        <label asp-for="Name" class="form-label mb-1">İsim</label>
                         <input asp-for="Name" class="form-control" placeholder="İsminiz" />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
-                        <label asp-for="Surname" class="control-label">Soyisim</label>
+                        <label asp-for="Surname" class="form-label mb-1">Soyisim</label>
                         <input asp-for="Surname" class="form-control" placeholder="Soyisminiz" />
                         <span asp-validation-for="Surname" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
-                        <label asp-for="About" class="form-label">Hakkımda</label>
+                        <label asp-for="About" class="form-label mb-1">Hakkımda</label>
                         <textarea asp-for="About" rows="8" class="form-control"></textarea>
                         <span asp-validation-for="About" class="text-danger" data-valmsg-replace="true"></span>
                     </div>
                     <div class="mb-3">
-                        <label asp-for="BirthDate" class="control-label">Doğum Tarihi</label>
+                        <label asp-for="BirthDate" class="form-label mb-1">Doğum Tarihi</label>
                         <input asp-for="BirthDate" class="form-control" type="datetime-local" />
                         <span asp-validation-for="BirthDate" class="text-danger"></span>
                     </div>
@@ -59,35 +38,3 @@
         </div>
     </div>
 </div>
-
-@section Styles {
-    <style>
-
-        .custom-alert-success {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 55%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #dff0d8;
-            color: #3c763d;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .custom-alert-error {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 55%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-    </style>
-}
