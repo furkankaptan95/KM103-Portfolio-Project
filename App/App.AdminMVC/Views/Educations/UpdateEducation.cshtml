@@ -1,62 +1,72 @@
 ﻿@model UpdateEducationViewModel
 
-@if (TempData["Message"] is not null)
-{
-    <div class="alert custom-alert-success mt-5">
-        @TempData["Message"]
-    </div>
+@{
+    if (TempData["Message"] is not null)
+    {
+        <div class="alert custom-alert-success mt-5">
+            @TempData["Message"]
+        </div>
+    }
+
+    if (TempData["ErrorMessage"] is not null)
+    {
+        <div class="alert custom-alert-error mt-5">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    if (ViewData["ErrorMessage"] is not null)
+    {
+        <div class="alert custom-alert-error mt-5">
+            @ViewData["ErrorMessage"]
+        </div>
+    }
 }
 
-@if (TempData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @TempData["ErrorMessage"]
-    </div>
-}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Eğitim</h5>
+                <small class="text-muted float-end">Güncelleme</small>
+            </div>
+            <div class="card-body">
 
-@if (ViewData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @ViewData["ErrorMessage"]
-    </div>
-}
+                <form action="/update-education" method="post">
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h2 class="text-center">Eğitimi Güncelle</h2>
-            <form action="/update-education" method="post">
+                    <input asp-for="Id" type="hidden" />
 
-                <input asp-for="Id" type="hidden" />
+                    <div class="mb-3">
+                        <label asp-for="School" class="control-label">Okul</label>
+                        <input asp-for="School" class="form-control" placeholder="Okul bilgisini buraya yazınız" />
+                        <span asp-validation-for="School" class="text-danger"></span>
+                    </div>
 
-                <div class="form-group">
-                    <label asp-for="School" class="control-label">Okul</label>
-                    <input asp-for="School" class="form-control" placeholder="Okul bilgisini buraya yazınız" />
-                    <span asp-validation-for="School" class="text-danger"></span>
-                </div>
-                <div class="form-group mt-3">
-                    <label asp-for="Degree" class="control-label">Derece</label>
-                    <input asp-for="Degree" class="form-control" placeholder="Derece bilgisini buraya yazınız" />
-                    <span asp-validation-for="Degree" class="text-danger"></span>
-                </div>
+                    <div class="mb-3">
+                        <label asp-for="Degree" class="control-label">Derece</label>
+                        <input asp-for="Degree" class="form-control" placeholder="Derece bilgisini buraya yazınız" />
+                        <span asp-validation-for="Degree" class="text-danger"></span>
+                    </div>
 
-                <div class="form-group mt-3">
-                    <label asp-for="StartDate" class="control-label">Başlangıç Tarihi</label>
-                    <input asp-for="StartDate" class="form-control" type="datetime-local" />
-                    <span asp-validation-for="StartDate" class="text-danger"></span>
-                </div>
+                    <div class="mb-3">
+                        <label asp-for="StartDate" class="control-label">Başlangıç Tarihi</label>
+                        <input asp-for="StartDate" class="form-control" type="datetime-local" />
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                    </div>
 
-                <div class="form-group mt-3">
-                    <label asp-for="EndDate" class="control-label">Bitiş Tarihi</label>
-                    <input asp-for="EndDate" class="form-control" type="datetime-local" />
-                    <span asp-validation-for="EndDate" class="text-danger"></span>
-                </div>
+                    <div class="mb-3">
+                        <label asp-for="EndDate" class="control-label">Bitiş Tarihi</label>
+                        <input asp-for="EndDate" class="form-control" type="datetime-local" />
+                        <span asp-validation-for="EndDate" class="text-danger"></span>
+                    </div>
 
-                <button type="submit" class="btn btn-primary mt-4">Güncelle</button>
-            </form>
+                    <button type="submit" class="btn btn-primary">Güncelle</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
 
 @section Styles {
     <style>
@@ -86,9 +96,4 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
     </style>
-}
-
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
 }

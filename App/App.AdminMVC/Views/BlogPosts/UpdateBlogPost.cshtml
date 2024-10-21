@@ -1,47 +1,59 @@
 ﻿@model UpdateBlogPostViewModel
 
-@if (TempData["Message"] is not null)
-{
-    <div class="alert custom-alert-success mt-5">
-        @TempData["Message"]
-    </div>
+@{
+    if (TempData["Message"] is not null)
+    {
+        <div class="alert custom-alert-success mt-5">
+            @TempData["Message"]
+        </div>
+    }
+
+    if (TempData["ErrorMessage"] is not null)
+    {
+        <div class="alert custom-alert-error mt-5">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    if (ViewData["ErrorMessage"] is not null)
+    {
+        <div class="alert custom-alert-error mt-5">
+            @ViewData["ErrorMessage"]
+        </div>
+    }
 }
 
-@if (TempData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @TempData["ErrorMessage"]
-    </div>
-}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Blog Post</h5>
+                <small class="text-muted float-end">Güncelleme</small>
+            </div>
+            <div class="card-body">
 
-@if (ViewData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @ViewData["ErrorMessage"]
-    </div>
-}
+                <form action="/update-blog-post" method="post">
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h2 class="text-center">Blog Postu Güncelle</h2>
-            <form action="/update-blog-post" method="post">
-                <input type="hidden" asp-for="Id" />
-                <div class="form-group">
-                    <label asp-for="Title" class="control-label">Başlık</label>
-                    <input asp-for="Title" class="form-control" placeholder="Başlığı buraya yazınız" />
-                    <span asp-validation-for="Title" class="text-danger"></span>
-                </div>
-                <div class="form-group mt-3">
-                    <label asp-for="Content" class="control-label">İçerik</label>
-                    <textarea asp-for="Content" class="form-control" rows="10" placeholder="Post içeriğini buraya yazınız"></textarea>
-                    <span asp-validation-for="Content" class="text-danger"></span>
-                </div>
-                <button type="submit" class="btn btn-primary mt-4">Güncelle</button>
-            </form>
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-3">
+                        <label asp-for="Title" class="control-label">Başlık</label>
+                        <input asp-for="Title" class="form-control" placeholder="Başlığı buraya yazınız" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Content" class="control-label">İçerik</label>
+                        <textarea asp-for="Content" class="form-control" rows="10" placeholder="Post içeriğini buraya yazınız"></textarea>
+                        <span asp-validation-for="Content" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Güncelle</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
 
 @section Styles {
     <style>
@@ -73,7 +85,3 @@
     </style>
 }
 
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
