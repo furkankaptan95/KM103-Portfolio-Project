@@ -27,11 +27,10 @@
                                     </p>
                                 </div>
                                 <h3 class="heading">
-                                        <a href="/blog-post-@blogPost.Id">@blogPost.Title</a>
+                                    <a href="/blog-post-@blogPost.Id" class="blog-title" data-title="@blogPost.Title"></a>
                                 </h3>
-                                <p>
-                                   "@blogPost.Content.Substring(0, Math.Min(80, @blogPost.Content.Length)).."
-                                </p>
+                                <p class="blog-content" data-content="@blogPost.Content"></p>
+
                             </div>
                         </div>
                     </div>
@@ -47,7 +46,7 @@
             else
             {
                 <div class="col-12 text-center">
-                    <h3>Şu Anda Blog Post Bilgisine Ulaşılamıyor</h3>
+                    <h3>Şu Anda Blog Post Bilgilerine Ulaşılamıyor</h3>
                 </div>
             }
            
@@ -62,3 +61,49 @@
         </div>
     </div>
 </section>
+
+<script>
+    function updateBlogTitlesAndContents() {
+        const titleElements = document.querySelectorAll('.blog-title'); // Tüm blog başlıklarını seç
+        const contentElements = document.querySelectorAll('.blog-content'); // Tüm blog içeriklerini seç
+        const maxTitleLength = 30;
+        const maxContentLengthMobile = 170;
+        const maxContentLengthDesktop = 80;
+
+        titleElements.forEach((titleElement, index) => {
+            const originalTitle = titleElement.getAttribute('data-title'); // Title verisini 'data-title' attribute'undan alıyoruz
+
+            // 768px'in altında tam başlık göster
+            if (window.matchMedia("(max-width: 767px)").matches) {
+                titleElement.textContent = originalTitle;
+            }
+            // 768px ve üzeri için başlık uzunluğunu kontrol et
+            else {
+                if (originalTitle.length > maxTitleLength) {
+                    titleElement.textContent = originalTitle.substring(0, maxTitleLength) + '..';
+                } else {
+                    titleElement.textContent = originalTitle;
+                }
+            }
+
+            // İçerik güncellemesi
+            const contentElement = contentElements[index]; // İlgili içerik elemanını seç
+            const originalContent = contentElement.getAttribute('data-content'); // İçerik verisini 'data-content' attribute'undan alıyoruz
+
+            // 768px'in altında 140 karakter göster
+            if (window.matchMedia("(max-width: 767px)").matches) {
+                contentElement.textContent = `"${originalContent.substring(0, maxContentLengthMobile)}.."`;
+            }
+            // 768px ve üzeri için 80 karakter göster
+            else {
+                contentElement.textContent = `"${originalContent.substring(0, maxContentLengthDesktop)}.."`;
+            }
+        });
+    }
+
+    // Sayfa yüklendiğinde ve pencere yeniden boyutlandırıldığında güncelle
+    window.addEventListener('load', updateBlogTitlesAndContents);
+    window.addEventListener('resize', updateBlogTitlesAndContents);
+</script>
+
+

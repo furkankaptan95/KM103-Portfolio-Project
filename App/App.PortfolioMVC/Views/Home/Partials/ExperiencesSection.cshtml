@@ -10,35 +10,7 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <style>
-                /* Flexbox yapısını aynı satırda hizalamak ve yüksekliği eşitlemek için */
-                .row {
-                    display: flex;
-                    flex-wrap: wrap;
-                    justify-content: center; /* Yatayda ortalamak için */
-                }
-
-                .col-md-6 {
-                    display: flex;
-                    align-items: stretch; /* Aynı yükseklikte hizalamak için */
-                    margin: 0; /* Margin kaldırıldı */
-                }
-
-                .resume-wrap {
-                    padding: 20px;
-                   /*  border: 1px solid #ddd; */
-                    width: 100%;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                }
-
-                /* Tek sayıda kart varsa ortalamak için */
-                .single-card {
-                    margin: auto; /* Yalnızca tek kart varsa otomatik kenar boşluğu */
-                }
-            </style>
-
+         
             @if (Model is not null && Model.Any())
             {
                 int cardCount = Model.Count();
@@ -81,4 +53,31 @@
     </div>
 </section>
 
+<style>
+    /* Flexbox yapısını aynı satırda hizalamak ve yüksekliği eşitlemek için */
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center; /* Yatayda ortalamak için */
+    }
 
+    .col-md-6 {
+        display: flex;
+        align-items: stretch; /* Aynı yükseklikte hizalamak için */
+        margin: 0; /* Margin kaldırıldı */
+    }
+
+    .resume-wrap {
+        padding: 20px;
+        /*  border: 1px solid #ddd; */
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    /* Tek sayıda kart varsa ortalamak için */
+    .single-card {
+        margin: auto; /* Yalnızca tek kart varsa otomatik kenar boşluğu */
+    }
+</style>
