@@ -1,15 +1,19 @@
 ﻿@model PersonalInfoPortfolioViewModel
 
+@{
+	var imgUrl = ViewData["AboutMeImageUrl"];
+}
+
 <section class="ftco-about img ftco-section ftco-no-pb" id="about-section">
 	<div class="container">
 		<div class="row d-flex">
 
-			@if(Model is not null&& Model.About is not null)
+			@if(Model is not null && Model.About is not null)
 			{
 				<div class="col-md-6 col-lg-5 d-flex">
 					<div class="img-about img d-flex align-items-stretch">
 						<div class="overlay"></div>
-						<div class="img d-flex align-self-stretch align-items-center" style="background-image:url(images/bg_1.png);">
+						<div class="img d-flex align-self-stretch align-items-center" style="background-image:url(@($"https://localhost:7085/uploads/{imgUrl}"));">
 						</div>
 					</div>
 				</div>
@@ -41,7 +45,7 @@
 			else if(Model is not null && Model.About is null)
 			{
 				<div class="col-12 text-center">
-					<h3 class="mt-5">Şu Anda Kişisel Bilgiler Bulunmuyor</h3>
+					<h3 class="mt-5">Şu Anda Kişisel Bilgi Bulunmuyor</h3>
 				</div>
 			}
 			else

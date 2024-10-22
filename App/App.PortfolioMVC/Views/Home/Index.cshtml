@@ -1,5 +1,11 @@
 ﻿@model HomeIndexViewModel
 
+@{
+    ViewData["AboutMeImageUrl"] = Model.AboutMe != null && !string.IsNullOrEmpty(Model.AboutMe.ImageUrl1)
+    ? Model.AboutMe.ImageUrl1
+    : "furkan-kaptan.png";
+}
+
 <partial name="Partials/HomeSection.cshtml" model="Model.AboutMe"/>
 
 <partial name="Partials/AboutSection.cshtml" model="Model.PersonalInfo"/>
