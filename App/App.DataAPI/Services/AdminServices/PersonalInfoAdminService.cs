@@ -40,6 +40,34 @@ public class PersonalInfoAdminService(DataApiDbContext dataApiDb) : IPersonalInf
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
+
+    public async Task<Result<bool>> CheckPersonalInfoAsync()
+    {
+        try
+        {
+            var entity = await dataApiDb.PersonalInfos.FirstOrDefaultAsync();
+
+            if (entity == null)
+            {
+                return Result.Success(false);
+            }
+
+            return Result.Success(true);
+
+        }
+
+        catch (SqlException sqlEx)
+        {
+            return Result<bool>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+
+        catch (Exception ex)
+        {
+            var errorMessage = $"Bir hata oluştu: {ex.Message}, Hata Kodu: {ex.HResult}";
+            return Result<bool>.Error(errorMessage);
+        }
+    }
+
     public async Task<Result<PersonalInfoAdminDto>> GetPersonalInfoAsync()
     {
         try
