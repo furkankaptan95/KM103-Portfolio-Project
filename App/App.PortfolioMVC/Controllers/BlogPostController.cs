@@ -54,4 +54,11 @@ public class BlogPostController(IBlogPostPortfolioService blogPostService) : Con
 
         return View(blogPostPageModel);
     }
+
+    [HttpGet]
+    [Route("all-blog-posts")]
+    public async Task<IActionResult> AllBlogPosts()
+    {
+        return View();
+    }
 }

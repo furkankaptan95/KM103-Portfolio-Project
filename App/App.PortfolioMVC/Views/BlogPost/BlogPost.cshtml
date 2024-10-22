@@ -36,7 +36,15 @@
 
 
                     <div class="pt-5 mt-5">
-                        <h3 class="mb-5">@Model.BlogPost.Comments.Count Yorum</h3>
+
+                        @if (Model.BlogPost.Comments is null || Model.BlogPost.Comments.Count < 1)
+                        {
+                            <h3 class="mb-5">Henüz yorum yapılmadı.</h3>
+                        }
+                        else
+                        {
+                            <h3 class="mb-5">@Model.BlogPost.Comments.Count Yorum</h3>
+                        }
 
                         <partial name="Partials/Comments.cshtml" model="Model.BlogPost.Comments"/>
 
