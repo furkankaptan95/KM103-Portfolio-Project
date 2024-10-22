@@ -23,7 +23,9 @@ public class UpdateEducationDtoValidator : AbstractValidator<UpdateEducationDto>
            .Must(BeAValidStartDate).WithMessage("Geçerli bir tarih olmalı.");
 
         RuleFor(x => x.EndDate)
-    .Must(BeAValidEndDate).When(x => x.EndDate.HasValue).WithMessage("Geçerli bir tarih olmalı."); // Değer girildiyse kontrol et
+                 .Must(BeAValidEndDate).When(x => x.EndDate.HasValue).WithMessage("Geçerli bir tarih olmalı.") // Değer girildiyse kontrol et
+                 .Must((viewModel, endDate) => !endDate.HasValue || endDate >= viewModel.StartDate)
+                 .WithMessage("Bitiş tarihi, başlangıç tarihinden önce olamaz.");
     }
 
     private bool BeAValidEndDate(DateTime? date)
