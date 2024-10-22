@@ -1,7 +1,6 @@
 ﻿using App.ViewModels.AdminMvc.AboutMeViewModels;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using System.Linq;
 
 namespace App.Core.Validators.ViewModelValidators.AboutMeValidators;
 public class AddAboutMeViewModelValidator : AbstractValidator<AddAboutMeViewModel>
@@ -15,7 +14,7 @@ public class AddAboutMeViewModelValidator : AbstractValidator<AddAboutMeViewMode
 
         // Tam isim validasyonu
         RuleFor(x => x.FullName)
-            .MaximumLength(100).WithMessage("Tam isim maksimum 100 karakter olabilir.")
+            .MaximumLength(50).WithMessage("Tam isim maksimum 50 karakter olabilir.")
             .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Tam isim kısmı boş olamaz.");
 
         // Alan validasyonu

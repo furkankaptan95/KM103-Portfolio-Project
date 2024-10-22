@@ -22,7 +22,7 @@ public class UpdateAboutMeViewModelValidator : AbstractValidator<UpdateAboutMeVi
 
         // Tam isim validasyonu
         RuleFor(x => x.FullName)
-            .MaximumLength(100).WithMessage("Tam isim maksimum 100 karakter olabilir.")
+            .MaximumLength(50).WithMessage("Tam isim maksimum 50 karakter olabilir.")
             .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Tam isim kısmı boş olamaz.");
 
         // Alan validasyonu

@@ -19,7 +19,7 @@ public class UpdateAboutMeApiDtoValidator : AbstractValidator<UpdateAboutMeApiDt
              .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Giriş kısmı boş olamaz.");
 
         RuleFor(x => x.FullName)
-            .MaximumLength(100).WithMessage("Tam isim maksimum 50 karakter olabilir.")
+            .MaximumLength(50).WithMessage("Tam isim maksimum 50 karakter olabilir.")
             .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Tam isim kısmı boş olamaz.");
 
         RuleFor(x => x.Field)
