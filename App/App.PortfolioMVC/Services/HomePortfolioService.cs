@@ -141,7 +141,9 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 	{
 		var models =new List<HomeBlogPostsPortfolioViewModel>();
 
-        foreach (var blogPost in dtos)
+		var filteredDtos = dtos.Take(3).ToList();
+
+        foreach (var blogPost in filteredDtos)
         {
             var blogPostToAdd = new HomeBlogPostsPortfolioViewModel();
 

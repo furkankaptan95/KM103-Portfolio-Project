@@ -1,93 +1,27 @@
-﻿
+﻿@model List<HomeBlogPostsPortfolioViewModel>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: black; /* Sayfa arka planı siyah */
-            color: white; /* Yazı rengi beyaz */
-        }
 
-        .blog-entry {
-            background-color: #222; /* Blog post arka plan rengi */
-            border-radius: 8px; /* Kenar yuvarlama */
-            padding: 20px; /* İç boşluk */
-            margin-bottom: 20px; /* Alt boşluk */
-            transition: transform 0.3s; /* Hover efekti için geçiş */
-        }
-
-            .blog-entry:hover {
-                transform: scale(1.05); /* Hover efekti */
-            }
-
-        .block-20 {
-            height: 200px; /* Resim yüksekliği */
-            background-size: cover; /* Resim boyutlandırma */
-            background-position: center; /* Resim pozisyonu */
-        }
-
-        .breadcrumbs {
-            margin-bottom: 20px; /* Breadcrumbs altında boşluk */
-            font-size: 16px; /* Yazı boyutu */
-        }
-
-        .title-section {
-            margin-top: 40px; /* Üstteki boşluk */
-            text-align: center; /* Ortaya hizalama */
-        }
-
-            .title-section h2 {
-                font-size: 24px; /* Başlık boyutu */
-                margin-bottom: 10px; /* Başlık altındaki boşluk */
-            }
-
-            .title-section p {
-                font-size: 14px; /* Açıklama yazı boyutu */
-                color: #ccc; /* Açıklama yazı rengi */
-            }
-
-        .container {
-            max-width: 1200px; /* İçerik genişliği */
-            margin: 0 auto; /* Ortada hizalama */
-            padding: 20px; /* İç boşluk */
-        }
-    </style>
-
+<section class="ftco-section" id="blog-section">
     <div class="container">
         <p class="breadcrumbs">
             <span class="mr-2"><a href="/">Anasayfa <i class="ion-ios-arrow-forward"></i></a></span>
-            <span class="mr-2"><a href="/#blog-section">Blog Post <i class="ion-ios-arrow-forward"></i></a></span>
-            <span>Tüm Blog Postlar<i class="ion-ios-arrow-forward"></i></span>
+            <span>Blog Postlar <i class="ion-ios-arrow-forward"></i></span>
         </p>
 
         <div class="title-section">
             <h2>Blog Postlar</h2>
-            <p>Şu ana kadar paylaşılmış blog postlarını aşağıda bulabilirsiniz.</p>
+            <p class="mb-5">Şu ana kadar paylaşılmış blog postları aşağıda bulabilirsiniz.</p>
         </div>
-
         <div class="row d-flex justify-content-center">
 
-            @{
-                // Sahte blog post verileri
-                var blogPosts = new List<dynamic>
+            @if (Model is not null && Model.Count > 0)
             {
-            new { Id = 1, Title = "Blog Post 1", Content = "İlk blog yazısı içeriği burada yer alıyor. Detaylı içerik için tıklayın.", PublishDate = DateTime.Now.AddDays(-5), CommentsCount = 2 },
-            new { Id = 2, Title = "Blog Post 2", Content = "İkinci blog yazısı içeriği burada yer alıyor. Detaylı içerik için tıklayın.", PublishDate = DateTime.Now.AddDays(-4), CommentsCount = 3 },
-            new { Id = 3, Title = "Blog Post 3", Content = "Üçüncü blog yazısı içeriği burada yer alıyor. Detaylı içerik için tıklayın.", PublishDate = DateTime.Now.AddDays(-3), CommentsCount = 1 },
-            new { Id = 4, Title = "Blog Post 4", Content = "Dördüncü blog yazısı içeriği burada yer alıyor. Detaylı içerik için tıklayın.", PublishDate = DateTime.Now.AddDays(-2), CommentsCount = 4 },
-            new { Id = 5, Title = "Blog Post 5", Content = "Beşinci blog yazısı içeriği burada yer alıyor. Detaylı içerik için tıklayın.", PublishDate = DateTime.Now.AddDays(-1), CommentsCount = 5 },
-            new { Id = 6, Title = "Blog Post 6", Content = "Altıncı blog yazısı içeriği burada yer alıyor. Detaylı içerik için tıklayın.", PublishDate = DateTime.Now.AddDays(-1), CommentsCount = 0 },
-            new { Id = 7, Title = "Blog Post 7", Content = "Yedinci blog yazısı içeriği burada yer alıyor. Detaylı içerik için tıklayın.", PublishDate = DateTime.Now.AddDays(-2), CommentsCount = 6 },
-            new { Id = 8, Title = "Blog Post 8", Content = "Sekizinci blog yazısı içeriği burada yer alıyor. Detaylı içerik için tıklayın.", PublishDate = DateTime.Now.AddDays(-3), CommentsCount = 2 }
-            };
-            }
-
-            @if (blogPosts != null && blogPosts.Count > 0)
-            {
-                foreach (var blogPost in blogPosts)
+                @foreach (var blogPost in Model)
                 {
                     <div class="col-md-4 d-flex ftco-animate">
                         <div class="blog-entry justify-content-end">
-                            <a href="/blog-post-@blogPost.Id" class="block-20" style="background-image: url('images/blog-post-img.jpg');"></a>
+                            <a href="/blog-post-@blogPost.Id" class="block-20" style="background-image: url('images/blog-post-img.jpg');">
+                            </a>
                             <div class="text mt-3 float-right d-block">
                                 <div class="d-flex align-items-center mb-3 meta">
                                     <p class="mb-0">
@@ -96,13 +30,21 @@
                                     </p>
                                 </div>
                                 <h3 class="heading">
-                                    <a href="/blog-post-@blogPost.Id" class="blog-title" data-title="@blogPost.Title">@blogPost.Title</a>
+                                    <a href="/blog-post-@blogPost.Id" class="blog-title" data-title="@blogPost.Title"></a>
                                 </h3>
-                                <p class="blog-content" data-content="@blogPost.Content">@blogPost.Content</p>
+                                <p class="blog-content" data-content="@blogPost.Content"></p>
+
                             </div>
                         </div>
                     </div>
+
                 }
+            }
+            else if (Model != null && Model.Count == 0)
+            {
+                <div class="col-12 text-center">
+                    <h3>Şu Anda Görüntülenecek Bir Blog Post Bulunmuyor</h3>
+                </div>
             }
             else
             {
@@ -112,7 +54,110 @@
             }
         </div>
     </div>
+</section>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<style>
+    /* Varsayılan olarak 4 sütun düzeni */
+    .col-md-4 {
+        flex: 0 0 25%; /* 4 sütun */
+        max-width: 25%;
+    }
+
+    /* 1200px altında sütun sayısını 3'e düşür */
+    @@media (max-width: 1199px) {
+        .col-md-4 {
+            flex: 0 0 33.3333%; /* 3 sütun */
+            max-width: 33.3333%;
+        }
+    }
+
+    /* 992px altında sütun sayısını 2'ye düşür */
+    @@media (max-width: 991px) {
+        .col-md-4 {
+            flex: 0 0 50%; /* 2 sütun */
+            max-width: 50%;
+        }
+
+        .breadcrumbs{
+            margin-top:-60px;
+        }
+    }
+
+    /* 576px altında sütun sayısını 1'e düşür ve tam ortala */
+ @@media (max-width: 575px) {
+    .row {
+        display: flex;
+        justify-content: center; /* Yatayda ortala */
+        flex-wrap: wrap; /* İçerik sarılabilsin */
+    }
+
+    .col-md-4 {
+        flex: 0 0 100%; /* Sütun genişliğini %100 yap */
+        max-width: 100%; 
+        display: flex; /* Flex ayarlarını uyguluyoruz */
+        justify-content: center; /* İçeriği ortala */
+    }
+
+    .blog-entry {
+        width: 100%; /* Kutunun genişliğini tam yap */
+    }
+}
+   @@media (max-width: 520px) {
+    .title-section p {
+      display: none; /* 520px altında paragrafı gizle */
+    }
+
+        .title-section h2{
+            margin-bottom:35px;
+        }
+  }
+
+    
+</style>
+
+
+
+<script>
+    function updateBlogTitlesAndContents() {
+        const titleElements = document.querySelectorAll('.blog-title'); // Tüm blog başlıklarını seç
+        const contentElements = document.querySelectorAll('.blog-content'); // Tüm blog içeriklerini seç
+        const maxTitleLength = 30;
+        const maxContentLengthMobile = 170;
+        const maxContentLengthDesktop = 80;
+
+        titleElements.forEach((titleElement, index) => {
+            const originalTitle = titleElement.getAttribute('data-title'); // Title verisini 'data-title' attribute'undan alıyoruz
+
+            // 768px'in altında tam başlık göster
+            if (window.matchMedia("(max-width: 767px)").matches) {
+                titleElement.textContent = originalTitle;
+            }
+            // 768px ve üzeri için başlık uzunluğunu kontrol et
+            else {
+                if (originalTitle.length > maxTitleLength) {
+                    titleElement.textContent = originalTitle.substring(0, maxTitleLength) + '..';
+                } else {
+                    titleElement.textContent = originalTitle;
+                }
+            }
+
+            // İçerik güncellemesi
+            const contentElement = contentElements[index]; // İlgili içerik elemanını seç
+            const originalContent = contentElement.getAttribute('data-content'); // İçerik verisini 'data-content' attribute'undan alıyoruz
+
+            // 768px'in altında 140 karakter göster
+            if (window.matchMedia("(max-width: 767px)").matches) {
+                contentElement.textContent = `"${originalContent.substring(0, maxContentLengthMobile)}.."`;
+            }
+            // 768px ve üzeri için 80 karakter göster
+            else {
+                contentElement.textContent = `"${originalContent.substring(0, maxContentLengthDesktop)}.."`;
+            }
+        });
+    }
+
+    // Sayfa yüklendiğinde ve pencere yeniden boyutlandırıldığında güncelle
+    window.addEventListener('load', updateBlogTitlesAndContents);
+    window.addEventListener('resize', updateBlogTitlesAndContents);
+</script>
