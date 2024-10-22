@@ -40,10 +40,14 @@
             <partial name="Partials/Menu.cshtml" />
                 <div class="layout-page">
 
-                   @*  <partial name="Partials/Navbar.cshtml" /> *@
+                   <partial name="Partials/Navbar.cshtml" /> 
 
                         <div class="content-wrapper">
-
+                    <style>
+                        .content-wrapper {
+                            padding-top: 20px; /* Yukarıdan 20px boşluk bırakır. */
+                        }
+                    </style>
                             <div class="container-xxl flex-grow-1 container-p-y">
 
                                 @RenderBody()
