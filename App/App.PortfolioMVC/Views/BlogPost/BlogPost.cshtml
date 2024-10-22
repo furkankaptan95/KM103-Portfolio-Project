@@ -15,9 +15,13 @@
                     <p class="breadcrumbs">
                         <span class="mr-2"><a href="/">Anasayfa <i class="ion-ios-arrow-forward"></i></a></span>
                         <span class="mr-2"><a href="/#blog-section">Blog Post <i class="ion-ios-arrow-forward"></i></a></span>
-                        <span>@Model.BlogPost.Title<i class="ion-ios-arrow-forward"></i></span>
+                        <span>@Model.BlogPost.Title <i class="ion-ios-arrow-forward"></i></span>
                     </p>
-                    <h2 class="mb-3">@Model.BlogPost.Title</h2>
+                    <h2 class="mb-3 d-flex justify-content-between align-items-center">
+                        @Model.BlogPost.Title
+                        <span class="text-muted" style="color:wheat; font-size:16px;">@Model.BlogPost.PublishDate.ToString("MMMM dd, yyyy")</span>
+                    </h2>
+
                     <p>
                         @Model.BlogPost.Content
                     </p>
@@ -30,7 +34,7 @@
                         </div>
                         <div class="desc">
                             <h3>George Washington</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia delectus aut, sunt placeat nam vero culpa sapiente consectetur similique, inventore eos fugit cupiditate numquam!</p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia</p>
                         </div>
                     </div>
 
@@ -46,10 +50,10 @@
                             <h3 class="mb-5">@Model.BlogPost.Comments.Count Yorum</h3>
                         }
 
-                        <partial name="Partials/Comments.cshtml" model="Model.BlogPost.Comments"/>
+                        <partial name="Partials/Comments.cshtml" model="Model.BlogPost.Comments" />
 
-                        <partial name="Partials/UnsignedCommentForm.cshtml" model="Model.UnsignedComment"/>
-                        <partial name="Partials/SignedCommentForm.cshtml" model="Model.SignedComment"/>
+                        <partial name="Partials/UnsignedCommentForm.cshtml" model="Model.UnsignedComment" />
+                        <partial name="Partials/SignedCommentForm.cshtml" model="Model.SignedComment" />
 
                     </div>
                 }
@@ -82,7 +86,7 @@
 
 
             <div class="col-lg-4 sidebar ftco-animate">
-             
+
                 <div class="sidebar-box ftco-animate">
                     <h3 class="heading-sidebar">En Son Yayınlananlar</h3>
                     <div class="block-21 mb-4 d-flex">
@@ -126,3 +130,12 @@
         </div>
     </div>
 </section>
+
+<style>
+
+    @@media (max-width: 495px) {
+       .bio{
+            display: none;
+       }
+    }
+</style>

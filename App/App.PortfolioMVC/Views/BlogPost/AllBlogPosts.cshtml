@@ -122,15 +122,15 @@
     function updateBlogTitlesAndContents() {
         const titleElements = document.querySelectorAll('.blog-title'); // Tüm blog başlıklarını seç
         const contentElements = document.querySelectorAll('.blog-content'); // Tüm blog içeriklerini seç
-        const maxTitleLength = 30;
+        const maxTitleLength = 40;
         const maxContentLengthMobile = 170;
-        const maxContentLengthDesktop = 80;
+        const maxContentLengthDesktop = 70;
 
         titleElements.forEach((titleElement, index) => {
             const originalTitle = titleElement.getAttribute('data-title'); // Title verisini 'data-title' attribute'undan alıyoruz
 
             // 768px'in altında tam başlık göster
-            if (window.matchMedia("(max-width: 767px)").matches) {
+            if (window.matchMedia("(max-width: 575px)").matches) {
                 titleElement.textContent = originalTitle;
             }
             // 768px ve üzeri için başlık uzunluğunu kontrol et
@@ -147,7 +147,7 @@
             const originalContent = contentElement.getAttribute('data-content'); // İçerik verisini 'data-content' attribute'undan alıyoruz
 
             // 768px'in altında 140 karakter göster
-            if (window.matchMedia("(max-width: 767px)").matches) {
+            if (window.matchMedia("(max-width: 575px)").matches) {
                 contentElement.textContent = `"${originalContent.substring(0, maxContentLengthMobile)}.."`;
             }
             // 768px ve üzeri için 80 karakter göster
