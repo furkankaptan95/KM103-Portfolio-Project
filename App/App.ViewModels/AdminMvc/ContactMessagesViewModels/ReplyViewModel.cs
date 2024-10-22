@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace App.ViewModels.AdminMvc.ContactMessagesViewModels;
+﻿namespace App.ViewModels.AdminMvc.ContactMessagesViewModels;
 public class ReplyViewModel
 {
     public GetContactMessageViewModel? GetModel { get; set; }
