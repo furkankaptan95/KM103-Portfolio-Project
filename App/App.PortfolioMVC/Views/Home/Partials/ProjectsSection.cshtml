@@ -6,7 +6,7 @@
             <div class="col-md-12 heading-section text-center ftco-animate">
                 <h1 class="big big-2">Projeler</h1>
                 <h2 class="mb-4">Projelerim</h2>
-                <p style="color:wheat;">Dahil olduğum veya kendim yürüttüğüm projelerime göz atın.</p>
+                <p style="color:wheat;">Dahil olduğum veya kendim yürüttüğüm projelere göz atın.</p>
             </div>
         </div>
 
@@ -20,7 +20,7 @@
                         <div class="project img ftco-animate d-flex justify-content-center align-items-center" style="background-image: url(@($"https://localhost:7085/uploads/{project.ImageUrl}"));">
                             <div class="overlay"></div>
                             <div class="text text-center p-4">
-                                <h3><a href="#projects-section">@project.Description</a></h3>
+                                <h3><a href="#projects-section" style="pointer-events: none;">@project.Description</a></h3>
                                 <span>@project.Title</span>
                             </div>
                         </div>
@@ -36,7 +36,7 @@
             else
             {
                 <div class="col-12 text-center">
-                    <h3 class="mt-5">Şu Anda Proje Bilgisine Ulaşılamıyor</h3>
+                    <h3 class="mt-5">Şu Anda Proje Bilgilerine Ulaşılamıyor</h3>
                 </div>
             }
         </div>

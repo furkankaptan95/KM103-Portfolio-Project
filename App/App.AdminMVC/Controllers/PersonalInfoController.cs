@@ -40,6 +40,9 @@ public class PersonalInfoController(IPersonalInfoAdminService personalInfoServic
                 Surname = dto.Surname,
                 About = dto.About,
                 BirthDate = dto.BirthDate,
+                Email = dto.Email,
+                Link = dto.Link,
+                Adress = dto.Adress,
             };
 
             return View(aboutMeModel);
@@ -101,6 +104,9 @@ public class PersonalInfoController(IPersonalInfoAdminService personalInfoServic
                 Name = model.Name,
                 BirthDate = model.BirthDate,
                 Surname = model.Surname,
+                Email = model.Email,
+                Link = model.Link,
+                Adress = model.Adress,
             };
 
             var result = await personalInfoService.AddPersonalInfoAsync(dto);
@@ -153,6 +159,9 @@ public class PersonalInfoController(IPersonalInfoAdminService personalInfoServic
                 Surname = dto.Surname,
                 BirthDate = dto.BirthDate,
                 About = dto.About,
+                Adress = dto.Adress,
+                Email = dto.Email,
+                Link = dto.Link,
             };
 
             return View(model);
@@ -181,6 +190,9 @@ public class PersonalInfoController(IPersonalInfoAdminService personalInfoServic
                 Surname = model.Surname,
                 BirthDate = model.BirthDate,
                 About = model.About,
+                Email = model.Email,
+                Adress=model.Adress,
+                Link = model.Link,
             };
 
             var result = await personalInfoService.UpdatePersonalInfoAsync(dto);

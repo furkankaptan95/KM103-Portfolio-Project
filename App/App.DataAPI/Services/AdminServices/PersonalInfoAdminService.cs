@@ -20,6 +20,9 @@ public class PersonalInfoAdminService(DataApiDbContext dataApiDb) : IPersonalInf
                 Name = dto.Name,
                 Surname = dto.Surname,
                 BirthDate = dto.BirthDate,
+                Email = dto.Email,
+                Link = dto.Link,
+                Adress = dto.Adress,
             };
 
             await dataApiDb.PersonalInfos.AddAsync(entity);
@@ -85,6 +88,9 @@ public class PersonalInfoAdminService(DataApiDbContext dataApiDb) : IPersonalInf
                 Surname = entity.Surname,
                 About = entity.About,
                 BirthDate = entity.BirthDate,
+                Link = entity.Link,
+                Adress = entity.Adress,
+                Email = entity.Email,
             };
 
             return Result<PersonalInfoAdminDto>.Success(dto);
@@ -115,6 +121,9 @@ public class PersonalInfoAdminService(DataApiDbContext dataApiDb) : IPersonalInf
             entity.Surname = dto.Surname;
             entity.About = dto.About;
             entity.BirthDate = dto.BirthDate;
+            entity.Link = dto.Link;
+            entity.Adress = dto.Adress;
+            entity.Email = dto.Email;
 
             dataApiDb.PersonalInfos.Update(entity);
             await dataApiDb.SaveChangesAsync();

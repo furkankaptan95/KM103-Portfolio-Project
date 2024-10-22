@@ -1,17 +1,20 @@
 ﻿@model List<HomeBlogPostsPortfolioViewModel>
 
+
 <section class="ftco-section" id="blog-section">
     <div class="container">
-        <div class="row justify-content-center mb-5 pb-5">
-            <div class="col-md-7 heading-section text-center ftco-animate">
-                <h1 class="big big-2">Blog</h1>
-                <h2 class="mb-4">Blog Postlarım</h2>
-                <p style="color:wheat;">Blog Postlarımı görüntüleyebilir ve yorum yazarak görüşlerinizi benimle ve diğer okurlarla paylaşabilirsiniz.</p>
-            </div>
+        <p class="breadcrumbs">
+            <span class="mr-2"><a href="/">Anasayfa <i class="ion-ios-arrow-forward"></i></a></span>
+            <span>Blog Postlar <i class="ion-ios-arrow-forward"></i></span>
+        </p>
+
+        <div class="title-section">
+            <h2>Blog Postlar</h2>
+            <p class="mb-5">Şu ana kadar paylaşılmış blog postları aşağıda bulabilirsiniz.</p>
         </div>
         <div class="row d-flex justify-content-center">
 
-            @if(Model is not null && Model.Count > 0)
+            @if (Model is not null && Model.Count > 0)
             {
                 @foreach (var blogPost in Model)
                 {
@@ -48,30 +51,86 @@
                 <div class="col-12 text-center">
                     <h3>Şu Anda Blog Post Bilgilerine Ulaşılamıyor</h3>
                 </div>
-            }               
-        </div>
-        <!-- Daha Fazlası Butonu -->
-        <div class="row justify-content-center mt-4">
-            <div class="col-md-4 text-center">
-                <a href="#" class="btn btn-primary py-2 px-4">Daha Fazla Blog Post</a>
-            </div>
+            }
         </div>
     </div>
 </section>
+
+
+<style>
+    /* Varsayılan olarak 4 sütun düzeni */
+    .col-md-4 {
+        flex: 0 0 25%; /* 4 sütun */
+        max-width: 25%;
+    }
+
+    /* 1200px altında sütun sayısını 3'e düşür */
+    @@media (max-width: 1199px) {
+        .col-md-4 {
+            flex: 0 0 33.3333%; /* 3 sütun */
+            max-width: 33.3333%;
+        }
+    }
+
+    /* 992px altında sütun sayısını 2'ye düşür */
+    @@media (max-width: 991px) {
+        .col-md-4 {
+            flex: 0 0 50%; /* 2 sütun */
+            max-width: 50%;
+        }
+
+        .breadcrumbs{
+            margin-top:-60px;
+        }
+    }
+
+    /* 576px altında sütun sayısını 1'e düşür ve tam ortala */
+ @@media (max-width: 575px) {
+    .row {
+        display: flex;
+        justify-content: center; /* Yatayda ortala */
+        flex-wrap: wrap; /* İçerik sarılabilsin */
+    }
+
+    .col-md-4 {
+        flex: 0 0 100%; /* Sütun genişliğini %100 yap */
+        max-width: 100%; 
+        display: flex; /* Flex ayarlarını uyguluyoruz */
+        justify-content: center; /* İçeriği ortala */
+    }
+
+    .blog-entry {
+        width: 100%; /* Kutunun genişliğini tam yap */
+    }
+}
+   @@media (max-width: 520px) {
+    .title-section p {
+      display: none; /* 520px altında paragrafı gizle */
+    }
+
+        .title-section h2{
+            margin-bottom:35px;
+        }
+  }
+
+    
+</style>
+
+
 
 <script>
     function updateBlogTitlesAndContents() {
         const titleElements = document.querySelectorAll('.blog-title'); // Tüm blog başlıklarını seç
         const contentElements = document.querySelectorAll('.blog-content'); // Tüm blog içeriklerini seç
-        const maxTitleLength = 30;
+        const maxTitleLength = 40;
         const maxContentLengthMobile = 170;
-        const maxContentLengthDesktop = 80;
+        const maxContentLengthDesktop = 70;
 
         titleElements.forEach((titleElement, index) => {
             const originalTitle = titleElement.getAttribute('data-title'); // Title verisini 'data-title' attribute'undan alıyoruz
 
             // 768px'in altında tam başlık göster
-            if (window.matchMedia("(max-width: 767px)").matches) {
+            if (window.matchMedia("(max-width: 575px)").matches) {
                 titleElement.textContent = originalTitle;
             }
             // 768px ve üzeri için başlık uzunluğunu kontrol et
@@ -88,7 +147,7 @@
             const originalContent = contentElement.getAttribute('data-content'); // İçerik verisini 'data-content' attribute'undan alıyoruz
 
             // 768px'in altında 140 karakter göster
-            if (window.matchMedia("(max-width: 767px)").matches) {
+            if (window.matchMedia("(max-width: 575px)").matches) {
                 contentElement.textContent = `"${originalContent.substring(0, maxContentLengthMobile)}.."`;
             }
             // 768px ve üzeri için 80 karakter göster
@@ -102,5 +161,3 @@
     window.addEventListener('load', updateBlogTitlesAndContents);
     window.addEventListener('resize', updateBlogTitlesAndContents);
 </script>
-
-

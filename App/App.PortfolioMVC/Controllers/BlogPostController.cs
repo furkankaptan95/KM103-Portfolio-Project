@@ -54,4 +54,34 @@ public class BlogPostController(IBlogPostPortfolioService blogPostService) : Con
 
         return View(blogPostPageModel);
     }
+
+    [HttpGet]
+    [Route("all-blog-posts")]
+    public async Task<IActionResult> AllBlogPosts()
+    {
+        List<HomeBlogPostsPortfolioViewModel> models = null;
+
+        var result = await blogPostService.GetHomeBlogPostsAsync();
+
+		if (!result.IsSuccess)
+		{
+			return View(models);
+		}
+
+		models = new();
+
+        foreach (var blogPost in result.Value)
+        {
+            var blogPostToAdd = new HomeBlogPostsPortfolioViewModel();
+
+            blogPostToAdd.Title = blogPost.Title;
+            blogPostToAdd.Content = blogPost.Content;
+            blogPostToAdd.Id = blogPost.Id;
+            blogPostToAdd.PublishDate = blogPost.PublishDate;
+            blogPostToAdd.CommentsCount = blogPost.CommentsCount;
+
+            models.Add(blogPostToAdd);
+        }
+        return View(models);
+    }
 }

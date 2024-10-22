@@ -5,20 +5,6 @@
     ViewData["UserId"] = 1;
 }
 
-@if (TempData["Message"] is not null)
-{
-    <div class="alert custom-alert-success mt-5">
-        @TempData["Message"]
-    </div>
-}
-
-@if (TempData["ErrorMessage"] is not null)
-{
-    <div class="alert custom-alert-error  mt-5">
-        @TempData["ErrorMessage"]
-    </div>
-}
-
 <section class="ftco-section">
     <div class="container">
         <div class="row">
@@ -29,9 +15,13 @@
                     <p class="breadcrumbs">
                         <span class="mr-2"><a href="/">Anasayfa <i class="ion-ios-arrow-forward"></i></a></span>
                         <span class="mr-2"><a href="/#blog-section">Blog Post <i class="ion-ios-arrow-forward"></i></a></span>
-                        <span>@Model.BlogPost.Title<i class="ion-ios-arrow-forward"></i></span>
+                        <span>@Model.BlogPost.Title <i class="ion-ios-arrow-forward"></i></span>
                     </p>
-                    <h2 class="mb-3">@Model.BlogPost.Title</h2>
+                    <h2 class="mb-3 d-flex justify-content-between align-items-center">
+                        @Model.BlogPost.Title
+                        <span class="text-muted" style="color:wheat; font-size:16px;">@Model.BlogPost.PublishDate.ToString("MMMM dd, yyyy")</span>
+                    </h2>
+
                     <p>
                         @Model.BlogPost.Content
                     </p>
@@ -44,18 +34,26 @@
                         </div>
                         <div class="desc">
                             <h3>George Washington</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia delectus aut, sunt placeat nam vero culpa sapiente consectetur similique, inventore eos fugit cupiditate numquam!</p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia</p>
                         </div>
                     </div>
 
 
                     <div class="pt-5 mt-5">
-                        <h3 class="mb-5">@Model.BlogPost.Comments.Count Yorum</h3>
 
-                        <partial name="Partials/Comments.cshtml" model="Model.BlogPost.Comments">
+                        @if (Model.BlogPost.Comments is null || Model.BlogPost.Comments.Count < 1)
+                        {
+                            <h3 class="mb-5">Henüz yorum yapılmadı.</h3>
+                        }
+                        else
+                        {
+                            <h3 class="mb-5">@Model.BlogPost.Comments.Count Yorum</h3>
+                        }
 
-                        <partial name="Partials/UnsignedCommentForm.cshtml" model="Model.UnsignedComment">
-                        <partial name="Partials/SignedCommentForm.cshtml" model="Model.SignedComment">
+                        <partial name="Partials/Comments.cshtml" model="Model.BlogPost.Comments" />
+
+                        <partial name="Partials/UnsignedCommentForm.cshtml" model="Model.UnsignedComment" />
+                        <partial name="Partials/SignedCommentForm.cshtml" model="Model.SignedComment" />
 
                     </div>
                 }
@@ -88,7 +86,7 @@
 
 
             <div class="col-lg-4 sidebar ftco-animate">
-             
+
                 <div class="sidebar-box ftco-animate">
                     <h3 class="heading-sidebar">En Son Yayınlananlar</h3>
                     <div class="block-21 mb-4 d-flex">
@@ -133,39 +131,11 @@
     </div>
 </section>
 
+<style>
 
-@section Styles{
-    <style>
-
-        .custom-alert-success {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 50%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #dff0d8;
-            color: #3c763d;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .custom-alert-error {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 50%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-    </style>
-}
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+    @@media (max-width: 495px) {
+       .bio{
+            display: none;
+       }
+    }
+</style>

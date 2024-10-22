@@ -15,7 +15,7 @@ public class BlogPosPortfolioService(DataApiDbContext dataApiDb,ICommentPortfoli
         {
             var dtos = new List<HomeBlogPostsPortfolioDto>();
 
-            var entities = await dataApiDb.BlogPosts.Include(b=>b.Comments).Take(3).ToListAsync();
+            var entities = await dataApiDb.BlogPosts.Where(bp=>bp.IsVisible == true).Include(b=>b.Comments).ToListAsync();
 
             if (entities is null)
             {

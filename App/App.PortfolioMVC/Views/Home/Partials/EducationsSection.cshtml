@@ -19,7 +19,7 @@
 
 							<div class="m-3">
 								<i>
-									<i>@education.StartDate.ToString("yyyy") - @(education.EndDate?.ToString("yyyy") ?? "Devam Ediyor")</i>
+									<i>@education.StartDate.ToString("yyyy-MM") / @(education.EndDate?.ToString("yyyy-MM") ?? "Devam Ediyor")</i>
 								</i>
 							</div>
 							<div class="desc">
@@ -41,7 +41,7 @@
 			else
 			{
 				<div class="col-12 text-center">
-					<h3 class="mt-5">Şu Anda Eğitim Bilgisine Ulaşılamıyor</h3>
+					<h3 class="mt-5">Şu Anda Eğitim Bilgilerine Ulaşılamıyor</h3>
 				</div>
 			}
 			

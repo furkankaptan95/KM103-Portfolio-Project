@@ -25,6 +25,9 @@ public class PersonalInfoPortfolioService(DataApiDbContext dataApiDb) : IPersona
 				Surname = entity.Surname,
 				About = entity.About,
 				BirthDate = entity.BirthDate,
+				Email = entity.Email,
+				Link = entity.Link,
+				Adress = entity.Adress,
 			};
 
 			return Result<PersonalInfoPortfolioDto>.Success(dto);

@@ -131,6 +131,9 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 		model.Name = dto.Name;
 		model.Surname = dto.Surname;
 		model.BirthDate = dto.BirthDate;
+		model.Email = dto.Email;
+		model.Link = dto.Link;
+		model.Adress = dto.Adress;
     
 		return model;
 	}
@@ -138,7 +141,9 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 	{
 		var models =new List<HomeBlogPostsPortfolioViewModel>();
 
-        foreach (var blogPost in dtos)
+		var filteredDtos = dtos.Take(3).ToList();
+
+        foreach (var blogPost in filteredDtos)
         {
             var blogPostToAdd = new HomeBlogPostsPortfolioViewModel();
 
