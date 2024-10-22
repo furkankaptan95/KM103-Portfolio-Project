@@ -14,26 +14,25 @@
             <div class="card-body">
 
                 <form action="/update-personal-info" method="post">
-
                     <div class="mb-3 mt-3">
                         <label asp-for="Name" class="form-label mb-1">İsim</label>
                         <input asp-for="Name" class="form-control" placeholder="İsminiz" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
+                        <span id="NameError" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label asp-for="Surname" class="form-label mb-1">Soyisim</label>
                         <input asp-for="Surname" class="form-control" placeholder="Soyisminiz" />
-                        <span asp-validation-for="Surname" class="text-danger"></span>
+                        <span id="SurnameError" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label asp-for="About" class="form-label mb-1">Hakkımda</label>
                         <textarea asp-for="About" rows="8" class="form-control"></textarea>
-                        <span asp-validation-for="About" class="text-danger" data-valmsg-replace="true"></span>
+                        <span id="AboutError" class="text-danger" data-valmsg-replace="true"></span>
                     </div>
                     <div class="mb-3">
                         <label asp-for="BirthDate" class="form-label mb-1">Doğum Tarihi</label>
                         <input asp-for="BirthDate" class="form-control" type="datetime-local" />
-                        <span asp-validation-for="BirthDate" class="text-danger"></span>
+                        <span id="BirthDateError" class="text-danger"></span>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Güncelle</button>
@@ -42,3 +41,68 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        document.querySelector('form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Formun gönderilmesini engelle
+
+            // Hata mesajlarını temizle
+            document.getElementById('NameError').innerText = '';
+            document.getElementById('SurnameError').innerText = '';
+            document.getElementById('AboutError').innerText = '';
+            document.getElementById('BirthDateError').innerText = '';
+
+            // Değerleri al
+            const name = document.querySelector('input[name="Name"]').value.trim();
+            const surname = document.querySelector('input[name="Surname"]').value.trim();
+            const about = document.querySelector('textarea[name="About"]').value.trim();
+            const birthDate = document.querySelector('input[name="BirthDate"]').value;
+
+            let hasError = false;
+
+            // İsim validasyonu
+            if (!name) {
+                document.getElementById('NameError').innerText = 'İsim kısmı zorunludur.';
+                hasError = true;
+            } else if (name.length > 50) {
+                document.getElementById('NameError').innerText = 'İsim maksimum 50 karakter olabilir.';
+                hasError = true;
+            }
+
+            // Soyisim validasyonu
+            if (!surname) {
+                document.getElementById('SurnameError').innerText = 'Soyisim kısmı zorunludur.';
+                hasError = true;
+            } else if (surname.length > 50) {
+                document.getElementById('SurnameError').innerText = 'Soyisim maksimum 50 karakter olabilir.';
+                hasError = true;
+            }
+
+            // Hakkımda validasyonu
+            if (!about) {
+                document.getElementById('AboutError').innerText = 'Hakkımda kısmı zorunludur.';
+                hasError = true;
+            } else if (about.length > 300) {
+                document.getElementById('AboutError').innerText = 'Hakkımda maksimum 300 karakter olabilir.';
+                hasError = true;
+            }
+
+            // Doğum Tarihi validasyonu
+            if (!birthDate) {
+                document.getElementById('BirthDateError').innerText = 'Doğum tarihi zorunludur.';
+                hasError = true;
+            } else {
+                const date = new Date(birthDate);
+                if (isNaN(date.getTime())) {
+                    document.getElementById('BirthDateError').innerText = 'Geçerli bir doğum tarihi giriniz.';
+                    hasError = true;
+                }
+            }
+
+            // Hatalar yoksa formu gönder
+            if (!hasError) {
+                this.submit(); // Formu gönder
+            }
+        });
+    </script>
+}

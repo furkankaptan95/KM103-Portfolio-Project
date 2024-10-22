@@ -8,21 +8,20 @@
 <div class="container">
     <div class="form-container">
         <div class="form-title">Projeyi Güncelle</div>
-        <form action="/update-project" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="All" class="text-danger"></div>
+        <form id="updateProjectForm" action="/update-project" method="post" enctype="multipart/form-data">
 
             <input type="hidden" asp-for="Id" />
 
             <div class="mb-3 mt-3">
                 <label asp-for="Title" class="form-label mb-1">Başlık</label>
                 <input asp-for="Title" class="form-control" placeholder="Başlığı buraya yazınız" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <span id="TitleError" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="Description" class="form-label mb-1">Açıklama</label>
                 <textarea asp-for="Description" rows="7" class="form-control"></textarea>
-                <span asp-validation-for="Description" class="text-danger" data-valmsg-replace="true"></span>
+                <span id="DescriptionError" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
@@ -35,11 +34,12 @@
                 <p>Fotoğrafı değiştirmek istiyorsanız yeni fotoğraf yükleyiniz.</p>
                 <p>** Yeni fotoğraf yüklemezseniz fotoğraf aynı kalacaktır.</p>
                 <input asp-for="ImageFile" class="form-control" type="file" accept="image/*">
-                <span asp-validation-for="ImageFile" class="text-danger" data-valmsg-replace="true"></span>
+                <span id="ImageFileError" class="text-danger"></span>
             </div>
 
             <button type="submit" class="btn btn-custom mt-2">Güncelle</button>
         </form>
+
 
     </div>
 </div>
@@ -72,4 +72,57 @@
             }
 
     </style>
+}
+
+@section Scripts {
+    <script>
+        document.querySelector('#updateProjectForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Formun gönderilmesini engelle
+
+            // Hata mesajlarını temizle
+            document.getElementById('TitleError').innerText = '';
+            document.getElementById('DescriptionError').innerText = '';
+            document.getElementById('ImageFileError').innerText = '';
+
+            // Değerleri al
+            const title = document.querySelector('input[name="Title"]').value.trim();
+            const description = document.querySelector('textarea[name="Description"]').value.trim();
+            const imageFile = document.querySelector('input[name="ImageFile"]').files[0];
+
+            let hasError = false;
+
+            // Title validasyonu
+            if (!title) {
+                document.getElementById('TitleError').innerText = 'Başlık kısmı boş olamaz.';
+                hasError = true;
+            } else if (title.length > 100) {
+                document.getElementById('TitleError').innerText = 'Başlık maksimum 100 karakter olabilir.';
+                hasError = true;
+            }
+
+            // Description validasyonu
+            if (!description) {
+                document.getElementById('DescriptionError').innerText = 'Açıklama kısmı boş olamaz.';
+                hasError = true;
+            }
+
+            // Resim validasyonu (eğer yüklenirse kontrol et)
+            if (imageFile && !isValidImage(imageFile)) {
+                document.getElementById('ImageFileError').innerText = 'Geçerli bir resim dosyası yükleyiniz.';
+                hasError = true;
+            }
+
+            // Hatalar yoksa formu gönder
+            if (!hasError) {
+                this.submit(); // Formu gönder
+            }
+        });
+
+        // Geçerli resim dosyası olup olmadığını kontrol eden fonksiyon
+        function isValidImage(file) {
+            const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+            const extension = file.name.split('.').pop().toLowerCase();
+            return allowedExtensions.includes(extension);
+        }
+    </script>
 }

@@ -1,9 +1,8 @@
 ﻿using App.ViewModels.AdminMvc.ProjectsViewModels;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using System.Linq;
 
-namespace App.Core.Validators.DtoValidators.ProjectValidators;
+namespace App.Core.Validators.ViewModelValidators.ProjectValidators;
 public class AddProjectViewModelValidator : AbstractValidator<AddProjectViewModel>
 {
     public AddProjectViewModelValidator()

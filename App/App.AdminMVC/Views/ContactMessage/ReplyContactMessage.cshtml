@@ -104,17 +104,23 @@
     </style>
 }
 
-@section Scripts{
+@section Scripts {
     <script>
-        document.getElementById('replyForm').addEventListener('submit', function (event) {
-            const replyMessage = document.querySelector('textarea[name="ReplyModel.ReplyMessage"]').value.trim();
-            const errorMessage = document.getElementById('replyMessageError');
+        document.querySelector('form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Formun gönderilmesini engelle
 
+            // Hata mesajını temizle
+            document.getElementById('replyMessageError').innerText = '';
+
+            // Yanıt mesajını al
+            const replyMessage = document.querySelector('textarea[name="ReplyMessage"]').value.trim();
+
+            // Hata kontrolü
             if (!replyMessage) {
-                errorMessage.textContent = "Yanıt mesajı boş olamaz.";
-                event.preventDefault(); // Formun gönderilmesini engelle
+                document.getElementById('replyMessageError').innerText = 'Yanıt boş olamaz.';
             } else {
-                errorMessage.textContent = ""; // Hata mesajını temizle
+                // Hata yoksa formu gönder
+                this.submit(); // Formu gönder
             }
         });
     </script>

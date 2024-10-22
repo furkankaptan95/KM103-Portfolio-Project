@@ -14,35 +14,34 @@
             <div class="card-body">
 
                 <form action="/add-experience" method="post">
-
                     <div class="mb-3 mt-3">
                         <label asp-for="Title" class="form-label mb-1">Başlık</label>
                         <input asp-for="Title" class="form-control" placeholder="Başlık bilgisini buraya yazınız" />
-                        <span asp-validation-for="Title" class="text-danger"></span>
+                        <span id="TitleError" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="Company" class="form-label mb-1">Firma</label>
                         <input asp-for="Company" class="form-control" placeholder="Firma bilgisini buraya yazınız" />
-                        <span asp-validation-for="Company" class="text-danger"></span>
+                        <span id="CompanyError" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="Description" class="form-label mb-1">Açıklama</label>
                         <textarea asp-for="Description" rows="4" class="form-control"></textarea>
-                        <span asp-validation-for="Description" class="text-danger" data-valmsg-replace="true"></span>
+                        <span id="DescriptionError" class="text-danger" data-valmsg-replace="true"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="StartDate" class="form-label mb-1">Başlangıç Tarihi</label>
                         <input asp-for="StartDate" class="form-control" type="datetime-local" />
-                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                        <span id="StartDateError" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="EndDate" class="form-label">Bitiş Tarihi</label>
                         <input asp-for="EndDate" class="form-control" type="datetime-local" />
-                        <span asp-validation-for="EndDate" class="text-danger"></span>
+                        <span id="EndDateError" class="text-danger"></span>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Ekle</button>
@@ -51,3 +50,82 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        document.querySelector('form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Formun gönderilmesini engelle
+
+            // Hata mesajlarını temizle
+            document.getElementById('TitleError').innerText = '';
+            document.getElementById('CompanyError').innerText = '';
+            document.getElementById('DescriptionError').innerText = '';
+            document.getElementById('StartDateError').innerText = '';
+            document.getElementById('EndDateError').innerText = '';
+
+            // Değerleri al
+            const title = document.querySelector('input[name="Title"]').value.trim();
+            const company = document.querySelector('input[name="Company"]').value.trim();
+            const description = document.querySelector('textarea[name="Description"]').value.trim();
+            const startDate = document.querySelector('input[name="StartDate"]').value;
+            const endDate = document.querySelector('input[name="EndDate"]').value;
+
+            let hasError = false;
+
+            // Başlık validasyonu
+            if (!title) {
+                document.getElementById('TitleError').innerText = 'Başlık kısmı zorunludur.';
+                hasError = true;
+            } else if (title.length > 100) {
+                document.getElementById('TitleError').innerText = 'Başlık maksimum 100 karakter olabilir.';
+                hasError = true;
+            }
+
+            // Firma validasyonu
+            if (!company) {
+                document.getElementById('CompanyError').innerText = 'Firma kısmı zorunludur.';
+                hasError = true;
+            } else if (company.length > 100) {
+                document.getElementById('CompanyError').innerText = 'Firma maksimum 100 karakter olabilir.';
+                hasError = true;
+            }
+
+            // Açıklama validasyonu
+            if (!description) {
+                document.getElementById('DescriptionError').innerText = 'Açıklama kısmı zorunludur.';
+                hasError = true;
+            }
+
+            // Başlangıç Tarihi validasyonu
+            if (!startDate) {
+                document.getElementById('StartDateError').innerText = 'Başlangıç tarihi zorunludur.';
+                hasError = true;
+            } else {
+                const start = new Date(startDate);
+                if (isNaN(start.getTime())) {
+                    document.getElementById('StartDateError').innerText = 'Geçerli bir başlangıç tarihi giriniz.';
+                    hasError = true;
+                }
+            }
+
+            // Bitiş Tarihi validasyonu
+            if (endDate) {
+                const end = new Date(endDate);
+                if (isNaN(end.getTime())) {
+                    document.getElementById('EndDateError').innerText = 'Geçerli bir bitiş tarihi giriniz.';
+                    hasError = true;
+                } else {
+                    const start = new Date(startDate);
+                    if (end < start) {
+                        document.getElementById('EndDateError').innerText = 'Bitiş tarihi başlangıç tarihinden önce olamaz.';
+                        hasError = true;
+                    }
+                }
+            }
+
+            // Hatalar yoksa formu gönder
+            if (!hasError) {
+                this.submit(); // Formu gönder
+            }
+        });
+    </script>
+}
