@@ -5,6 +5,21 @@
         @await RenderSectionAsync("Styles", required: false)
 </head>
 <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+    @{
+        if (TempData["Message"] is not null)
+        {
+            <div class="alert custom-alert-success mt-5">
+                @TempData["Message"]
+            </div>
+        }
+
+        if (TempData["ErrorMessage"] is not null)
+        {
+            <div class="alert custom-alert-error mt-5">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+    }
 
     <partial name="Partials/Navbar.cshtml">
 

@@ -37,7 +37,16 @@
 						<div class="one-forth d-flex align-items-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
 							<div class="text">
 								<span class="subheading">Merhaba!</span>
-								<h1 class="mb-4 mt-3"><span> @Model.Introduction </span></h1>
+								<h1 class="mb-4 mt-3">
+									@(Model.Introduction != null && Model.Introduction.Length > 0
+																? Model.Introduction.Substring(0, Model.Introduction.Length / 2)
+																: "")
+									<span>
+										@(Model.Introduction != null && Model.Introduction.Length > 0
+																				? Model.Introduction.Substring(Model.Introduction.Length / 2)
+																				: "")
+									</span>
+									</h1>
 								<p>
 									<a href="/#contact-section" class="button-about-me btn btn-primary py-3 px-4">Birlikte Çalışalım</a>
 									<a href="/#projects-section" class="btn btn-white btn-outline-white py-3 px-4">Çalışmalarım</a>
@@ -62,58 +71,3 @@
 		}
 	</div>
 </section>
-
-	<style>
-
-		@@media (max-width: 401px) {
-			.button-about-me {
-				margin-bottom: 1rem;
-			}
-		}
-
-	.one-third.js-fullheight.order-md-last.img {
-		background-position: center top; /* Arka planı yukarı taşır */
-	}
-
-	@@media (max-width: 450px) {
-		.one-third.js-fullheight.order-md-last.img {
-			background-size: 80%; /* Fotoğrafı %80 oranında küçült */
-			height: 300px; /* Yüksekliği 300px yap */
-			transform: translateY(-80px); /* İstenilen kadar yukarı kaydır */
-		}
-	}
-
-	@@media (min-width: 451px) and (max-width: 767px) {
-		.one-third.js-fullheight.order-md-last.img {
-			background-size: 85%; /* Fotoğrafı %85 oranında büyüt */
-			height: auto; /* Yüksekliği otomatik ayarla */
-			transform: translateY(-130px); /* İstenilen kadar yukarı kaydır */
-		}
-	}
-
-	@@media (min-width: 768px) and (max-width: 991px) {
-		.one-third.js-fullheight.order-md-last.img {
-			background-size: 90%; /* Fotoğrafı %85 oranında büyüt */
-			height: auto; /* Yüksekliği otomatik ayarla */
-			transform: translateY(-220px); /* İstenilen kadar yukarı kaydır */
-		}
-	}
-
-	@@media (min-width: 992px) and (max-width: 1199px) {
-		.one-third.js-fullheight.order-md-last.img {
-			background-size: 85%; /* Fotoğrafı %95 oranında büyüt */
-			height: auto; /* Yüksekliği otomatik ayarla */
-			transform: translate(150px, -150px); /* İstenilen kadar sağa ve yukarı kaydır */
-		}
-	}
-
-	@@media (min-width: 1200px) and (max-width: 2000px) {
-		.one-third.js-fullheight.order-md-last.img {
-			background-size: 95%; /* Fotoğrafı %85 oranında büyüt */
-			height: auto; /* Yüksekliği otomatik ayarla */
-			transform: translate(50px,-150px); /* İstenilen kadar yukarı kaydır */
-		}
-	}
-
-	</style>
-

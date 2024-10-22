@@ -15,4 +15,8 @@
     <ProjectReference Include="..\App.DTOs\App.DTOs.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="uploads\" />
+  </ItemGroup>
+
 </Project>
