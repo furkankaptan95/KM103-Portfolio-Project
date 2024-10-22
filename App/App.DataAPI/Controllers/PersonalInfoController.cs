@@ -24,6 +24,28 @@ public class PersonalInfoController : ControllerBase
         _personalInfoPortfolioService = personalInfoPortfolioService;
     }
 
+
+    [HttpGet("/check-personal-info")]
+    public async Task<IActionResult> CheckPersonalInfoAsync()
+    {
+        try
+        {
+            var result = await _personalInfoAdminService.CheckPersonalInfoAsync();
+
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            return StatusCode(500, result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
+    }
+
+
     [HttpPost("/add-personal-info")]
     public async Task<IActionResult> AddAsync([FromBody] AddPersonalInfoDto dto)
     {

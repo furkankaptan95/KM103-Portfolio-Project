@@ -27,6 +27,31 @@ public class PersonalInfoService(IHttpClientFactory factory) : IPersonalInfoAdmi
             return Result.Error("Kişisel Bilgiler eklenirken beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
         }
     }
+    public async Task<Result<bool>> CheckPersonalInfoAsync()
+    {
+        try
+        {
+            var apiResponse = await DataApiClient.GetAsync("check-personal-info");
+
+            if (apiResponse.IsSuccessStatusCode)
+            {
+                var result = await apiResponse.Content.ReadFromJsonAsync<Result<bool>>();
+
+                if (result is null)
+                {
+                    return Result<bool>.Error();
+                }
+
+                return result;
+            }
+
+            return Result<bool>.Error();
+        }
+        catch (Exception)
+        {
+            return Result<bool>.Error();
+        }
+    }
 
     public async Task<Result<PersonalInfoAdminDto>> GetPersonalInfoAsync()
     {

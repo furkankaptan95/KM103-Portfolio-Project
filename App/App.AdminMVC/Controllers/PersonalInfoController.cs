@@ -1,4 +1,5 @@
-﻿using App.DTOs.PersonalInfoDtos;
+﻿using App.AdminMVC.Services;
+using App.DTOs.PersonalInfoDtos;
 using App.DTOs.PersonalInfoDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.PersonalInfoViewModels;
@@ -53,9 +54,35 @@ public class PersonalInfoController(IPersonalInfoAdminService personalInfoServic
 
     [HttpGet]
     [Route("add-personal-info")]
-    public IActionResult AddPersonalInfo()
+    public async Task<IActionResult> AddPersonalInfo()
     {
-        return View();
+        try
+        {
+            var result = await personalInfoService.CheckPersonalInfoAsync();
+
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = "Ekleme ekranı getirilirken beklenmedik bir hata oluştu..";
+
+                return Redirect("/home/index");
+            }
+
+            if (result.Value == false)
+            {
+                return View();
+            }
+
+            TempData["ErrorMessage"] = "Kişisel Bilgiler kısmına daha önceden zaten ekleme yapılmış!..";
+
+            return Redirect("/personal-info");
+        }
+        catch (Exception)
+        {
+
+            TempData["ErrorMessage"] = "Ekleme ekranı getirilirken beklenmedik bir hata oluştu..";
+
+            return Redirect("/home/index");
+        }
     }
 
     [HttpPost]

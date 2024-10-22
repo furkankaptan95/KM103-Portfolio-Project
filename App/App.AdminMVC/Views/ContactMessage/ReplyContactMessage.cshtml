@@ -6,7 +6,7 @@
 
 <div class="container">
     <div class="profile-card">
-        <h2 class="profile-title">Mesaj Bigileri</h2>
+        <h2 class="profile-title">Mesaj Bilgileri</h2>
         <hr>
         <div class="profile-detail mb-3">
             <span class="profile-label">İsim: </span> @Model.GetModel.Name
@@ -27,8 +27,7 @@
             </div>
         </div>
 
-
-        <form id="replyForm" action="/reply-message" method="post">
+        <form action="/reply-message" method="post">
             <input type="hidden" asp-for="@Model.GetModel.Name" />
             <input type="hidden" asp-for="@Model.GetModel.Email" />
             <input type="hidden" asp-for="@Model.GetModel.Subject" />
@@ -45,19 +44,18 @@
 
             <button type="submit" class="btn btn-primary mt-3">Yanıtı Gönder</button>
         </form>
-
     </div>
 </div>
 
 @section Styles {
     <style>
         .message-content {
-    max-height: 250px; /* Yüksekliği sınırlandırmak için */
-    overflow-y: auto; /* Dikey kaydırma çubuğunu aktif eder */
-    padding: 10px; /* İçerik ile kenarlar arasında boşluk bırakır */
-    background-color: #f1f1f1; /* Arka plan rengi ekleyebiliriz */
-    border-radius: 10px; /* Kenarlara hafif yuvarlaklık verir */
-}
+            max-height: 250px; /* Yüksekliği sınırlandırmak için */
+            overflow-y: auto; /* Dikey kaydırma çubuğunu aktif eder */
+            padding: 10px; /* İçerik ile kenarlar arasında boşluk bırakır */
+            background-color: #f1f1f1; /* Arka plan rengi ekleyebiliriz */
+            border-radius: 10px; /* Kenarlara hafif yuvarlaklık verir */
+        }
 
         .profile-card {
             background-color: #f8f9fa;
@@ -113,12 +111,14 @@
             document.getElementById('replyMessageError').innerText = '';
 
             // Yanıt mesajını al
-            const replyMessage = document.querySelector('textarea[name="ReplyMessage"]').value.trim();
+            const replyMessage = document.querySelector('textarea[name="ReplyModel.ReplyMessage"]').value.trim();
 
             // Hata kontrolü
             if (!replyMessage) {
                 document.getElementById('replyMessageError').innerText = 'Yanıt boş olamaz.';
             } else {
+                console.log('Form gönderimi başladı...');
+                console.log('Yanıt mesajı:', replyMessage);
                 // Hata yoksa formu gönder
                 this.submit(); // Formu gönder
             }

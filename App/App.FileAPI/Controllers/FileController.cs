@@ -27,16 +27,29 @@ public class FileController : ControllerBase
             Console.WriteLine($"Dizin oluşturulurken hata oluştu: {ex.Message}");
         }
     }
-
     [HttpPost("/upload-files")]
     public async Task<IActionResult> UploadFilesAsync([FromForm] IFormFile? imageFile1, IFormFile? imageFile2)
     {
         var urlDto = new ReturnUrlDto();
 
+        if(imageFile1 is null && imageFile2 is null)
+        {
+            return BadRequest("İşleme devam edebilmek için en az 1 adet resim dosyası  (.jpg, .jpeg, .png, .gif) yüklemelisiniz.");
+        }
+
         try
         {
+            // Geçerli resim uzantıları
+            var validImageExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+
+            // İlk dosya kontrolü
             if (imageFile1 is not null)
             {
+                if (!validImageExtensions.Contains(Path.GetExtension(imageFile1.FileName).ToLower()))
+                {
+                    return BadRequest("Yalnızca resim dosyaları (.jpg, .jpeg, .png, .gif) yüklenebilir.");
+                }
+
                 // İlk dosyayı kaydet
                 var fileName1 = Path.GetFileName(imageFile1.FileName);
                 var filePath1 = Path.Combine(_uploadsFolder, fileName1);
@@ -48,8 +61,14 @@ public class FileController : ControllerBase
                 urlDto.ImageUrl1 = fileName1;
             }
 
+            // İkinci dosya kontrolü
             if (imageFile2 is not null)
             {
+                if (!validImageExtensions.Contains(Path.GetExtension(imageFile2.FileName).ToLower()))
+                {
+                    return BadRequest("Yalnızca resim dosyaları (.jpg, .jpeg, .png, .gif) yüklenebilir.");
+                }
+
                 // İkinci dosyayı kaydet
                 var fileName2 = Path.GetFileName(imageFile2.FileName);
                 var filePath2 = Path.Combine(_uploadsFolder, fileName2);

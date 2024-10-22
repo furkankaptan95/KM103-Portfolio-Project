@@ -8,4 +8,5 @@ public interface IPersonalInfoAdminService
     Task<Result> AddPersonalInfoAsync(AddPersonalInfoDto dto);
     Task<Result<PersonalInfoAdminDto>> GetPersonalInfoAsync();
     Task<Result> UpdatePersonalInfoAsync(UpdatePersonalInfoDto dto);
+    Task<Result<bool>> CheckPersonalInfoAsync();
 }
