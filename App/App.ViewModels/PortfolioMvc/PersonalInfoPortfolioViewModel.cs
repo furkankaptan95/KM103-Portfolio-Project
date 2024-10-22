@@ -8,4 +8,7 @@ public class PersonalInfoPortfolioViewModel
     public string About { get; set; }
 
     public DateTime BirthDate { get; set; }
+    public string Email { get; set; }
+    public string Adress { get; set; }
+    public string Link { get; set; }
 }
