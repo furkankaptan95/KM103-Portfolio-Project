@@ -131,6 +131,9 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 		model.Name = dto.Name;
 		model.Surname = dto.Surname;
 		model.BirthDate = dto.BirthDate;
+		model.Email = dto.Email;
+		model.Link = dto.Link;
+		model.Adress = dto.Adress;
     
 		return model;
 	}
