@@ -4,6 +4,14 @@
     ViewData["AboutMeImageUrl"] = Model.AboutMe != null && !string.IsNullOrEmpty(Model.AboutMe.ImageUrl1)
     ? Model.AboutMe.ImageUrl1
     : "furkan-kaptan.png";
+
+    ViewData["Link"] = Model.PersonalInfo != null && !string.IsNullOrEmpty(Model.PersonalInfo.Link) 
+    ? Model.PersonalInfo.Link 
+    : "https://www.linkedin.com/in/furkan-kaptan-0b5339258/";
+
+    ViewData["Email"] = Model.PersonalInfo != null && !string.IsNullOrEmpty(Model.PersonalInfo.Email)
+           ? Model.PersonalInfo.Email
+           : "iamfurkan86@gmail.com";
 }
 
 <partial name="Partials/HomeSection.cshtml" model="Model.AboutMe"/>

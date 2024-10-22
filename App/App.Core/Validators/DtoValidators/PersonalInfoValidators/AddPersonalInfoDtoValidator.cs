@@ -26,11 +26,9 @@ public class AddPersonalInfoDtoValidator : AbstractValidator<AddPersonalInfoDto>
            .NotEmpty().WithMessage("Email kısmı boş olamaz.")
            .MaximumLength(100).WithMessage("Email maksimum 100 karakter olabilir.")
            .EmailAddress().WithMessage("Geçerli bir e-posta adresi girin.");
-
         RuleFor(x => x.Link)
-            .NotEmpty().WithMessage("Link kısmı boş olamaz.")
-            .MaximumLength(255).WithMessage("Link maksimum 255 karakter olabilir.")
-            .Must(link => Uri.IsWellFormedUriString(link, UriKind.Absolute)).WithMessage("Geçerli bir link girin.");
+                   .NotEmpty().WithMessage("Link kısmı boş olamaz.")
+                   .MaximumLength(255).WithMessage("Link maksimum 255 karakter olabilir.");
 
         RuleFor(x => x.BirthDate)
            .NotEmpty().WithMessage("Doğum tarihi gerekli.")

@@ -18,9 +18,9 @@ public class AddPersonalInfoViewModelValidator : AbstractValidator<AddPersonalIn
            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Soyisim kısmı boş olamaz.")
            .MaximumLength(50).WithMessage("Soyisim maksimum 50 karakter olabilir.");
 
-        RuleFor(x => x.BirthDate)
-           .NotEmpty().WithMessage("Doğum tarihi gerekli.")
-           .Must(BeAValidDate).WithMessage("Geçerli bir tarih giriniz.");
+        RuleFor(x => x.Adress)
+          .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Adres kısmı boş olamaz.")
+          .MaximumLength(50).WithMessage("Adres maksimum 50 karakter olabilir.");
 
         RuleFor(x => x.Email)
            .NotEmpty().WithMessage("Email kısmı boş olamaz.")
@@ -29,9 +29,8 @@ public class AddPersonalInfoViewModelValidator : AbstractValidator<AddPersonalIn
 
         RuleFor(x => x.Link)
             .NotEmpty().WithMessage("Link kısmı boş olamaz.")
-            .MaximumLength(255).WithMessage("Link maksimum 255 karakter olabilir.")
-            .Must(link => Uri.IsWellFormedUriString(link, UriKind.Absolute)).WithMessage("Geçerli bir link girin.");
-
+            .MaximumLength(255).WithMessage("Link maksimum 255 karakter olabilir.");
+            
         RuleFor(x => x.BirthDate)
            .NotEmpty().WithMessage("Doğum tarihi gerekli.")
            .Must(BeAValidDate).WithMessage("Geçerli bir tarih giriniz.");

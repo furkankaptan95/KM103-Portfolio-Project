@@ -25,6 +25,21 @@
                         <span id="SurnameError" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
+                        <label asp-for="Email" class="form-label mb-1">Email</label>
+                        <input asp-for="Email" class="form-control" placeholder="Email Adresiniz" />
+                        <span id="EmailError" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Link" class="form-label mb-1">Bağlantı Linki</label>
+                        <input asp-for="Link" class="form-control" placeholder="Bağlantı Linkiniz" />
+                        <span id="LinkError" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Adress" class="form-label mb-1">Adres</label>
+                        <input asp-for="Adress" class="form-control" placeholder="Adres bilgisi" />
+                        <span id="AdressError" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
                         <label asp-for="About" class="form-label mb-1">Hakkımda</label>
                         <textarea asp-for="About" rows="8" class="form-control"></textarea>
                         <span id="AboutError" class="text-danger" data-valmsg-replace="true"></span>
@@ -35,12 +50,13 @@
                         <span id="BirthDateError" class="text-danger"></span>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Güncelle</button>
+                    <button type="submit" class="btn btn-primary">Güncelleme</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 @section Scripts {
     <script>
         document.querySelector('form').addEventListener('submit', function (event) {
@@ -49,12 +65,18 @@
             // Hata mesajlarını temizle
             document.getElementById('NameError').innerText = '';
             document.getElementById('SurnameError').innerText = '';
+            document.getElementById('EmailError').innerText = '';
+            document.getElementById('LinkError').innerText = '';
+            document.getElementById('AdressError').innerText = '';
             document.getElementById('AboutError').innerText = '';
             document.getElementById('BirthDateError').innerText = '';
 
             // Değerleri al
             const name = document.querySelector('input[name="Name"]').value.trim();
             const surname = document.querySelector('input[name="Surname"]').value.trim();
+            const email = document.querySelector('input[name="Email"]').value.trim();
+            const link = document.querySelector('input[name="Link"]').value.trim();
+            const adress = document.querySelector('input[name="Adress"]').value.trim();
             const about = document.querySelector('textarea[name="About"]').value.trim();
             const birthDate = document.querySelector('input[name="BirthDate"]').value;
 
@@ -75,6 +97,35 @@
                 hasError = true;
             } else if (surname.length > 50) {
                 document.getElementById('SurnameError').innerText = 'Soyisim maksimum 50 karakter olabilir.';
+                hasError = true;
+            }
+
+            // Email validasyonu
+            if (!email) {
+                document.getElementById('EmailError').innerText = 'Email kısmı boş olamaz.';
+                hasError = true;
+            } else if (email.length > 100) {
+                document.getElementById('EmailError').innerText = 'Email maksimum 100 karakter olabilir.';
+                hasError = true;
+            } else if (!/\S+@@\S+\.\S+/.test(email)) { // Basit e-posta formatı kontrolü
+                document.getElementById('EmailError').innerText = 'Geçerli bir e-posta adresi girin.';
+                hasError = true;
+            }
+
+            // Link validasyonu
+            if (!link) {
+                document.getElementById('LinkError').innerText = 'Link kısmı boş olamaz.';
+                hasError = true;
+            } else if (link.length > 255) {
+                document.getElementById('LinkError').innerText = 'Link maksimum 255 karakter olabilir.';
+                hasError = true;
+            }
+            // Adres validasyonu
+            if (!adress) {
+                document.getElementById('AdressError').innerText = 'Adres kısmı boş olamaz.';
+                hasError = true;
+            } else if (adress.length > 50) {
+                document.getElementById('AdressError').innerText = 'Adres maksimum 50 karakter olabilir.';
                 hasError = true;
             }
 
