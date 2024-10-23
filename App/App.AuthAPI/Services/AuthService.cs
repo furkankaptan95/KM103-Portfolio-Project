@@ -64,6 +64,48 @@ public class AuthService : IAuthService
         return Result<TokensDto>.Success(tokensDto);
     }
 
+    public async Task<Result<TokensDto>> RefreshTokenAsync(string? token)
+    {
+        if(token is null)
+        {
+            return Result<TokensDto>.Invalid();
+        }
+
+        var refreshToken = await _authApiDb.RefreshTokens.Where(rt =>
+        rt.Token == token &&
+        rt.ExpireDate > DateTime.UtcNow &&
+        rt.IsRevoked == null &&
+        rt.IsUsed == null).Include(rt=>rt.User).FirstOrDefaultAsync();
+
+        if (refreshToken is null)
+        {
+            return Result<TokensDto>.Error();
+        }
+
+        refreshToken.IsUsed = DateTime.UtcNow;
+
+        var newJwt = GenerateJwtToken(refreshToken.User);
+        var newRefreshTokenString = GenerateRefreshToken();
+
+        var newRefreshToken = new RefreshTokenEntity
+        {
+            Token = newRefreshTokenString,
+            UserId = refreshToken.User.Id,
+            ExpireDate = DateTime.UtcNow.AddDays(7),
+        };
+
+        await _authApiDb.RefreshTokens.AddAsync(newRefreshToken);
+        await _authApiDb.SaveChangesAsync();
+
+        var response = new TokensDto
+        {
+            AccessToken = newJwt,
+            RefreshToken = newRefreshTokenString
+        };
+
+        return Result<TokensDto>.Success(response); 
+    }
+
     public async Task<RegistrationResult> RegisterAsync(RegisterDto registerDto)
     {
         var isEmailAlreadyTaken = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == registerDto.Email);
