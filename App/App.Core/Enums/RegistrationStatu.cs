@@ -1,7 +1,7 @@
 ﻿namespace App.Core.Enums;
 public enum RegistrationError
 {
-    Success,
+    None,
     EmailTaken,
     UsernameTaken,
     BothTaken

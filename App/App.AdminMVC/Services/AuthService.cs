@@ -1,7 +1,9 @@
-﻿using App.Core.Results;
+﻿using App.Core.Enums;
+using App.Core.Results;
 using App.DTOs.AuthDtos;
 using App.Services;
 using Ardalis.Result;
+using Newtonsoft.Json.Linq;
 using System.Net;
 
 namespace App.AdminMVC.Services;
@@ -54,9 +56,37 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
         return Result<TokensDto>.Error();
     }
 
-    public Task<RegistrationResult> RegisterAsync(RegisterDto registerDto)
+    public async Task<RegistrationResult> RegisterAsync(RegisterDto registerDto)
     {
-        throw new NotImplementedException();
+        var response = await AuthApiClient.PostAsJsonAsync("register", registerDto);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<RegistrationResult>();
+
+            if(result is null)
+            {
+                return new RegistrationResult(false,null,RegistrationError.None);
+            }
+            else
+            {
+                if(result.Error == RegistrationError.UsernameTaken)
+                {
+                    return new RegistrationResult(false,"Bu Kullanıcı Adı zaten alınmış!..",RegistrationError.UsernameTaken);
+                }
+                else if(result.Error == RegistrationError.EmailTaken)
+                {
+                    return new RegistrationResult(false, "Bu Email zaten alınmış!..",RegistrationError.EmailTaken);
+                }
+                else
+                {
+                    return new RegistrationResult(false,"Bu Email ve Kullanıcı Adı zaten alınmış!..", RegistrationError.BothTaken);
+                }
+            }
+        }
+
+        return new RegistrationResult(true,"Kullanıcı kaydı başarıyla gerçekleşti. Lütfen hesabınızı aktive etmek için Email adresinizi kontrol ediniz.",RegistrationError.None);
+
     }
 
     public Task<Result> RenewPasswordEmailAsync(string email, string token)

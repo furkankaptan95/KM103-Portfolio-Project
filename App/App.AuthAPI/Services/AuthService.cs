@@ -141,15 +141,17 @@ public class AuthService : IAuthService
 
         if(isEmailAlreadyTaken is not null&& isUsernameAlreadyTaken is not null)
         {
-            return new RegistrationResult { IsSuccess = false, Error = RegistrationError.BothTaken };
+            return new RegistrationResult(false,null,RegistrationError.BothTaken);
         }
+
         else if (isEmailAlreadyTaken is null && isUsernameAlreadyTaken is not null)
         {
-            return new RegistrationResult { IsSuccess = false, Error = RegistrationError.UsernameTaken };
+            return new RegistrationResult(false, null, RegistrationError.UsernameTaken);
         }
+
         else if (isEmailAlreadyTaken is not null && isUsernameAlreadyTaken is null)
         {
-            return new RegistrationResult { IsSuccess = false, Error = RegistrationError.EmailTaken };
+            return new RegistrationResult(false, null, RegistrationError.EmailTaken);
         }
 
         byte[] passwordHash, passwordSalt;
@@ -185,7 +187,7 @@ public class AuthService : IAuthService
         var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Email Doğrulama için tıklayınız.</a>";
         var emailResult = await _emailService.SendEmailAsync(user.Email, "Kayıt başarılı. Lütfen email adresinizi doğrulayın.", htmlMailBody);
 
-        return new RegistrationResult { IsSuccess = true };
+        return new RegistrationResult(true,null,RegistrationError.None);
     }
 
     public async Task<Result> RenewPasswordEmailAsync(string email, string token)
