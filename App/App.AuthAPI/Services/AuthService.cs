@@ -264,9 +264,9 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task<Result> VerifyEmailAsync(string email, string token)
+    public async Task<Result> VerifyEmailAsync(VerifyEmailDto dto)
     {
-        var userVerification = await _authApiDb.UserVerifications.Where(uv => uv.User.Email == email && uv.Token == token).Include(uv=>uv.User).FirstOrDefaultAsync();
+        var userVerification = await _authApiDb.UserVerifications.Where(uv => uv.User.Email == dto.Email && uv.Token == dto.Token).Include(uv=>uv.User).FirstOrDefaultAsync();
 
         if (userVerification == null || userVerification.Expiration < DateTime.UtcNow)
         {
@@ -274,8 +274,10 @@ public class AuthService : IAuthService
         }
 
         userVerification.User.IsActive = true;
+
         _authApiDb.UserVerifications.Update(userVerification);
         await _authApiDb.SaveChangesAsync();
+
         _authApiDb.UserVerifications.Remove(userVerification);
         await _authApiDb.SaveChangesAsync();
 

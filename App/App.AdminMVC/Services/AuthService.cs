@@ -104,7 +104,7 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
         throw new NotImplementedException();
     }
 
-    public Task<Result> VerifyEmailAsync(string email, string token)
+    public Task<Result> VerifyEmailAsync(VerifyEmailDto dto)
     {
         throw new NotImplementedException();
     }

@@ -70,8 +70,15 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
         throw new NotImplementedException();
     }
 
-    public Task<Result> VerifyEmailAsync(string email, string token)
+    public async Task<Result> VerifyEmailAsync(VerifyEmailDto dto)
     {
-        throw new NotImplementedException();
+        var response = await AuthApiClient.PostAsJsonAsync("verify-email", dto);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return Result.SuccessWithMessage("Email başarıyla doğrulandı ve hesabınız aktif edildi. Hesabınıza giriş yapabilirsiniz.");
+        }
+
+        return Result.Error("Email doğrulama başarısız!..Tekrar doğrulama maili almak için tıklayınız.");
     }
 }
