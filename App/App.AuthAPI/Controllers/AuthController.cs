@@ -25,4 +25,22 @@ public class AuthController(IAuthService authService) : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPost("/refresh-token")]
+    public async Task<IActionResult> RefreshTokenAsync([FromBody] string token)
+    {
+        if (string.IsNullOrEmpty(token))
+        {
+            return BadRequest(Result<TokensDto>.Error("Token is null or empty"));
+        }
+
+        var result = await authService.RefreshTokenAsync(token);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
 }

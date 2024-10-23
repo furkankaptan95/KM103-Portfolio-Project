@@ -96,12 +96,8 @@ public class AuthService : IAuthService
         return Result<TokensDto>.Success(tokensDto);
     }
 
-    public async Task<Result<TokensDto>> RefreshTokenAsync(string? token)
+    public async Task<Result<TokensDto>> RefreshTokenAsync(string token)
     {
-        if(token is null)
-        {
-            return Result<TokensDto>.Invalid();
-        }
 
         var refreshToken = await _authApiDb.RefreshTokens.Where(rt =>
         rt.Token == token &&

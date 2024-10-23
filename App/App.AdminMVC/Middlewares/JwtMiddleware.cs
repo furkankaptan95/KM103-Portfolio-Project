@@ -14,7 +14,7 @@ public class JwtMiddleware
 
     public async Task Invoke(HttpContext context, IAuthService authService)
     {
-        // Cookie'den JWT ve refresh token'ı al
+        
         var jwtToken = context.Request.Cookies["JwtToken"];
         var refreshToken = context.Request.Cookies["RefreshToken"];
 
@@ -22,6 +22,7 @@ public class JwtMiddleware
         if (string.IsNullOrEmpty(jwtToken) && !string.IsNullOrEmpty(refreshToken))
         {
             var tokensResponse = await authService.RefreshTokenAsync(refreshToken);
+
             var tokens = tokensResponse.Value;
 
             if (tokens != null && !string.IsNullOrEmpty(tokens.JwtToken) && !string.IsNullOrEmpty(tokens.RefreshToken))
