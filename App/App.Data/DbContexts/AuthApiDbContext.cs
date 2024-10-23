@@ -12,11 +12,13 @@ public class AuthApiDbContext : DbContext
     }
 
     public DbSet<UserEntity> Users { get; set; }
+    public DbSet<RefreshTokenEntity> RefreshTokens { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         byte[] passwordHash, passwordSalt;
+        
 
         HashingHelper.CreatePasswordHash("123Fk768", out passwordHash, out passwordSalt);
 
@@ -40,6 +42,8 @@ public class AuthApiDbContext : DbContext
                  Email = "hslmz@gmail.com",
                  IsActive = true,
                  Role = "commenter",
+                 PasswordHash = passwordHash,
+                 PasswordSalt = passwordSalt,
              },
                new UserEntity
                {
@@ -48,6 +52,8 @@ public class AuthApiDbContext : DbContext
                    Email = "ardglr@gmail.com",
                    IsActive = true,
                    Role = "commenter",
+                   PasswordHash = passwordHash,
+                   PasswordSalt = passwordSalt,
                },
                new UserEntity
                {
@@ -56,6 +62,8 @@ public class AuthApiDbContext : DbContext
                    Email = "fromano@gmail.com",
                    IsActive = false,
                    Role = "commenter",
+                   PasswordHash = passwordHash,
+                   PasswordSalt = passwordSalt,
                }
             );
     }
