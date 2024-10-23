@@ -100,9 +100,16 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
         throw new NotImplementedException();
     }
 
-    public Task<Result> ValidateTokenAsync(string token)
+    public async Task<Result> ValidateTokenAsync(string token)
     {
-        throw new NotImplementedException();
+        var response = await AuthApiClient.PostAsJsonAsync("validate-token", token);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadFromJsonAsync<Result>();
+        }
+           
+        return Result.Error();
     }
 
     public async Task<Result> VerifyEmailAsync(VerifyEmailDto dto)

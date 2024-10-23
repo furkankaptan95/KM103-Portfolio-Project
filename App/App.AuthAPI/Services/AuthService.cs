@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace App.AuthAPI.Services;
@@ -236,38 +237,48 @@ public class AuthService : IAuthService
             return Result.Error("Token is null or empty");
         }
 
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-
         try
         {
-            tokenHandler.ValidateToken(token, new TokenValidationParameters
+            var parts = token.Split('.');
+            if (parts.Length != 3)
             {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = secretKey,
-                ValidateIssuer = false, // Gerekirse kontrol edin
-                ValidateAudience = false, // Gerekirse kontrol edin
-                ClockSkew = TimeSpan.Zero // Geçerlilik süresi kontrolü için tolerans süresi
-            }, out SecurityToken validatedToken);
+                throw new ArgumentException("JWT formatı hatalı");
+            }
 
-            // Token geçerli ise, Success döner
-            return Result.Success();
+            var header = parts[0];
+            var payload = parts[1];
+            var signature = parts[2];
+
+            var computedSignature = CreateSignature(header, payload, _configuration["Jwt:Key"]);
+            if (computedSignature == signature)
+            {
+                return Result.Success();
+            }
+
+            
+            return Result.Error();
         }
-        catch (SecurityTokenExpiredException)
+        catch (Exception)
         {
-            // Token süresi dolmuş
-            return Result.Error("Token has expired");
+            return Result.Error();
         }
-        catch (SecurityTokenException)
+
+    }
+
+    private static string CreateSignature(string header, string payload, string secret)
+    {
+        var key = Encoding.UTF8.GetBytes(secret);
+        using (var algorithm = new HMACSHA256(key))
         {
-            // Token geçersiz
-            return Result.Error("Invalid token");
+            var data = Encoding.UTF8.GetBytes(header + "." + payload);
+            var hash = algorithm.ComputeHash(data);
+            return Base64UrlEncode(hash);
         }
-        catch (Exception ex)
-        {
-            // Diğer hatalar
-            return Result.Error($"An error occurred: {ex.Message}");
-        }
+    }
+
+    private static string Base64UrlEncode(byte[] input)
+    {
+        return Convert.ToBase64String(input).TrimEnd('=').Replace('+', '-').Replace('/', '_');
     }
 
     public async Task<Result> VerifyEmailAsync(VerifyEmailDto dto)

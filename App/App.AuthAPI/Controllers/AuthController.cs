@@ -76,4 +76,17 @@ public class AuthController(IAuthService authService) : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPost("/validate-token")]
+    public async Task<IActionResult> ValidateTokenAsync([FromBody] string token)
+    {
+        var result = await authService.ValidateTokenAsync(token);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
 }
