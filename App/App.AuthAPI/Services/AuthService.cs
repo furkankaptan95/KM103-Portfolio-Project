@@ -177,6 +177,11 @@ public class AuthService : IAuthService
         return Result.Success();
     }
 
+    public Task<Result> VerifyEmailAsync(string email, string token)
+    {
+        throw new NotImplementedException();
+    }
+
     private string GenerateJwtToken(UserEntity user)
     {
         var claims = new List<Claim>
