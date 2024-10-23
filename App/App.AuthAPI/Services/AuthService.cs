@@ -5,6 +5,7 @@ using App.Data.DbContexts;
 using App.Data.Entities;
 using App.DTOs.AuthDtos;
 using App.Services;
+using App.Services.AuthService.Abstract;
 using Ardalis.Result;
 using IdentityModel;
 using Microsoft.EntityFrameworkCore;

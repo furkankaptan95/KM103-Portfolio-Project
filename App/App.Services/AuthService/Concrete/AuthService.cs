@@ -1,12 +1,12 @@
 ﻿using App.Core.Enums;
 using App.Core.Results;
 using App.DTOs.AuthDtos;
-using App.Services;
+using App.Services.AuthService.Abstract;
 using Ardalis.Result;
-using Newtonsoft.Json.Linq;
+using System.Net.Http.Json;
 using System.Net;
 
-namespace App.AdminMVC.Services;
+namespace App.Services.AuthService.Concrete;
 public class AuthService(IHttpClientFactory factory) : IAuthService
 {
     private HttpClient AuthApiClient => factory.CreateClient("authApi");
@@ -23,20 +23,22 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
         {
             var result = await response.Content.ReadFromJsonAsync<Result<TokensDto>>();
 
-            if(result is null)
+            if (result is null)
             {
-                return Result<TokensDto>.Error();
+                return Result<TokensDto>.Error("Giriş işlemi sırasında beklenmeyen bir hata oluştu! Tekrar deneyebilirsiniz.");
             }
-            return result;
-        }
-        if(response.StatusCode == HttpStatusCode.NotFound)
-        {
-            return Result<TokensDto>.NotFound();
+
+            return Result<TokensDto>.Success(result.Value, "Hoşgeldiniz. Giriş işlemi başarılı!");
         }
 
-        return Result<TokensDto>.Error();
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+        {
+            return Result<TokensDto>.Forbidden("Henüz Email adresinizi doğrulamadınız. Lütfen Email adresinize gönderilen linke tıklayarak hesabınızı aktif edin.");
+        }
+
+        return Result<TokensDto>.Error("Hatalı Email veya Şifre!");
     }
-    
+
     public async Task<Result<TokensDto>> RefreshTokenAsync(string token)
     {
         var response = await AuthApiClient.PostAsJsonAsync("refresh-token", token);
@@ -64,29 +66,28 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
         {
             var result = await response.Content.ReadFromJsonAsync<RegistrationResult>();
 
-            if(result is null)
+            if (result is null)
             {
-                return new RegistrationResult(false,null,RegistrationError.None);
+                return new RegistrationResult(false, null, RegistrationError.None);
             }
             else
             {
-                if(result.Error == RegistrationError.UsernameTaken)
+                if (result.Error == RegistrationError.UsernameTaken)
                 {
-                    return new RegistrationResult(false,"Bu Kullanıcı Adı zaten alınmış!..",RegistrationError.UsernameTaken);
+                    return new RegistrationResult(false, "Bu Kullanıcı Adı zaten alınmış!..", RegistrationError.UsernameTaken);
                 }
-                else if(result.Error == RegistrationError.EmailTaken)
+                else if (result.Error == RegistrationError.EmailTaken)
                 {
-                    return new RegistrationResult(false, "Bu Email zaten alınmış!..",RegistrationError.EmailTaken);
+                    return new RegistrationResult(false, "Bu Email zaten alınmış!..", RegistrationError.EmailTaken);
                 }
                 else
                 {
-                    return new RegistrationResult(false,"Bu Email ve Kullanıcı Adı zaten alınmış!..", RegistrationError.BothTaken);
+                    return new RegistrationResult(false, "Bu Email ve Kullanıcı Adı zaten alınmış!..", RegistrationError.BothTaken);
                 }
             }
         }
 
-        return new RegistrationResult(true,"Kullanıcı kaydı başarıyla gerçekleşti. Lütfen hesabınızı aktive etmek için Email adresinizi kontrol ediniz.",RegistrationError.None);
-
+        return new RegistrationResult(true, "Kullanıcı kaydı başarıyla gerçekleşti. Lütfen hesabınızı aktive etmek için Email adresinizi kontrol ediniz.", RegistrationError.None);
     }
 
     public Task<Result> RenewPasswordEmailAsync(string email, string token)
@@ -104,8 +105,15 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
         throw new NotImplementedException();
     }
 
-    public Task<Result> VerifyEmailAsync(VerifyEmailDto dto)
+    public async Task<Result> VerifyEmailAsync(VerifyEmailDto dto)
     {
-        throw new NotImplementedException();
+        var response = await AuthApiClient.PostAsJsonAsync("verify-email", dto);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return Result.SuccessWithMessage("Email başarıyla doğrulandı ve hesabınız aktif edildi. Hesabınıza giriş yapabilirsiniz.");
+        }
+
+        return Result.Error("Email doğrulama başarısız!..Tekrar doğrulama maili almak için tıklayınız.");
     }
 }

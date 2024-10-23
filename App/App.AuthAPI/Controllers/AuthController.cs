@@ -1,5 +1,5 @@
 ﻿using App.DTOs.AuthDtos;
-using App.Services;
+using App.Services.AuthService.Abstract;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,4 +1,3 @@
-using App.AdminMVC.Middlewares;
 using App.AdminMVC.Services;
 
 var builder = WebApplication.CreateBuilder(args);

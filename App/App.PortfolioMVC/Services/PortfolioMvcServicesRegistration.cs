@@ -1,5 +1,5 @@
-﻿using App.Services;
-using App.Services.AdminServices.Abstract;
+﻿using App.Services.AuthService.Abstract;
+using App.Services.AuthService.Concrete;
 using App.Services.PortfolioServices.Abstract;
 
 namespace App.PortfolioMVC.Services;

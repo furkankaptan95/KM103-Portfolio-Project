@@ -1,4 +1,4 @@
-﻿using App.Services;
+﻿using App.Services.AuthService.Abstract;
 using Microsoft.AspNetCore.Http;
 using System.IdentityModel.Tokens.Jwt;
 
