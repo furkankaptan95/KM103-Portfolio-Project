@@ -1,15 +1,16 @@
 ﻿using App.Services;
+using Microsoft.AspNetCore.Http;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace App.AdminMVC.Middlewares;
-
+namespace App.Middlewares;
 public class JwtMiddleware
 {
     private readonly RequestDelegate _next;
-
-    public JwtMiddleware(RequestDelegate next)
+    private readonly IAuthService _authService;
+    public JwtMiddleware(RequestDelegate next, IAuthService authService)
     {
         _next = next;
+        _authService = authService;
     }
 
     public async Task Invoke(HttpContext context, IAuthService authService)
