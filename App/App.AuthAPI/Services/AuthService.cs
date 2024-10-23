@@ -49,7 +49,7 @@ public class AuthService : IAuthService
         await _authApiDb.SaveChangesAsync();
 
 
-        var verificationLink = $"https://localhost:7114/renew-password/{verificationCode}";
+        var verificationLink = $"https://localhost:7167/renew-password/{verificationCode}";
 
         var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Şifrenizi sıfırlamak için tıklayınız.</a>";
         var emailResult = await _emailService.SendEmailAsync(emailToRenewPassword.Email, "Lütfen email adresinizi doğrulayın.", htmlMailBody);
@@ -69,6 +69,11 @@ public class AuthService : IAuthService
         if (!HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt))
         {
             return Result<TokensDto>.Error();
+        }
+
+        if (HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt)&&user.IsActive==false)
+        {
+            return Result<TokensDto>.Forbidden();
         }
 
         user.RefreshTokens.ToList().ForEach(t => t.IsRevoked = DateTime.UtcNow);
@@ -182,7 +187,7 @@ public class AuthService : IAuthService
         await _authApiDb.UserVerifications.AddAsync(userVerification);
         await _authApiDb.SaveChangesAsync();
 
-        var verificationLink = $"https://localhost:7114/verify-email?email={user.Email}&token={token}";
+        var verificationLink = $"https://localhost:7167/verify-email?email={user.Email}&token={token}";
 
         var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Email Doğrulama için tıklayınız.</a>";
         var emailResult = await _emailService.SendEmailAsync(user.Email, "Kayıt başarılı. Lütfen email adresinizi doğrulayın.", htmlMailBody);

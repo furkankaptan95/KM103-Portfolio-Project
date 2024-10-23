@@ -3,6 +3,7 @@ using App.Core.Results;
 using App.DTOs.AuthDtos;
 using App.Services;
 using Ardalis.Result;
+using System.Net;
 
 namespace App.PortfolioMVC.Services;
 public class AuthService(IHttpClientFactory factory) : IAuthService
@@ -13,9 +14,28 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
         throw new NotImplementedException();
     }
 
-    public Task<Result<TokensDto>> LoginAsync(LoginDto loginDto)
+    public async Task<Result<TokensDto>> LoginAsync(LoginDto loginDto)
     {
-        throw new NotImplementedException();
+        var response = await AuthApiClient.PostAsJsonAsync("login", loginDto);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<Result<TokensDto>>();
+
+            if (result is null)
+            {
+                return Result<TokensDto>.Error("Giriş işlemi sırasında beklenmeyen bir hata oluştu! Tekrar deneyebilirsiniz.");
+            }
+
+            return Result<TokensDto>.Success(result.Value, "Hoşgeldiniz. Giriş işlemi başarılı!");
+        }
+
+        if(response.StatusCode == HttpStatusCode.Forbidden)
+        {
+            return Result<TokensDto>.Forbidden("Henüz Email adresinizi doğrulamadınız. Lütfen Email adrsinize gönderilen linke tıklayarak hesabınızı aktif edin.");
+        }
+
+        return Result<TokensDto>.Error("Hatalı Kullanıcı Adı veya Şifre!");
     }
 
     public Task<Result<TokensDto>> RefreshTokenAsync(string token)

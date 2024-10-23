@@ -20,6 +20,12 @@ public class AuthController(IAuthService authService) : ControllerBase
             {
                 return NotFound(result);
             }
+
+            if(result.Status == ResultStatus.Forbidden)
+            {
+                return StatusCode(403, result);
+            }
+
             return BadRequest(result);
         }
 
