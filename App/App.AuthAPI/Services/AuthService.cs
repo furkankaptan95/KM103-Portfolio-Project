@@ -89,7 +89,7 @@ public class AuthService : IAuthService
 
         var tokensDto = new TokensDto
         {
-            AccessToken = jwt,
+            JwtToken = jwt,
             RefreshToken = refreshTokenString
         };
         
@@ -131,7 +131,7 @@ public class AuthService : IAuthService
 
         var response = new TokensDto
         {
-            AccessToken = newJwt,
+            JwtToken = newJwt,
             RefreshToken = newRefreshTokenString
         };
 
@@ -223,6 +223,47 @@ public class AuthService : IAuthService
         await _authApiDb.SaveChangesAsync();
 
         return Result.Success();
+    }
+
+    public async Task<Result> ValidateTokenAsync(string token)
+    {
+        if (string.IsNullOrEmpty(token))
+        {
+            return Result.Error("Token is null or empty");
+        }
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+
+        try
+        {
+            tokenHandler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = secretKey,
+                ValidateIssuer = false, // Gerekirse kontrol edin
+                ValidateAudience = false, // Gerekirse kontrol edin
+                ClockSkew = TimeSpan.Zero // Geçerlilik süresi kontrolü için tolerans süresi
+            }, out SecurityToken validatedToken);
+
+            // Token geçerli ise, Success döner
+            return Result.Success();
+        }
+        catch (SecurityTokenExpiredException)
+        {
+            // Token süresi dolmuş
+            return Result.Error("Token has expired");
+        }
+        catch (SecurityTokenException)
+        {
+            // Token geçersiz
+            return Result.Error("Invalid token");
+        }
+        catch (Exception ex)
+        {
+            // Diğer hatalar
+            return Result.Error($"An error occurred: {ex.Message}");
+        }
     }
 
     public async Task<Result> VerifyEmailAsync(string email, string token)

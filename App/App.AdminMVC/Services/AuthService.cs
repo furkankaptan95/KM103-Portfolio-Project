@@ -55,6 +55,11 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
         throw new NotImplementedException();
     }
 
+    public Task<Result> ValidateTokenAsync(string token)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<Result> VerifyEmailAsync(string email, string token)
     {
         throw new NotImplementedException();

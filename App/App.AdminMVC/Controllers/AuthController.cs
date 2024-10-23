@@ -45,7 +45,7 @@ public class AuthController(IAuthService authService) : Controller
             Expires = DateTime.UtcNow.AddDays(7) // Refresh token süresi
         };
 
-        HttpContext.Response.Cookies.Append("AccessToken", tokens.AccessToken, jwtCookieOptions);
+        HttpContext.Response.Cookies.Append("AccessToken", tokens.JwtToken, jwtCookieOptions);
         HttpContext.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, refreshTokenCookieOptions);
 
         return Redirect("/");

@@ -1,3 +1,4 @@
+using App.AdminMVC.Middlewares;
 using App.AdminMVC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseMiddleware<JwtMiddleware>();
 
 app.UseAuthorization();
 
