@@ -60,6 +60,15 @@ public class AuthService : IAuthService
         return Result<TokensDto>.Success(tokensDto);
     }
 
+    public async Task<Result> RegisterAsync(RegisterDto registerDto)
+    {
+        var isEmailAlreadyTaken = await _authApiDb.Users.SingleOrDefaultAsync(u=>u.Email == registerDto.Email);
+        if (isEmailAlreadyTaken is not null)
+        {
+            return Result.Conflict();
+        }
+    }
+
     private string GenerateJwtToken(UserEntity user)
     {
         var claims = new List<Claim>
@@ -89,4 +98,6 @@ public class AuthService : IAuthService
     {
         return Guid.NewGuid().ToString();
     }
+
+
 }
