@@ -1,4 +1,5 @@
-﻿using App.Services.AdminServices.Abstract;
+﻿using App.Services;
+using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 
 namespace App.PortfolioMVC.Services;
@@ -53,7 +54,7 @@ public static class PortfolioMvcServicesRegistration
         services.AddScoped<IProjectPortfolioService, ProjectPortfolioService>();
 		services.AddScoped<IHomePortfolioService, HomePortfolioService>();
         services.AddScoped<IContactMessagePortfolioService, ContactMessagePortfolioService>();
-
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }
