@@ -43,4 +43,18 @@ public class AuthController(IAuthService authService) : ControllerBase
 
         return Ok(result);
     }
+
+
+    [HttpPost("/register")]
+    public async Task<IActionResult> RegisterAsync([FromBody] RegisterDto dto)
+    {
+        var result = await authService.RegisterAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
 }

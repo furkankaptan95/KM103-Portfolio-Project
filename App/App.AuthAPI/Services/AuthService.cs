@@ -145,11 +145,11 @@ public class AuthService : IAuthService
         }
         else if (isEmailAlreadyTaken is null && isUsernameAlreadyTaken is not null)
         {
-            return new RegistrationResult { IsSuccess = true, Error = RegistrationError.UsernameTaken };
+            return new RegistrationResult { IsSuccess = false, Error = RegistrationError.UsernameTaken };
         }
         else if (isEmailAlreadyTaken is not null && isUsernameAlreadyTaken is null)
         {
-            return new RegistrationResult { IsSuccess = true, Error = RegistrationError.EmailTaken };
+            return new RegistrationResult { IsSuccess = false, Error = RegistrationError.EmailTaken };
         }
 
         byte[] passwordHash, passwordSalt;
