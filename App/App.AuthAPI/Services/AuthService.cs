@@ -177,9 +177,22 @@ public class AuthService : IAuthService
         return Result.Success();
     }
 
-    public Task<Result> VerifyEmailAsync(string email, string token)
+    public async Task<Result> VerifyEmailAsync(string email, string token)
     {
-        throw new NotImplementedException();
+        var userVerification = await _authApiDb.UserVerifications.Where(uv => uv.User.Email == email && uv.Token == token).Include(uv=>uv.User).FirstOrDefaultAsync();
+
+        if (userVerification == null || userVerification.Expiration < DateTime.UtcNow)
+        {
+            return Result.Error();
+        }
+
+        userVerification.User.IsActive = true;
+        _authApiDb.UserVerifications.Update(userVerification);
+        await _authApiDb.SaveChangesAsync();
+        _authApiDb.UserVerifications.Remove(userVerification);
+        await _authApiDb.SaveChangesAsync();
+
+        return Result.Success();
     }
 
     private string GenerateJwtToken(UserEntity user)
