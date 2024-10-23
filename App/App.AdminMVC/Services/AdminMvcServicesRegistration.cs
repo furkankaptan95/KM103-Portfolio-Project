@@ -1,4 +1,5 @@
-﻿using App.Services.AdminServices.Abstract;
+﻿using App.Services;
+using App.Services.AdminServices.Abstract;
 
 namespace App.AdminMVC.Services;
 public static class AdminMvcServicesRegistration
@@ -53,6 +54,7 @@ public static class AdminMvcServicesRegistration
         services.AddScoped<ICommentAdminService, CommentService>();
         services.AddScoped<IUserAdminService, UserService>();
         services.AddScoped<IContactMessageAdminService, ContactMessageService>();
+        services.AddScoped<IAuthService, AuthService>();
 
 
         return services;
