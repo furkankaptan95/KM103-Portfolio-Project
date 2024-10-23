@@ -160,6 +160,23 @@ public class AuthService : IAuthService
         return new RegistrationResult { IsSuccess = true };
     }
 
+    public async Task<Result> RevokeTokenAsync(string token)
+    {
+        var refreshToken = await _authApiDb.RefreshTokens.FirstOrDefaultAsync(rt=>rt.Token == token);
+
+        if (refreshToken is null)
+        {
+            return Result.NotFound();
+        }
+
+        refreshToken.IsRevoked = DateTime.UtcNow;
+
+        _authApiDb.RefreshTokens.Update(refreshToken);
+        await _authApiDb.SaveChangesAsync();
+
+        return Result.Success();
+    }
+
     private string GenerateJwtToken(UserEntity user)
     {
         var claims = new List<Claim>
