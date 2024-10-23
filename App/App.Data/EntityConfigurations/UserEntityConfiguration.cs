@@ -12,8 +12,8 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
 
         builder.Property(u => u.Username).IsRequired().HasColumnType("varchar(50)");
         builder.Property(u => u.Email).IsRequired().HasColumnType("varchar(100)");
-        //builder.Property(u => u.PasswordHash).IsRequired().HasColumnType("varchar(255)");
-        //builder.Property(u => u.PasswordSalt).IsRequired().HasColumnType("varchar(255)");
+        builder.Property(u => u.PasswordHash).IsRequired().HasColumnType("varchar(255)");
+        builder.Property(u => u.PasswordSalt).IsRequired().HasColumnType("varchar(255)");
         builder.Property(u => u.Role).IsRequired().HasColumnType("varchar(50)");
         builder.Property(u => u.ImageUrl).HasColumnType("varchar(255)");
         builder.Property(u => u.IsActive).IsRequired().HasColumnType("bit");
