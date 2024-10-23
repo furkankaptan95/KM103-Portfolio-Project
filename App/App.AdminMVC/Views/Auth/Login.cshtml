@@ -1,0 +1,12 @@
+﻿@model LoginViewModel
+
+<form asp-controller="Auth" asp-action="Login" method="post">
+
+    <label asp-for="Email" class="form-label mb-1">Email</label>
+    <input asp-for="Email" class="form-control" />
+
+    <label asp-for="Password" class="form-label mb-1">Email</label>
+    <input asp-for="Password" class="form-control" />
+
+    <button type="submit" class="btn btn-primary">Giriş yap</button>
+</form>

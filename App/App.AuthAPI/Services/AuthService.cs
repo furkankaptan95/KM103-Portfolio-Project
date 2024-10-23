@@ -59,7 +59,7 @@ public class AuthService : IAuthService
 
     public async Task<Result<TokensDto>> LoginAsync(LoginDto loginDto)
     {
-        var user = await _authApiDb.Users.SingleOrDefaultAsync(u=>u.Email == loginDto.Email);
+        var user = await _authApiDb.Users.Include(u=>u.RefreshTokens).FirstOrDefaultAsync(u=>u.Email == loginDto.Email);
 
         if(user == null)
         {

@@ -43,6 +43,7 @@ public static class AuthApiServicesRegistration
 
         services.AddScoped<IUserAdminService, AdminUserService>();
         services.AddScoped<IEmailService, SmtpEmailService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }
