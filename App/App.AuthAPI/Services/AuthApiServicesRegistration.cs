@@ -1,4 +1,5 @@
 ﻿using App.Data.DbContexts;
+using App.Services;
 using App.Services.AdminServices.Abstract;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,6 +42,7 @@ public static class AuthApiServicesRegistration
         });
 
         services.AddScoped<IUserAdminService, AdminUserService>();
+        services.AddScoped<IEmailService, SmtpEmailService>();
 
         return services;
     }

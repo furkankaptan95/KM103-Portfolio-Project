@@ -1,9 +1,10 @@
-﻿using App.DTOs.AuthDtos;
+﻿using App.Core.Results;
+using App.DTOs.AuthDtos;
 using Ardalis.Result;
 
 namespace App.Services;
 public interface IAuthService
 {
     Task<Result<TokensDto>> LoginAsync(LoginDto loginDto);
-    Task<Result> RegisterAsync(RegisterDto registerDto);
+    Task<RegistrationResult> RegisterAsync(RegisterDto registerDto);
 }
