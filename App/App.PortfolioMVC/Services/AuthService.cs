@@ -32,10 +32,10 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
 
         if(response.StatusCode == HttpStatusCode.Forbidden)
         {
-            return Result<TokensDto>.Forbidden("Henüz Email adresinizi doğrulamadınız. Lütfen Email adrsinize gönderilen linke tıklayarak hesabınızı aktif edin.");
+            return Result<TokensDto>.Forbidden("Henüz Email adresinizi doğrulamadınız. Lütfen Email adresinize gönderilen linke tıklayarak hesabınızı aktif edin.");
         }
 
-        return Result<TokensDto>.Error("Hatalı Kullanıcı Adı veya Şifre!");
+        return Result<TokensDto>.Error("Hatalı Email veya Şifre!");
     }
 
     public Task<Result<TokensDto>> RefreshTokenAsync(string token)

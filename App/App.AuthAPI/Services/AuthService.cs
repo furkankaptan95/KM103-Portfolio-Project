@@ -71,7 +71,7 @@ public class AuthService : IAuthService
             return Result<TokensDto>.Error();
         }
 
-        if (HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt)&&user.IsActive==false)
+        if (HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt) && user.IsActive == false)
         {
             return Result<TokensDto>.Forbidden();
         }

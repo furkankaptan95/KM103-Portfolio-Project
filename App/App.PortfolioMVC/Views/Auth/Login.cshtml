@@ -46,6 +46,44 @@
 </head>
 
 <body>
+
+    @{
+        if (TempData["SuccessMessage"] is not null)
+        {
+            <div class="alert custom-alert-success mt-5">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        if (TempData["Message"] is not null)
+        {
+            <div class="alert custom-alert-success mt-5">
+                @TempData["Message"]
+            </div>
+        }
+
+        if (ViewData["ErrorMessage"] is not null)
+        {
+            <div class="alert custom-alert-success mt-5">
+                @ViewData["ErrorMessage"]
+            </div>
+        }
+
+
+        if (ViewData["Message"] is not null)
+        {
+            <div class="alert custom-alert-success mt-5">
+                @ViewData["Message"]
+            </div>
+        }
+
+        if (TempData["ErrorMessage"] is not null)
+        {
+            <div class="alert custom-alert-error mt-5">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+    }
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
@@ -89,6 +127,8 @@
                                             </span>
                                         </div>
                                     </div>
+
+                                    <button type="submit" class="btn btn-primary">Giriş Yap</button>
 
                                 </form>
 

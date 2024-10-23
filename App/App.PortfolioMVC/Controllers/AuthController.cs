@@ -37,6 +37,7 @@ public class AuthController(IAuthService authService) : Controller
             }
 
             ViewData["ErrorMessage"] = errorMessage;
+
             return View(model);
         }
 
@@ -112,6 +113,6 @@ public class AuthController(IAuthService authService) : Controller
 
         TempData["SuccessMessage"] = result.SuccessMessage;
 
-        return Redirect("/");
+        return RedirectToAction(nameof(Login));
     }
 }
