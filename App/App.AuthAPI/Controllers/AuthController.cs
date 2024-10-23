@@ -1,5 +1,5 @@
 ﻿using App.DTOs.AuthDtos;
-using App.Services;
+using App.Services.AuthService.Abstract;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +20,70 @@ public class AuthController(IAuthService authService) : ControllerBase
             {
                 return NotFound(result);
             }
+
+            if(result.Status == ResultStatus.Forbidden)
+            {
+                return StatusCode(403, result);
+            }
+
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpPost("/refresh-token")]
+    public async Task<IActionResult> RefreshTokenAsync([FromBody] string token)
+    {
+        if (string.IsNullOrEmpty(token))
+        {
+            return BadRequest(Result<TokensDto>.Error("Token is null or empty"));
+        }
+
+        var result = await authService.RefreshTokenAsync(token);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+
+
+    [HttpPost("/register")]
+    public async Task<IActionResult> RegisterAsync([FromBody] RegisterDto dto)
+    {
+        var result = await authService.RegisterAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpPost("/verify-email")]
+    public async Task<IActionResult> VerifEmailAsync([FromBody] VerifyEmailDto dto)
+    {
+        var result = await authService.VerifyEmailAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpPost("/validate-token")]
+    public async Task<IActionResult> ValidateTokenAsync([FromBody] string token)
+    {
+        var result = await authService.ValidateTokenAsync(token);
+
+        if (!result.IsSuccess)
+        {
             return BadRequest(result);
         }
 

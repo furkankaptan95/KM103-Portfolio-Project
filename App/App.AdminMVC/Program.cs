@@ -17,6 +17,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// app.UseMiddleware<JwtMiddleware>();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(

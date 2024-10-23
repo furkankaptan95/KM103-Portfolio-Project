@@ -1,6 +1,6 @@
 ﻿namespace App.DTOs.AuthDtos;
 public class TokensDto
 {
-    public string AccessToken { get; set; }
+    public string JwtToken { get; set; }
     public string RefreshToken { get; set; }
 }

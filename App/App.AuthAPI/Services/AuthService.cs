@@ -5,12 +5,14 @@ using App.Data.DbContexts;
 using App.Data.Entities;
 using App.DTOs.AuthDtos;
 using App.Services;
+using App.Services.AuthService.Abstract;
 using Ardalis.Result;
 using IdentityModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace App.AuthAPI.Services;
@@ -49,7 +51,7 @@ public class AuthService : IAuthService
         await _authApiDb.SaveChangesAsync();
 
 
-        var verificationLink = $"https://localhost:7114/renew-password/{verificationCode}";
+        var verificationLink = $"https://localhost:7167/renew-password/{verificationCode}";
 
         var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Şifrenizi sıfırlamak için tıklayınız.</a>";
         var emailResult = await _emailService.SendEmailAsync(emailToRenewPassword.Email, "Lütfen email adresinizi doğrulayın.", htmlMailBody);
@@ -71,6 +73,11 @@ public class AuthService : IAuthService
             return Result<TokensDto>.Error();
         }
 
+        if (HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt) && user.IsActive == false)
+        {
+            return Result<TokensDto>.Forbidden();
+        }
+
         user.RefreshTokens.ToList().ForEach(t => t.IsRevoked = DateTime.UtcNow);
 
         string jwt = GenerateJwtToken(user);
@@ -89,19 +96,15 @@ public class AuthService : IAuthService
 
         var tokensDto = new TokensDto
         {
-            AccessToken = jwt,
+            JwtToken = jwt,
             RefreshToken = refreshTokenString
         };
         
         return Result<TokensDto>.Success(tokensDto);
     }
 
-    public async Task<Result<TokensDto>> RefreshTokenAsync(string? token)
+    public async Task<Result<TokensDto>> RefreshTokenAsync(string token)
     {
-        if(token is null)
-        {
-            return Result<TokensDto>.Invalid();
-        }
 
         var refreshToken = await _authApiDb.RefreshTokens.Where(rt =>
         rt.Token == token &&
@@ -131,7 +134,7 @@ public class AuthService : IAuthService
 
         var response = new TokensDto
         {
-            AccessToken = newJwt,
+            JwtToken = newJwt,
             RefreshToken = newRefreshTokenString
         };
 
@@ -145,15 +148,17 @@ public class AuthService : IAuthService
 
         if(isEmailAlreadyTaken is not null&& isUsernameAlreadyTaken is not null)
         {
-            return new RegistrationResult { IsSuccess = false, Error = RegistrationError.BothTaken };
+            return new RegistrationResult(false,null,RegistrationError.BothTaken);
         }
+
         else if (isEmailAlreadyTaken is null && isUsernameAlreadyTaken is not null)
         {
-            return new RegistrationResult { IsSuccess = true, Error = RegistrationError.UsernameTaken };
+            return new RegistrationResult(false, null, RegistrationError.UsernameTaken);
         }
+
         else if (isEmailAlreadyTaken is not null && isUsernameAlreadyTaken is null)
         {
-            return new RegistrationResult { IsSuccess = true, Error = RegistrationError.EmailTaken };
+            return new RegistrationResult(false, null, RegistrationError.EmailTaken);
         }
 
         byte[] passwordHash, passwordSalt;
@@ -184,12 +189,12 @@ public class AuthService : IAuthService
         await _authApiDb.UserVerifications.AddAsync(userVerification);
         await _authApiDb.SaveChangesAsync();
 
-        var verificationLink = $"https://localhost:7114/verify-email?email={user.Email}&token={token}";
+        var verificationLink = $"https://localhost:7167/verify-email?email={user.Email}&token={token}";
 
         var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Email Doğrulama için tıklayınız.</a>";
         var emailResult = await _emailService.SendEmailAsync(user.Email, "Kayıt başarılı. Lütfen email adresinizi doğrulayın.", htmlMailBody);
 
-        return new RegistrationResult { IsSuccess = true };
+        return new RegistrationResult(true,null,RegistrationError.None);
     }
 
     public async Task<Result> RenewPasswordEmailAsync(string email, string token)
@@ -225,9 +230,60 @@ public class AuthService : IAuthService
         return Result.Success();
     }
 
-    public async Task<Result> VerifyEmailAsync(string email, string token)
+    public async Task<Result> ValidateTokenAsync(string token)
     {
-        var userVerification = await _authApiDb.UserVerifications.Where(uv => uv.User.Email == email && uv.Token == token).Include(uv=>uv.User).FirstOrDefaultAsync();
+        if (string.IsNullOrEmpty(token))
+        {
+            return Result.Error("Token is null or empty");
+        }
+
+        try
+        {
+            var parts = token.Split('.');
+            if (parts.Length != 3)
+            {
+                throw new ArgumentException("JWT formatı hatalı");
+            }
+
+            var header = parts[0];
+            var payload = parts[1];
+            var signature = parts[2];
+
+            var computedSignature = CreateSignature(header, payload, _configuration["Jwt:Key"]);
+            if (computedSignature == signature)
+            {
+                return Result.Success();
+            }
+
+            
+            return Result.Error();
+        }
+        catch (Exception)
+        {
+            return Result.Error();
+        }
+
+    }
+
+    private static string CreateSignature(string header, string payload, string secret)
+    {
+        var key = Encoding.UTF8.GetBytes(secret);
+        using (var algorithm = new HMACSHA256(key))
+        {
+            var data = Encoding.UTF8.GetBytes(header + "." + payload);
+            var hash = algorithm.ComputeHash(data);
+            return Base64UrlEncode(hash);
+        }
+    }
+
+    private static string Base64UrlEncode(byte[] input)
+    {
+        return Convert.ToBase64String(input).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+    }
+
+    public async Task<Result> VerifyEmailAsync(VerifyEmailDto dto)
+    {
+        var userVerification = await _authApiDb.UserVerifications.Where(uv => uv.User.Email == dto.Email && uv.Token == dto.Token).Include(uv=>uv.User).FirstOrDefaultAsync();
 
         if (userVerification == null || userVerification.Expiration < DateTime.UtcNow)
         {
@@ -235,8 +291,10 @@ public class AuthService : IAuthService
         }
 
         userVerification.User.IsActive = true;
+
         _authApiDb.UserVerifications.Update(userVerification);
         await _authApiDb.SaveChangesAsync();
+
         _authApiDb.UserVerifications.Remove(userVerification);
         await _authApiDb.SaveChangesAsync();
 

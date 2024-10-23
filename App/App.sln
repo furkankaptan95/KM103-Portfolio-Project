@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Services", "App.Service
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.ViewModels", "App.ViewModels\App.ViewModels.csproj", "{F7203387-D703-417A-9C12-A25853DD6B88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.DTOs", "App.DTOs\App.DTOs.csproj", "{7D3F144F-CAA2-4780-9F3F-EEF75A11FA1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.DTOs", "App.DTOs\App.DTOs.csproj", "{7D3F144F-CAA2-4780-9F3F-EEF75A11FA1E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Middlewares", "App.Middlewares\App.Middlewares.csproj", "{4A3AD869-A1A4-4953-A6B5-B9052B9686DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{7D3F144F-CAA2-4780-9F3F-EEF75A11FA1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D3F144F-CAA2-4780-9F3F-EEF75A11FA1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D3F144F-CAA2-4780-9F3F-EEF75A11FA1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A3AD869-A1A4-4953-A6B5-B9052B9686DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A3AD869-A1A4-4953-A6B5-B9052B9686DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A3AD869-A1A4-4953-A6B5-B9052B9686DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A3AD869-A1A4-4953-A6B5-B9052B9686DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

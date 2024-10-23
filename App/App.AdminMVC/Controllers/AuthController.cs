@@ -1,5 +1,5 @@
 ﻿using App.DTOs.AuthDtos;
-using App.Services;
+using App.Services.AuthService.Abstract;
 using App.ViewModels.AuthViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,7 +45,7 @@ public class AuthController(IAuthService authService) : Controller
             Expires = DateTime.UtcNow.AddDays(7) // Refresh token süresi
         };
 
-        HttpContext.Response.Cookies.Append("AccessToken", tokens.AccessToken, jwtCookieOptions);
+        HttpContext.Response.Cookies.Append("AccessToken", tokens.JwtToken, jwtCookieOptions);
         HttpContext.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, refreshTokenCookieOptions);
 
         return Redirect("/");

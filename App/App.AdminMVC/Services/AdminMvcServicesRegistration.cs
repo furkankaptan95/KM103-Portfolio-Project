@@ -1,5 +1,6 @@
-﻿using App.Services;
-using App.Services.AdminServices.Abstract;
+﻿using App.Services.AdminServices.Abstract;
+using App.Services.AuthService.Abstract;
+using App.Services.AuthService.Concrete;
 
 namespace App.AdminMVC.Services;
 public static class AdminMvcServicesRegistration

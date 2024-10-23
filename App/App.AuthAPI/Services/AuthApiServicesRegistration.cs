@@ -1,6 +1,7 @@
 ﻿using App.Data.DbContexts;
 using App.Services;
 using App.Services.AdminServices.Abstract;
+using App.Services.AuthService.Abstract;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.AuthAPI.Services;
