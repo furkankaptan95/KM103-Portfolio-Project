@@ -1,10 +1,13 @@
-﻿using App.DTOs.AuthDtos;
+﻿using App.Core;
+using App.DTOs.AuthDtos;
 using App.Services.AuthService.Abstract;
 using App.ViewModels.AuthViewModels;
+using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace App.AdminMVC.Controllers;
+[AllowAnonymousManuel]
 public class AuthController(IAuthService authService) : Controller
 {
     [HttpGet]
@@ -26,6 +29,16 @@ public class AuthController(IAuthService authService) : Controller
 
         if (!result.IsSuccess)
         {
+            string errorMessage = result.Errors.FirstOrDefault();
+
+            if (result.Status == ResultStatus.Forbidden)
+            {
+                ViewData["ErrorMessage"] = errorMessage;
+                return View();
+            }
+
+            ViewData["ErrorMessage"] = errorMessage;
+
             return View(model);
         }
 
@@ -46,10 +59,85 @@ public class AuthController(IAuthService authService) : Controller
             Expires = DateTime.UtcNow.AddDays(7) // Refresh token süresi
         };
 
-        HttpContext.Response.Cookies.Append("AccessToken", tokens.JwtToken, jwtCookieOptions);
+        HttpContext.Response.Cookies.Append("JwtToken", tokens.JwtToken, jwtCookieOptions);
         HttpContext.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, refreshTokenCookieOptions);
 
+        TempData["SuccessMessage"] = result.SuccessMessage;
         return Redirect("/");
+    }
+
+    public async Task<IActionResult> ForgotPassword()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ForgotPassword([FromForm] ForgotPasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var dto = new ForgotPasswordDto(model.Email);
+
+        var result = await authService.ForgotPasswordAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return View(model);
+        }
+
+        ViewData["SuccessMessage"] = result.SuccessMessage;
+
+        return View();
+    }
+
+    [HttpGet("renew-password")]
+    public async Task<IActionResult> RenewPassword([FromQuery] string email, string token)
+    {
+        //null token kontrolü
+
+        var dto = new RenewPasswordDto(email, token);
+
+        var result = await authService.RenewPasswordEmailAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return Redirect("/");
+        }
+
+        ViewData["SuccessMessage"] = result.SuccessMessage;
+
+        var model = new NewPasswordViewModel
+        {
+            Email = email
+        };
+        return View(model);
+    }
+
+    [HttpPost("renew-password")]
+    public async Task<IActionResult> RenewPassword([FromForm] NewPasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var dto = new NewPasswordDto() { Email = model.Email, Password = model.Password };
+
+        var result = await authService.NewPasswordAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return RedirectToAction(nameof(ForgotPassword));
+        }
+
+        TempData["SuccessMessage"] = result.SuccessMessage;
+        return RedirectToAction(nameof(Login));
     }
 
     [HttpGet]

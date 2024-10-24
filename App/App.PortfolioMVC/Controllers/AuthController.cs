@@ -1,4 +1,5 @@
-﻿using App.DTOs.AuthDtos;
+﻿using App.Core;
+using App.DTOs.AuthDtos;
 using App.Services.AuthService.Abstract;
 using App.ViewModels.AuthViewModels;
 using Ardalis.Result;
@@ -6,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace App.PortfolioMVC.Controllers;
+
+[AllowAnonymousManuel]
 public class AuthController(IAuthService authService) : Controller
 {
 
