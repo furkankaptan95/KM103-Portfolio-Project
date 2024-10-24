@@ -71,21 +71,27 @@ public class AuthController : ControllerBase
     [HttpPost("/refresh-token")]
     public async Task<IActionResult> RefreshTokenAsync([FromBody] string token)
     {
-        if (string.IsNullOrEmpty(token))
+        try
         {
-            return BadRequest(Result<TokensDto>.Error("Token is null or empty"));
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(Result<TokensDto>.Invalid());
+            }
+
+            var result = await _authService.RefreshTokenAsync(token);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
         }
-
-        var result = await _authService.RefreshTokenAsync(token);
-
-        if (!result.IsSuccess)
+        catch (Exception ex)
         {
-            return BadRequest(result);
+            return StatusCode(500, Result.Error($"Bir hata oluştu: {ex.Message}"));
         }
-
-        return Ok(result);
     }
-
 
     [HttpPost("/register")]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterDto dto)

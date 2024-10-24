@@ -121,40 +121,47 @@ public class AuthService : IAuthService
 
     public async Task<Result<TokensDto>> RefreshTokenAsync(string token)
     {
-
-        var refreshToken = await _authApiDb.RefreshTokens.Where(rt =>
-        rt.Token == token &&
-        rt.ExpireDate > DateTime.UtcNow &&
-        rt.IsRevoked == null &&
-        rt.IsUsed == null).Include(rt=>rt.User).FirstOrDefaultAsync();
-
-        if (refreshToken is null)
+        try
         {
-            return Result<TokensDto>.Error();
+            var refreshToken = await _authApiDb.RefreshTokens.Where(rt =>
+               rt.Token == token &&
+               rt.ExpireDate > DateTime.UtcNow &&
+               rt.IsRevoked == null &&
+               rt.IsUsed == null).Include(rt => rt.User).FirstOrDefaultAsync();
+
+            if (refreshToken is null)
+            {
+                return Result<TokensDto>.Error();
+            }
+
+            refreshToken.IsUsed = DateTime.UtcNow;
+
+            var newJwt = GenerateJwtToken(refreshToken.User);
+            var newRefreshTokenString = GenerateRefreshToken();
+
+            var newRefreshToken = new RefreshTokenEntity
+            {
+                Token = newRefreshTokenString,
+                UserId = refreshToken.User.Id,
+                ExpireDate = DateTime.UtcNow.AddDays(7),
+            };
+
+            await _authApiDb.RefreshTokens.AddAsync(newRefreshToken);
+            await _authApiDb.SaveChangesAsync();
+
+            var response = new TokensDto
+            {
+                JwtToken = newJwt,
+                RefreshToken = newRefreshTokenString
+            };
+
+            return Result<TokensDto>.Success(response);
         }
 
-        refreshToken.IsUsed = DateTime.UtcNow;
-
-        var newJwt = GenerateJwtToken(refreshToken.User);
-        var newRefreshTokenString = GenerateRefreshToken();
-
-        var newRefreshToken = new RefreshTokenEntity
+        catch (Exception ex)
         {
-            Token = newRefreshTokenString,
-            UserId = refreshToken.User.Id,
-            ExpireDate = DateTime.UtcNow.AddDays(7),
-        };
-
-        await _authApiDb.RefreshTokens.AddAsync(newRefreshToken);
-        await _authApiDb.SaveChangesAsync();
-
-        var response = new TokensDto
-        {
-            JwtToken = newJwt,
-            RefreshToken = newRefreshTokenString
-        };
-
-        return Result<TokensDto>.Success(response); 
+            return Result<TokensDto>.Error($"Bir hata oluştu: {ex.Message}");
+        }
     }
 
     public async Task<RegistrationResult> RegisterAsync(RegisterDto registerDto)

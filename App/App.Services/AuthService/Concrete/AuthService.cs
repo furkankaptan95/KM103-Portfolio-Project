@@ -108,21 +108,29 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
 
     public async Task<Result<TokensDto>> RefreshTokenAsync(string token)
     {
-        var response = await AuthApiClient.PostAsJsonAsync("refresh-token", token);
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            var result = await response.Content.ReadFromJsonAsync<Result<TokensDto>>();
+            var response = await AuthApiClient.PostAsJsonAsync("refresh-token", token);
 
-            if (result is null)
+            if (response.IsSuccessStatusCode)
             {
-                return Result<TokensDto>.Error();
+                var result = await response.Content.ReadFromJsonAsync<Result<TokensDto>>();
+
+                if (result is null)
+                {
+                    return Result<TokensDto>.Error();
+                }
+
+                return result;
             }
 
-            return result;
+            return Result<TokensDto>.Error();
         }
 
-        return Result<TokensDto>.Error();
+        catch (Exception)
+        {
+            return Result.Error();
+        }
     }
 
     public async Task<RegistrationResult> RegisterAsync(RegisterDto registerDto)
