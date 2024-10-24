@@ -1,12 +1,81 @@
 ﻿@model LoginViewModel
 
-<form asp-controller="Auth" asp-action="Login" method="post">
+    @{
+        if (TempData["SuccessMessage"] is not null)
+        {
+            <div class="alert custom-alert-success mt-5">
+                @TempData["SuccessMessage"]
+            </div>
+        }
 
-    <label asp-for="Email" class="form-label mb-1">Email</label>
-    <input asp-for="Email" class="form-control" />
+        if (TempData["Message"] is not null)
+        {
+            <div class="alert custom-alert-success mt-5">
+                @TempData["Message"]
+            </div>
+        }
 
-    <label asp-for="Password" class="form-label mb-1">Email</label>
-    <input asp-for="Password" class="form-control" />
+        if (ViewData["ErrorMessage"] is not null)
+        {
+            <div class="alert custom-alert-success mt-5">
+                @ViewData["ErrorMessage"]
+            </div>
+        }
 
-    <button type="submit" class="btn btn-primary">Giriş yap</button>
-</form>
+
+        if (ViewData["Message"] is not null)
+        {
+            <div class="alert custom-alert-success mt-5">
+                @ViewData["Message"]
+            </div>
+        }
+
+        if (TempData["ErrorMessage"] is not null)
+        {
+            <div class="alert custom-alert-error mt-5">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+    }
+
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <h5 class="card-header">Giriş Yap</h5>
+                            <div class="card-body demo-vertical-spacing demo-only-element">
+
+                                <form asp-controller="Auth" asp-action="Login" method="post">
+
+                                    <label class="form-label" asp-for="Email">Email</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon11">@@</span>
+                                        <input asp-for="Email"
+                                               class="form-control"
+                                               placeholder="Email"
+                                               aria-label="Username"
+                                               aria-describedby="basic-addon11" />
+                                    </div>
+
+                                    <div class="form-password-toggle">
+                                        <label class="form-label" asp-for="Password">Password</label>
+                                        <div class="input-group">
+                                            <input type="password"
+                                                   class="form-control"
+                                                   asp-for="Password"
+                                                   placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                                   aria-describedby="basic-default-password2" />
+                                            <span id="basic-default-password2" class="input-group-text cursor-pointer">
+                                                <i class="bx bx-hide"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Giriş Yap</button>
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+               
+
+

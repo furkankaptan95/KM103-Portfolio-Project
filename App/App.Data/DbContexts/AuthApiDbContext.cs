@@ -21,7 +21,7 @@ public class AuthApiDbContext : DbContext
         byte[] passwordHash, passwordSalt;
         
 
-        HashingHelper.CreatePasswordHash("123Fk768", out passwordHash, out passwordSalt);
+        HashingHelper.CreatePasswordHash("f", out passwordHash, out passwordSalt);
 
         modelBuilder.Entity<UserEntity>().HasData(
 

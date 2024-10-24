@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\App.Middlewares\App.Middlewares.csproj" />
     <ProjectReference Include="..\App.Services\App.Services.csproj" />
   </ItemGroup>
 
