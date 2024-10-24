@@ -211,14 +211,21 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
 
     public async Task<Result> ValidateTokenAsync(string token)
     {
-        var response = await AuthApiClient.PostAsJsonAsync("validate-token", token);
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            return await response.Content.ReadFromJsonAsync<Result>();
+            var response = await AuthApiClient.PostAsJsonAsync("validate-token", token);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<Result>();
+            }
+
+            return Result.Error();
         }
-           
-        return Result.Error();
+        catch (Exception)
+        {
+            return Result.Error();
+        }
     }
 
     public async Task<Result> VerifyEmailAsync(VerifyEmailDto dto)

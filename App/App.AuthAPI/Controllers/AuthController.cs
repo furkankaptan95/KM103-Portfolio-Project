@@ -1,5 +1,4 @@
-﻿using App.Core.Validators.DtoValidators.AuthValidators;
-using App.DTOs.AuthDtos;
+﻿using App.DTOs.AuthDtos;
 using App.Services.AuthService.Abstract;
 using Ardalis.Result;
 using FluentValidation;
@@ -122,14 +121,21 @@ public class AuthController : ControllerBase
     [HttpPost("/validate-token")]
     public async Task<IActionResult> ValidateTokenAsync([FromBody] string token)
     {
-        var result = await _authService.ValidateTokenAsync(token);
-
-        if (!result.IsSuccess)
+        try
         {
-            return BadRequest(result);
-        }
+            var result = await _authService.ValidateTokenAsync(token);
 
-        return Ok(result);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Bir hata oluştu: {ex.Message}"));
+        }
     }
 
     [HttpPost("/forgot-password")]

@@ -280,7 +280,7 @@ public class AuthService : IAuthService
             var parts = token.Split('.');
             if (parts.Length != 3)
             {
-                throw new ArgumentException("JWT formatı hatalı");
+                return Result.Error("JWT formatı hatalı");
             }
 
             var header = parts[0];
@@ -288,12 +288,12 @@ public class AuthService : IAuthService
             var signature = parts[2];
 
             var computedSignature = CreateSignature(header, payload, _configuration["Jwt:Key"]);
+
             if (computedSignature == signature)
             {
                 return Result.Success();
             }
 
-            
             return Result.Error();
         }
         catch (Exception)
