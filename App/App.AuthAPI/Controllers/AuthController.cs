@@ -15,12 +15,14 @@ public class AuthController : ControllerBase
     private readonly IValidator<LoginDto> _loginValidator;
     private readonly IValidator<ForgotPasswordDto> _forgotPasswordValidator;
     private readonly IValidator<RenewPasswordDto> _renewPasswordValidator;
-    public AuthController(IAuthService authService, IValidator<LoginDto> loginValidator, IValidator<ForgotPasswordDto> forgotPasswordValidator, IValidator<RenewPasswordDto> renewPasswordValidator)
+    private readonly IValidator<NewPasswordDto> _newPasswordValidator;
+    public AuthController(IAuthService authService, IValidator<LoginDto> loginValidator, IValidator<ForgotPasswordDto> forgotPasswordValidator, IValidator<RenewPasswordDto> renewPasswordValidator, IValidator<NewPasswordDto> newPasswordValidator)
     {
         _authService = authService;
         _loginValidator = loginValidator;
         _forgotPasswordValidator = forgotPasswordValidator;
         _renewPasswordValidator = renewPasswordValidator;
+        _newPasswordValidator = newPasswordValidator;
     }
 
     [HttpPost("/login")]
@@ -190,14 +192,35 @@ public class AuthController : ControllerBase
     [HttpPost("/new-password")]
     public async Task<IActionResult> NewPasswordAsync([FromBody] NewPasswordDto dto)
     {
-        var result = await _authService.NewPasswordAsync(dto);
-
-        if (!result.IsSuccess)
+        try
         {
-            return NotFound(result);
+            var validationResult = await _newPasswordValidator.ValidateAsync(dto);
+
+            if (!validationResult.IsValid)
+            {
+                string errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            }
+
+            var result = await _authService.NewPasswordAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                if(result.Status == ResultStatus.NotFound)
+                {
+                    return NotFound(result);
+                }
+
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
         }
 
-        return Ok(result);
+          catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Bir hata oluştu: {ex.Message}"));
+        }
     }
 
     [HttpPost("/revoke-token")]

@@ -356,23 +356,31 @@ public class AuthService : IAuthService
 
     public async Task<Result> NewPasswordAsync(NewPasswordDto dto)
     {
-        var user = await _authApiDb.Users.SingleOrDefaultAsync(u=>u.Email == dto.Email);
-
-        if(user is null)
+        try
         {
-            return Result.NotFound();
+            var user = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == dto.Email);
+
+            if (user is null)
+            {
+                return Result.NotFound();
+            }
+
+            byte[] passwordHash, passwordSalt;
+
+            HashingHelper.CreatePasswordHash(dto.Password, out passwordHash, out passwordSalt);
+
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
+            _authApiDb.Users.Update(user);
+            await _authApiDb.SaveChangesAsync();
+
+            return Result.Success();
         }
 
-        byte[] passwordHash, passwordSalt;
-
-        HashingHelper.CreatePasswordHash(dto.Password, out passwordHash, out passwordSalt);
-
-        user.PasswordHash = passwordHash;
-        user.PasswordSalt = passwordSalt;
-
-        _authApiDb.Users.Update(user);
-        await _authApiDb.SaveChangesAsync();
-
-        return Result.Success();
+        catch (Exception ex)
+        {
+            return Result.Error($"Bir hata oluştu: {ex.Message}");
+        }
     }
 }

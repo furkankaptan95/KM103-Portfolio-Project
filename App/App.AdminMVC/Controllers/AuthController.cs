@@ -163,18 +163,26 @@ public class AuthController(IAuthService authService) : Controller
             return View(model);
         }
 
-        var dto = new NewPasswordDto() { Email = model.Email, Password = model.Password };
-
-        var result = await authService.NewPasswordAsync(dto);
-
-        if (!result.IsSuccess)
+        try
         {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            var dto = new NewPasswordDto() { Email = model.Email, Password = model.Password };
+
+            var result = await authService.NewPasswordAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return RedirectToAction(nameof(ForgotPassword));
+            }
+
+            TempData["SuccessMessage"] = result.SuccessMessage;
+            return RedirectToAction(nameof(Login));
+        }
+        catch (Exception)
+        {
+            TempData["SuccessMessage"] = "Şifreniz sıfırlanırken bir hata oluştu..Tekrar sıfırlama maili gönderebilirsiniz.";
             return RedirectToAction(nameof(ForgotPassword));
         }
-
-        TempData["SuccessMessage"] = result.SuccessMessage;
-        return RedirectToAction(nameof(Login));
     }
 
     [HttpGet]

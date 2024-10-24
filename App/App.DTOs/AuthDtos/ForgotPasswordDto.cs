@@ -8,4 +8,9 @@ public class ForgotPasswordDto
         Email = email;
         Url = url;
     }
+
+    public ForgotPasswordDto(string email)
+    {
+        Email = email;
+    }
 }

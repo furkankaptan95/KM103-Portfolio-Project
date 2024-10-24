@@ -83,14 +83,27 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
 
     public async Task<Result> NewPasswordAsync(NewPasswordDto dto)
     {
-        var response = await AuthApiClient.PostAsJsonAsync("new-password", dto);
-
-        if (!response.IsSuccessStatusCode)
+        try
         {
-            return Result.NotFound("Kullanıcı bulunamadı!");
-        }
+            var response = await AuthApiClient.PostAsJsonAsync("new-password", dto);
 
-        return Result.SuccessWithMessage("Şifreniz başarıyla değiştirildi. Yeni şifrenizle giriş yapabilirsiniz.");
+            if (!response.IsSuccessStatusCode)
+            {
+                if(response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return Result.NotFound("Kullanıcı bulunamadı!");
+                }
+
+                return Result.Error("Şifreniz sıfırlanırken bir hata oluştu..Tekrar sıfırlama maili gönderebilirsiniz.");
+            }
+
+            return Result.SuccessWithMessage("Şifreniz başarıyla değiştirildi. Yeni şifrenizle giriş yapabilirsiniz.");
+        }
+        
+        catch (Exception)
+        {
+            return Result.Error("Şifreniz sıfırlanırken bir hata oluştu..Tekrar sıfırlama maili gönderebilirsiniz.");
+        }
     }
 
     public async Task<Result<TokensDto>> RefreshTokenAsync(string token)
