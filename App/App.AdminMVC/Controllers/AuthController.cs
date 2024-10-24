@@ -15,6 +15,7 @@ public class AuthController(IAuthService authService) : Controller
     {
         return View();
     }
+
     [HttpPost]
     public async Task<IActionResult> Login([FromForm] LoginViewModel model)
     {
@@ -23,49 +24,61 @@ public class AuthController(IAuthService authService) : Controller
             return View(model);
         }
 
-        var dto = new LoginDto(model.Email, model.Password);
-
-        var result = await authService.LoginAsync(dto);
-
-        if (!result.IsSuccess)
+        try
         {
-            string errorMessage = result.Errors.FirstOrDefault();
 
-            if (result.Status == ResultStatus.Forbidden)
+            var dto = new LoginDto(model.Email, model.Password);
+
+            var result = await authService.LoginAsync(dto);
+
+            if (!result.IsSuccess)
             {
+                string errorMessage = result.Errors.FirstOrDefault();
+
+                if (result.Status == ResultStatus.Forbidden)
+                {
+                    ViewData["ErrorMessage"] = errorMessage;
+                    return View();
+                }
+
                 ViewData["ErrorMessage"] = errorMessage;
-                return View();
+
+                return View(model);
             }
 
-            ViewData["ErrorMessage"] = errorMessage;
+            var tokens = result.Value;
+
+            CookieOptions jwtCookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                Expires = DateTime.UtcNow.AddMinutes(10) // JWT ile aynı süre
+            };
+
+            // Refresh token için de süre ayarlanabilir
+            CookieOptions refreshTokenCookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                Expires = DateTime.UtcNow.AddDays(7) // Refresh token süresi
+            };
+
+            HttpContext.Response.Cookies.Append("JwtToken", tokens.JwtToken, jwtCookieOptions);
+            HttpContext.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, refreshTokenCookieOptions);
+
+            TempData["SuccessMessage"] = result.SuccessMessage;
+            return Redirect("/");
+        }
+
+        catch (Exception)
+        {
+            ViewData["ErrorMessage"] = "Giriş işlemi sırasında bir hata oluştu!..";
 
             return View(model);
         }
-
-        var tokens = result.Value;
-
-        CookieOptions jwtCookieOptions = new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = true,
-            Expires = DateTime.UtcNow.AddMinutes(10) // JWT ile aynı süre
-        };
-
-        // Refresh token için de süre ayarlanabilir
-        CookieOptions refreshTokenCookieOptions = new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = true,
-            Expires = DateTime.UtcNow.AddDays(7) // Refresh token süresi
-        };
-
-        HttpContext.Response.Cookies.Append("JwtToken", tokens.JwtToken, jwtCookieOptions);
-        HttpContext.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, refreshTokenCookieOptions);
-
-        TempData["SuccessMessage"] = result.SuccessMessage;
-        return Redirect("/");
     }
 
+    [HttpGet]
     public async Task<IActionResult> ForgotPassword()
     {
         return View();
@@ -79,43 +92,69 @@ public class AuthController(IAuthService authService) : Controller
             return View(model);
         }
 
-        var dto = new ForgotPasswordDto(model.Email);
-
-        var result = await authService.ForgotPasswordAsync(dto);
-
-        if (!result.IsSuccess)
+        try
         {
-            ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            var request = HttpContext.Request;
+            string url = $"{request.Scheme}://{request.Host}";
+
+            var dto = new ForgotPasswordDto(model.Email, url);
+
+            var result = await authService.ForgotPasswordAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return View(model);
+            }
+
+            ViewData["SuccessMessage"] = result.SuccessMessage;
+
+            return View();
+        }
+        catch (Exception)
+        {
+            ViewData["ErrorMessage"] = "Şifre sıfırlama linki gönderilirken bir hata oluştu!..";
+
             return View(model);
         }
 
-        ViewData["SuccessMessage"] = result.SuccessMessage;
-
-        return View();
     }
 
     [HttpGet("renew-password")]
     public async Task<IActionResult> RenewPassword([FromQuery] string email, string token)
     {
-        //null token kontrolü
-
-        var dto = new RenewPasswordDto(email, token);
-
-        var result = await authService.RenewPasswordEmailAsync(dto);
-
-        if (!result.IsSuccess)
+        if (token.IsNullOrEmpty())
         {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-            return Redirect("/");
+            TempData["ErrorMessage"] = "Email adresiniz doğrulanamadı. Tekrar deneyebilirsiniz.";
+            return RedirectToAction(nameof(ForgotPassword));
+        }
+        try
+        {
+            var dto = new RenewPasswordDto(email, token);
+
+            var result = await authService.RenewPasswordEmailAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return RedirectToAction(nameof(ForgotPassword));
+            }
+
+            ViewData["SuccessMessage"] = result.SuccessMessage;
+
+            var model = new NewPasswordViewModel
+            {
+                Email = email
+            };
+
+            return View(model);
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Email adresiniz doğrulanırken bir problem oluştu!..";
+            return RedirectToAction(nameof(ForgotPassword));
         }
 
-        ViewData["SuccessMessage"] = result.SuccessMessage;
-
-        var model = new NewPasswordViewModel
-        {
-            Email = email
-        };
-        return View(model);
     }
 
     [HttpPost("renew-password")]
@@ -126,43 +165,72 @@ public class AuthController(IAuthService authService) : Controller
             return View(model);
         }
 
-        var dto = new NewPasswordDto() { Email = model.Email, Password = model.Password };
-
-        var result = await authService.NewPasswordAsync(dto);
-
-        if (!result.IsSuccess)
+        try
         {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            var dto = new NewPasswordDto() { Email = model.Email, Password = model.Password };
+
+            var result = await authService.NewPasswordAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return RedirectToAction(nameof(ForgotPassword));
+            }
+
+            TempData["SuccessMessage"] = result.SuccessMessage;
+            return RedirectToAction(nameof(Login));
+        }
+        catch (Exception)
+        {
+            TempData["SuccessMessage"] = "Şifreniz sıfırlanırken bir hata oluştu..Tekrar sıfırlama maili gönderebilirsiniz.";
             return RedirectToAction(nameof(ForgotPassword));
         }
-
-        TempData["SuccessMessage"] = result.SuccessMessage;
-        return RedirectToAction(nameof(Login));
     }
 
     [HttpGet]
     public async Task<IActionResult> LogOut()
     {
-        var refreshToken = Request.Cookies["RefreshToken"];
-
-        if (refreshToken.IsNullOrEmpty())
+        try
         {
-            ViewData["SuccessMessage"] = "Hesabınızdan başarıyla çıkış yapıldı.";
-            return View(nameof(Login));
+            var refreshToken = Request.Cookies["RefreshToken"];
+
+            if (refreshToken.IsNullOrEmpty())
+            {
+                if (Request.Cookies["JwtToken"] is not null)
+                {
+                    Response.Cookies.Delete("JwtToken");
+                    ViewData["SuccessMessage"] = "Hesabınızdan başarıyla çıkış yapıldı.";
+                    return View(nameof(Login));
+                }
+
+                return View(nameof(Login));
+            }
+
+            var result = await authService.RevokeTokenAsync(refreshToken);
+
+            if (result.IsSuccess)
+            {
+                Response.Cookies.Delete("JwtToken");
+                Response.Cookies.Delete("RefreshToken");
+
+                ViewData["SuccessMessage"] = result.SuccessMessage;
+                return View(nameof(Login));
+            }
+
+            if (result.Status == ResultStatus.NotFound)
+            {
+                Response.Cookies.Delete("JwtToken");
+                ViewData["SuccessMessage"] = "Hesabınızdan başarıyla çıkış yapıldı.";
+                return View(nameof(Login));
+            }
+
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return Redirect("/");
         }
-
-        var result = await authService.RevokeTokenAsync(refreshToken);
-
-        if (result.IsSuccess)
+        catch (Exception)
         {
-            Response.Cookies.Delete("JwtToken");
-            Response.Cookies.Delete("RefreshToken");
-
-            ViewData["SuccessMessage"] = result.SuccessMessage;
-            return View(nameof(Login));
+            TempData["ErrorMessage"] = "Hesabınızdan çıkış yapılırken bir hata oluştu!..";
+            return Redirect("/");
         }
-
-        TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-        return Redirect("/");
     }
 }

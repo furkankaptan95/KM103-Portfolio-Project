@@ -10,7 +10,6 @@ using Ardalis.Result;
 using IdentityModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -31,115 +30,138 @@ public class AuthService : IAuthService
 
     public async Task<Result> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
     {
-        var emailToRenewPassword = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == forgotPasswordDto.Email);
-
-        if (emailToRenewPassword is null)
+        try
         {
-            return Result.NotFound();
+            var emailToRenewPassword = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == forgotPasswordDto.Email);
+
+            if (emailToRenewPassword is null)
+            {
+                return Result.NotFound();
+            }
+
+            var token = Guid.NewGuid().ToString().Substring(0, 6);
+
+            var forgotPassword = new UserVerificationEntity
+            {
+                UserId = emailToRenewPassword.Id,
+                Token = token,
+                Expiration = DateTime.UtcNow.AddHours(24),
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _authApiDb.UserVerifications.AddAsync(forgotPassword);
+            await _authApiDb.SaveChangesAsync();
+
+
+            var verificationLink = $"{forgotPasswordDto.Url}/renew-password?email={forgotPasswordDto.Email}&token={token}";
+
+            var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Şifrenizi sıfırlamak için tıklayınız.</a>";
+            var emailResult = await _emailService.SendEmailAsync(emailToRenewPassword.Email, "Lütfen email adresinizi doğrulayın.", htmlMailBody);
+
+            return Result.Success();
         }
 
-        var token = Guid.NewGuid().ToString().Substring(0, 6);
-
-        var forgotPassword = new UserVerificationEntity
+        catch (Exception ex)
         {
-            UserId = emailToRenewPassword.Id,
-            Token = token,
-            Expiration = DateTime.UtcNow.AddHours(24),
-            CreatedAt = DateTime.UtcNow
-        };
-
-        await _authApiDb.UserVerifications.AddAsync(forgotPassword);
-        await _authApiDb.SaveChangesAsync();
-
-
-        var verificationLink = $"https://localhost:7167/renew-password?email={forgotPasswordDto.Email}&token={token}";
-
-        var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Şifrenizi sıfırlamak için tıklayınız.</a>";
-        var emailResult = await _emailService.SendEmailAsync(emailToRenewPassword.Email, "Lütfen email adresinizi doğrulayın.", htmlMailBody);
-
-        return Result.Success();
+            return Result.Error($"Bir hata oluştu: {ex.Message}");
+        }
     }
 
     public async Task<Result<TokensDto>> LoginAsync(LoginDto loginDto)
     {
-        var user = await _authApiDb.Users.Include(u=>u.RefreshTokens).FirstOrDefaultAsync(u=>u.Email == loginDto.Email);
-
-        if(user == null)
+        try
         {
-            return Result.NotFound();
+            var user = await _authApiDb.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+
+            if (user == null)
+            {
+                return Result.NotFound();
+            }
+
+            if (!HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt))
+            {
+                return Result<TokensDto>.Invalid();
+            }
+
+            if (HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt) && user.IsActive == false)
+            {
+                return Result<TokensDto>.Forbidden();
+            }
+
+            user.RefreshTokens.ToList().ForEach(t => t.IsRevoked = DateTime.UtcNow);
+
+            string jwt = GenerateJwtToken(user);
+
+            string refreshTokenString = GenerateRefreshToken();
+
+            var refreshToken = new RefreshTokenEntity
+            {
+                Token = refreshTokenString,
+                UserId = user.Id,
+                ExpireDate = DateTime.UtcNow.AddDays(7),
+            };
+
+            await _authApiDb.RefreshTokens.AddAsync(refreshToken);
+            await _authApiDb.SaveChangesAsync();
+
+            var tokensDto = new TokensDto
+            {
+                JwtToken = jwt,
+                RefreshToken = refreshTokenString
+            };
+
+            return Result<TokensDto>.Success(tokensDto);
+        }
+        catch (Exception ex)
+        {
+            return Result<TokensDto>.Error($"Bir hata oluştu: {ex.Message}");
         }
 
-        if (!HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt))
-        {
-            return Result<TokensDto>.Error();
-        }
-
-        if (HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt) && user.IsActive == false)
-        {
-            return Result<TokensDto>.Forbidden();
-        }
-
-        user.RefreshTokens.ToList().ForEach(t => t.IsRevoked = DateTime.UtcNow);
-
-        string jwt = GenerateJwtToken(user);
-
-        string refreshTokenString = GenerateRefreshToken();
-
-        var refreshToken = new RefreshTokenEntity
-        {
-            Token = refreshTokenString,
-            UserId = user.Id,
-            ExpireDate = DateTime.UtcNow.AddDays(7),
-        };
-
-        await _authApiDb.RefreshTokens.AddAsync(refreshToken);
-        await _authApiDb.SaveChangesAsync();
-
-        var tokensDto = new TokensDto
-        {
-            JwtToken = jwt,
-            RefreshToken = refreshTokenString
-        };
-        
-        return Result<TokensDto>.Success(tokensDto);
     }
 
     public async Task<Result<TokensDto>> RefreshTokenAsync(string token)
     {
-
-        var refreshToken = await _authApiDb.RefreshTokens.Where(rt =>
-        rt.Token == token &&
-        rt.ExpireDate > DateTime.UtcNow &&
-        rt.IsRevoked == null &&
-        rt.IsUsed == null).Include(rt=>rt.User).FirstOrDefaultAsync();
-
-        if (refreshToken is null)
+        try
         {
-            return Result<TokensDto>.Error();
+            var refreshToken = await _authApiDb.RefreshTokens.Where(rt =>
+               rt.Token == token &&
+               rt.ExpireDate > DateTime.UtcNow &&
+               rt.IsRevoked == null &&
+               rt.IsUsed == null).Include(rt => rt.User).FirstOrDefaultAsync();
+
+            if (refreshToken is null)
+            {
+                return Result<TokensDto>.Error();
+            }
+
+            refreshToken.IsUsed = DateTime.UtcNow;
+
+            var newJwt = GenerateJwtToken(refreshToken.User);
+            var newRefreshTokenString = GenerateRefreshToken();
+
+            var newRefreshToken = new RefreshTokenEntity
+            {
+                Token = newRefreshTokenString,
+                UserId = refreshToken.User.Id,
+                ExpireDate = DateTime.UtcNow.AddDays(7),
+            };
+
+            await _authApiDb.RefreshTokens.AddAsync(newRefreshToken);
+            await _authApiDb.SaveChangesAsync();
+
+            var response = new TokensDto
+            {
+                JwtToken = newJwt,
+                RefreshToken = newRefreshTokenString
+            };
+
+            return Result<TokensDto>.Success(response);
         }
 
-        refreshToken.IsUsed = DateTime.UtcNow;
-
-        var newJwt = GenerateJwtToken(refreshToken.User);
-        var newRefreshTokenString = GenerateRefreshToken();
-
-        var newRefreshToken = new RefreshTokenEntity
+        catch (Exception ex)
         {
-            Token = newRefreshTokenString,
-            UserId = refreshToken.User.Id,
-            ExpireDate = DateTime.UtcNow.AddDays(7),
-        };
-
-        await _authApiDb.RefreshTokens.AddAsync(newRefreshToken);
-        await _authApiDb.SaveChangesAsync();
-
-        var response = new TokensDto
-        {
-            JwtToken = newJwt,
-            RefreshToken = newRefreshTokenString
-        };
-
-        return Result<TokensDto>.Success(response); 
+            return Result<TokensDto>.Error($"Bir hata oluştu: {ex.Message}");
+        }
     }
 
     public async Task<RegistrationResult> RegisterAsync(RegisterDto registerDto)
@@ -200,34 +222,50 @@ public class AuthService : IAuthService
 
     public async Task<Result> RenewPasswordEmailAsync(RenewPasswordDto dto)
     {
-        var userVerification = await _authApiDb.UserVerifications.Include(uv=>uv.User).FirstOrDefaultAsync(uv => uv.User.Email == dto.Email && uv.Token == dto.Token);
-
-        if (userVerification == null || userVerification.Expiration < DateTime.UtcNow)
+        try
         {
-            return Result.Error();
+            var userVerification = await _authApiDb.UserVerifications.Include(uv => uv.User).FirstOrDefaultAsync(uv => uv.User.Email == dto.Email && uv.Token == dto.Token);
+
+            if (userVerification == null || userVerification.Expiration < DateTime.UtcNow)
+            {
+                return Result.Error();
+            }
+
+            _authApiDb.UserVerifications.Remove(userVerification);
+            await _authApiDb.SaveChangesAsync();
+
+            return Result.Success();
         }
 
-        _authApiDb.UserVerifications.Remove(userVerification);
-        await _authApiDb.SaveChangesAsync();
-
-        return Result.Success();
+        catch (Exception ex)
+        {
+            return Result.Error($"Bir hata oluştu: {ex.Message}");
+        }
     }
 
     public async Task<Result> RevokeTokenAsync(string token)
     {
-        var refreshToken = await _authApiDb.RefreshTokens.FirstOrDefaultAsync(rt=>rt.Token == token);
-
-        if (refreshToken is null)
+        try
         {
-            return Result.NotFound();
+            var refreshToken = await _authApiDb.RefreshTokens.FirstOrDefaultAsync(rt => rt.Token == token);
+
+            if (refreshToken is null)
+            {
+                return Result.NotFound();
+            }
+
+            refreshToken.IsRevoked = DateTime.UtcNow;
+
+            _authApiDb.RefreshTokens.Update(refreshToken);
+            await _authApiDb.SaveChangesAsync();
+
+            return Result.Success();
         }
 
-        refreshToken.IsRevoked = DateTime.UtcNow;
-
-        _authApiDb.RefreshTokens.Update(refreshToken);
-        await _authApiDb.SaveChangesAsync();
-
-        return Result.Success();
+        catch (Exception ex)
+        {
+            return Result.Error($"Bir hata oluştu: {ex.Message}");
+        }
     }
 
     public async Task<Result> ValidateTokenAsync(string token)
@@ -242,7 +280,7 @@ public class AuthService : IAuthService
             var parts = token.Split('.');
             if (parts.Length != 3)
             {
-                throw new ArgumentException("JWT formatı hatalı");
+                return Result.Error("JWT formatı hatalı");
             }
 
             var header = parts[0];
@@ -250,12 +288,12 @@ public class AuthService : IAuthService
             var signature = parts[2];
 
             var computedSignature = CreateSignature(header, payload, _configuration["Jwt:Key"]);
+
             if (computedSignature == signature)
             {
                 return Result.Success();
             }
 
-            
             return Result.Error();
         }
         catch (Exception)
@@ -333,23 +371,31 @@ public class AuthService : IAuthService
 
     public async Task<Result> NewPasswordAsync(NewPasswordDto dto)
     {
-        var user = await _authApiDb.Users.SingleOrDefaultAsync(u=>u.Email == dto.Email);
-
-        if(user is null)
+        try
         {
-            return Result.NotFound();
+            var user = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == dto.Email);
+
+            if (user is null)
+            {
+                return Result.NotFound();
+            }
+
+            byte[] passwordHash, passwordSalt;
+
+            HashingHelper.CreatePasswordHash(dto.Password, out passwordHash, out passwordSalt);
+
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
+            _authApiDb.Users.Update(user);
+            await _authApiDb.SaveChangesAsync();
+
+            return Result.Success();
         }
 
-        byte[] passwordHash, passwordSalt;
-
-        HashingHelper.CreatePasswordHash(dto.Password, out passwordHash, out passwordSalt);
-
-        user.PasswordHash = passwordHash;
-        user.PasswordSalt = passwordSalt;
-
-        _authApiDb.Users.Update(user);
-        await _authApiDb.SaveChangesAsync();
-
-        return Result.Success();
+        catch (Exception ex)
+        {
+            return Result.Error($"Bir hata oluştu: {ex.Message}");
+        }
     }
 }
