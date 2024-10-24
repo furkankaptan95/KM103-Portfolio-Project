@@ -115,4 +115,10 @@ public class AuthController(IAuthService authService) : Controller
 
         return RedirectToAction(nameof(Login));
     }
+
+    [HttpGet]
+    public async Task<IActionResult> ForgotPassword()
+    {
+        return View();
+    }
 }
