@@ -121,4 +121,19 @@ public class AuthController(IAuthService authService) : Controller
     {
         return View();
     }
+
+    [HttpPost]
+    public async Task<IActionResult> ForgotPassword([FromForm] ForgotPasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var dto = new ForgotPasswordDto(model.Email);
+
+        var result = await authService.ForgotPasswordAsync(dto);
+
+        return View();
+    }
 }
