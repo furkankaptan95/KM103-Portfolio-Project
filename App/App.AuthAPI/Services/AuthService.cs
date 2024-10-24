@@ -10,7 +10,6 @@ using Ardalis.Result;
 using IdentityModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -31,33 +30,41 @@ public class AuthService : IAuthService
 
     public async Task<Result> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
     {
-        var emailToRenewPassword = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == forgotPasswordDto.Email);
-
-        if (emailToRenewPassword is null)
+        try
         {
-            return Result.NotFound();
+            var emailToRenewPassword = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == forgotPasswordDto.Email);
+
+            if (emailToRenewPassword is null)
+            {
+                return Result.NotFound();
+            }
+
+            var token = Guid.NewGuid().ToString().Substring(0, 6);
+
+            var forgotPassword = new UserVerificationEntity
+            {
+                UserId = emailToRenewPassword.Id,
+                Token = token,
+                Expiration = DateTime.UtcNow.AddHours(24),
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _authApiDb.UserVerifications.AddAsync(forgotPassword);
+            await _authApiDb.SaveChangesAsync();
+
+
+            var verificationLink = $"{forgotPasswordDto.Url}/renew-password?email={forgotPasswordDto.Email}&token={token}";
+
+            var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Şifrenizi sıfırlamak için tıklayınız.</a>";
+            var emailResult = await _emailService.SendEmailAsync(emailToRenewPassword.Email, "Lütfen email adresinizi doğrulayın.", htmlMailBody);
+
+            return Result.Success();
         }
 
-        var token = Guid.NewGuid().ToString().Substring(0, 6);
-
-        var forgotPassword = new UserVerificationEntity
+        catch (Exception ex)
         {
-            UserId = emailToRenewPassword.Id,
-            Token = token,
-            Expiration = DateTime.UtcNow.AddHours(24),
-            CreatedAt = DateTime.UtcNow
-        };
-
-        await _authApiDb.UserVerifications.AddAsync(forgotPassword);
-        await _authApiDb.SaveChangesAsync();
-
-
-        var verificationLink = $"https://localhost:7167/renew-password?email={forgotPasswordDto.Email}&token={token}";
-
-        var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Şifrenizi sıfırlamak için tıklayınız.</a>";
-        var emailResult = await _emailService.SendEmailAsync(emailToRenewPassword.Email, "Lütfen email adresinizi doğrulayın.", htmlMailBody);
-
-        return Result.Success();
+            return Result.Error($"Bir hata oluştu: {ex.Message}");
+        }
     }
 
     public async Task<Result<TokensDto>> LoginAsync(LoginDto loginDto)

@@ -11,5 +11,8 @@ public class ForgotPasswordDtoValidator : AbstractValidator<ForgotPasswordDto>
             .NotEmpty().WithMessage("Email alanı boş bırakılamaz.")
             .EmailAddress().WithMessage("Geçerli bir email adresi giriniz.")
             .MaximumLength(100).WithMessage("Email 100 karakterden uzun olamaz.");
+
+        RuleFor(x => x.Url)
+            .NotEmpty();
     }
 }

@@ -13,12 +13,13 @@ public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly IValidator<LoginDto> _loginValidator;
-    public AuthController(IAuthService authService, IValidator<LoginDto> loginValidator)
+    private readonly IValidator<ForgotPasswordDto> _forgotPasswordValidator;
+    public AuthController(IAuthService authService, IValidator<LoginDto> loginValidator, IValidator<ForgotPasswordDto> forgotPasswordValidator)
     {
         _authService = authService;
         _loginValidator = loginValidator;
+        _forgotPasswordValidator = forgotPasswordValidator;
     }
-
 
     [HttpPost("/login")]
     public async Task<IActionResult> LoginAsync([FromBody] LoginDto dto)
@@ -48,6 +49,8 @@ public class AuthController : ControllerBase
                 }
 
                 return BadRequest(result);
+
+                //return StatusCode(500, result);
             }
 
             return Ok(result);
@@ -121,11 +124,24 @@ public class AuthController : ControllerBase
     [HttpPost("/forgot-password")]
     public async Task<IActionResult> ForgotPasswordAsync([FromBody] ForgotPasswordDto dto)
     {
+        var validationResult = await _forgotPasswordValidator.ValidateAsync(dto);
+
+        if (!validationResult.IsValid)
+        {
+            string errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+        }
+
         var result = await _authService.ForgotPasswordAsync(dto);
 
         if (!result.IsSuccess)
         {
-            return NotFound(result);
+            if(result.Status == ResultStatus.NotFound)
+            {
+                return NotFound(result);
+            }
+
+            return StatusCode(500, result);
         }
 
         return Ok(result);

@@ -5,7 +5,6 @@ using App.Services.AuthService.Abstract;
 using Ardalis.Result;
 using System.Net.Http.Json;
 using System.Net;
-using Newtonsoft.Json.Linq;
 
 namespace App.Services.AuthService.Concrete;
 public class AuthService(IHttpClientFactory factory) : IAuthService
@@ -13,52 +12,73 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
     private HttpClient AuthApiClient => factory.CreateClient("authApi");
     public async Task<Result> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
     {
-        var response = await AuthApiClient.PostAsJsonAsync("forgot-password", forgotPasswordDto);
-
-        if (!response.IsSuccessStatusCode)
+        try
         {
-            return Result.NotFound("Girmiş olduğunuz Email adresine sahip bir kullanıcı bulunamadı!..");
+            var response = await AuthApiClient.PostAsJsonAsync("forgot-password", forgotPasswordDto);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    return Result.Error("Girmiş olduğunuz Email adresine sahip bir kullanıcı bulunamadı!..");
+                }
+
+                return Result.Error("Şifre sıfırlama linki gönderilirken bir hata oluştu!..");
+            }
+
+            return Result.SuccessWithMessage("Şifre sıfırlama linki Email adresinize gönderildi.");
         }
 
-        return Result.SuccessWithMessage("Şifre sıfırlama linki Email adresinize gönderildi.");
+        catch (Exception)
+        {
+            return Result.Error("Şifre sıfırlama linki gönderilirken bir hata oluştu!..");
+        }
     }
 
     public async Task<Result<TokensDto>> LoginAsync(LoginDto loginDto)
     {
-        var response = await AuthApiClient.PostAsJsonAsync("login", loginDto);
-
-        Result<TokensDto> result;
-
-        if (response.IsSuccessStatusCode)
+        try
         {
+            var response = await AuthApiClient.PostAsJsonAsync("login", loginDto);
+
+            Result<TokensDto> result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                result = await response.Content.ReadFromJsonAsync<Result<TokensDto>>();
+
+                if (result is null)
+                {
+                    return Result<TokensDto>.Error("Giriş işlemi sırasında beklenmeyen bir hata oluştu! Tekrar deneyebilirsiniz.");
+                }
+
+                return Result<TokensDto>.Success(result.Value, "Hoşgeldiniz. Giriş işlemi başarılı!");
+            }
+
             result = await response.Content.ReadFromJsonAsync<Result<TokensDto>>();
 
             if (result is null)
             {
-                return Result<TokensDto>.Error("Giriş işlemi sırasında beklenmeyen bir hata oluştu! Tekrar deneyebilirsiniz.");
+                return Result<TokensDto>.Error("Giriş işlemi sırasında bir hata oluştu!..");
             }
 
-            return Result<TokensDto>.Success(result.Value, "Hoşgeldiniz. Giriş işlemi başarılı!");
-        }
+            if (result.Status == ResultStatus.Forbidden)
+            {
+                return Result<TokensDto>.Forbidden("Henüz Email adresinizi doğrulamadınız. Lütfen Email adresinize gönderilen linke tıklayarak hesabınızı aktif edin.");
+            }
 
-         result = await response.Content.ReadFromJsonAsync<Result<TokensDto>>();
+            if (result.Status == ResultStatus.NotFound || result.Status == ResultStatus.Invalid)
+            {
+                return Result<TokensDto>.Error("Hatalı Email veya Şifre!");
+            }
 
-        if(result is null)
-        {
             return Result<TokensDto>.Error("Giriş işlemi sırasında bir hata oluştu!..");
         }
 
-        if(result.Status == ResultStatus.Forbidden)
+        catch (Exception)
         {
-            return Result<TokensDto>.Forbidden("Henüz Email adresinizi doğrulamadınız. Lütfen Email adresinize gönderilen linke tıklayarak hesabınızı aktif edin.");
+            return Result<TokensDto>.Error("Giriş işlemi sırasında bir hata oluştu!..");
         }
-
-        if(result.Status == ResultStatus.NotFound && result.Status == ResultStatus.Invalid)
-        {
-            return Result<TokensDto>.Error("Hatalı Email veya Şifre!");
-        }
-
-        return Result<TokensDto>.Error("Giriş işlemi sırasında bir hata oluştu!..");
     }
 
     public async Task<Result> NewPasswordAsync(NewPasswordDto dto)
