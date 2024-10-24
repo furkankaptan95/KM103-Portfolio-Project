@@ -15,6 +15,7 @@ public class AuthController(IAuthService authService) : Controller
     {
         return View();
     }
+
     [HttpPost]
     public async Task<IActionResult> Login([FromForm] LoginViewModel model)
     {
@@ -77,6 +78,7 @@ public class AuthController(IAuthService authService) : Controller
         }
     }
 
+    [HttpGet]
     public async Task<IActionResult> ForgotPassword()
     {
         return View();
