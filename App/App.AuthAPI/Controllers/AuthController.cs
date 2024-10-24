@@ -115,4 +115,17 @@ public class AuthController(IAuthService authService) : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPost("/new-password")]
+    public async Task<IActionResult> NewPasswordAsync([FromBody] NewPasswordDto dto)
+    {
+        var result = await authService.NewPasswordAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            return NotFound(result);
+        }
+
+        return Ok(result);
+    }
 }
