@@ -1,7 +1,12 @@
-﻿using App.Data.DbContexts;
+﻿using App.Core.Validators.DtoValidators.AuthValidators;
+using App.Core.Validators.DtoValidators.ContactMessageValidators;
+using App.Data.DbContexts;
+using App.DTOs.AuthDtos;
+using App.DTOs.ContactMessageDtos.Admin;
 using App.Services;
 using App.Services.AdminServices.Abstract;
 using App.Services.AuthService.Abstract;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.AuthAPI.Services;
@@ -45,6 +50,8 @@ public static class AuthApiServicesRegistration
         services.AddScoped<IUserAdminService, AdminUserService>();
         services.AddScoped<IEmailService, SmtpEmailService>();
         services.AddScoped<IAuthService, AuthService>();
+
+        services.AddTransient<IValidator<LoginDto>, LoginDtoValidator>();
 
         return services;
     }

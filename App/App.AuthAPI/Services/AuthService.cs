@@ -62,46 +62,54 @@ public class AuthService : IAuthService
 
     public async Task<Result<TokensDto>> LoginAsync(LoginDto loginDto)
     {
-        var user = await _authApiDb.Users.Include(u=>u.RefreshTokens).FirstOrDefaultAsync(u=>u.Email == loginDto.Email);
-
-        if(user == null)
+        try
         {
-            return Result.NotFound();
+            var user = await _authApiDb.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+
+            if (user == null)
+            {
+                return Result.NotFound();
+            }
+
+            if (!HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt))
+            {
+                return Result<TokensDto>.Invalid();
+            }
+
+            if (HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt) && user.IsActive == false)
+            {
+                return Result<TokensDto>.Forbidden();
+            }
+
+            user.RefreshTokens.ToList().ForEach(t => t.IsRevoked = DateTime.UtcNow);
+
+            string jwt = GenerateJwtToken(user);
+
+            string refreshTokenString = GenerateRefreshToken();
+
+            var refreshToken = new RefreshTokenEntity
+            {
+                Token = refreshTokenString,
+                UserId = user.Id,
+                ExpireDate = DateTime.UtcNow.AddDays(7),
+            };
+
+            await _authApiDb.RefreshTokens.AddAsync(refreshToken);
+            await _authApiDb.SaveChangesAsync();
+
+            var tokensDto = new TokensDto
+            {
+                JwtToken = jwt,
+                RefreshToken = refreshTokenString
+            };
+
+            return Result<TokensDto>.Success(tokensDto);
+        }
+        catch (Exception ex)
+        {
+            return Result<TokensDto>.Error($"Bir hata oluştu: {ex.Message}");
         }
 
-        if (!HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt))
-        {
-            return Result<TokensDto>.Error();
-        }
-
-        if (HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt) && user.IsActive == false)
-        {
-            return Result<TokensDto>.Forbidden();
-        }
-
-        user.RefreshTokens.ToList().ForEach(t => t.IsRevoked = DateTime.UtcNow);
-
-        string jwt = GenerateJwtToken(user);
-
-        string refreshTokenString = GenerateRefreshToken();
-
-        var refreshToken = new RefreshTokenEntity
-        {
-            Token = refreshTokenString,
-            UserId = user.Id,
-            ExpireDate = DateTime.UtcNow.AddDays(7),
-        };
-
-        await _authApiDb.RefreshTokens.AddAsync(refreshToken);
-        await _authApiDb.SaveChangesAsync();
-
-        var tokensDto = new TokensDto
-        {
-            JwtToken = jwt,
-            RefreshToken = refreshTokenString
-        };
-        
-        return Result<TokensDto>.Success(tokensDto);
     }
 
     public async Task<Result<TokensDto>> RefreshTokenAsync(string token)

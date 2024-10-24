@@ -27,9 +27,11 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
     {
         var response = await AuthApiClient.PostAsJsonAsync("login", loginDto);
 
+        Result<TokensDto> result;
+
         if (response.IsSuccessStatusCode)
         {
-            var result = await response.Content.ReadFromJsonAsync<Result<TokensDto>>();
+            result = await response.Content.ReadFromJsonAsync<Result<TokensDto>>();
 
             if (result is null)
             {
@@ -39,12 +41,24 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
             return Result<TokensDto>.Success(result.Value, "Hoşgeldiniz. Giriş işlemi başarılı!");
         }
 
-        if (response.StatusCode == HttpStatusCode.Forbidden)
+         result = await response.Content.ReadFromJsonAsync<Result<TokensDto>>();
+
+        if(result is null)
+        {
+            return Result<TokensDto>.Error("Giriş işlemi sırasında bir hata oluştu!..");
+        }
+
+        if(result.Status == ResultStatus.Forbidden)
         {
             return Result<TokensDto>.Forbidden("Henüz Email adresinizi doğrulamadınız. Lütfen Email adresinize gönderilen linke tıklayarak hesabınızı aktif edin.");
         }
 
-        return Result<TokensDto>.Error("Hatalı Email veya Şifre!");
+        if(result.Status == ResultStatus.NotFound && result.Status == ResultStatus.Invalid)
+        {
+            return Result<TokensDto>.Error("Hatalı Email veya Şifre!");
+        }
+
+        return Result<TokensDto>.Error("Giriş işlemi sırasında bir hata oluştu!..");
     }
 
     public async Task<Result> NewPasswordAsync(NewPasswordDto dto)
