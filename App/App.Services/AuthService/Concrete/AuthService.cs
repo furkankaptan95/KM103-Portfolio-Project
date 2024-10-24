@@ -10,9 +10,16 @@ namespace App.Services.AuthService.Concrete;
 public class AuthService(IHttpClientFactory factory) : IAuthService
 {
     private HttpClient AuthApiClient => factory.CreateClient("authApi");
-    public Task<Result> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
+    public async Task<Result> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
     {
-        throw new NotImplementedException();
+        var response = await AuthApiClient.PostAsJsonAsync("forgot-password", forgotPasswordDto);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return Result.NotFound("Girmiş olduğunuz Email adresine sahip bir kullanıcı bulunamadı!..");
+        }
+
+        return Result.SuccessWithMessage("Şifre sıfırlama linki Email adresinize gönderildi.");
     }
 
     public async Task<Result<TokensDto>> LoginAsync(LoginDto loginDto)

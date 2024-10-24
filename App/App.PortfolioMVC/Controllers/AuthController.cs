@@ -134,6 +134,14 @@ public class AuthController(IAuthService authService) : Controller
 
         var result = await authService.ForgotPasswordAsync(dto);
 
+        if (!result.IsSuccess)
+        {
+            ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return View(model);
+        }
+
+        ViewData["SuccessMessage"] = result.SuccessMessage;
+
         return View();
     }
 }
