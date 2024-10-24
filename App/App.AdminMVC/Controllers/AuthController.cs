@@ -121,7 +121,11 @@ public class AuthController(IAuthService authService) : Controller
     [HttpGet("renew-password")]
     public async Task<IActionResult> RenewPassword([FromQuery] string email, string token)
     {
-        //null token kontrolü
+        if (token.IsNullOrEmpty())
+        {
+            TempData["ErrorMessage"] = "Email adresiniz doğrulanamadı. Tekrar deneyebilirsiniz.";
+            return RedirectToAction(nameof(ForgotPassword));
+        }
 
         var dto = new RenewPasswordDto(email, token);
 

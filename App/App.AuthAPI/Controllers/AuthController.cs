@@ -124,40 +124,58 @@ public class AuthController : ControllerBase
     [HttpPost("/forgot-password")]
     public async Task<IActionResult> ForgotPasswordAsync([FromBody] ForgotPasswordDto dto)
     {
-        var validationResult = await _forgotPasswordValidator.ValidateAsync(dto);
-
-        if (!validationResult.IsValid)
+        try
         {
-            string errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-            return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
-        }
+            var validationResult = await _forgotPasswordValidator.ValidateAsync(dto);
 
-        var result = await _authService.ForgotPasswordAsync(dto);
-
-        if (!result.IsSuccess)
-        {
-            if(result.Status == ResultStatus.NotFound)
+            if (!validationResult.IsValid)
             {
-                return NotFound(result);
+                string errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
             }
 
-            return StatusCode(500, result);
+            var result = await _authService.ForgotPasswordAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    return NotFound(result);
+                }
+
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
         }
 
-        return Ok(result);
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Bir hata oluştu: {ex.Message}"));
+        }
+
     }
 
     [HttpPost("/renew-password")]
     public async Task<IActionResult> RenewPasswordAsync([FromBody] RenewPasswordDto dto)
     {
-        var result = await _authService.RenewPasswordEmailAsync(dto);
-
-        if (!result.IsSuccess)
+        try
         {
-            return BadRequest(result);
-        }
+            var result = await _authService.RenewPasswordEmailAsync(dto);
 
-        return Ok(result);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+       
+
+         catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Bir hata oluştu: {ex.Message}"));
+        }
     }
 
     [HttpPost("/new-password")]
