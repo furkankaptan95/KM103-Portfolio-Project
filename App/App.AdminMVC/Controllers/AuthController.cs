@@ -2,6 +2,7 @@
 using App.DTOs.AuthDtos;
 using App.Services.AuthService.Abstract;
 using App.ViewModels.AuthViewModels;
+using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -28,6 +29,16 @@ public class AuthController(IAuthService authService) : Controller
 
         if (!result.IsSuccess)
         {
+            string errorMessage = result.Errors.FirstOrDefault();
+
+            if (result.Status == ResultStatus.Forbidden)
+            {
+                ViewData["ErrorMessage"] = errorMessage;
+                return View();
+            }
+
+            ViewData["ErrorMessage"] = errorMessage;
+
             return View(model);
         }
 
@@ -48,9 +59,10 @@ public class AuthController(IAuthService authService) : Controller
             Expires = DateTime.UtcNow.AddDays(7) // Refresh token süresi
         };
 
-        HttpContext.Response.Cookies.Append("AccessToken", tokens.JwtToken, jwtCookieOptions);
+        HttpContext.Response.Cookies.Append("JwtToken", tokens.JwtToken, jwtCookieOptions);
         HttpContext.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, refreshTokenCookieOptions);
 
+        TempData["SuccessMessage"] = result.SuccessMessage;
         return Redirect("/");
     }
 

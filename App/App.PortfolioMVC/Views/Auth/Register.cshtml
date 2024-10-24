@@ -15,67 +15,38 @@
     <!-- web font -->
     <link href="//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i" rel="stylesheet">
     <!-- //web font -->
-</head>
-<body>
-    <!-- main -->
-    <div class="main-w3layouts wrapper">
-        <h1>Kayıt Formu</h1>
-        <div class="main-agileinfo">
-            <div class="agileits-top">
-                <form id="signupForm" asp-action="Register" method="post">
-                    <div style="margin-bottom: 15px;">
-                        <input id="Username" asp-for="Username" style="margin-bottom: 15px;" placeholder="Kullanıcı İsmi">
-                        <span id="usernameError" style="color: wheat;" class="text-danger"></span>
-                    </div>
 
-                    <div style="margin-bottom: 15px;">
-                        <input id="Email" asp-for="Email" style="margin-bottom: 15px;" placeholder="Email">
-                        <span id="emailError" style="color: wheat;" class="text-danger"></span>
-                    </div>
+    <style>
+   
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, dl, dt, dd, ol, nav ul, nav li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video 
 
-                    <div style="margin-bottom: 15px;">
-                        <input id="Password" asp-for="Password" style="margin-bottom: 15px;" type="password" placeholder="Şifre">
-                        <span id="passwordError" style="color: wheat;" class="text-danger"></span>
-                    </div>
+  .custom-alert-success {
+        position: fixed; /* Sayfada sabit konumlandırma */
+        top: 50px; /* Ekranın üst kısmından 10px boşluk */
+        left: 50%; /* Ekranın ortasına hizalama */
+        transform: translateX(-50%); /* Ortalamak için translate */
+        z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
+        background-color: #dff0d8;
+        color: #3c763d;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
 
-                    <div style="margin-bottom: 15px;">
-                        <input id="ConfirmPassword" asp-for="ConfirmPassword" style="margin-bottom: 15px;" type="password" placeholder="Şifreyi Onayla">
-                        <span id="confirmPasswordError" style="color: wheat;" class="text-danger"></span>
-                    </div>
+    .custom-alert-error {
+        position: fixed; /* Sayfada sabit konumlandırma */
+        top: 50px; /* Ekranın üst kısmından 10px boşluk */
+        left: 50%; /* Ekranın ortasına hizalama */
+        transform: translateX(-50%); /* Ortalamak için translate */
+        z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
 
-                    <input type="submit" value="Kayıt Ol">
-                </form>
-
-                <p>Zaten Hesabınız Var Mı? <a asp-action="Login">Giriş Yapın</a></p>
-            </div>
-        </div>
-        <ul class="colorlib-bubbles">
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-        </ul>
-    </div>
-    <!-- //main -->
-</body>
-</html>
-
-
-<style>
-    /*--
-Author: Colorlib
-Author URL: https://colorlib.com
-License: Creative Commons Attribution 3.0 Unported
-License URL: http://creativecommons.org/licenses/by/3.0/
---*/
-/*-- reset --*/
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, dl, dt, dd, ol, nav ul, nav li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+{
   margin: 0;
   padding: 0;
   border: 0;
@@ -835,7 +806,102 @@ input.checkbox:checked:after {
    
 </style>
 
- <script>
+</head>
+<body>
+
+    @{
+        if (TempData["Message"] is not null)
+        {
+                <div class="alert custom-alert-success mt-5">
+                @TempData["Message"]
+                </div>
+        }
+
+        if (TempData["ErrorMessage"] is not null)
+        {
+                <div class="alert custom-alert-error mt-5">
+                @TempData["ErrorMessage"]
+                </div>
+        }
+
+        if (ViewData["Message"] is not null)
+        {
+                <div class="alert custom-alert-success mt-5">
+                @ViewData["Message"]
+                </div>
+        }
+
+        if (ViewData["ErrorMessage"] is not null)
+        {
+                <div class="alert custom-alert-error mt-5">
+                @ViewData["ErrorMessage"]
+                </div>
+        }
+    }
+
+    <!-- main -->
+    <div class="main-w3layouts wrapper">
+        <h1>Kayıt Formu</h1>
+        <div class="main-agileinfo">
+            <div class="agileits-top">
+                <form id="signupForm" asp-action="Register" method="post">
+                    <div style="margin-bottom: 15px;">
+                        <input id="Username" asp-for="Username" style="margin-bottom: 15px;" placeholder="Kullanıcı İsmi">
+                        <span id="usernameError" style="color: wheat;" class="text-danger"></span>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <input id="Email" asp-for="Email" style="margin-bottom: 15px;" placeholder="Email">
+                        <span id="emailError" style="color: wheat;" class="text-danger"></span>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <input id="Password" asp-for="Password" style="margin-bottom: 15px;" type="password" placeholder="Şifre">
+                        <span id="passwordError" style="color: wheat;" class="text-danger"></span>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <input id="ConfirmPassword" asp-for="ConfirmPassword" style="margin-bottom: 15px;" type="password" placeholder="Şifreyi Onayla">
+                        <span id="confirmPasswordError" style="color: wheat;" class="text-danger"></span>
+                    </div>
+
+                    <input type="submit" value="Kayıt Ol">
+                </form>
+
+                <p>Zaten Hesabınız Var Mı? <a asp-action="Login">Giriş Yapın</a></p>
+            </div>
+        </div>
+        <ul class="colorlib-bubbles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <!-- //main -->
+     <script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var alerts = document.querySelectorAll('.custom-alert-success, .custom-alert-error');
+        alerts.forEach(function (alert) {
+            if (alert) {
+                setTimeout(function () {
+                    alert.style.transition = 'opacity 0.5s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(function () {
+                        alert.remove();
+                    }, 500);
+                }, 5000);
+            }
+        });
+    });
+
         document.getElementById('signupForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Formun gönderilmesini engelle
 
@@ -903,3 +969,6 @@ input.checkbox:checked:after {
             }
         });
     </script>
+</body>
+</html>
+

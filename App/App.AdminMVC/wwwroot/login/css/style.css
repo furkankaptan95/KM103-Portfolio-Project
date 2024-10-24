@@ -1,9 +1,28 @@
-/*!
- * Bootstrap v4.3.1 (https://getbootstrap.com/)
- * Copyright 2011-2019 The Bootstrap Authors
- * Copyright 2011-2019 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- */
+.custom-alert-success {
+    position: fixed; /* Sayfada sabit konumlandýrma */
+    top: 50px; /* Ekranýn üst kýsmýndan 10px boþluk */
+    left: 50%; /* Ekranýn ortasýna hizalama */
+    transform: translateX(-50%); /* Ortalamak için translate */
+    z-index: 1000; /* Diðer elementlerin üstünde görünmesini saðlar */
+    background-color: #dff0d8;
+    color: #3c763d;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.custom-alert-error {
+    position: fixed; /* Sayfada sabit konumlandýrma */
+    top: 50px; /* Ekranýn üst kýsmýndan 10px boþluk */
+    left: 50%; /* Ekranýn ortasýna hizalama */
+    transform: translateX(-50%); /* Ortalamak için translate */
+    z-index: 1000; /* Diðer elementlerin üstünde görünmesini saðlar */
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
 :root {
   --blue: #007bff;
   --indigo: #6610f2;
