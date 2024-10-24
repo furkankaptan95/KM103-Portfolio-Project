@@ -161,6 +161,19 @@ public class AuthController(IAuthService authService) : Controller
         }
 
         ViewData["SuccessMessage"] = result.SuccessMessage;
-        return View();
+        return View(email);
+    }
+
+    [HttpPost("renew-password")]
+    public async Task<IActionResult> RenewPassword([FromForm] NewPasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var dto = new NewPasswordDto() { Email = model.Email , Password = model.Password};
+
+        return View(dto);
     }
 }

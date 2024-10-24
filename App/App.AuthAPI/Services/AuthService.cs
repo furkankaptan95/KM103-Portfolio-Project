@@ -331,5 +331,25 @@ public class AuthService : IAuthService
         return Guid.NewGuid().ToString();
     }
 
+    public async Task<Result> NewPasswordAsync(NewPasswordDto dto)
+    {
+        var user = await _authApiDb.Users.SingleOrDefaultAsync(u=>u.Email == dto.Email);
 
+        if(user is null)
+        {
+            return Result.NotFound();
+        }
+
+        byte[] passwordHash, passwordSalt;
+
+        HashingHelper.CreatePasswordHash(dto.Password, out passwordHash, out passwordSalt);
+
+        user.PasswordHash = passwordHash;
+        user.PasswordSalt = passwordSalt;
+
+        _authApiDb.Users.Update(user);
+        await _authApiDb.SaveChangesAsync();
+
+        return Result.Success();
+    }
 }
