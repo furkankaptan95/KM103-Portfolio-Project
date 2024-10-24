@@ -144,4 +144,23 @@ public class AuthController(IAuthService authService) : Controller
 
         return View();
     }
+
+    [HttpGet("renew-password")]
+    public async Task<IActionResult> RenewPassword([FromQuery] string email,string token)
+    {
+        //null token kontrolü
+
+        var dto = new RenewPasswordDto(email, token);
+
+        var result = await authService.RenewPasswordEmailAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return Redirect("/");
+        }
+
+        ViewData["SuccessMessage"] = result.SuccessMessage;
+        return View();
+    }
 }

@@ -102,4 +102,17 @@ public class AuthController(IAuthService authService) : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPost("/renew-password")]
+    public async Task<IActionResult> RenewPasswordAsync([FromBody] RenewPasswordDto dto)
+    {
+        var result = await authService.RenewPasswordEmailAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
 }

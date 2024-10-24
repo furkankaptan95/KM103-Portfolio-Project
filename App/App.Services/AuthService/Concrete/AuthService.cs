@@ -5,6 +5,7 @@ using App.Services.AuthService.Abstract;
 using Ardalis.Result;
 using System.Net.Http.Json;
 using System.Net;
+using Newtonsoft.Json.Linq;
 
 namespace App.Services.AuthService.Concrete;
 public class AuthService(IHttpClientFactory factory) : IAuthService
@@ -97,9 +98,16 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
         return new RegistrationResult(true, "Kullanıcı kaydı başarıyla gerçekleşti. Lütfen hesabınızı aktive etmek için Email adresinizi kontrol ediniz.", RegistrationError.None);
     }
 
-    public Task<Result> RenewPasswordEmailAsync(string email, string token)
+    public async Task<Result> RenewPasswordEmailAsync(RenewPasswordDto dto)
     {
-        throw new NotImplementedException();
+        var response = await AuthApiClient.PostAsJsonAsync("renew-password", dto);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return Result.Error("Email adresiniz doğrulanamadı!..");
+        }
+
+        return Result.SuccessWithMessage("Şifrenizi sıfırlayabilirsiniz.");
     }
 
     public Task<Result> RevokeTokenAsync(string token)
