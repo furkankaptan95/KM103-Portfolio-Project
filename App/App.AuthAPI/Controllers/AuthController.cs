@@ -128,4 +128,17 @@ public class AuthController(IAuthService authService) : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPost("/revoke-token")]
+    public async Task<IActionResult> RevokeTokenAsync([FromBody] string token)
+    {
+        var result = await authService.RevokeTokenAsync(token);
+
+        if (!result.IsSuccess)
+        {
+            return NotFound(result);
+        }
+
+        return Ok(result);
+    }
 }

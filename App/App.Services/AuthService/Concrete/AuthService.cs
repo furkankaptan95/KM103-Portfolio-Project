@@ -122,9 +122,16 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
         return Result.SuccessWithMessage("Şifrenizi sıfırlayabilirsiniz.");
     }
 
-    public Task<Result> RevokeTokenAsync(string token)
+    public async Task<Result> RevokeTokenAsync(string token)
     {
-        throw new NotImplementedException();
+        var response = await AuthApiClient.PostAsJsonAsync("revoke-token", token);
+
+        if(response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.OK)
+        {
+            return Result.SuccessWithMessage("Hesabınızdan başarıyla çıkış yapıldı.");
+        }
+
+        return Result.Error("Hesabınızdan çıkış yapılırken bir problemle karşılaşıldı.");
     }
 
     public async Task<Result> ValidateTokenAsync(string token)

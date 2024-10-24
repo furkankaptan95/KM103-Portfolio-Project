@@ -3,6 +3,7 @@ using App.Services.AuthService.Abstract;
 using App.ViewModels.AuthViewModels;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace App.PortfolioMVC.Controllers;
 public class AuthController(IAuthService authService) : Controller
@@ -184,5 +185,31 @@ public class AuthController(IAuthService authService) : Controller
 
         TempData["SuccessMessage"] = result.SuccessMessage;
         return RedirectToAction(nameof(Login));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> LogOut()
+    {
+        var refreshToken = Request.Cookies["RefreshToken"];
+
+        if(refreshToken.IsNullOrEmpty())
+        {
+            ViewData["SuccessMessage"] = "Hesabınızdan başarıyla çıkış yapıldı.";
+            return View(nameof(Login));
+        }
+
+        var result = await authService.RevokeTokenAsync(refreshToken);
+
+        if (result.IsSuccess)
+        {
+            Response.Cookies.Delete("JwtToken");
+            Response.Cookies.Delete("RefreshToken");
+
+            ViewData["SuccessMessage"] = result.SuccessMessage;
+            return View(nameof(Login));
+        }
+
+        TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+        return Redirect("/");
     }
 }

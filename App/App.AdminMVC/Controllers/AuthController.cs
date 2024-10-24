@@ -2,6 +2,7 @@
 using App.Services.AuthService.Abstract;
 using App.ViewModels.AuthViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace App.AdminMVC.Controllers;
 public class AuthController(IAuthService authService) : Controller
@@ -48,6 +49,32 @@ public class AuthController(IAuthService authService) : Controller
         HttpContext.Response.Cookies.Append("AccessToken", tokens.JwtToken, jwtCookieOptions);
         HttpContext.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, refreshTokenCookieOptions);
 
+        return Redirect("/");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> LogOut()
+    {
+        var refreshToken = Request.Cookies["RefreshToken"];
+
+        if (refreshToken.IsNullOrEmpty())
+        {
+            ViewData["SuccessMessage"] = "Hesabınızdan başarıyla çıkış yapıldı.";
+            return View(nameof(Login));
+        }
+
+        var result = await authService.RevokeTokenAsync(refreshToken);
+
+        if (result.IsSuccess)
+        {
+            Response.Cookies.Delete("JwtToken");
+            Response.Cookies.Delete("RefreshToken");
+
+            ViewData["SuccessMessage"] = result.SuccessMessage;
+            return View(nameof(Login));
+        }
+
+        TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
         return Redirect("/");
     }
 }
