@@ -215,17 +215,25 @@ public class AuthService : IAuthService
 
     public async Task<Result> RenewPasswordEmailAsync(RenewPasswordDto dto)
     {
-        var userVerification = await _authApiDb.UserVerifications.Include(uv=>uv.User).FirstOrDefaultAsync(uv => uv.User.Email == dto.Email && uv.Token == dto.Token);
-
-        if (userVerification == null || userVerification.Expiration < DateTime.UtcNow)
+        try
         {
-            return Result.Error();
+            var userVerification = await _authApiDb.UserVerifications.Include(uv => uv.User).FirstOrDefaultAsync(uv => uv.User.Email == dto.Email && uv.Token == dto.Token);
+
+            if (userVerification == null || userVerification.Expiration < DateTime.UtcNow)
+            {
+                return Result.Error();
+            }
+
+            _authApiDb.UserVerifications.Remove(userVerification);
+            await _authApiDb.SaveChangesAsync();
+
+            return Result.Success();
         }
 
-        _authApiDb.UserVerifications.Remove(userVerification);
-        await _authApiDb.SaveChangesAsync();
-
-        return Result.Success();
+        catch (Exception ex)
+        {
+            return Result.Error($"Bir hata oluştu: {ex.Message}");
+        }
     }
 
     public async Task<Result> RevokeTokenAsync(string token)

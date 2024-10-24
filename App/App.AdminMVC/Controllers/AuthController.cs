@@ -126,24 +126,33 @@ public class AuthController(IAuthService authService) : Controller
             TempData["ErrorMessage"] = "Email adresiniz doğrulanamadı. Tekrar deneyebilirsiniz.";
             return RedirectToAction(nameof(ForgotPassword));
         }
-
-        var dto = new RenewPasswordDto(email, token);
-
-        var result = await authService.RenewPasswordEmailAsync(dto);
-
-        if (!result.IsSuccess)
+        try
         {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-            return Redirect("/");
+            var dto = new RenewPasswordDto(email, token);
+
+            var result = await authService.RenewPasswordEmailAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return RedirectToAction(nameof(ForgotPassword));
+            }
+
+            ViewData["SuccessMessage"] = result.SuccessMessage;
+
+            var model = new NewPasswordViewModel
+            {
+                Email = email
+            };
+
+            return View(model);
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Email adresiniz doğrulanırken bir problem oluştu!..";
+            return RedirectToAction(nameof(ForgotPassword));
         }
 
-        ViewData["SuccessMessage"] = result.SuccessMessage;
-
-        var model = new NewPasswordViewModel
-        {
-            Email = email
-        };
-        return View(model);
     }
 
     [HttpPost("renew-password")]

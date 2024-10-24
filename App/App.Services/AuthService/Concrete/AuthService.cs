@@ -146,14 +146,22 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
 
     public async Task<Result> RenewPasswordEmailAsync(RenewPasswordDto dto)
     {
-        var response = await AuthApiClient.PostAsJsonAsync("renew-password", dto);
-
-        if (!response.IsSuccessStatusCode)
+        try
         {
-            return Result.Error("Email adresiniz doğrulanamadı!..");
+            var response = await AuthApiClient.PostAsJsonAsync("renew-password", dto);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return Result.Error("Email adresiniz doğrulanamadı!..");
+            }
+
+            return Result.SuccessWithMessage("Şifrenizi sıfırlayabilirsiniz.");
         }
 
-        return Result.SuccessWithMessage("Şifrenizi sıfırlayabilirsiniz.");
+        catch (Exception)
+        {
+            return Result.Error("Email adresiniz doğrulanırken bir problem oluştu!..");
+        }
     }
 
     public async Task<Result> RevokeTokenAsync(string token)

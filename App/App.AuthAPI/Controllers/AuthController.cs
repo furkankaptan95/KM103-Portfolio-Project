@@ -14,11 +14,13 @@ public class AuthController : ControllerBase
     private readonly IAuthService _authService;
     private readonly IValidator<LoginDto> _loginValidator;
     private readonly IValidator<ForgotPasswordDto> _forgotPasswordValidator;
-    public AuthController(IAuthService authService, IValidator<LoginDto> loginValidator, IValidator<ForgotPasswordDto> forgotPasswordValidator)
+    private readonly IValidator<RenewPasswordDto> _renewPasswordValidator;
+    public AuthController(IAuthService authService, IValidator<LoginDto> loginValidator, IValidator<ForgotPasswordDto> forgotPasswordValidator, IValidator<RenewPasswordDto> renewPasswordValidator)
     {
         _authService = authService;
         _loginValidator = loginValidator;
         _forgotPasswordValidator = forgotPasswordValidator;
+        _renewPasswordValidator = renewPasswordValidator;
     }
 
     [HttpPost("/login")]
@@ -161,6 +163,14 @@ public class AuthController : ControllerBase
     {
         try
         {
+            var validationResult = await _renewPasswordValidator.ValidateAsync(dto);
+
+            if (!validationResult.IsValid)
+            {
+                string errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            }
+
             var result = await _authService.RenewPasswordEmailAsync(dto);
 
             if (!result.IsSuccess)
@@ -170,7 +180,6 @@ public class AuthController : ControllerBase
 
             return Ok(result);
         }
-       
 
          catch (Exception ex)
         {
