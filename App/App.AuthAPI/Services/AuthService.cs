@@ -238,19 +238,27 @@ public class AuthService : IAuthService
 
     public async Task<Result> RevokeTokenAsync(string token)
     {
-        var refreshToken = await _authApiDb.RefreshTokens.FirstOrDefaultAsync(rt=>rt.Token == token);
-
-        if (refreshToken is null)
+        try
         {
-            return Result.NotFound();
+            var refreshToken = await _authApiDb.RefreshTokens.FirstOrDefaultAsync(rt => rt.Token == token);
+
+            if (refreshToken is null)
+            {
+                return Result.NotFound();
+            }
+
+            refreshToken.IsRevoked = DateTime.UtcNow;
+
+            _authApiDb.RefreshTokens.Update(refreshToken);
+            await _authApiDb.SaveChangesAsync();
+
+            return Result.Success();
         }
 
-        refreshToken.IsRevoked = DateTime.UtcNow;
-
-        _authApiDb.RefreshTokens.Update(refreshToken);
-        await _authApiDb.SaveChangesAsync();
-
-        return Result.Success();
+        catch (Exception ex)
+        {
+            return Result.Error($"Bir hata oluştu: {ex.Message}");
+        }
     }
 
     public async Task<Result> ValidateTokenAsync(string token)

@@ -190,26 +190,47 @@ public class AuthController(IAuthService authService) : Controller
     [HttpGet]
     public async Task<IActionResult> LogOut()
     {
-        var refreshToken = Request.Cookies["RefreshToken"];
-
-        if (refreshToken.IsNullOrEmpty())
+        try
         {
-            ViewData["SuccessMessage"] = "Hesabınızdan başarıyla çıkış yapıldı.";
-            return View(nameof(Login));
+            var refreshToken = Request.Cookies["RefreshToken"];
+
+            if (refreshToken.IsNullOrEmpty())
+            {
+                if (Request.Cookies["JwtToken"] is not null)
+                {
+                    Response.Cookies.Delete("JwtToken");
+                    ViewData["SuccessMessage"] = "Hesabınızdan başarıyla çıkış yapıldı.";
+                    return View(nameof(Login));
+                }
+
+                return View(nameof(Login));
+            }
+
+            var result = await authService.RevokeTokenAsync(refreshToken);
+
+            if (result.IsSuccess)
+            {
+                Response.Cookies.Delete("JwtToken");
+                Response.Cookies.Delete("RefreshToken");
+
+                ViewData["SuccessMessage"] = result.SuccessMessage;
+                return View(nameof(Login));
+            }
+
+            if (result.Status == ResultStatus.NotFound)
+            {
+                Response.Cookies.Delete("JwtToken");
+                ViewData["SuccessMessage"] = "Hesabınızdan başarıyla çıkış yapıldı.";
+                return View(nameof(Login));
+            }
+
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return Redirect("/");
         }
-
-        var result = await authService.RevokeTokenAsync(refreshToken);
-
-        if (result.IsSuccess)
+        catch (Exception)
         {
-            Response.Cookies.Delete("JwtToken");
-            Response.Cookies.Delete("RefreshToken");
-
-            ViewData["SuccessMessage"] = result.SuccessMessage;
-            return View(nameof(Login));
+            TempData["ErrorMessage"] = "Hesabınızdan çıkış yapılırken bir hata oluştu!..";
+            return Redirect("/");
         }
-
-        TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-        return Redirect("/");
     }
 }

@@ -179,14 +179,26 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
 
     public async Task<Result> RevokeTokenAsync(string token)
     {
-        var response = await AuthApiClient.PostAsJsonAsync("revoke-token", token);
-
-        if(response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.OK)
+        try
         {
-            return Result.SuccessWithMessage("Hesabınızdan başarıyla çıkış yapıldı.");
-        }
+            var response = await AuthApiClient.PostAsJsonAsync("revoke-token", token);
 
-        return Result.Error("Hesabınızdan çıkış yapılırken bir problemle karşılaşıldı.");
+            if (response.IsSuccessStatusCode)
+            {
+                return Result.SuccessWithMessage("Hesabınızdan başarıyla çıkış yapıldı.");
+            }
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return Result.NotFound();
+            }
+
+            return Result.Error("Hesabınızdan çıkış yapılırken bir problemle karşılaşıldı.");
+        }
+        catch (Exception)
+        {
+            return Result.Error("Hesabınızdan çıkış yapılırken bir problemle karşılaşıldı.");
+        }
     }
 
     public async Task<Result> ValidateTokenAsync(string token)

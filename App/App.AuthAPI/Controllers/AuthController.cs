@@ -4,6 +4,7 @@ using App.Services.AuthService.Abstract;
 using Ardalis.Result;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace App.AuthAPI.Controllers;
 
@@ -226,13 +227,30 @@ public class AuthController : ControllerBase
     [HttpPost("/revoke-token")]
     public async Task<IActionResult> RevokeTokenAsync([FromBody] string token)
     {
-        var result = await _authService.RevokeTokenAsync(token);
-
-        if (!result.IsSuccess)
+        if (token.IsNullOrEmpty())
         {
-            return NotFound(result);
+            return BadRequest(Result.Invalid());
         }
 
-        return Ok(result);
+        try
+        {
+            var result = await _authService.RevokeTokenAsync(token);
+
+            if (!result.IsSuccess)
+            {
+                if(result.Status == ResultStatus.NotFound)
+                {
+                    return NotFound(result);
+                }
+
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Bir hata oluştu: {ex.Message}"));
+        }
     }
 }
