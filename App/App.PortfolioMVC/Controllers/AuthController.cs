@@ -115,4 +115,74 @@ public class AuthController(IAuthService authService) : Controller
 
         return RedirectToAction(nameof(Login));
     }
+
+    [HttpGet]
+    public async Task<IActionResult> ForgotPassword()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ForgotPassword([FromForm] ForgotPasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var dto = new ForgotPasswordDto(model.Email);
+
+        var result = await authService.ForgotPasswordAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return View(model);
+        }
+
+        ViewData["SuccessMessage"] = result.SuccessMessage;
+
+        return View();
+    }
+
+    [HttpGet("renew-password")]
+    public async Task<IActionResult> RenewPassword([FromQuery] string email,string token)
+    {
+        //null token kontrolü
+
+        var dto = new RenewPasswordDto(email, token);
+
+        var result = await authService.RenewPasswordEmailAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return Redirect("/");
+        }
+
+        ViewData["SuccessMessage"] = result.SuccessMessage;
+        return View(email);
+    }
+
+    [HttpPost("renew-password")]
+    public async Task<IActionResult> RenewPassword([FromForm] NewPasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var dto = new NewPasswordDto() { Email = model.Email , Password = model.Password};
+
+        var result = await authService.NewPasswordAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return RedirectToAction(nameof(ForgotPassword));
+        }
+
+        TempData["SuccessMessage"] = result.SuccessMessage;
+        return RedirectToAction(nameof(Login));
+    }
 }

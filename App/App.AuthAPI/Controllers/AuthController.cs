@@ -89,4 +89,43 @@ public class AuthController(IAuthService authService) : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPost("/forgot-password")]
+    public async Task<IActionResult> ForgotPasswordAsync([FromBody] ForgotPasswordDto dto)
+    {
+        var result = await authService.ForgotPasswordAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            return NotFound(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpPost("/renew-password")]
+    public async Task<IActionResult> RenewPasswordAsync([FromBody] RenewPasswordDto dto)
+    {
+        var result = await authService.RenewPasswordEmailAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpPost("/new-password")]
+    public async Task<IActionResult> NewPasswordAsync([FromBody] NewPasswordDto dto)
+    {
+        var result = await authService.NewPasswordAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            return NotFound(result);
+        }
+
+        return Ok(result);
+    }
 }

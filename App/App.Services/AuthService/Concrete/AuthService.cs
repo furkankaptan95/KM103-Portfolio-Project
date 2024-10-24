@@ -5,14 +5,22 @@ using App.Services.AuthService.Abstract;
 using Ardalis.Result;
 using System.Net.Http.Json;
 using System.Net;
+using Newtonsoft.Json.Linq;
 
 namespace App.Services.AuthService.Concrete;
 public class AuthService(IHttpClientFactory factory) : IAuthService
 {
     private HttpClient AuthApiClient => factory.CreateClient("authApi");
-    public Task<Result> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
+    public async Task<Result> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
     {
-        throw new NotImplementedException();
+        var response = await AuthApiClient.PostAsJsonAsync("forgot-password", forgotPasswordDto);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return Result.NotFound("Girmiş olduğunuz Email adresine sahip bir kullanıcı bulunamadı!..");
+        }
+
+        return Result.SuccessWithMessage("Şifre sıfırlama linki Email adresinize gönderildi.");
     }
 
     public async Task<Result<TokensDto>> LoginAsync(LoginDto loginDto)
@@ -37,6 +45,18 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
         }
 
         return Result<TokensDto>.Error("Hatalı Email veya Şifre!");
+    }
+
+    public async Task<Result> NewPasswordAsync(NewPasswordDto dto)
+    {
+        var response = await AuthApiClient.PostAsJsonAsync("new-password", dto);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return Result.NotFound("Kullanıcı bulunamadı!");
+        }
+
+        return Result.SuccessWithMessage("Şifreniz başarıyla değiştirildi. Yeni şifrenizle giriş yapabilirsiniz.");
     }
 
     public async Task<Result<TokensDto>> RefreshTokenAsync(string token)
@@ -90,9 +110,16 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
         return new RegistrationResult(true, "Kullanıcı kaydı başarıyla gerçekleşti. Lütfen hesabınızı aktive etmek için Email adresinizi kontrol ediniz.", RegistrationError.None);
     }
 
-    public Task<Result> RenewPasswordEmailAsync(string email, string token)
+    public async Task<Result> RenewPasswordEmailAsync(RenewPasswordDto dto)
     {
-        throw new NotImplementedException();
+        var response = await AuthApiClient.PostAsJsonAsync("renew-password", dto);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return Result.Error("Email adresiniz doğrulanamadı!..");
+        }
+
+        return Result.SuccessWithMessage("Şifrenizi sıfırlayabilirsiniz.");
     }
 
     public Task<Result> RevokeTokenAsync(string token)

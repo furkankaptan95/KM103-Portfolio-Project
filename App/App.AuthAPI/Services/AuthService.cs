@@ -10,6 +10,7 @@ using Ardalis.Result;
 using IdentityModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -37,12 +38,12 @@ public class AuthService : IAuthService
             return Result.NotFound();
         }
 
-        var verificationCode = Guid.NewGuid().ToString().Substring(0, 6);
+        var token = Guid.NewGuid().ToString().Substring(0, 6);
 
         var forgotPassword = new UserVerificationEntity
         {
             UserId = emailToRenewPassword.Id,
-            Token = verificationCode,
+            Token = token,
             Expiration = DateTime.UtcNow.AddHours(24),
             CreatedAt = DateTime.UtcNow
         };
@@ -51,7 +52,7 @@ public class AuthService : IAuthService
         await _authApiDb.SaveChangesAsync();
 
 
-        var verificationLink = $"https://localhost:7167/renew-password/{verificationCode}";
+        var verificationLink = $"https://localhost:7167/renew-password?email={forgotPasswordDto.Email}&token={token}";
 
         var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Şifrenizi sıfırlamak için tıklayınız.</a>";
         var emailResult = await _emailService.SendEmailAsync(emailToRenewPassword.Email, "Lütfen email adresinizi doğrulayın.", htmlMailBody);
@@ -197,15 +198,14 @@ public class AuthService : IAuthService
         return new RegistrationResult(true,null,RegistrationError.None);
     }
 
-    public async Task<Result> RenewPasswordEmailAsync(string email, string token)
+    public async Task<Result> RenewPasswordEmailAsync(RenewPasswordDto dto)
     {
-        var userVerification = await _authApiDb.UserVerifications.Include(uv=>uv.User).FirstOrDefaultAsync(uv => uv.User.Email == email && uv.Token == token);
+        var userVerification = await _authApiDb.UserVerifications.Include(uv=>uv.User).FirstOrDefaultAsync(uv => uv.User.Email == dto.Email && uv.Token == dto.Token);
 
         if (userVerification == null || userVerification.Expiration < DateTime.UtcNow)
         {
             return Result.Error();
         }
-
 
         _authApiDb.UserVerifications.Remove(userVerification);
         await _authApiDb.SaveChangesAsync();
@@ -331,5 +331,25 @@ public class AuthService : IAuthService
         return Guid.NewGuid().ToString();
     }
 
+    public async Task<Result> NewPasswordAsync(NewPasswordDto dto)
+    {
+        var user = await _authApiDb.Users.SingleOrDefaultAsync(u=>u.Email == dto.Email);
 
+        if(user is null)
+        {
+            return Result.NotFound();
+        }
+
+        byte[] passwordHash, passwordSalt;
+
+        HashingHelper.CreatePasswordHash(dto.Password, out passwordHash, out passwordSalt);
+
+        user.PasswordHash = passwordHash;
+        user.PasswordSalt = passwordSalt;
+
+        _authApiDb.Users.Update(user);
+        await _authApiDb.SaveChangesAsync();
+
+        return Result.Success();
+    }
 }
