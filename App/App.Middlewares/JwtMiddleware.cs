@@ -1,4 +1,5 @@
-﻿using App.Services.AuthService.Abstract;
+﻿using App.Core;
+using App.Services.AuthService.Abstract;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System.IdentityModel.Tokens.Jwt;
@@ -22,6 +23,16 @@ namespace App.Middlewares
             // Token işlemleri
             var jwtToken = context.Request.Cookies["JwtToken"];
             var refreshToken = context.Request.Cookies["RefreshToken"];
+
+            var endpoint = context.GetEndpoint();
+
+            var allowAnonymous = endpoint?.Metadata.GetMetadata<AllowAnonymousManuelAttribute>() != null;
+
+            if (allowAnonymous)
+            {
+                await _next(context);
+                return;
+            }
 
             if (string.IsNullOrEmpty(jwtToken) && string.IsNullOrEmpty(refreshToken))
             {

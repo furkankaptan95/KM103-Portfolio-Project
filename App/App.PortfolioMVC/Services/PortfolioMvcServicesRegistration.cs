@@ -1,4 +1,5 @@
-﻿using App.Services.AuthService.Abstract;
+﻿using App.Services;
+using App.Services.AuthService.Abstract;
 using App.Services.AuthService.Concrete;
 using App.Services.PortfolioServices.Abstract;
 
@@ -55,6 +56,7 @@ public static class PortfolioMvcServicesRegistration
 		services.AddScoped<IHomePortfolioService, HomePortfolioService>();
         services.AddScoped<IContactMessagePortfolioService, ContactMessagePortfolioService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IEmailService, SmtpEmailService>();
 
         return services;
     }
