@@ -174,6 +174,15 @@ public class AuthController(IAuthService authService) : Controller
 
         var dto = new NewPasswordDto() { Email = model.Email , Password = model.Password};
 
-        return View(dto);
+        var result = await authService.NewPasswordAsync(dto);
+
+        if (!result.IsSuccess)
+        {
+            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return RedirectToAction(nameof(ForgotPassword));
+        }
+
+        TempData["SuccessMessage"] = result.SuccessMessage;
+        return RedirectToAction(nameof(Login));
     }
 }

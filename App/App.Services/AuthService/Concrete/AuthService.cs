@@ -47,9 +47,16 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
         return Result<TokensDto>.Error("Hatalı Email veya Şifre!");
     }
 
-    public Task<Result> NewPasswordAsync(NewPasswordDto dto)
+    public async Task<Result> NewPasswordAsync(NewPasswordDto dto)
     {
-        throw new NotImplementedException();
+        var response = await AuthApiClient.PostAsJsonAsync("new-password", dto);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return Result.NotFound("Kullanıcı bulunamadı!");
+        }
+
+        return Result.SuccessWithMessage("Şifreniz başarıyla değiştirildi. Yeni şifrenizle giriş yapabilirsiniz.");
     }
 
     public async Task<Result<TokensDto>> RefreshTokenAsync(string token)
