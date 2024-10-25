@@ -1,10 +1,13 @@
-﻿using App.DTOs.EducationDtos;
+﻿using App.Core;
+using App.DTOs.EducationDtos;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.EducationsViewModels;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
+
+[AuthorizeRoles("admin")]
 public class EducationsController(IEducationAdminService educationService) : Controller
 {
 

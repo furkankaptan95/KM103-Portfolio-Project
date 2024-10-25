@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace App.AdminMVC.Controllers;
+
 [AllowAnonymousManuel]
 public class AuthController(IAuthService authService) : Controller
 {
@@ -123,7 +124,7 @@ public class AuthController(IAuthService authService) : Controller
     [HttpGet("renew-password")]
     public async Task<IActionResult> RenewPassword([FromQuery] string email, string token)
     {
-        if (token.IsNullOrEmpty())
+        if (string.IsNullOrEmpty(token))
         {
             TempData["ErrorMessage"] = "Email adresiniz doğrulanamadı. Tekrar deneyebilirsiniz.";
             return RedirectToAction(nameof(ForgotPassword));
@@ -194,7 +195,7 @@ public class AuthController(IAuthService authService) : Controller
         {
             var refreshToken = Request.Cookies["RefreshToken"];
 
-            if (refreshToken.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(refreshToken))
             {
                 if (Request.Cookies["JwtToken"] is not null)
                 {

@@ -3,6 +3,7 @@ using App.Services.AuthService.Abstract;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace App.Middlewares;
 public class JwtMiddleware
@@ -122,4 +123,5 @@ public class JwtMiddleware
         var expirationDate = jwtToken.ValidTo;
         return expirationDate < DateTime.UtcNow;
     }
+
 }

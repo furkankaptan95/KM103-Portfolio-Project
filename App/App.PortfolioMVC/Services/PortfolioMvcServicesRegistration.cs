@@ -56,7 +56,6 @@ public static class PortfolioMvcServicesRegistration
 		services.AddScoped<IHomePortfolioService, HomePortfolioService>();
         services.AddScoped<IContactMessagePortfolioService, ContactMessagePortfolioService>();
         services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IEmailService, SmtpEmailService>();
 
         return services;
     }

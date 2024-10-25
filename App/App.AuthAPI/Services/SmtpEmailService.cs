@@ -1,9 +1,10 @@
-﻿using Ardalis.Result;
+﻿using App.Services;
+using Ardalis.Result;
 using Microsoft.Extensions.Options;
 using System.Net.Mail;
 using System.Net;
 
-namespace App.Services;
+namespace App.AuthAPI.Services;
 public class SmtpConfiguration
 {
     public string Server { get; set; }

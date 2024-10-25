@@ -1,4 +1,5 @@
-﻿using App.DTOs.CommentDtos.Portfolio;
+﻿using App.Core;
+using App.DTOs.CommentDtos.Portfolio;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc.CommentsViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,7 @@ public class CommentController(ICommentPortfolioService commentService) : Contro
         return Redirect($"/blog-post-{model.BlogPostId}");
     }
 
+    [AllowAnonymousManuel]
     [HttpPost]
     public async Task<IActionResult> AddSignedComment([FromForm] SignedAddCommentViewModel model)
     {
