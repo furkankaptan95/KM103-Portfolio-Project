@@ -64,9 +64,22 @@ public class JwtMiddleware
             {               
                 var isValidToken = await authService.ValidateTokenAsync(jwtToken);
 
-                if (!isValidToken.IsSuccess)
+                if (isValidToken.IsSuccess)
                 {
-                    
+
+                    // JWT'den ClaimsPrincipal oluştur
+                    var handler = new JwtSecurityTokenHandler();
+                    var jwtTokenObject = handler.ReadToken(jwtToken) as JwtSecurityToken;
+
+                    if (jwtTokenObject != null)
+                    {
+                        var identity = new ClaimsIdentity(jwtTokenObject.Claims, "jwt");
+                        context.User = new ClaimsPrincipal(identity); // Kullanıcı bilgilerini ayarla
+                    }
+                }
+                else
+                {
+
                     if (!string.IsNullOrEmpty(refreshToken))
                     {
                         await RenewTokens(context, authService, refreshToken);
@@ -77,6 +90,7 @@ public class JwtMiddleware
                         return;
                     }
                 }
+
             }
         }
 
@@ -99,8 +113,17 @@ public class JwtMiddleware
 
             if (tokens != null && !string.IsNullOrEmpty(tokens.JwtToken) && !string.IsNullOrEmpty(tokens.RefreshToken))
             {
+                
+                context.Response.Cookies.Delete("JwtToken");
+
                 context.Response.Cookies.Append("JwtToken", tokens.JwtToken);
                 context.Response.Cookies.Append("RefreshToken", tokens.RefreshToken);
+
+                // JWT'den ClaimsPrincipal oluştur
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadToken(tokens.JwtToken) as JwtSecurityToken;
+                var identity = new ClaimsIdentity(jwtToken?.Claims, "jwt");
+                context.User = new ClaimsPrincipal(identity); // Kullanıcı bilgilerini ayarla
             }
             else
             {
@@ -118,10 +141,23 @@ public class JwtMiddleware
     private bool TokenExpired(string token)
     {
         var handler = new JwtSecurityTokenHandler();
-        var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
+        try
+        {
+            var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
 
-        var expirationDate = jwtToken.ValidTo;
-        return expirationDate < DateTime.UtcNow;
+            if (jwtToken == null)
+            {
+                return true; // Geçersiz token formatı, bu durumda expired olarak işaretlenir.
+            }
+
+            var expirationDate = jwtToken.ValidTo;
+            return expirationDate < DateTime.UtcNow;
+        }
+        catch (Exception)
+        {
+            return true; // Token geçersiz formatta olduğunda, expired olarak değerlendir.
+        }
     }
+
 
 }

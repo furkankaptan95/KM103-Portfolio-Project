@@ -8,64 +8,88 @@ using App.Core.Validators.DtoValidators.PersonalInfoValidators;
 using App.Core.Validators.DtoValidators.ProjectValidators;
 using App.Data.DbContexts;
 using App.DataAPI.Services.AdminServices;
-using App.DataAPI.Services.PortfolioServices;
-using App.DTOs.AboutMeDtos;
 using App.DTOs.AboutMeDtos.Admin;
+using App.DTOs.AboutMeDtos;
 using App.DTOs.BlogPostDtos.Admin;
 using App.DTOs.CommentDtos.Portfolio;
 using App.DTOs.ContactMessageDtos.Admin;
 using App.DTOs.ContactMessageDtos.Portfolio;
 using App.DTOs.EducationDtos;
-using App.DTOs.ExperienceDtos;
 using App.DTOs.ExperienceDtos.Admin;
-using App.DTOs.PersonalInfoDtos;
+using App.DTOs.ExperienceDtos;
 using App.DTOs.PersonalInfoDtos.Admin;
-using App.DTOs.ProjectDtos;
+using App.DTOs.PersonalInfoDtos;
 using App.DTOs.ProjectDtos.Admin;
+using App.DTOs.ProjectDtos;
 using App.Services.AdminServices.Abstract;
 using App.Services.AuthService.Abstract;
-using App.Services.AuthService.Concrete;
 using App.Services.PortfolioServices.Abstract;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using App.Services.AuthService.Concrete;
+using App.DataAPI.Services.PortfolioServices;
 
-namespace App.DataAPI.Services;
+namespace App.DataApi.Services;
 public static class DataApiServicesRegistration
 {
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
+        // CORS yapılandırması
         services.AddCors(options =>
         {
             options.AddPolicy("AllowSpecificOrigin", builder =>
             {
-                builder.WithOrigins("https://localhost:7163") // İzin verilen köken
-                       .AllowAnyMethod() // İzin verilen HTTP yöntemleri
-                       .AllowAnyHeader(); // İzin verilen başlıklar
+                builder.WithOrigins("https://localhost:7163")
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
             });
         });
 
+        // Temel yapılandırmalar
+        services.AddHttpContextAccessor();
         services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
-        var authApiUrl = configuration.GetValue<string>("AuthApiUrl");
+        // DbContext yapılandırması
+        ConfigureDbContext(services, configuration);
 
-        if (string.IsNullOrWhiteSpace(authApiUrl))
-        {
-            throw new InvalidOperationException("AuthApiUrl is required in appsettings.json");
-        }
+        // HttpClient yapılandırmaları
+        ConfigureHttpClients(services, configuration);
 
-        services.AddHttpClient("authApi", c =>
-        {
-            c.BaseAddress = new Uri(authApiUrl);
-        });
+        // Scoped hizmetler
+        RegisterScopedServices(services);
 
+        // Validator'ları ekleme
+        RegisterValidators(services);
+
+        return services;
+    }
+
+    private static void ConfigureDbContext(IServiceCollection services, IConfiguration configuration)
+    {
         services.AddDbContext<DataApiDbContext>(options =>
         {
             options.UseSqlServer(configuration.GetConnectionString("DataApiBaseDb"));
         });
+    }
 
+    private static void ConfigureHttpClients(IServiceCollection services, IConfiguration configuration)
+    {
+        var authApiUrl = configuration.GetValue<string>("AuthApiUrl");
+        if (string.IsNullOrWhiteSpace(authApiUrl))
+        {
+            throw new InvalidOperationException("AuthApiUrl is required in appsettings.json");
+        }
+        services.AddHttpClient("authApi", c =>
+        {
+            c.BaseAddress = new Uri(authApiUrl);
+        });
+    }
+
+    private static void RegisterScopedServices(IServiceCollection services)
+    {
+        // Admin hizmetleri
         services.AddScoped<IAboutMeAdminService, AboutMeAdminService>();
         services.AddScoped<IBlogPostAdminService, BlogPostAdminService>();
         services.AddScoped<ICommentAdminService, CommentAdminService>();
@@ -77,17 +101,19 @@ public static class DataApiServicesRegistration
         services.AddScoped<IContactMessageAdminService, ContactMessageAdminService>();
         services.AddScoped<IAuthService, AuthService>();
 
-
+        // Portfolio hizmetleri
         services.AddScoped<IAboutMePortfolioService, AboutMePortfolioService>();
-        services.AddScoped<IBlogPostPortfolioService, BlogPosPortfolioService>();
+        services.AddScoped<IBlogPostPortfolioService, BlogPostPortfolioService>();
         services.AddScoped<ICommentPortfolioService, CommentPortfolioService>();
         services.AddScoped<IEducationPortfolioService, EducationPortfolioService>();
         services.AddScoped<IExperiencePortfolioService, ExperiencePortfolioService>();
         services.AddScoped<IPersonalInfoPortfolioService, PersonalInfoPortfolioService>();
         services.AddScoped<IProjectPortfolioService, ProjectPortfolioService>();
         services.AddScoped<IContactMessagePortfolioService, ContactMessagePortfolioService>();
+    }
 
-
+    private static void RegisterValidators(IServiceCollection services)
+    {
         services.AddTransient<IValidator<AddAboutMeApiDto>, AddAboutMeApiDtoValidator>();
         services.AddTransient<IValidator<UpdateAboutMeApiDto>, UpdateAboutMeApiDtoValidator>();
         services.AddTransient<IValidator<AddBlogPostDto>, AddBlogPostDtoValidator>();
@@ -104,8 +130,5 @@ public static class DataApiServicesRegistration
         services.AddTransient<IValidator<AddCommentUnsignedDto>, AddCommentUnsignedDtoValidator>();
         services.AddTransient<IValidator<AddContactMessageDto>, AddContactMessageDtoValidator>();
         services.AddTransient<IValidator<ReplyContactMessageDto>, ReplyContactMessageDtoValidator>();
-        
-
-        return services;
     }
 }

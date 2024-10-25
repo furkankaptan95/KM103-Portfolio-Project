@@ -13,8 +13,8 @@ public class AuthCookiesHandler : DelegatingHandler
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         // Cookie'leri al
-        var jwtToken = _httpContextAccessor.HttpContext.Request.Cookies["JwtToken"];
-        var refreshToken = _httpContextAccessor.HttpContext.Request.Cookies["RefreshToken"];
+        var jwtToken = _httpContextAccessor.HttpContext?.Request.Cookies["JwtToken"];
+        var refreshToken = _httpContextAccessor.HttpContext?.Request.Cookies["RefreshToken"];
 
         // Cookie'leri ekle
         if (!string.IsNullOrEmpty(jwtToken))

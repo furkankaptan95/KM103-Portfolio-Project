@@ -1,22 +1,29 @@
 ﻿using App.Core;
-using App.Services;
 using App.Services.AuthService.Abstract;
 using App.Services.AuthService.Concrete;
 using App.Services.PortfolioServices.Abstract;
 
 namespace App.PortfolioMVC.Services;
+
 public static class PortfolioMvcServicesRegistration
 {
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddControllersWithViews();
 
-        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        // HttpContextAccessor kaydı
+        services.AddHttpContextAccessor();
+        services.AddScoped<AuthCookiesHandler>();
 
-        services.AddTransient<AuthCookiesHandler>();
+        ConfigureHttpClients(services, configuration);
+        RegisterScopedServices(services);
 
+        return services;
+    }
+
+    private static void ConfigureHttpClients(IServiceCollection services, IConfiguration configuration)
+    {
         var dataApiUrl = configuration.GetValue<string>("DataApiUrl");
-
         if (string.IsNullOrWhiteSpace(dataApiUrl))
         {
             throw new InvalidOperationException("DataApiUrl is required in appsettings.json");
@@ -26,10 +33,9 @@ public static class PortfolioMvcServicesRegistration
         {
             c.BaseAddress = new Uri(dataApiUrl);
         })
-         .AddHttpMessageHandler<AuthCookiesHandler>();
+        .AddHttpMessageHandler<AuthCookiesHandler>();
 
         var fileApiUrl = configuration.GetValue<string>("FileApiUrl");
-
         if (string.IsNullOrWhiteSpace(fileApiUrl))
         {
             throw new InvalidOperationException("FileApiUrl is required in appsettings.json");
@@ -41,7 +47,6 @@ public static class PortfolioMvcServicesRegistration
         });
 
         var authApiUrl = configuration.GetValue<string>("AuthApiUrl");
-
         if (string.IsNullOrWhiteSpace(authApiUrl))
         {
             throw new InvalidOperationException("AuthApiUrl is required in appsettings.json");
@@ -51,9 +56,10 @@ public static class PortfolioMvcServicesRegistration
         {
             c.BaseAddress = new Uri(authApiUrl);
         });
+    }
 
-        
-
+    private static void RegisterScopedServices(IServiceCollection services)
+    {
         services.AddScoped<IAboutMePortfolioService, AboutMePortfolioService>();
         services.AddScoped<IBlogPostPortfolioService, BlogPostPortfolioService>();
         services.AddScoped<ICommentPortfolioService, CommentPortfolioService>();
@@ -61,10 +67,8 @@ public static class PortfolioMvcServicesRegistration
         services.AddScoped<IExperiencePortfolioService, ExperiencePortfolioService>();
         services.AddScoped<IPersonalInfoPortfolioService, PersonalInfoPortfolioService>();
         services.AddScoped<IProjectPortfolioService, ProjectPortfolioService>();
-		services.AddScoped<IHomePortfolioService, HomePortfolioService>();
+        services.AddScoped<IHomePortfolioService, HomePortfolioService>();
         services.AddScoped<IContactMessagePortfolioService, ContactMessagePortfolioService>();
         services.AddScoped<IAuthService, AuthService>();
-
-        return services;
     }
 }

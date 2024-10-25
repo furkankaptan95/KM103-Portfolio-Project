@@ -1,56 +1,40 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 
-namespace App.Core;
-public class AuthorizeRolesAttribute : Attribute, IAuthorizationFilter
+namespace App.Core
 {
-    private readonly string[] _roles;
-
-    public AuthorizeRolesAttribute(params string[] roles)
+    public class AuthorizeRolesAttribute : Attribute, IAuthorizationFilter
     {
-        _roles = roles;
-    }
+        private readonly string[] _roles;
 
-    public void OnAuthorization(AuthorizationFilterContext context)
-    {
-        // JwtToken'ı Cookie'den alıyoruz
-        var jwtToken = context.HttpContext.Request.Cookies["JwtToken"];
-
-        if (string.IsNullOrEmpty(jwtToken))
+        public AuthorizeRolesAttribute(params string[] roles)
         {
-            // Token yoksa 401 durumu ile yanıt ver
-            context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            context.Result = new RedirectToActionResult("Login", "Auth", null);
-            return;
+            _roles = roles;
         }
 
-        // Token'ı çözümle
-        var handler = new JwtSecurityTokenHandler();
-        var token = handler.ReadToken(jwtToken) as JwtSecurityToken;
-
-        if (token == null || token.Claims == null)
+        public void OnAuthorization(AuthorizationFilterContext context)
         {
-            // Token geçersizse 401 durumu ile yanıt ver
-            context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            context.Result = new RedirectToActionResult("Login", "Auth", null);
-            return;
-        }
+            // IHttpContextAccessor'ı burada doğrudan erişin
+            var httpContextAccessor = context.HttpContext.RequestServices.GetService(typeof(IHttpContextAccessor)) as IHttpContextAccessor;
+            var user = httpContextAccessor?.HttpContext?.User;
 
-        // Kullanıcının rollerini al
-        var userRoles = token.Claims
-         .Where(c => c.Type == "role") // Burada doğrudan "role" kullanmalısınız
-         .Select(c => c.Value)
-         .ToList();
+            if (user == null || !user.Identity.IsAuthenticated)
+            {
+                context.Result = new RedirectToActionResult("Login", "Auth", null);
+                return;
+            }
 
-        // Eğer kullanıcı gerekli rollerden birine sahip değilse
-        if (!_roles.Any(role => userRoles.Contains(role)))
-        {
-            // Yeterli rol yoksa 403 durumu ile yanıt ver ve farklı bir sayfaya yönlendir
-            context.HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
-            context.Result = new RedirectToActionResult("AccessDenied", "Home", null);
-            return;
+            var userRoles = user.Claims
+                .Where(c => c.Type == "role")
+                .Select(c => c.Value)
+                .ToList();
+
+            if (!_roles.Intersect(userRoles).Any())
+            {
+                context.Result = new RedirectToActionResult("AccessDenied", "Home", null);
+            }
         }
     }
 }

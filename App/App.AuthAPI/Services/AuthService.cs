@@ -292,6 +292,14 @@ public class AuthService : IAuthService
                 return Result.Error("JWT formatı hatalı");
             }
 
+
+            // Geçerlilik ve imza kontrolü için JWT işleyici
+            var handler = new JwtSecurityTokenHandler();
+            if (!handler.CanReadToken(token))
+            {
+                return Result.Error("Token okunamıyor veya geçersiz formatta.");
+            }
+
             var header = parts[0];
             var payload = parts[1];
             var signature = parts[2];
