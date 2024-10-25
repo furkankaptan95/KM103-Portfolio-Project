@@ -1,6 +1,7 @@
 ﻿using App.Core.Validators.DtoValidators.AuthValidators;
 using App.Data.DbContexts;
 using App.DTOs.AuthDtos;
+using App.Services;
 using App.Services.AdminServices.Abstract;
 using App.Services.AuthService.Abstract;
 using FluentValidation;
@@ -44,11 +45,16 @@ public static class AuthApiServicesRegistration
             options.UseSqlServer(configuration.GetConnectionString("AuthApiBaseDb"));
         });
 
+        services.AddSingleton<IEmailService,SmtpEmailService>();
+
         services.AddScoped<IUserAdminService, AdminUserService>();
         services.AddScoped<IAuthService, AuthService>();
 
         services.AddTransient<IValidator<LoginDto>, LoginDtoValidator>();
         services.AddTransient<IValidator<ForgotPasswordDto>, ForgotPasswordDtoValidator>();
+        services.AddTransient<IValidator<RenewPasswordDto>, RenewPasswordDtoValidator>();
+        services.AddTransient<IValidator<NewPasswordDto>, NewPasswordDtoValidator>();
+
 
         return services;
     }

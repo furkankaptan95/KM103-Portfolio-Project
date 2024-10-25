@@ -239,7 +239,7 @@ public class AuthController : ControllerBase
     [HttpPost("/revoke-token")]
     public async Task<IActionResult> RevokeTokenAsync([FromBody] string token)
     {
-        if (token.IsNullOrEmpty())
+        if (string.IsNullOrEmpty(token))
         {
             return BadRequest(Result.Invalid());
         }

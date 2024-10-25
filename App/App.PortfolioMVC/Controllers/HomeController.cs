@@ -1,9 +1,11 @@
+using App.Core;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.PortfolioMVC.Controllers;
 
+[AllowAnonymousManuel]
 public class HomeController(IHomePortfolioService homeService) : Controller
 {
     public async Task<IActionResult> Index()

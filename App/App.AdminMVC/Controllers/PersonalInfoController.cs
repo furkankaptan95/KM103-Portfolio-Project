@@ -1,4 +1,5 @@
 ﻿using App.AdminMVC.Services;
+using App.Core;
 using App.DTOs.PersonalInfoDtos;
 using App.DTOs.PersonalInfoDtos.Admin;
 using App.Services.AdminServices.Abstract;
@@ -7,6 +8,8 @@ using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
+
+[AuthorizeRoles("admin")]
 public class PersonalInfoController(IPersonalInfoAdminService personalInfoService) : Controller
 {
     [HttpGet]

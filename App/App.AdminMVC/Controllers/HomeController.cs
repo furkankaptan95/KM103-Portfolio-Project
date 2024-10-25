@@ -1,10 +1,22 @@
+using App.Core;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.HomeViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
+
 public class HomeController(IHomeAdminService homeService) : Controller
 {
+    [AllowAnonymousManuel]
+
+    [HttpGet]
+    public IActionResult AccessDenied()
+    {
+
+        return View();
+    }
+
+    [AuthorizeRoles("admin")]
     public async Task<IActionResult> Index()
     {
         try
@@ -35,6 +47,8 @@ public class HomeController(IHomeAdminService homeService) : Controller
             return RedirectToAction(nameof(Index2));
         }
     }
+
+    [AuthorizeRoles("admin")]
     public IActionResult Index2()
     {
         return View();
