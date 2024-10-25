@@ -1,10 +1,12 @@
-﻿using App.Services.PortfolioServices.Abstract;
+﻿using App.Core;
+using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc.BlogPostsViewModels;
 using App.ViewModels.PortfolioMvc.CommentsViewModels;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.PortfolioMVC.Controllers;
+[AllowAnonymousManuel]
 public class BlogPostController(IBlogPostPortfolioService blogPostService) : Controller
 {
 	[HttpGet]

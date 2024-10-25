@@ -1,4 +1,5 @@
-﻿using App.DTOs.BlogPostDtos.Admin;
+﻿using App.Core;
+using App.DTOs.BlogPostDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
@@ -10,6 +11,7 @@ namespace App.DataAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+
 public class BlogPostsController : ControllerBase
 {
     private readonly IValidator<AddBlogPostDto> _addValidator;
@@ -24,7 +26,7 @@ public class BlogPostsController : ControllerBase
         _updateValidator = updateValidator;
         _blogPostPortfolioService = blogPostPortfolioService;
     }
-
+    [AuthorizeRoles("admin")]
     [HttpPost("/add-blog-post")]
     public async Task<IActionResult> AddBlogPostAsync([FromBody] AddBlogPostDto dto)
     {
@@ -52,7 +54,7 @@ public class BlogPostsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-
+    [AuthorizeRoles("admin")]
     [HttpGet("/all-blog-posts")]
     public async Task<IActionResult> GetAllBlogPosts()
     {
@@ -72,7 +74,7 @@ public class BlogPostsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-
+    [AllowAnonymousManuel]
     [HttpGet("/home-blog-posts")]
     public async Task<IActionResult> GetHomeBlogPosts()
     {
@@ -92,8 +94,7 @@ public class BlogPostsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-
-
+    [AuthorizeRoles("admin")]
     [HttpGet("/blog-post-{id:int}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
     {
@@ -123,7 +124,7 @@ public class BlogPostsController : ControllerBase
             return StatusCode(500,$"Beklenmedik bir hata oluştu: {ex.Message}");
         }
     }
-
+    [AllowAnonymousManuel]
 	[HttpGet("/portfolio-blog-post-{id:int}")]
 	public async Task<IActionResult> GetByIdPortfolioAsync([FromRoute] int id)
 	{
@@ -153,8 +154,8 @@ public class BlogPostsController : ControllerBase
 			return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
 		}
 	}
-
-	[HttpPut("/update-blog-post")]
+    [AuthorizeRoles("admin")]
+    [HttpPut("/update-blog-post")]
     public async Task<IActionResult> UpdateBlogPostAsync([FromBody] UpdateBlogPostDto dto)
     {
         try
@@ -187,7 +188,7 @@ public class BlogPostsController : ControllerBase
         }
 
     }
-
+    [AuthorizeRoles("admin")]
     [HttpDelete("/delete-blog-post-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
@@ -218,7 +219,7 @@ public class BlogPostsController : ControllerBase
             return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
         }
     }
-
+    [AuthorizeRoles("admin")]
     [HttpGet("/change-blog-post-visibility-{id:int}")]
     public async Task<IActionResult> ChangeVisibilityAsync([FromRoute] int id)
     {

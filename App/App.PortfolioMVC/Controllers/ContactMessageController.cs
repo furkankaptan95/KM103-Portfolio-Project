@@ -1,9 +1,11 @@
-﻿using App.DTOs.ContactMessageDtos.Portfolio;
+﻿using App.Core;
+using App.DTOs.ContactMessageDtos.Portfolio;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.PortfolioMVC.Controllers;
+[AllowAnonymousManuel]
 public class ContactMessageController(IContactMessagePortfolioService contactMessageService) : Controller
 {
     [HttpPost]

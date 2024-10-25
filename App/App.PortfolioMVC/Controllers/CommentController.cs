@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace App.PortfolioMVC.Controllers;
 public class CommentController(ICommentPortfolioService commentService) : Controller
 {
+    [AllowAnonymousManuel]
     [HttpPost]
     public async Task<IActionResult> AddUnsignedComment([FromForm]UnSignedAddCommentViewModel model)
     {
@@ -36,7 +37,7 @@ public class CommentController(ICommentPortfolioService commentService) : Contro
         return Redirect($"/blog-post-{model.BlogPostId}");
     }
 
-    [AllowAnonymousManuel]
+    [AuthorizeRoles("admin", "commenter")]
     [HttpPost]
     public async Task<IActionResult> AddSignedComment([FromForm] SignedAddCommentViewModel model)
     {
