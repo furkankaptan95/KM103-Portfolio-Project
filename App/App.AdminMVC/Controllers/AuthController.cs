@@ -28,7 +28,7 @@ public class AuthController(IAuthService authService) : Controller
         try
         {
 
-            var dto = new LoginDto(model.Email, model.Password);
+            var dto = new LoginDto(model.Email, model.Password,true);
 
             var result = await authService.LoginAsync(dto);
 

@@ -1,4 +1,5 @@
-﻿using App.Services;
+﻿using App.Core;
+using App.Services;
 using App.Services.AuthService.Abstract;
 using App.Services.AuthService.Concrete;
 using App.Services.PortfolioServices.Abstract;
@@ -20,7 +21,8 @@ public static class PortfolioMvcServicesRegistration
         services.AddHttpClient("dataApi", c =>
         {
             c.BaseAddress = new Uri(dataApiUrl);
-        });
+        })
+         .AddHttpMessageHandler<AuthCookiesHandler>();
 
         var fileApiUrl = configuration.GetValue<string>("FileApiUrl");
 
@@ -45,6 +47,8 @@ public static class PortfolioMvcServicesRegistration
         {
             c.BaseAddress = new Uri(authApiUrl);
         });
+
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
         services.AddScoped<IAboutMePortfolioService, AboutMePortfolioService>();
         services.AddScoped<IBlogPostPortfolioService, BlogPostPortfolioService>();

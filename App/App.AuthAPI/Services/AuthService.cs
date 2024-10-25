@@ -71,8 +71,17 @@ public class AuthService : IAuthService
     {
         try
         {
-            var user = await _authApiDb.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+            UserEntity? user;
 
+            if (loginDto.IsAdmin)
+            {
+                user = await _authApiDb.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(u => u.Email == loginDto.Email && u.Role == "admin");
+            }
+            else
+            {
+                user = await _authApiDb.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+            }
+            
             if (user == null)
             {
                 return Result.NotFound();

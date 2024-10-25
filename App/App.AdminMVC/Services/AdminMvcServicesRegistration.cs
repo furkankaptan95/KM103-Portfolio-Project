@@ -1,4 +1,5 @@
-﻿using App.Middlewares;
+﻿using App.Core;
+using App.Middlewares;
 using App.Services.AdminServices.Abstract;
 using App.Services.AuthService.Abstract;
 using App.Services.AuthService.Concrete;
@@ -20,7 +21,8 @@ public static class AdminMvcServicesRegistration
         services.AddHttpClient("dataApi", c =>
         {
             c.BaseAddress = new Uri(dataApiUrl);
-        });
+        })
+        .AddHttpMessageHandler<AuthCookiesHandler>();
 
         var fileApiUrl = configuration.GetValue<string>("FileApiUrl");
 
@@ -45,6 +47,8 @@ public static class AdminMvcServicesRegistration
         {
             c.BaseAddress = new Uri(authApiUrl);
         });
+
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
         services.AddScoped<IAboutMeAdminService, AboutMeService>();
         services.AddScoped<IBlogPostAdminService, BlogPostService>();

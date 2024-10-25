@@ -4,8 +4,6 @@ using App.Services.AuthService.Abstract;
 using App.ViewModels.AuthViewModels;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
 
 namespace App.PortfolioMVC.Controllers;
 
@@ -30,7 +28,7 @@ public class AuthController(IAuthService authService) : Controller
         try
         {
 
-            var dto = new LoginDto(model.Email, model.Password);
+            var dto = new LoginDto(model.Email, model.Password,false);
 
             var result = await authService.LoginAsync(dto);
 
