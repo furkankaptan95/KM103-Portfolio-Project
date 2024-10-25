@@ -14,7 +14,7 @@ public static class AdminMvcServicesRegistration
         services.AddHttpContextAccessor();
 
         // AuthCookiesHandler ekleme
-        services.AddScoped<AuthCookiesHandler>();
+        services.AddScoped<AuthorizationService>();
 
         // API URL'lerini kontrol et ve HttpClient yapılandır
         ConfigureHttpClients(services, configuration);

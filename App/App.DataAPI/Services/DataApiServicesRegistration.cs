@@ -28,6 +28,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using App.Services.AuthService.Concrete;
 using App.DataAPI.Services.PortfolioServices;
+using App.Core;
 
 namespace App.DataApi.Services;
 public static class DataApiServicesRegistration
@@ -54,7 +55,8 @@ public static class DataApiServicesRegistration
         // DbContext yapılandırması
         ConfigureDbContext(services, configuration);
 
-        // HttpClient yapılandırmaları
+        services.AddScoped<AuthorizationService>();
+
         ConfigureHttpClients(services, configuration);
 
         // Scoped hizmetler

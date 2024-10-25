@@ -1,39 +1,34 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace App.Core
+namespace App.Core;
+
+public class AuthorizeRolesAttribute : Attribute, IAuthorizationFilter
 {
-    public class AuthorizeRolesAttribute : Attribute, IAuthorizationFilter
+    private readonly string[] _roles;
+
+    public AuthorizeRolesAttribute(params string[] roles)
     {
-        private readonly string[] _roles;
+        _roles = roles;
+    }
+    public void OnAuthorization(AuthorizationFilterContext context)
+    {
+        var serviceProvider = context.HttpContext.RequestServices;
+        var authorizationService = serviceProvider.GetService<AuthorizationService>();
 
-        public AuthorizeRolesAttribute(params string[] roles)
+        if (authorizationService != null)
         {
-            _roles = roles;
-        }
+            var statusCode = authorizationService.GetAuthorizationStatus(_roles);
 
-        public void OnAuthorization(AuthorizationFilterContext context)
-        {
-            // IHttpContextAccessor'ı burada doğrudan erişin
-            var httpContextAccessor = context.HttpContext.RequestServices.GetService(typeof(IHttpContextAccessor)) as IHttpContextAccessor;
-            var user = httpContextAccessor?.HttpContext?.User;
-
-            if (user == null || !user.Identity.IsAuthenticated)
+            if (statusCode == StatusCodes.Status401Unauthorized)
             {
-                context.Result = new RedirectToActionResult("Login", "Auth", null);
-                return;
+                context.Result = new StatusCodeResult(StatusCodes.Status401Unauthorized);
             }
-
-            var userRoles = user.Claims
-                .Where(c => c.Type == "role")
-                .Select(c => c.Value)
-                .ToList();
-
-            if (!_roles.Intersect(userRoles).Any())
+            else if (statusCode == StatusCodes.Status403Forbidden)
             {
-                context.Result = new RedirectToActionResult("AccessDenied", "Home", null);
+                context.Result = new StatusCodeResult(StatusCodes.Status403Forbidden);
             }
         }
     }

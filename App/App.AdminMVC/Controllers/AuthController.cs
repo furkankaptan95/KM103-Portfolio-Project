@@ -136,9 +136,10 @@ public class AuthController(IAuthService authService) : Controller
             TempData["ErrorMessage"] = "Email adresiniz doğrulanamadı. Tekrar deneyebilirsiniz.";
             return RedirectToAction(nameof(ForgotPassword));
         }
+
         try
         {
-            var dto = new RenewPasswordDto(email, token);
+            var dto = new RenewPasswordDto(email, token,true);
 
             var result = await authService.RenewPasswordEmailAsync(dto);
 

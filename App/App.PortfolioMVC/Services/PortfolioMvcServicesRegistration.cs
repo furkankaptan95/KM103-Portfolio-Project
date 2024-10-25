@@ -2,6 +2,7 @@
 using App.Services.AuthService.Abstract;
 using App.Services.AuthService.Concrete;
 using App.Services.PortfolioServices.Abstract;
+using System.Net;
 
 namespace App.PortfolioMVC.Services;
 
@@ -13,7 +14,8 @@ public static class PortfolioMvcServicesRegistration
 
         // HttpContextAccessor kaydı
         services.AddHttpContextAccessor();
-        services.AddScoped<AuthCookiesHandler>();
+
+        services.AddScoped<AuthorizationService>();
 
         ConfigureHttpClients(services, configuration);
         RegisterScopedServices(services);
@@ -33,7 +35,32 @@ public static class PortfolioMvcServicesRegistration
         {
             c.BaseAddress = new Uri(dataApiUrl);
         })
-        .AddHttpMessageHandler<AuthCookiesHandler>();
+           .ConfigurePrimaryHttpMessageHandler(() =>
+           {
+               var handler = new HttpClientHandler();
+
+               // CookieContainer oluştur
+               var cookieContainer = new CookieContainer();
+
+               // HttpContext'ten cookie'leri al
+               var httpContextAccessor = services.BuildServiceProvider().GetRequiredService<IHttpContextAccessor>();
+               var jwtToken = httpContextAccessor.HttpContext?.Request.Cookies["JwtToken"];
+               var refreshToken = httpContextAccessor.HttpContext?.Request.Cookies["RefreshToken"];
+
+               // Cookie'leri ekle
+               if (!string.IsNullOrEmpty(jwtToken))
+               {
+                   cookieContainer.Add(new Uri(dataApiUrl), new Cookie("JwtToken", jwtToken));
+               }
+
+               if (!string.IsNullOrEmpty(refreshToken))
+               {
+                   cookieContainer.Add(new Uri(dataApiUrl), new Cookie("RefreshToken", refreshToken));
+               }
+
+               handler.CookieContainer = cookieContainer; // CookieContainer'ı handler'a ekle
+               return handler;
+           });
 
         var fileApiUrl = configuration.GetValue<string>("FileApiUrl");
         if (string.IsNullOrWhiteSpace(fileApiUrl))

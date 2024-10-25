@@ -233,7 +233,17 @@ public class AuthService : IAuthService
     {
         try
         {
-            var userVerification = await _authApiDb.UserVerifications.Include(uv => uv.User).FirstOrDefaultAsync(uv => uv.User.Email == dto.Email && uv.Token == dto.Token);
+            UserVerificationEntity? userVerification;
+
+            if(dto.IsAdmin  == true)
+            {
+                userVerification = await _authApiDb.UserVerifications.Include(uv => uv.User).FirstOrDefaultAsync(uv => uv.User.Email == dto.Email && uv.Token == dto.Token && uv.User.Role == "admin");
+            }
+            else
+            {
+                userVerification = await _authApiDb.UserVerifications.Include(uv => uv.User).FirstOrDefaultAsync(uv => uv.User.Email == dto.Email && uv.Token == dto.Token);
+            }
+            
 
             if (userVerification == null || userVerification.Expiration < DateTime.UtcNow)
             {
