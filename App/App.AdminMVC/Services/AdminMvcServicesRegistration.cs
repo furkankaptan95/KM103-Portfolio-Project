@@ -11,6 +11,10 @@ public static class AdminMvcServicesRegistration
     {
         services.AddControllersWithViews();
 
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+        services.AddTransient<AuthCookiesHandler>();
+
         var dataApiUrl = configuration.GetValue<string>("DataApiUrl");
 
         if (string.IsNullOrWhiteSpace(dataApiUrl))
@@ -48,7 +52,7 @@ public static class AdminMvcServicesRegistration
             c.BaseAddress = new Uri(authApiUrl);
         });
 
-        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        
 
         services.AddScoped<IAboutMeAdminService, AboutMeService>();
         services.AddScoped<IBlogPostAdminService, BlogPostService>();
