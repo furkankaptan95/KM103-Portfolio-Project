@@ -1,4 +1,5 @@
-﻿using App.DTOs.AboutMeDtos;
+﻿using App.Core;
+using App.DTOs.AboutMeDtos;
 using App.DTOs.AboutMeDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
@@ -10,6 +11,7 @@ namespace App.DataAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+
 public class AboutMeController : ControllerBase
 {
     private readonly IAboutMeAdminService _aboutMeAdminService;
@@ -23,7 +25,7 @@ public class AboutMeController : ControllerBase
         _updateValidator = updateValidator;
         _aboutMePortfolioService = aboutMePortfolioService;
     }
-
+    [AuthorizeRoles("admin")]
     [HttpGet("/check-about-me")]
     public async Task<IActionResult> CheckAboutMeAsync()
     {
@@ -43,7 +45,7 @@ public class AboutMeController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-
+    [AuthorizeRoles("admin")]
     [HttpGet("/get-about-me")]
     public async Task<IActionResult> GetAboutMeAsync()
     {
@@ -67,7 +69,7 @@ public class AboutMeController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-
+    [AllowAnonymousManuel]
     [HttpGet("/portfolio-get-about-me")]
     public async Task<IActionResult> GetAboutMePortfolioAsync()
     {
@@ -91,7 +93,7 @@ public class AboutMeController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-
+    [AuthorizeRoles("admin")]
     [HttpPost("/add-about-me")]
     public async Task<IActionResult> AddAboutMeAsync([FromBody] AddAboutMeApiDto dto)
     {
@@ -121,7 +123,7 @@ public class AboutMeController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-
+    [AuthorizeRoles("admin")]
     [HttpPut("/update-about-me")]
     public async Task<IActionResult> UpdateAboutMeAsync([FromBody] UpdateAboutMeApiDto dto)
     {

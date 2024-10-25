@@ -1,4 +1,5 @@
-﻿using App.DTOs.CommentDtos.Portfolio;
+﻿using App.Core;
+using App.DTOs.CommentDtos.Portfolio;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
@@ -23,6 +24,8 @@ public class CommentsController : ControllerBase
         _addCommentUnsignedDtoValidator = addCommentUnsignedDtoValidator;
     }
 
+    [AuthorizeRoles("admin")]
+
     [HttpGet("/all-comments")]
     public async Task<IActionResult> GetAllAsync()
     {
@@ -44,6 +47,7 @@ public class CommentsController : ControllerBase
         }
     }
 
+    [AuthorizeRoles("admin")]
     [HttpDelete("/delete-comment-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
@@ -74,7 +78,7 @@ public class CommentsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-
+    [AuthorizeRoles("admin")]
     [HttpGet("/(not)-approve-comment-{id:int}")]
     public async Task<IActionResult> ApproveNotApproveAsync([FromRoute] int id)
     {
@@ -103,7 +107,7 @@ public class CommentsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-
+    [AuthorizeRoles("admin")]
     [HttpGet("/get-users-comments-{id:int}")]
     public async Task<IActionResult> GetUsersCommentsAsync([FromRoute] int id)
     {
@@ -129,7 +133,7 @@ public class CommentsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-
+    [AllowAnonymousManuel]
     [HttpPost("/add-comment-unsigned")]
     public async Task<IActionResult> AddUnsignedAsync([FromBody] AddCommentUnsignedDto dto)
     {
@@ -158,7 +162,7 @@ public class CommentsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-
+    [AuthorizeRoles("admin", "commenter")]
     [HttpPost("/add-comment-signed")]
     public async Task<IActionResult> AddSignedAsync([FromBody] AddCommentSignedDto dto)
     {
