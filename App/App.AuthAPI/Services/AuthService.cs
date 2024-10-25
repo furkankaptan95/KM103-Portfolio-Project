@@ -32,7 +32,16 @@ public class AuthService : IAuthService
     {
         try
         {
-            var emailToRenewPassword = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == forgotPasswordDto.Email);
+            UserEntity? emailToRenewPassword;
+
+            if (forgotPasswordDto.IsAdmin == true)
+            {
+                emailToRenewPassword = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == forgotPasswordDto.Email && u.Role == "admin");
+            }
+            else
+            {
+                emailToRenewPassword = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == forgotPasswordDto.Email);
+            }
 
             if (emailToRenewPassword is null)
             {

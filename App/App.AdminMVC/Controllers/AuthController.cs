@@ -105,7 +105,7 @@ public class AuthController(IAuthService authService) : Controller
             var request = HttpContext.Request;
             string url = $"{request.Scheme}://{request.Host}";
 
-            var dto = new ForgotPasswordDto(model.Email, url);
+            var dto = new ForgotPasswordDto(model.Email, url,true);
 
             var result = await authService.ForgotPasswordAsync(dto);
 
