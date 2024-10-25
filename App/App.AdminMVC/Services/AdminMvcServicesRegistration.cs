@@ -13,7 +13,7 @@ public static class AdminMvcServicesRegistration
 
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-        services.AddTransient<AuthCookiesHandler>();
+        services.AddScoped<AuthCookiesHandler>();
 
         var dataApiUrl = configuration.GetValue<string>("DataApiUrl");
 

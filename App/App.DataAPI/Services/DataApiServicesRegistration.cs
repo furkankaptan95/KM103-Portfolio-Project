@@ -23,6 +23,8 @@ using App.DTOs.PersonalInfoDtos.Admin;
 using App.DTOs.ProjectDtos;
 using App.DTOs.ProjectDtos.Admin;
 using App.Services.AdminServices.Abstract;
+using App.Services.AuthService.Abstract;
+using App.Services.AuthService.Concrete;
 using App.Services.PortfolioServices.Abstract;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -73,7 +75,7 @@ public static class DataApiServicesRegistration
         services.AddScoped<IProjectAdminService, ProjectAdminService>();
         services.AddScoped<IHomeAdminService, HomeAdminService>();
         services.AddScoped<IContactMessageAdminService, ContactMessageAdminService>();
-
+        services.AddScoped<IAuthService, AuthService>();
 
 
         services.AddScoped<IAboutMePortfolioService, AboutMePortfolioService>();
