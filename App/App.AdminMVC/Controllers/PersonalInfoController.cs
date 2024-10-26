@@ -1,6 +1,4 @@
-﻿using App.AdminMVC.Services;
-using App.Core;
-using App.Core.Authorization;
+﻿using App.Core.Authorization;
 using App.DTOs.PersonalInfoDtos;
 using App.DTOs.PersonalInfoDtos.Admin;
 using App.Services.AdminServices.Abstract;

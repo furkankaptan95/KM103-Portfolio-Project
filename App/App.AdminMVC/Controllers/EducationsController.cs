@@ -1,5 +1,4 @@
-﻿using App.Core;
-using App.Core.Authorization;
+﻿using App.Core.Authorization;
 using App.DTOs.EducationDtos;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.EducationsViewModels;

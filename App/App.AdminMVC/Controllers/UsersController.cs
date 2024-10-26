@@ -1,5 +1,4 @@
-﻿using App.Core;
-using App.Core.Authorization;
+﻿using App.Core.Authorization;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.CommentsViewModels;
 using App.ViewModels.AdminMvc.UsersViewModels;

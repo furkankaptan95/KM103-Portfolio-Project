@@ -9,17 +9,13 @@ public static class AdminMvcServicesRegistration
 {
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Temel hizmetler
         services.AddControllersWithViews();
         services.AddHttpContextAccessor();
 
-        // AuthCookiesHandler ekleme
         services.AddScoped<AuthorizationService>();
 
-        // API URL'lerini kontrol et ve HttpClient yapılandır
         ConfigureHttpClients(services, configuration);
 
-        // Scoped hizmetleri ekleme
         RegisterScopedServices(services);
 
         return services;
@@ -27,7 +23,6 @@ public static class AdminMvcServicesRegistration
 
     private static void ConfigureHttpClients(IServiceCollection services, IConfiguration configuration)
     {
-        // Data API Client
         var dataApiUrl = configuration.GetValue<string>("DataApiUrl");
         if (string.IsNullOrWhiteSpace(dataApiUrl))
         {
@@ -64,7 +59,7 @@ public static class AdminMvcServicesRegistration
              return handler;
          });
 
-        // File API Client
+        
         var fileApiUrl = configuration.GetValue<string>("FileApiUrl");
         if (string.IsNullOrWhiteSpace(fileApiUrl))
         {
@@ -75,7 +70,7 @@ public static class AdminMvcServicesRegistration
             c.BaseAddress = new Uri(fileApiUrl);
         });
 
-        // Auth API Client
+        
         var authApiUrl = configuration.GetValue<string>("AuthApiUrl");
         if (string.IsNullOrWhiteSpace(authApiUrl))
         {
