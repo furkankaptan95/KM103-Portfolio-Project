@@ -38,6 +38,7 @@ public class CommentController(ICommentPortfolioService commentService) : Contro
     }
 
     [AuthorizeRolesMvc("admin", "commenter")]
+    [PostComment]
     [HttpPost]
     public async Task<IActionResult> AddSignedComment([FromForm] SignedAddCommentViewModel model)
     {
