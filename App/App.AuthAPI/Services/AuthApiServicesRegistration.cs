@@ -16,6 +16,7 @@ namespace App.AuthAPI.Services
             // CORS yapılandırması
             ConfigureCors(services);
 
+            services.AddHttpContextAccessor();
             // Temel yapılandırmalar
             services.AddControllers();
             services.AddEndpointsApiExplorer();

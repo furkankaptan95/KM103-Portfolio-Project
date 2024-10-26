@@ -1,6 +1,13 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     Layout = null;
+    var userId = User.Claims.First(claim => claim.Type == "sub").Value;
+    var email = User.Claims.First(claim => claim.Type == "email").Value;
+    var username = User.Claims.First(claim => claim.Type == "name").Value;
+    var profileImageUrl = User.FindFirst("user-img")?.Value ?? "default-user-img.png";
 }
+
+   
 
 <!DOCTYPE html>
 <html lang="en">
@@ -70,7 +77,7 @@
 <body>
     <div class="profile-container">
         <div class="text-center">
-            <img src="https://via.placeholder.com/120" alt="Profil Resmi" class="profile-pic" id="profilePicture">
+            <img src="~/images/@profileImageUrl" alt="Profil Resmi" class="profile-pic" id="profilePicture">
             <div class="btn-container">
                 <button class="btn btn-sm btn-outline-light add-btn" id="editProfilePicBtn">Ekle/Düzenle</button>
             </div>
@@ -78,28 +85,14 @@
 
         <div class="info-container">
             <div class="label">Kullanıcı Adı:</div>
-            <div id="username">Kullanıcı Adı</div>
+            <div id="username">@username</div>
             <button class="btn btn-sm btn-outline-light edit-btn" id="editUsernameBtn">Düzenle</button>
         </div>
 
         <div class="info-container">
             <div class="label">Email:</div>
-            <div id="email">email@example.com</div>
+            <div id="email">@email</div>
         </div>
     </div>
-
-    <script>
-        const profilePic = document.getElementById("profilePicture");
-        const editProfilePicBtn = document.getElementById("editProfilePicBtn");
-        const editUsernameBtn = document.getElementById("editUsernameBtn");
-
-        editProfilePicBtn.addEventListener("click", () => {
-            alert("Profil resmini düzenleme işlemi başlatıldı!");
-        });
-
-        editUsernameBtn.addEventListener("click", () => {
-            alert("Kullanıcı adını düzenleme işlemi başlatıldı!");
-        });
-    </script>
 </body>
 </html>

@@ -9,16 +9,16 @@ using System.Security.Claims;
 
 namespace App.PortfolioMVC.Controllers;
 
-[AllowAnonymousManuel]
+
 public class AuthController(IAuthService authService) : Controller
 {
-
+    [AllowAnonymousManuel]
     [HttpGet]
     public async Task<IActionResult> Login()
     {
         return View();
     }
-
+    [AllowAnonymousManuel]
     [HttpPost]
     public async Task<IActionResult> Login([FromForm] LoginViewModel model)
     {
@@ -86,19 +86,20 @@ public class AuthController(IAuthService authService) : Controller
             return View(model);
         }
     }
-
+    [AuthorizeRolesMvc("admin","commenter")]
     [HttpGet]
     public IActionResult MyProfile()
     {
         return View();
     }
 
+    [AllowAnonymousManuel]
     [HttpGet]
     public async Task<IActionResult> Register()
     {
         return View();
     }
-
+    [AllowAnonymousManuel]
     [HttpPost]
     public async Task<IActionResult> Register([FromForm] RegisterViewModel registerModel)
     {
@@ -126,7 +127,7 @@ public class AuthController(IAuthService authService) : Controller
 
         return RedirectToAction(nameof(Login));
     }
-
+    [AllowAnonymousManuel]
     [HttpGet("verify-email")]
     public async Task<IActionResult> VerifyEmail([FromQuery] string email, string token)
     {
@@ -143,13 +144,13 @@ public class AuthController(IAuthService authService) : Controller
 
         return RedirectToAction(nameof(Login));
     }
-
+    [AllowAnonymousManuel]
     [HttpGet]
     public async Task<IActionResult> ForgotPassword()
     {
         return View();
     }
-
+    [AllowAnonymousManuel]
     [HttpPost]
     public async Task<IActionResult> ForgotPassword([FromForm] ForgotPasswordViewModel model)
     {
@@ -185,7 +186,7 @@ public class AuthController(IAuthService authService) : Controller
         }
 
     }
-
+    [AllowAnonymousManuel]
     [HttpGet("renew-password")]
     public async Task<IActionResult> RenewPassword([FromQuery] string email, string token)
     {
@@ -222,7 +223,7 @@ public class AuthController(IAuthService authService) : Controller
         }
 
     }
-
+    [AllowAnonymousManuel]
     [HttpPost("renew-password")]
     public async Task<IActionResult> RenewPassword([FromForm] NewPasswordViewModel model)
     {
@@ -252,7 +253,7 @@ public class AuthController(IAuthService authService) : Controller
             return RedirectToAction(nameof(ForgotPassword));
         }
     }
-
+    [AllowAnonymousManuel]
     [HttpGet]
     public async Task<IActionResult> LogOut()
     {

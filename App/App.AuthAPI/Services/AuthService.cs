@@ -21,11 +21,13 @@ public class AuthService : IAuthService
     private readonly AuthApiDbContext _authApiDb;
     private readonly IConfiguration _configuration;
     private readonly IEmailService _emailService;
-    public AuthService(AuthApiDbContext authApiDb, IConfiguration configuration, IEmailService emailService)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public AuthService(AuthApiDbContext authApiDb, IConfiguration configuration, IEmailService emailService, IHttpContextAccessor httpContextAccessor)
     {
         _authApiDb = authApiDb;
         _configuration = configuration;
         _emailService = emailService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<Result> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
@@ -386,7 +388,9 @@ public class AuthService : IAuthService
            {
                 new Claim(JwtClaimTypes.Subject,user.Id.ToString()),
                 new Claim(JwtClaimTypes.Email,user.Email),
-                new Claim(JwtClaimTypes.Role, user.Role)
+                new Claim(JwtClaimTypes.Role, user.Role),
+                new Claim(JwtClaimTypes.Name,user.Username),
+                new Claim("user-img", user.ImageUrl ?? "default-image-url"),
             };
 
         var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
