@@ -22,21 +22,6 @@ app.UseMiddleware<MvcJwtMiddleware>();
 
 app.UseAuthorization();
 
-app.UseStatusCodePages(context =>
-{
-    var response = context.HttpContext.Response;
-    if (response.StatusCode == StatusCodes.Status401Unauthorized)
-    {
-        response.Redirect("/Auth/Login");
-    }
-    else if (response.StatusCode == StatusCodes.Status403Forbidden)
-    {
-        response.Redirect("/Home/AccessDenied");
-    }
-    return Task.CompletedTask;
-});
-
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

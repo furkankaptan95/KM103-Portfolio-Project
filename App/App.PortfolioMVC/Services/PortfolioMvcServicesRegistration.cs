@@ -12,7 +12,6 @@ public static class PortfolioMvcServicesRegistration
     {
         services.AddControllersWithViews();
 
-        // HttpContextAccessor kaydı
         services.AddHttpContextAccessor();
 
         services.AddScoped<AuthorizationService>();
