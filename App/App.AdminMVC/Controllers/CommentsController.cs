@@ -1,11 +1,11 @@
-﻿using App.Core;
+﻿using App.Core.Authorization;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.CommentsViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 
-[AuthorizeRoles("admin")]
+[AuthorizeRolesMvc("admin")]
 public class CommentsController(ICommentAdminService commentService) : Controller
 {
     [HttpGet]

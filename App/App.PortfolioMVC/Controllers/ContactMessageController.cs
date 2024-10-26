@@ -1,4 +1,4 @@
-﻿using App.Core;
+﻿using App.Core.Authorization;
 using App.DTOs.ContactMessageDtos.Portfolio;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc;

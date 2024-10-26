@@ -1,4 +1,4 @@
-﻿using App.Core;
+﻿using App.Core.Authorization;
 using App.DTOs.AboutMeDtos;
 using App.DTOs.AboutMeDtos.Admin;
 using App.Services.AdminServices.Abstract;
@@ -25,7 +25,7 @@ public class AboutMeController : ControllerBase
         _updateValidator = updateValidator;
         _aboutMePortfolioService = aboutMePortfolioService;
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpGet("/check-about-me")]
     public async Task<IActionResult> CheckAboutMeAsync()
     {
@@ -45,7 +45,7 @@ public class AboutMeController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpGet("/get-about-me")]
     public async Task<IActionResult> GetAboutMeAsync()
     {
@@ -93,7 +93,7 @@ public class AboutMeController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpPost("/add-about-me")]
     public async Task<IActionResult> AddAboutMeAsync([FromBody] AddAboutMeApiDto dto)
     {
@@ -123,7 +123,7 @@ public class AboutMeController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpPut("/update-about-me")]
     public async Task<IActionResult> UpdateAboutMeAsync([FromBody] UpdateAboutMeApiDto dto)
     {

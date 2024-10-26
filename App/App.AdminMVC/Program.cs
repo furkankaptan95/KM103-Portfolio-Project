@@ -18,7 +18,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseMiddleware<JwtMiddleware>();
+app.UseMiddleware<MvcJwtMiddleware>();
 
 app.UseAuthorization();
 

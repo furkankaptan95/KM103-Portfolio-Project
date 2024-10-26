@@ -1,4 +1,4 @@
-﻿using App.Core;
+﻿using App.Core.Authorization;
 using App.DTOs.EducationDtos;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.EducationsViewModels;
@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 
-[AuthorizeRoles("admin")]
+[AuthorizeRolesMvc("admin")]
 public class EducationsController(IEducationAdminService educationService) : Controller
 {
 

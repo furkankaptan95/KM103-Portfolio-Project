@@ -32,7 +32,16 @@ public class AuthService : IAuthService
     {
         try
         {
-            var emailToRenewPassword = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == forgotPasswordDto.Email);
+            UserEntity? emailToRenewPassword;
+
+            if (forgotPasswordDto.IsAdmin == true)
+            {
+                emailToRenewPassword = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == forgotPasswordDto.Email && u.Role == "admin");
+            }
+            else
+            {
+                emailToRenewPassword = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == forgotPasswordDto.Email);
+            }
 
             if (emailToRenewPassword is null)
             {
@@ -233,7 +242,17 @@ public class AuthService : IAuthService
     {
         try
         {
-            var userVerification = await _authApiDb.UserVerifications.Include(uv => uv.User).FirstOrDefaultAsync(uv => uv.User.Email == dto.Email && uv.Token == dto.Token);
+            UserVerificationEntity? userVerification;
+
+            if(dto.IsAdmin  == true)
+            {
+                userVerification = await _authApiDb.UserVerifications.Include(uv => uv.User).FirstOrDefaultAsync(uv => uv.User.Email == dto.Email && uv.Token == dto.Token && uv.User.Role == "admin");
+            }
+            else
+            {
+                userVerification = await _authApiDb.UserVerifications.Include(uv => uv.User).FirstOrDefaultAsync(uv => uv.User.Email == dto.Email && uv.Token == dto.Token);
+            }
+            
 
             if (userVerification == null || userVerification.Expiration < DateTime.UtcNow)
             {
@@ -290,6 +309,14 @@ public class AuthService : IAuthService
             if (parts.Length != 3)
             {
                 return Result.Error("JWT formatı hatalı");
+            }
+
+
+            // Geçerlilik ve imza kontrolü için JWT işleyici
+            var handler = new JwtSecurityTokenHandler();
+            if (!handler.CanReadToken(token))
+            {
+                return Result.Error("Token okunamıyor veya geçersiz formatta.");
             }
 
             var header = parts[0];

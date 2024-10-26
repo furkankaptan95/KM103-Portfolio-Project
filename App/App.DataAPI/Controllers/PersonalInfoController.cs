@@ -1,4 +1,4 @@
-﻿using App.Core;
+﻿using App.Core.Authorization;
 using App.DTOs.PersonalInfoDtos;
 using App.DTOs.PersonalInfoDtos.Admin;
 using App.Services.AdminServices.Abstract;
@@ -25,7 +25,7 @@ public class PersonalInfoController : ControllerBase
         _personalInfoPortfolioService = personalInfoPortfolioService;
     }
 
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpGet("/check-personal-info")]
     public async Task<IActionResult> CheckPersonalInfoAsync()
     {
@@ -46,7 +46,7 @@ public class PersonalInfoController : ControllerBase
         }
     }
 
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpPost("/add-personal-info")]
     public async Task<IActionResult> AddAsync([FromBody] AddPersonalInfoDto dto)
     {
@@ -75,7 +75,7 @@ public class PersonalInfoController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpGet("/get-personal-info")]
     public async Task<IActionResult> GetAsync()
     {
@@ -125,7 +125,7 @@ public class PersonalInfoController : ControllerBase
 			return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
 		}
 	}
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpPut("/update-personal-info")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdatePersonalInfoDto dto)
     {

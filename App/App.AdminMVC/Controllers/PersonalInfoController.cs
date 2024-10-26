@@ -1,5 +1,4 @@
-﻿using App.AdminMVC.Services;
-using App.Core;
+﻿using App.Core.Authorization;
 using App.DTOs.PersonalInfoDtos;
 using App.DTOs.PersonalInfoDtos.Admin;
 using App.Services.AdminServices.Abstract;
@@ -9,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 
-[AuthorizeRoles("admin")]
+[AuthorizeRolesMvc("admin")]
 public class PersonalInfoController(IPersonalInfoAdminService personalInfoService) : Controller
 {
     [HttpGet]

@@ -1,5 +1,4 @@
-﻿using App.Core;
-using App.DataAPI.Services.AdminServices;
+﻿using App.Core.Authorization;
 using App.DTOs.ContactMessageDtos.Admin;
 using App.DTOs.ContactMessageDtos.Portfolio;
 using App.Services.AdminServices.Abstract;
@@ -56,7 +55,7 @@ public class ContactMessageController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpGet("/all-contact-messages")]
     public async Task<IActionResult> GetAllAsync()
     {
@@ -77,7 +76,7 @@ public class ContactMessageController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpGet("/get-contact-message-{id:int}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
     {
@@ -111,7 +110,7 @@ public class ContactMessageController : ControllerBase
             return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
         }
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpPut("/reply-contact-message")]
     public async Task<IActionResult> ReplyAsync([FromBody] ReplyContactMessageDto dto)
     {
@@ -145,7 +144,7 @@ public class ContactMessageController : ControllerBase
         }
 
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpGet("/make-message-read-{id:int}")]
     public async Task<IActionResult> MakeMessageReadAsync([FromRoute] int id)
     {

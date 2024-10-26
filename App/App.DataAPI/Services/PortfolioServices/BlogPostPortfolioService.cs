@@ -7,7 +7,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services.PortfolioServices;
-public class BlogPosPortfolioService(DataApiDbContext dataApiDb,ICommentPortfolioService commentPortfolioService) : IBlogPostPortfolioService
+public class BlogPostPortfolioService(DataApiDbContext dataApiDb,ICommentPortfolioService commentPortfolioService) : IBlogPostPortfolioService
 {
 	public async Task<Result<List<HomeBlogPostsPortfolioDto>>> GetHomeBlogPostsAsync()
 	{

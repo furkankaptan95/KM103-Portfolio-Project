@@ -1,4 +1,4 @@
-﻿using App.Core;
+﻿using App.Core.Authorization;
 using App.DTOs.AuthDtos;
 using App.Services.AuthService.Abstract;
 using App.ViewModels.AuthViewModels;
@@ -149,7 +149,7 @@ public class AuthController(IAuthService authService) : Controller
             var request = HttpContext.Request;
             string url = $"{request.Scheme}://{request.Host}";
 
-            var dto = new ForgotPasswordDto(model.Email, url);
+            var dto = new ForgotPasswordDto(model.Email, url,false);
 
             var result = await authService.ForgotPasswordAsync(dto);
 
@@ -182,7 +182,7 @@ public class AuthController(IAuthService authService) : Controller
         }
         try
         {
-            var dto = new RenewPasswordDto(email, token);
+            var dto = new RenewPasswordDto(email, token,false);
 
             var result = await authService.RenewPasswordEmailAsync(dto);
 

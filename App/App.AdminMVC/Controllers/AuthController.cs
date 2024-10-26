@@ -1,10 +1,11 @@
-﻿using App.Core;
+﻿using App.Core.Authorization;
 using App.DTOs.AuthDtos;
 using App.Services.AuthService.Abstract;
 using App.ViewModels.AuthViewModels;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace App.AdminMVC.Controllers;
 
@@ -67,6 +68,12 @@ public class AuthController(IAuthService authService) : Controller
             HttpContext.Response.Cookies.Append("JwtToken", tokens.JwtToken, jwtCookieOptions);
             HttpContext.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, refreshTokenCookieOptions);
 
+            // JWT'den ClaimsPrincipal oluştur
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadToken(tokens.JwtToken) as JwtSecurityToken;
+            var identity = new ClaimsIdentity(jwtToken?.Claims, "jwt"); // veya "Bearer"
+            HttpContext.User = new ClaimsPrincipal(identity); // Kullanıcı bilgilerini ayarla
+
             TempData["SuccessMessage"] = result.SuccessMessage;
             return Redirect("/");
         }
@@ -98,7 +105,7 @@ public class AuthController(IAuthService authService) : Controller
             var request = HttpContext.Request;
             string url = $"{request.Scheme}://{request.Host}";
 
-            var dto = new ForgotPasswordDto(model.Email, url);
+            var dto = new ForgotPasswordDto(model.Email, url,true);
 
             var result = await authService.ForgotPasswordAsync(dto);
 
@@ -129,9 +136,10 @@ public class AuthController(IAuthService authService) : Controller
             TempData["ErrorMessage"] = "Email adresiniz doğrulanamadı. Tekrar deneyebilirsiniz.";
             return RedirectToAction(nameof(ForgotPassword));
         }
+
         try
         {
-            var dto = new RenewPasswordDto(email, token);
+            var dto = new RenewPasswordDto(email, token,true);
 
             var result = await authService.RenewPasswordEmailAsync(dto);
 

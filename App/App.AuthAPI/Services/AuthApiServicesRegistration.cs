@@ -7,55 +7,84 @@ using App.Services.AuthService.Abstract;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
-namespace App.AuthAPI.Services;
-public static class AuthApiServicesRegistration
+namespace App.AuthAPI.Services
 {
-    public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
+    public static class AuthApiServicesRegistration
     {
-
-        services.AddCors(options =>
+        public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
         {
-            options.AddPolicy("AllowSpecificOrigin", builder =>
-            {
-                builder.WithOrigins("https://localhost:7071") // İzin verilen köken
-                       .AllowAnyMethod() // İzin verilen HTTP yöntemleri
-                       .AllowAnyHeader(); // İzin verilen başlıklar
-            });
-        });
+            // CORS yapılandırması
+            ConfigureCors(services);
 
-        services.AddControllers();
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+            // Temel yapılandırmalar
+            services.AddControllers();
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
 
-        var dataApiUrl = configuration.GetValue<string>("DataApiUrl");
+            // HttpClient yapılandırması
+            ConfigureHttpClient(services, configuration);
 
-        if (string.IsNullOrWhiteSpace(dataApiUrl))
-        {
-            throw new InvalidOperationException("DataApiUrl is required in appsettings.json");
+            // DbContext yapılandırması
+            ConfigureDbContext(services, configuration);
+
+            // Hizmetleri ekleme
+            ConfigureServices(services);
+
+            // Validator'ları ekleme
+            ConfigureValidators(services);
+
+            return services;
         }
 
-        services.AddHttpClient("dataApi", c =>
+        private static void ConfigureCors(IServiceCollection services)
         {
-            c.BaseAddress = new Uri(dataApiUrl);
-        });
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin", builder =>
+                {
+                    builder.WithOrigins("https://localhost:7071")
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
+        }
 
-
-        services.AddDbContext<AuthApiDbContext>(options =>
+        private static void ConfigureHttpClient(IServiceCollection services, IConfiguration configuration)
         {
-            options.UseSqlServer(configuration.GetConnectionString("AuthApiBaseDb"));
-        });
+            var dataApiUrl = configuration.GetValue<string>("DataApiUrl");
 
-        services.AddSingleton<IEmailService,SmtpEmailService>();
+            if (string.IsNullOrWhiteSpace(dataApiUrl))
+            {
+                throw new InvalidOperationException("DataApiUrl is required in appsettings.json");
+            }
 
-        services.AddScoped<IUserAdminService, AdminUserService>();
-        services.AddScoped<IAuthService, AuthService>();
+            services.AddHttpClient("dataApi", c =>
+            {
+                c.BaseAddress = new Uri(dataApiUrl);
+            });
+        }
 
-        services.AddTransient<IValidator<LoginDto>, LoginDtoValidator>();
-        services.AddTransient<IValidator<ForgotPasswordDto>, ForgotPasswordDtoValidator>();
-        services.AddTransient<IValidator<RenewPasswordDto>, RenewPasswordDtoValidator>();
-        services.AddTransient<IValidator<NewPasswordDto>, NewPasswordDtoValidator>();
+        private static void ConfigureDbContext(IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddDbContext<AuthApiDbContext>(options =>
+            {
+                options.UseSqlServer(configuration.GetConnectionString("AuthApiBaseDb"));
+            });
+        }
 
+        private static void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSingleton<IEmailService, SmtpEmailService>();
+            services.AddScoped<IUserAdminService, AdminUserService>();
+            services.AddScoped<IAuthService, AuthService>();
+        }
 
-        return services;
+        private static void ConfigureValidators(IServiceCollection services)
+        {
+            services.AddTransient<IValidator<LoginDto>, LoginDtoValidator>();
+            services.AddTransient<IValidator<ForgotPasswordDto>, ForgotPasswordDtoValidator>();
+            services.AddTransient<IValidator<RenewPasswordDto>, RenewPasswordDtoValidator>();
+            services.AddTransient<IValidator<NewPasswordDto>, NewPasswordDtoValidator>();
+        }
     }
 }
