@@ -122,7 +122,6 @@ public class AuthController(IAuthService authService) : Controller
         catch (Exception)
         {
             ViewData["ErrorMessage"] = "Şifre sıfırlama linki gönderilirken bir hata oluştu!..";
-
             return View(model);
         }
 

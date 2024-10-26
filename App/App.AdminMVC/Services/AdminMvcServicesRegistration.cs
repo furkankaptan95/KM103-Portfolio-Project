@@ -2,6 +2,8 @@
 using App.Services.AdminServices.Abstract;
 using App.Services.AuthService.Abstract;
 using App.Services.AuthService.Concrete;
+using App.ViewModels.AdminMvc.AboutMeViewModels;
+using FluentValidation;
 using System.Net;
 
 namespace App.AdminMVC.Services;
@@ -10,6 +12,7 @@ public static class AdminMvcServicesRegistration
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddControllersWithViews();
+        services.AddValidatorsFromAssemblyContaining<AddAboutMeViewModel>();
         services.AddHttpContextAccessor();
 
         services.AddScoped<AuthorizationService>();

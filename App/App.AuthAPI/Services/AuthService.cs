@@ -67,7 +67,12 @@ public class AuthService : IAuthService
             var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Şifrenizi sıfırlamak için tıklayınız.</a>";
             var emailResult = await _emailService.SendEmailAsync(emailToRenewPassword.Email, "Lütfen email adresinizi doğrulayın.", htmlMailBody);
 
-            return Result.Success();
+            if (emailResult.IsSuccess)
+            {
+                return Result.Success();
+            }
+
+            return Result.Error("Email gönderilirken bir hata oluştu.");
         }
 
         catch (Exception ex)
@@ -82,7 +87,7 @@ public class AuthService : IAuthService
         {
             UserEntity? user;
 
-            if (loginDto.IsAdmin)
+            if (loginDto.IsAdmin == true)
             {
                 user = await _authApiDb.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(u => u.Email == loginDto.Email && u.Role == "admin");
             }
