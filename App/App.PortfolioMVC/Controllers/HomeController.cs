@@ -1,4 +1,4 @@
-using App.Core;
+using App.Core.Authorization;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc;
 using Microsoft.AspNetCore.Mvc;

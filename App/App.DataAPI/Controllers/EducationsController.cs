@@ -1,4 +1,4 @@
-﻿using App.Core;
+﻿using App.Core.Authorization;
 using App.DTOs.EducationDtos;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
@@ -24,7 +24,7 @@ public class EducationsController : ControllerBase
         _updateValidator = updateValidator;
         _educationPortfolioService = educationPortfolioService;
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpGet("/all-educations")]
     public async Task<IActionResult> GetAllAsync()
     {
@@ -66,7 +66,7 @@ public class EducationsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpPost("/add-education")]
     public async Task<IActionResult> AddAsync([FromBody] AddEducationDto dto)
     {
@@ -95,7 +95,7 @@ public class EducationsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpPut("/update-education")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateEducationDto dto)
     {
@@ -129,7 +129,7 @@ public class EducationsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpGet("/get-education-{id:int}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
     {
@@ -160,7 +160,7 @@ public class EducationsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpDelete("/delete-education-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
@@ -191,7 +191,7 @@ public class EducationsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpGet("/change-education-visibility-{id:int}")]
     public async Task<IActionResult> ChangeVisibilityAsync([FromRoute] int id)
     {

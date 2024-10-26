@@ -28,7 +28,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using App.Services.AuthService.Concrete;
 using App.DataAPI.Services.PortfolioServices;
-using App.Core;
+using App.Core.Authorization;
 
 namespace App.DataApi.Services;
 public static class DataApiServicesRegistration

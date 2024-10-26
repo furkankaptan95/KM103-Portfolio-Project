@@ -1,4 +1,4 @@
-﻿using App.Core;
+﻿using App.Core.Authorization;
 using App.Services.AuthService.Abstract;
 using App.Services.AuthService.Concrete;
 using App.Services.PortfolioServices.Abstract;

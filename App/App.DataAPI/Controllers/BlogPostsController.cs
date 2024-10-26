@@ -5,7 +5,7 @@ using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-
+using App.Core.Authorization;
 
 namespace App.DataAPI.Controllers;
 
@@ -26,7 +26,7 @@ public class BlogPostsController : ControllerBase
         _updateValidator = updateValidator;
         _blogPostPortfolioService = blogPostPortfolioService;
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpPost("/add-blog-post")]
     public async Task<IActionResult> AddBlogPostAsync([FromBody] AddBlogPostDto dto)
     {
@@ -54,7 +54,7 @@ public class BlogPostsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpGet("/all-blog-posts")]
     public async Task<IActionResult> GetAllBlogPosts()
     {
@@ -94,7 +94,7 @@ public class BlogPostsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpGet("/blog-post-{id:int}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
     {
@@ -154,7 +154,7 @@ public class BlogPostsController : ControllerBase
 			return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
 		}
 	}
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpPut("/update-blog-post")]
     public async Task<IActionResult> UpdateBlogPostAsync([FromBody] UpdateBlogPostDto dto)
     {
@@ -188,7 +188,7 @@ public class BlogPostsController : ControllerBase
         }
 
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpDelete("/delete-blog-post-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
@@ -219,7 +219,7 @@ public class BlogPostsController : ControllerBase
             return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
         }
     }
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesApi("admin")]
     [HttpGet("/change-blog-post-visibility-{id:int}")]
     public async Task<IActionResult> ChangeVisibilityAsync([FromRoute] int id)
     {

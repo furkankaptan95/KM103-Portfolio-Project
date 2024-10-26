@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace App.Core;
+namespace App.Core.Authorization;
 
-public class AuthorizeRolesAttribute : Attribute, IAuthorizationFilter
+public class AuthorizeRolesApiAttribute : Attribute, IAuthorizationFilter
 {
     private readonly string[] _roles;
 
-    public AuthorizeRolesAttribute(params string[] roles)
+    public AuthorizeRolesApiAttribute(params string[] roles)
     {
         _roles = roles;
     }

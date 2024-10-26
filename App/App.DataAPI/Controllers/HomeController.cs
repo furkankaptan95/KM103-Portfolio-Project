@@ -1,4 +1,4 @@
-﻿using App.Core;
+﻿using App.Core.Authorization;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +7,7 @@ namespace App.DataAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[AuthorizeRoles("admin")]
+[AuthorizeRolesApi("admin")]
 public class HomeController(IHomeAdminService homeService) : ControllerBase
 {
     [HttpGet("/get-home-infos")]

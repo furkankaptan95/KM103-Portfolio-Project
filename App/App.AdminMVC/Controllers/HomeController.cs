@@ -1,4 +1,5 @@
 using App.Core;
+using App.Core.Authorization;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.HomeViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ public class HomeController(IHomeAdminService homeService) : Controller
         return View();
     }
 
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesMvc("admin")]
     public async Task<IActionResult> Index()
     {
         try
@@ -48,7 +49,7 @@ public class HomeController(IHomeAdminService homeService) : Controller
         }
     }
 
-    [AuthorizeRoles("admin")]
+    [AuthorizeRolesMvc("admin")]
     public IActionResult Index2()
     {
         return View();

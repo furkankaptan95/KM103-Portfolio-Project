@@ -1,4 +1,5 @@
 ﻿using App.Core;
+using App.Core.Authorization;
 using App.DTOs.ExperienceDtos;
 using App.DTOs.ExperienceDtos.Admin;
 using App.Services.AdminServices.Abstract;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 
-[AuthorizeRoles("admin")]
+[AuthorizeRolesMvc("admin")]
 public class ExperiencesController(IExperienceAdminService experienceService) : Controller
 {
     [HttpGet]

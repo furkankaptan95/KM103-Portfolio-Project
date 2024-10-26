@@ -1,4 +1,5 @@
 ﻿using App.Core;
+using App.Core.Authorization;
 using App.DTOs.ContactMessageDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.ContactMessagesViewModels;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 
-[AuthorizeRoles("admin")]
+[AuthorizeRolesMvc("admin")]
 public class ContactMessageController(IContactMessageAdminService contactMessageService) : Controller
 {
     [HttpGet]

@@ -1,4 +1,5 @@
 ﻿using App.Core;
+using App.Core.Authorization;
 using App.DTOs.AboutMeDtos;
 using App.DTOs.AboutMeDtos.Admin;
 using App.Services.AdminServices.Abstract;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 
-[AuthorizeRoles("admin")]
+[AuthorizeRolesMvc("admin")]
 public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
 {
     [HttpGet]

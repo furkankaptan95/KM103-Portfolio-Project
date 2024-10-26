@@ -1,4 +1,4 @@
-﻿using App.Core;
+﻿using App.Core.Authorization;
 using App.Services.AuthService.Abstract;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,11 +6,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace App.Middlewares;
-public class JwtMiddleware
+public class ApiJwtMiddleware
 {
     private readonly RequestDelegate _next;
 
-    public JwtMiddleware(RequestDelegate next)
+    public ApiJwtMiddleware(RequestDelegate next)
     {
         _next = next;
     }
@@ -19,7 +19,7 @@ public class JwtMiddleware
     {
 
         var authService = serviceProvider.GetService<IAuthService>();
-        
+
         var jwtToken = context.Request.Cookies["JwtToken"];
         var refreshToken = context.Request.Cookies["RefreshToken"];
 
@@ -35,14 +35,13 @@ public class JwtMiddleware
 
         if (string.IsNullOrEmpty(jwtToken) && string.IsNullOrEmpty(refreshToken))
         {
-             context.Response.Redirect("/Auth/Login");
-             return;
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return;
         }
 
         if (string.IsNullOrEmpty(jwtToken) && !string.IsNullOrEmpty(refreshToken))
         {
             await RenewTokens(context, authService, refreshToken);
-
         }
 
         if (!string.IsNullOrEmpty(jwtToken))
@@ -56,12 +55,12 @@ public class JwtMiddleware
                 }
                 else
                 {
-                    context.Response.Redirect("/Auth/Login");
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                     return;
                 }
             }
             else
-            {               
+            {
                 var isValidToken = await authService.ValidateTokenAsync(jwtToken);
 
                 if (isValidToken.IsSuccess)
@@ -86,7 +85,7 @@ public class JwtMiddleware
                     }
                     else
                     {
-                        context.Response.Redirect("/Auth/Login");
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                         return;
                     }
                 }
@@ -103,9 +102,9 @@ public class JwtMiddleware
         {
             var tokensResponse = await authService.RefreshTokenAsync(refreshToken);
 
-            if(!tokensResponse.IsSuccess)
+            if (!tokensResponse.IsSuccess)
             {
-                context.Response.Redirect("/Auth/Login");
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return;
             }
 
@@ -141,13 +140,13 @@ public class JwtMiddleware
             }
             else
             {
-                context.Response.Redirect("/Auth/Login");
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return;
             }
         }
-       catch (Exception)
+        catch (Exception)
         {
-            context.Response.Redirect("/Auth/Login");
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             return;
         }
     }
