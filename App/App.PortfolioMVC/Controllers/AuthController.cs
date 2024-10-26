@@ -88,6 +88,12 @@ public class AuthController(IAuthService authService) : Controller
     }
 
     [HttpGet]
+    public IActionResult MyProfile()
+    {
+        return View();
+    }
+
+    [HttpGet]
     public async Task<IActionResult> Register()
     {
         return View();
