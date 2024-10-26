@@ -1,5 +1,4 @@
-﻿using App.Core;
-using App.Core.Authorization;
+﻿using App.Core.Authorization;
 using App.DTOs.AboutMeDtos;
 using App.DTOs.AboutMeDtos.Admin;
 using App.Services.AdminServices.Abstract;
