@@ -4,6 +4,8 @@ using App.Services.AuthService.Abstract;
 using App.ViewModels.AuthViewModels;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace App.PortfolioMVC.Controllers;
 
@@ -66,6 +68,12 @@ public class AuthController(IAuthService authService) : Controller
 
             HttpContext.Response.Cookies.Append("JwtToken", tokens.JwtToken, jwtCookieOptions);
             HttpContext.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, refreshTokenCookieOptions);
+
+            // JWT'den ClaimsPrincipal oluştur
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadToken(tokens.JwtToken) as JwtSecurityToken;
+            var identity = new ClaimsIdentity(jwtToken?.Claims, "jwt"); // veya "Bearer"
+            HttpContext.User = new ClaimsPrincipal(identity); // Kullanıcı bilgilerini ayarla
 
             TempData["SuccessMessage"] = result.SuccessMessage;
             return Redirect("/");

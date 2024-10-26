@@ -52,8 +52,15 @@
 
                         <partial name="Partials/Comments.cshtml" model="Model.BlogPost.Comments" />
 
-                        <partial name="Partials/UnsignedCommentForm.cshtml" model="Model.UnsignedComment" />
+                        @if (User?.Identity?.IsAuthenticated == true)
+                        {
                         <partial name="Partials/SignedCommentForm.cshtml" model="Model.SignedComment" />
+                        }
+                        else {
+                        <partial name="Partials/UnsignedCommentForm.cshtml" model="Model.UnsignedComment" />
+                        }
+                      
+                       
 
                     </div>
                 }
