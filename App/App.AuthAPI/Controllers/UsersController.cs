@@ -1,4 +1,6 @@
-﻿using App.Services.AdminServices.Abstract;
+﻿using App.DTOs.UserDtos;
+using App.Services.AdminServices.Abstract;
+using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,11 +10,13 @@ namespace App.AuthAPI.Controllers;
 [ApiController]
 public class UsersController : ControllerBase
 {
-    private readonly IUserAdminService _userService;
+    private readonly IUserAdminService _userAdminService;
+    private readonly IUserPortfolioService _userPortfolioService;
 
-    public UsersController(IUserAdminService userService)
+    public UsersController(IUserAdminService userAdminService, IUserPortfolioService userPortfolioService)
     {
-        _userService = userService;
+        _userAdminService = userAdminService;
+        _userPortfolioService = userPortfolioService;
     }
 
     [HttpGet("/get-users-count")]
@@ -20,7 +24,7 @@ public class UsersController : ControllerBase
     {
         try
         {
-            var result = await _userService.GetUsersCount();
+            var result = await _userAdminService.GetUsersCount();
 
             if (!result.IsSuccess)
             {
@@ -46,7 +50,7 @@ public class UsersController : ControllerBase
 
         try
         {
-            var result = await _userService.GetCommentsUserName(id);
+            var result = await _userAdminService.GetCommentsUserName(id);
 
             if (!result.IsSuccess)
             {
@@ -72,7 +76,7 @@ public class UsersController : ControllerBase
     {
         try
         {
-            var result = await _userService.GetAllUsersAsync();
+            var result = await _userAdminService.GetAllUsersAsync();
 
             if (!result.IsSuccess)
             {
@@ -98,7 +102,7 @@ public class UsersController : ControllerBase
 
         try
         {
-            var result = await _userService.ChangeActivenessOfUserAsync(id);
+            var result = await _userAdminService.ChangeActivenessOfUserAsync(id);
 
             if (!result.IsSuccess)
             {
@@ -116,4 +120,36 @@ public class UsersController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
+
+    [HttpPost("/edit-username")]
+    public async Task<IActionResult> EditUsernameAsync([FromBody] EditUsernameDto dto)
+    {
+        try
+        {
+            var result = await _userPortfolioService.EditUsernameAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                if(result.Status == ResultStatus.NotFound)
+                {
+                    return NotFound(result);
+                }
+
+                if(result.Status == ResultStatus.Unavailable)
+                {
+                    return BadRequest(result);
+                }
+
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
+    }
+
 }

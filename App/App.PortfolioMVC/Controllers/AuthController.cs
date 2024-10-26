@@ -86,13 +86,7 @@ public class AuthController(IAuthService authService) : Controller
             return View(model);
         }
     }
-    [AuthorizeRolesMvc("admin","commenter")]
-    [HttpGet]
-    public IActionResult MyProfile()
-    {
-        return View();
-    }
-
+ 
     [AllowAnonymousManuel]
     [HttpGet]
     public async Task<IActionResult> Register()
