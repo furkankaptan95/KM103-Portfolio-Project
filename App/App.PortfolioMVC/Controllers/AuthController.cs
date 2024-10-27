@@ -241,7 +241,7 @@ public class AuthController(IAuthService authService) : Controller
         }
         catch (Exception)
         {
-            TempData["SuccessMessage"] = "Şifreniz sıfırlanırken bir hata oluştu..Tekrar sıfırlama maili gönderebilirsiniz.";
+            TempData["ErrorMessage"] = "Şifreniz sıfırlanırken bir hata oluştu..Tekrar sıfırlama maili gönderebilirsiniz.";
             return RedirectToAction(nameof(ForgotPassword));
         }
     }

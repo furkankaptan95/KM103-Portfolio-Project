@@ -142,7 +142,7 @@ public class AuthController(IAuthService authService) : Controller
                 return RedirectToAction(nameof(ForgotPassword));
             }
 
-            ViewData["SuccessMessage"] = result.SuccessMessage;
+            ViewData["Message"] = result.SuccessMessage;
 
             var model = new NewPasswordViewModel
             {
@@ -156,7 +156,6 @@ public class AuthController(IAuthService authService) : Controller
             TempData["ErrorMessage"] = "Email adresiniz doğrulanırken bir problem oluştu!..";
             return RedirectToAction(nameof(ForgotPassword));
         }
-
     }
 
     [HttpPost("renew-password")]
@@ -179,12 +178,12 @@ public class AuthController(IAuthService authService) : Controller
                 return RedirectToAction(nameof(ForgotPassword));
             }
 
-            TempData["SuccessMessage"] = result.SuccessMessage;
+            TempData["Message"] = result.SuccessMessage;
             return RedirectToAction(nameof(Login));
         }
         catch (Exception)
         {
-            TempData["SuccessMessage"] = "Şifreniz sıfırlanırken bir hata oluştu..Tekrar sıfırlama maili gönderebilirsiniz.";
+            TempData["ErrorMessage"] = "Şifreniz sıfırlanırken bir hata oluştu..Tekrar sıfırlama maili gönderebilirsiniz.";
             return RedirectToAction(nameof(ForgotPassword));
         }
     }

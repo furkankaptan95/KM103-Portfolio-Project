@@ -140,6 +140,7 @@ public class AuthService : IAuthService
             return Result<TokensDto>.Error($"Bir hata oluştu: {ex.Message}");
         }
     }
+
     public async Task<Result<TokensDto>> RefreshTokenAsync(string token)
     {
         try
@@ -256,7 +257,6 @@ public class AuthService : IAuthService
                 userVerification = await _authApiDb.UserVerifications.Include(uv => uv.User).FirstOrDefaultAsync(uv => uv.User.Email == dto.Email && uv.Token == dto.Token);
             }
             
-
             if (userVerification == null || userVerification.Expiration < DateTime.UtcNow)
             {
                 return Result.Error();
@@ -338,6 +338,7 @@ public class AuthService : IAuthService
             return Result.Error();
         }
     }
+
     private static string CreateSignature(string header, string payload, string secret)
     {
         var key = Encoding.UTF8.GetBytes(secret);
@@ -349,10 +350,12 @@ public class AuthService : IAuthService
             return Base64UrlEncode(hash);
         }
     }
+
     private static string Base64UrlEncode(byte[] input)
     {
         return Convert.ToBase64String(input).TrimEnd('=').Replace('+', '-').Replace('/', '_');
     }
+
     public async Task<Result> VerifyEmailAsync(VerifyEmailDto dto)
     {
         var userVerification = await _authApiDb.UserVerifications.Where(uv => uv.User.Email == dto.Email && uv.Token == dto.Token).Include(uv=>uv.User).FirstOrDefaultAsync();
