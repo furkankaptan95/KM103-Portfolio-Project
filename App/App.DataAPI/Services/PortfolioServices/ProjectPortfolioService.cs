@@ -14,7 +14,7 @@ public class ProjectPortfolioService(DataApiDbContext dataApiDb) : IProjectPortf
         {
             var dtos = new List<AllProjectsPortfolioDto>();
 
-            var entities = await dataApiDb.Projects.ToListAsync();
+            var entities = await dataApiDb.Projects.Where(bp => bp.IsVisible == true).ToListAsync();
 
             if (entities is null)
             {

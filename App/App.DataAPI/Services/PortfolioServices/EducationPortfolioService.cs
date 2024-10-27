@@ -14,7 +14,7 @@ public class EducationPortfolioService(DataApiDbContext dataApiDb) : IEducationP
         {
             var dtos = new List<AllEducationsPortfolioDto>();
 
-            var entities = await dataApiDb.Educations.ToListAsync();
+            var entities = await dataApiDb.Educations.Where(bp => bp.IsVisible == true).ToListAsync();
 
             if (entities is null)
             {
