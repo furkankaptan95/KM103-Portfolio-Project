@@ -80,6 +80,7 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
             return Result<TokensDto>.Error("Giriş işlemi sırasında bir hata oluştu!..");
         }
     }
+
     public async Task<Result> NewPasswordAsync(NewPasswordDto dto)
     {
         try
@@ -128,40 +129,47 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
 
         catch (Exception)
         {
-            return Result.Error();
+            return Result<TokensDto>.Error();
         }
     }
 
     public async Task<RegistrationResult> RegisterAsync(RegisterDto registerDto)
     {
-        var response = await AuthApiClient.PostAsJsonAsync("register", registerDto);
-
-        if (!response.IsSuccessStatusCode)
+        try
         {
-            var result = await response.Content.ReadFromJsonAsync<RegistrationResult>();
+            var response = await AuthApiClient.PostAsJsonAsync("register", registerDto);
 
-            if (result is null)
+            if (!response.IsSuccessStatusCode)
             {
-                return new RegistrationResult(false, null, RegistrationError.None);
-            }
-            else
-            {
-                if (result.Error == RegistrationError.UsernameTaken)
+                var result = await response.Content.ReadFromJsonAsync<RegistrationResult>();
+
+                if (result is null)
                 {
-                    return new RegistrationResult(false, "Bu Kullanıcı Adı zaten alınmış!..", RegistrationError.UsernameTaken);
-                }
-                else if (result.Error == RegistrationError.EmailTaken)
-                {
-                    return new RegistrationResult(false, "Bu Email zaten alınmış!..", RegistrationError.EmailTaken);
+                    return new RegistrationResult(false, "Kayıt işlemi sırasında beklenmeyen bir hata oluştu!..", RegistrationError.None);
                 }
                 else
                 {
-                    return new RegistrationResult(false, "Bu Email ve Kullanıcı Adı zaten alınmış!..", RegistrationError.BothTaken);
+                    if (result.Error == RegistrationError.UsernameTaken)
+                    {
+                        return new RegistrationResult(false, "Bu Kullanıcı Adı zaten alınmış!..", RegistrationError.UsernameTaken);
+                    }
+                    else if (result.Error == RegistrationError.EmailTaken)
+                    {
+                        return new RegistrationResult(false, "Bu Email zaten alınmış!..", RegistrationError.EmailTaken);
+                    }
+                    else
+                    {
+                        return new RegistrationResult(false, "Bu Email ve Kullanıcı Adı zaten alınmış!..", RegistrationError.BothTaken);
+                    }
                 }
             }
-        }
 
-        return new RegistrationResult(true, "Kullanıcı kaydı başarıyla gerçekleşti. Lütfen hesabınızı aktive etmek için Email adresinizi kontrol ediniz.", RegistrationError.None);
+            return new RegistrationResult(true, "Kullanıcı kaydı başarıyla gerçekleşti. Lütfen hesabınızı aktive etmek için Email adresinizi kontrol ediniz.", RegistrationError.None);
+        }
+        catch (Exception)
+        {
+            return new RegistrationResult(false, "Kayıt işlemi sırasında beklenmeyen bir hata oluştu!..", RegistrationError.None);
+        }
     }
 
     public async Task<Result> RenewPasswordEmailAsync(RenewPasswordDto dto)
@@ -229,13 +237,20 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
 
     public async Task<Result> VerifyEmailAsync(VerifyEmailDto dto)
     {
-        var response = await AuthApiClient.PostAsJsonAsync("verify-email", dto);
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            return Result.SuccessWithMessage("Email başarıyla doğrulandı ve hesabınız aktif edildi. Hesabınıza giriş yapabilirsiniz.");
-        }
+            var response = await AuthApiClient.PostAsJsonAsync("verify-email", dto);
 
-        return Result.Error("Email doğrulama başarısız!..Tekrar doğrulama maili almak için tıklayınız.");
+            if (response.IsSuccessStatusCode)
+            {
+                return Result.SuccessWithMessage("Email başarıyla doğrulandı ve hesabınız aktif edildi. Hesabınıza giriş yapabilirsiniz.");
+            }
+
+            return Result.Error("Email doğrulama başarısız!..Tekrar doğrulama maili almak için tıklayınız.");
+        }
+        catch (Exception)
+        {
+            return Result.Error("Email doğrulama başarısız!..Tekrar doğrulama maili almak için tıklayınız.");
+        }
     }
 }

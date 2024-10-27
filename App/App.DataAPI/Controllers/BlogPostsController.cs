@@ -124,7 +124,7 @@ public class BlogPostsController : ControllerBase
             return StatusCode(500,$"Beklenmedik bir hata oluştu: {ex.Message}");
         }
     }
-    [PostComment]
+    [CommonArea]
     [HttpGet("/portfolio-blog-post-{id:int}")]
 	public async Task<IActionResult> GetByIdPortfolioAsync([FromRoute] int id)
 	{

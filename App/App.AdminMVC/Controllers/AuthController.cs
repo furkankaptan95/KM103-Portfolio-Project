@@ -13,7 +13,7 @@ namespace App.AdminMVC.Controllers;
 public class AuthController(IAuthService authService) : Controller
 {
     [HttpGet]
-    public async Task<IActionResult> Login()
+    public IActionResult Login()
     {
         return View();
     }
@@ -28,7 +28,6 @@ public class AuthController(IAuthService authService) : Controller
 
         try
         {
-
             var dto = new LoginDto(model.Email, model.Password,true);
 
             var result = await authService.LoginAsync(dto);
@@ -54,40 +53,36 @@ public class AuthController(IAuthService authService) : Controller
             {
                 HttpOnly = true,
                 Secure = true,
-                Expires = DateTime.UtcNow.AddMinutes(10) // JWT ile aynı süre
+                Expires = DateTime.UtcNow.AddMinutes(10)
             };
 
-            // Refresh token için de süre ayarlanabilir
             CookieOptions refreshTokenCookieOptions = new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
-                Expires = DateTime.UtcNow.AddDays(7) // Refresh token süresi
+                Expires = DateTime.UtcNow.AddDays(7)
             };
 
             HttpContext.Response.Cookies.Append("JwtToken", tokens.JwtToken, jwtCookieOptions);
             HttpContext.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, refreshTokenCookieOptions);
 
-            // JWT'den ClaimsPrincipal oluştur
             var handler = new JwtSecurityTokenHandler();
             var jwtToken = handler.ReadToken(tokens.JwtToken) as JwtSecurityToken;
-            var identity = new ClaimsIdentity(jwtToken?.Claims, "jwt"); // veya "Bearer"
-            HttpContext.User = new ClaimsPrincipal(identity); // Kullanıcı bilgilerini ayarla
+            var identity = new ClaimsIdentity(jwtToken?.Claims, "jwt");
+            HttpContext.User = new ClaimsPrincipal(identity);
 
             TempData["SuccessMessage"] = result.SuccessMessage;
             return Redirect("/");
         }
-
         catch (Exception)
         {
             ViewData["ErrorMessage"] = "Giriş işlemi sırasında bir hata oluştu!..";
-
             return View(model);
         }
     }
 
     [HttpGet]
-    public async Task<IActionResult> ForgotPassword()
+    public IActionResult ForgotPassword()
     {
         return View();
     }
@@ -115,7 +110,7 @@ public class AuthController(IAuthService authService) : Controller
                 return View(model);
             }
 
-            ViewData["SuccessMessage"] = result.SuccessMessage;
+            ViewData["Message"] = result.SuccessMessage;
 
             return View();
         }
@@ -124,7 +119,6 @@ public class AuthController(IAuthService authService) : Controller
             ViewData["ErrorMessage"] = "Şifre sıfırlama linki gönderilirken bir hata oluştu!..";
             return View(model);
         }
-
     }
 
     [HttpGet("renew-password")]
@@ -148,7 +142,7 @@ public class AuthController(IAuthService authService) : Controller
                 return RedirectToAction(nameof(ForgotPassword));
             }
 
-            ViewData["SuccessMessage"] = result.SuccessMessage;
+            ViewData["Message"] = result.SuccessMessage;
 
             var model = new NewPasswordViewModel
             {
@@ -162,7 +156,6 @@ public class AuthController(IAuthService authService) : Controller
             TempData["ErrorMessage"] = "Email adresiniz doğrulanırken bir problem oluştu!..";
             return RedirectToAction(nameof(ForgotPassword));
         }
-
     }
 
     [HttpPost("renew-password")]
@@ -185,12 +178,12 @@ public class AuthController(IAuthService authService) : Controller
                 return RedirectToAction(nameof(ForgotPassword));
             }
 
-            TempData["SuccessMessage"] = result.SuccessMessage;
+            TempData["Message"] = result.SuccessMessage;
             return RedirectToAction(nameof(Login));
         }
         catch (Exception)
         {
-            TempData["SuccessMessage"] = "Şifreniz sıfırlanırken bir hata oluştu..Tekrar sıfırlama maili gönderebilirsiniz.";
+            TempData["ErrorMessage"] = "Şifreniz sıfırlanırken bir hata oluştu..Tekrar sıfırlama maili gönderebilirsiniz.";
             return RedirectToAction(nameof(ForgotPassword));
         }
     }

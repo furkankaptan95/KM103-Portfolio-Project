@@ -5,6 +5,7 @@ using App.ViewModels.AuthViewModels;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Security.Claims;
 
 namespace App.PortfolioMVC.Controllers;
@@ -14,10 +15,11 @@ public class AuthController(IAuthService authService) : Controller
 {
     [AllowAnonymousManuel]
     [HttpGet]
-    public async Task<IActionResult> Login()
+    public IActionResult Login()
     {
         return View();
     }
+
     [AllowAnonymousManuel]
     [HttpPost]
     public async Task<IActionResult> Login([FromForm] LoginViewModel model)
@@ -55,25 +57,23 @@ public class AuthController(IAuthService authService) : Controller
             {
                 HttpOnly = true,
                 Secure = true,
-                Expires = DateTime.UtcNow.AddMinutes(10) // JWT ile aynı süre
+                Expires = DateTime.UtcNow.AddMinutes(10)
             };
 
-            // Refresh token için de süre ayarlanabilir
             CookieOptions refreshTokenCookieOptions = new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
-                Expires = DateTime.UtcNow.AddDays(7) // Refresh token süresi
+                Expires = DateTime.UtcNow.AddDays(7)
             };
 
             HttpContext.Response.Cookies.Append("JwtToken", tokens.JwtToken, jwtCookieOptions);
             HttpContext.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, refreshTokenCookieOptions);
 
-            // JWT'den ClaimsPrincipal oluştur
             var handler = new JwtSecurityTokenHandler();
             var jwtToken = handler.ReadToken(tokens.JwtToken) as JwtSecurityToken;
-            var identity = new ClaimsIdentity(jwtToken?.Claims, "jwt"); // veya "Bearer"
-            HttpContext.User = new ClaimsPrincipal(identity); // Kullanıcı bilgilerini ayarla
+            var identity = new ClaimsIdentity(jwtToken?.Claims, "jwt");
+            HttpContext.User = new ClaimsPrincipal(identity);
 
             TempData["SuccessMessage"] = result.SuccessMessage;
             return Redirect("/");
@@ -82,7 +82,6 @@ public class AuthController(IAuthService authService) : Controller
         catch (Exception)
         {
             ViewData["ErrorMessage"] = "Giriş işlemi sırasında bir hata oluştu!..";
-
             return View(model);
         }
     }
@@ -102,45 +101,64 @@ public class AuthController(IAuthService authService) : Controller
             return View(registerModel);
         }
 
-        var dto = new RegisterDto
+        try
         {
-            Email = registerModel.Email,
-            Password = registerModel.Password,
-            Username = registerModel.Username,
-        };
+            var dto = new RegisterDto
+            {
+                Email = registerModel.Email,
+                Password = registerModel.Password,
+                Username = registerModel.Username,
+            };
 
-        var result = await authService.RegisterAsync(dto);
+            var result = await authService.RegisterAsync(dto);
 
-        if (!result.IsSuccess)
-        {
-            ViewData["ErrorMessage"] = result.Message;
-            return View(registerModel);
+            if (!result.IsSuccess)
+            {
+                ViewData["ErrorMessage"] = result.Message;
+                return View(registerModel);
+            }
+
+            TempData["SuccessMessage"] = result.Message;
+
+            return RedirectToAction(nameof(Login));
         }
 
-        TempData["SuccessMessage"] = result.Message;
+        catch (Exception)
+        {
+            ViewData["ErrorMessage"] = "Şifre sıfırlama linki gönderilirken bir hata oluştu!..";
 
-        return RedirectToAction(nameof(Login));
+            return View(registerModel);
+        }
     }
+
     [AllowAnonymousManuel]
     [HttpGet("verify-email")]
     public async Task<IActionResult> VerifyEmail([FromQuery] string email, string token)
     {
-        var dto = new VerifyEmailDto(email, token);
-
-        var result = await authService.VerifyEmailAsync(dto);
-
-        if (!result.IsSuccess)
+        try
         {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            var dto = new VerifyEmailDto(email, token);
+
+            var result = await authService.VerifyEmailAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            }
+
+            TempData["SuccessMessage"] = result.SuccessMessage;
+
+            return RedirectToAction(nameof(Login));
         }
-
-        TempData["SuccessMessage"] = result.SuccessMessage;
-
-        return RedirectToAction(nameof(Login));
+        catch (Exception)
+        {
+            ViewData["ErrorMessage"] = "Email doğrulama başarısız!..Tekrar doğrulama maili almak için tıklayınız.";
+            return RedirectToAction(nameof(Login));
+        }
     }
     [AllowAnonymousManuel]
     [HttpGet]
-    public async Task<IActionResult> ForgotPassword()
+    public IActionResult ForgotPassword()
     {
         return View();
     }
@@ -178,7 +196,6 @@ public class AuthController(IAuthService authService) : Controller
 
             return View(model);
         }
-
     }
     [AllowAnonymousManuel]
     [HttpGet("renew-password")]
@@ -243,7 +260,7 @@ public class AuthController(IAuthService authService) : Controller
         }
         catch (Exception)
         {
-            TempData["SuccessMessage"] = "Şifreniz sıfırlanırken bir hata oluştu..Tekrar sıfırlama maili gönderebilirsiniz.";
+            TempData["ErrorMessage"] = "Şifreniz sıfırlanırken bir hata oluştu..Tekrar sıfırlama maili gönderebilirsiniz.";
             return RedirectToAction(nameof(ForgotPassword));
         }
     }

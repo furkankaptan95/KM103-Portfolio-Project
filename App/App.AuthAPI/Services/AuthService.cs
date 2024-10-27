@@ -29,7 +29,6 @@ public class AuthService : IAuthService
         _emailService = emailService;
         _httpContextAccessor = httpContextAccessor;
     }
-
     public async Task<Result> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
     {
         try
@@ -62,7 +61,6 @@ public class AuthService : IAuthService
 
             await _authApiDb.UserVerifications.AddAsync(forgotPassword);
             await _authApiDb.SaveChangesAsync();
-
 
             var verificationLink = $"{forgotPasswordDto.Url}/renew-password?email={forgotPasswordDto.Email}&token={token}";
 
@@ -141,7 +139,6 @@ public class AuthService : IAuthService
         {
             return Result<TokensDto>.Error($"Bir hata oluştu: {ex.Message}");
         }
-
     }
 
     public async Task<Result<TokensDto>> RefreshTokenAsync(string token)
@@ -191,58 +188,65 @@ public class AuthService : IAuthService
 
     public async Task<RegistrationResult> RegisterAsync(RegisterDto registerDto)
     {
-        var isEmailAlreadyTaken = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == registerDto.Email);
-        var isUsernameAlreadyTaken = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Username == registerDto.Username);
-
-        if(isEmailAlreadyTaken is not null&& isUsernameAlreadyTaken is not null)
+        try
         {
-            return new RegistrationResult(false,null,RegistrationError.BothTaken);
+            var isEmailAlreadyTaken = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == registerDto.Email);
+            var isUsernameAlreadyTaken = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Username == registerDto.Username);
+
+            if (isEmailAlreadyTaken is not null && isUsernameAlreadyTaken is not null)
+            {
+                return new RegistrationResult(false, null, RegistrationError.BothTaken);
+            }
+
+            else if (isEmailAlreadyTaken is null && isUsernameAlreadyTaken is not null)
+            {
+                return new RegistrationResult(false, null, RegistrationError.UsernameTaken);
+            }
+
+            else if (isEmailAlreadyTaken is not null && isUsernameAlreadyTaken is null)
+            {
+                return new RegistrationResult(false, null, RegistrationError.EmailTaken);
+            }
+
+            byte[] passwordHash, passwordSalt;
+
+            HashingHelper.CreatePasswordHash(registerDto.Password, out passwordHash, out passwordSalt);
+
+            var user = new UserEntity
+            {
+                Username = registerDto.Username,
+                Email = registerDto.Email,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt
+            };
+
+            await _authApiDb.Users.AddAsync(user);
+            await _authApiDb.SaveChangesAsync();
+
+            var token = Guid.NewGuid().ToString().Substring(0, 6);
+
+            var userVerification = new UserVerificationEntity
+            {
+                UserId = user.Id,
+                Token = token,
+                Expiration = DateTime.UtcNow.AddHours(24),
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _authApiDb.UserVerifications.AddAsync(userVerification);
+            await _authApiDb.SaveChangesAsync();
+
+            var verificationLink = $"https://localhost:7167/verify-email?email={user.Email}&token={token}";
+
+            var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Email Doğrulama için tıklayınız.</a>";
+            var emailResult = await _emailService.SendEmailAsync(user.Email, "Kayıt başarılı. Lütfen email adresinizi doğrulayın.", htmlMailBody);
+
+            return new RegistrationResult(true, null, RegistrationError.None);
         }
-
-        else if (isEmailAlreadyTaken is null && isUsernameAlreadyTaken is not null)
+        catch (Exception ex)
         {
-            return new RegistrationResult(false, null, RegistrationError.UsernameTaken);
+            return new RegistrationResult(false,$"Bir hata oluştu: {ex.Message}",RegistrationError.None);
         }
-
-        else if (isEmailAlreadyTaken is not null && isUsernameAlreadyTaken is null)
-        {
-            return new RegistrationResult(false, null, RegistrationError.EmailTaken);
-        }
-
-        byte[] passwordHash, passwordSalt;
-
-        HashingHelper.CreatePasswordHash(registerDto.Password, out passwordHash, out passwordSalt);
-
-        var user = new UserEntity
-        {
-            Username = registerDto.Username,
-            Email = registerDto.Email,
-            PasswordHash = passwordHash,
-            PasswordSalt = passwordSalt
-        };
-
-        await _authApiDb.Users.AddAsync(user);
-        await _authApiDb.SaveChangesAsync();
-
-        var token = Guid.NewGuid().ToString().Substring(0, 6);
-
-        var userVerification = new UserVerificationEntity
-        {
-            UserId = user.Id,
-            Token = token,
-            Expiration = DateTime.UtcNow.AddHours(24),
-            CreatedAt = DateTime.UtcNow
-        };
-
-        await _authApiDb.UserVerifications.AddAsync(userVerification);
-        await _authApiDb.SaveChangesAsync();
-
-        var verificationLink = $"https://localhost:7167/verify-email?email={user.Email}&token={token}";
-
-        var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Email Doğrulama için tıklayınız.</a>";
-        var emailResult = await _emailService.SendEmailAsync(user.Email, "Kayıt başarılı. Lütfen email adresinizi doğrulayın.", htmlMailBody);
-
-        return new RegistrationResult(true,null,RegistrationError.None);
     }
 
     public async Task<Result> RenewPasswordEmailAsync(RenewPasswordDto dto)
@@ -260,7 +264,6 @@ public class AuthService : IAuthService
                 userVerification = await _authApiDb.UserVerifications.Include(uv => uv.User).FirstOrDefaultAsync(uv => uv.User.Email == dto.Email && uv.Token == dto.Token);
             }
             
-
             if (userVerification == null || userVerification.Expiration < DateTime.UtcNow)
             {
                 return Result.Error();
@@ -318,8 +321,6 @@ public class AuthService : IAuthService
                 return Result.Error("JWT formatı hatalı");
             }
 
-
-            // Geçerlilik ve imza kontrolü için JWT işleyici
             var handler = new JwtSecurityTokenHandler();
             if (!handler.CanReadToken(token))
             {
@@ -343,12 +344,12 @@ public class AuthService : IAuthService
         {
             return Result.Error();
         }
-
     }
 
     private static string CreateSignature(string header, string payload, string secret)
     {
         var key = Encoding.UTF8.GetBytes(secret);
+
         using (var algorithm = new HMACSHA256(key))
         {
             var data = Encoding.UTF8.GetBytes(header + "." + payload);
@@ -364,22 +365,29 @@ public class AuthService : IAuthService
 
     public async Task<Result> VerifyEmailAsync(VerifyEmailDto dto)
     {
-        var userVerification = await _authApiDb.UserVerifications.Where(uv => uv.User.Email == dto.Email && uv.Token == dto.Token).Include(uv=>uv.User).FirstOrDefaultAsync();
-
-        if (userVerification == null || userVerification.Expiration < DateTime.UtcNow)
+        try
         {
-            return Result.Error();
+            var userVerification = await _authApiDb.UserVerifications.Where(uv => uv.User.Email == dto.Email && uv.Token == dto.Token).Include(uv => uv.User).FirstOrDefaultAsync();
+
+            if (userVerification == null || userVerification.Expiration < DateTime.UtcNow)
+            {
+                return Result.Invalid();
+            }
+
+            userVerification.User.IsActive = true;
+
+            _authApiDb.UserVerifications.Update(userVerification);
+            await _authApiDb.SaveChangesAsync();
+
+            _authApiDb.UserVerifications.Remove(userVerification);
+            await _authApiDb.SaveChangesAsync();
+
+            return Result.Success();
         }
-
-        userVerification.User.IsActive = true;
-
-        _authApiDb.UserVerifications.Update(userVerification);
-        await _authApiDb.SaveChangesAsync();
-
-        _authApiDb.UserVerifications.Remove(userVerification);
-        await _authApiDb.SaveChangesAsync();
-
-        return Result.Success();
+        catch (Exception ex)
+        {
+            return Result.Error($"Bir hata oluştu: {ex.Message}");
+        }
     }
 
     private string GenerateJwtToken(UserEntity user)

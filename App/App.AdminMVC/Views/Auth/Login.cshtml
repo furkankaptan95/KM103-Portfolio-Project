@@ -46,7 +46,7 @@
         }
 
         .text-danger {
-            color: black !important; /* text-danger sınıfının rengini siyah yap */
+            color: wheat !important; /* text-danger sınıfının rengini siyah yap */
         }
     </style>
 
@@ -98,12 +98,13 @@
 
                             <div class="form-group">
                                 <input asp-for="Email" class="form-control" placeholder="Email">
-                                <span id="emailError" class="text-danger"></span> <!-- Hata mesajı için span -->
+                                <span id="emailError" class="text-danger"></span> 
                             </div>
 
                             <div class="form-group">
                                 <input id="password-field" asp-for="Password" class="form-control" placeholder="Şifre">
-                                <span id="passwordError" class="text-danger"></span> <!-- Hata mesajı için span -->
+                                <span id="passwordError" class="text-danger"></span>
+
                                 <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
                             </div>
 

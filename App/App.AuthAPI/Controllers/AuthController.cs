@@ -1,9 +1,9 @@
-﻿using App.DTOs.AuthDtos;
+﻿using App.Core.Results;
+using App.DTOs.AuthDtos;
 using App.Services.AuthService.Abstract;
 using Ardalis.Result;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace App.AuthAPI.Controllers;
 
@@ -16,13 +16,17 @@ public class AuthController : ControllerBase
     private readonly IValidator<ForgotPasswordDto> _forgotPasswordValidator;
     private readonly IValidator<RenewPasswordDto> _renewPasswordValidator;
     private readonly IValidator<NewPasswordDto> _newPasswordValidator;
-    public AuthController(IAuthService authService, IValidator<LoginDto> loginValidator, IValidator<ForgotPasswordDto> forgotPasswordValidator, IValidator<RenewPasswordDto> renewPasswordValidator, IValidator<NewPasswordDto> newPasswordValidator)
+    private readonly IValidator<RegisterDto> _registerValidator;
+    private readonly IValidator<VerifyEmailDto> _verifyEmailValidator;
+    public AuthController(IAuthService authService, IValidator<LoginDto> loginValidator, IValidator<ForgotPasswordDto> forgotPasswordValidator, IValidator<RenewPasswordDto> renewPasswordValidator, IValidator<NewPasswordDto> newPasswordValidator, IValidator<RegisterDto> registerValidator, IValidator<VerifyEmailDto> verifyEmailValidator)
     {
         _authService = authService;
         _loginValidator = loginValidator;
         _forgotPasswordValidator = forgotPasswordValidator;
         _renewPasswordValidator = renewPasswordValidator;
         _newPasswordValidator = newPasswordValidator;
+        _registerValidator = registerValidator;
+        _verifyEmailValidator = verifyEmailValidator;
     }
 
     [HttpPost("/login")]
@@ -53,8 +57,6 @@ public class AuthController : ControllerBase
                 }
 
                 return BadRequest(result);
-
-                //return StatusCode(500, result);
             }
 
             return Ok(result);
@@ -64,7 +66,6 @@ public class AuthController : ControllerBase
         {
             return StatusCode(500, Result.Error($"Bir hata oluştu: {ex.Message}"));
         }
-
     }
 
     [HttpPost("/refresh-token")]
@@ -95,27 +96,68 @@ public class AuthController : ControllerBase
     [HttpPost("/register")]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterDto dto)
     {
-        var result = await _authService.RegisterAsync(dto);
-
-        if (!result.IsSuccess)
+        try
         {
-            return BadRequest(result);
-        }
+            var validationResult = await _registerValidator.ValidateAsync(dto);
 
-        return Ok(result);
+            if (!validationResult.IsValid)
+            {
+                string errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(new RegistrationResult(false,errorMessage,Core.Enums.RegistrationError.None));
+            }
+
+            var result = await _authService.RegisterAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                if(result.Error == Core.Enums.RegistrationError.None)
+                {
+                    return StatusCode(500,result);
+                }
+
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+      
+         catch (Exception ex)
+        {
+            return StatusCode(500, new RegistrationResult(false,$"Bir hata oluştu: {ex.Message}",Core.Enums.RegistrationError.None));
+        }
     }
 
     [HttpPost("/verify-email")]
     public async Task<IActionResult> VerifEmailAsync([FromBody] VerifyEmailDto dto)
     {
-        var result = await _authService.VerifyEmailAsync(dto);
-
-        if (!result.IsSuccess)
+        try
         {
-            return BadRequest(result);
-        }
+            var validationResult = await _verifyEmailValidator.ValidateAsync(dto);
 
-        return Ok(result);
+            if (!validationResult.IsValid)
+            {
+                string errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(new RegistrationResult(false, errorMessage, Core.Enums.RegistrationError.None));
+            }
+
+            var result = await _authService.VerifyEmailAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                if(result.Status == ResultStatus.Invalid)
+                {
+                    return BadRequest(result);
+                }
+
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Bir hata oluştu: {ex.Message}"));
+        }
     }
 
     [HttpPost("/validate-token")]
@@ -170,7 +212,6 @@ public class AuthController : ControllerBase
         {
             return StatusCode(500, Result.Error($"Bir hata oluştu: {ex.Message}"));
         }
-
     }
 
     [HttpPost("/renew-password")]

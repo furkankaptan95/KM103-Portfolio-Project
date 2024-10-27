@@ -23,7 +23,6 @@ app.MapControllers();
 
 using var scope = app.Services.CreateScope();
 using var context = scope.ServiceProvider.GetRequiredService<AuthApiDbContext>();
-context.Database.EnsureDeleted();
 context.Database.EnsureCreated();
 
 app.Run();

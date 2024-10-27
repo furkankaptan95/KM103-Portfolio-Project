@@ -33,7 +33,7 @@ public class MvcJwtMiddleware
             return;
         }
 
-        var postComment = endpoint?.Metadata.GetMetadata<PostCommentAttribute>() != null;
+        var postComment = endpoint?.Metadata.GetMetadata<CommonAreaAttribute>() != null;
 
         if (postComment)
         {
@@ -52,7 +52,6 @@ public class MvcJwtMiddleware
             {
                 if (TokenExpired(jwtToken))
                 {
-
                     if (!string.IsNullOrEmpty(refreshToken))
                     {
                         await RenewTokensAllow(context, authService, refreshToken);
@@ -69,15 +68,13 @@ public class MvcJwtMiddleware
 
                     if (isValidToken.IsSuccess)
                     {
-
-                        // JWT'den ClaimsPrincipal oluştur
                         var handler = new JwtSecurityTokenHandler();
                         var jwtTokenObject = handler.ReadToken(jwtToken) as JwtSecurityToken;
 
                         if (jwtTokenObject != null)
                         {
                             var identity = new ClaimsIdentity(jwtTokenObject.Claims, "jwt");
-                            context.User = new ClaimsPrincipal(identity); // Kullanıcı bilgilerini ayarla
+                            context.User = new ClaimsPrincipal(identity);
                         }
                     }
                     else
@@ -106,12 +103,14 @@ public class MvcJwtMiddleware
         if (string.IsNullOrEmpty(jwtToken) && string.IsNullOrEmpty(refreshToken))
         {
              context.Response.Redirect("/Auth/Login");
-             return;
+            await context.Response.CompleteAsync();
+            return;
         }
 
         if (string.IsNullOrEmpty(jwtToken) && !string.IsNullOrEmpty(refreshToken))
         {
             await RenewTokens(context, authService, refreshToken);
+
         }
 
         if (!string.IsNullOrEmpty(jwtToken))
@@ -126,6 +125,7 @@ public class MvcJwtMiddleware
                 else
                 {
                     context.Response.Redirect("/Auth/Login");
+                    await context.Response.CompleteAsync();
                     return;
                 }
             }
@@ -135,20 +135,18 @@ public class MvcJwtMiddleware
 
                 if (isValidToken.IsSuccess)
                 {
-
-                    // JWT'den ClaimsPrincipal oluştur
                     var handler = new JwtSecurityTokenHandler();
                     var jwtTokenObject = handler.ReadToken(jwtToken) as JwtSecurityToken;
 
                     if (jwtTokenObject != null)
                     {
                         var identity = new ClaimsIdentity(jwtTokenObject.Claims, "jwt");
-                        context.User = new ClaimsPrincipal(identity); // Kullanıcı bilgilerini ayarla
+                        context.User = new ClaimsPrincipal(identity);
                     }
                 }
+
                 else
                 {
-
                     if (!string.IsNullOrEmpty(refreshToken))
                     {
                         await RenewTokens(context, authService, refreshToken);
@@ -156,6 +154,7 @@ public class MvcJwtMiddleware
                     else
                     {
                         context.Response.Redirect("/Auth/Login");
+                        await context.Response.CompleteAsync();
                         return;
                     }
                 }
@@ -175,6 +174,7 @@ public class MvcJwtMiddleware
             if(!tokensResponse.IsSuccess)
             {
                 context.Response.Redirect("/Auth/Login");
+                await context.Response.CompleteAsync();
                 return;
             }
 
@@ -187,40 +187,38 @@ public class MvcJwtMiddleware
                 {
                     HttpOnly = true,
                     Secure = true,
-                    Expires = DateTime.UtcNow.AddMinutes(10) // JWT ile aynı süre
+                    Expires = DateTime.UtcNow.AddMinutes(10)
                 };
 
-                // Refresh token için de süre ayarlanabilir
                 CookieOptions refreshTokenCookieOptions = new CookieOptions
                 {
                     HttpOnly = true,
                     Secure = true,
-                    Expires = DateTime.UtcNow.AddDays(7) // Refresh token süresi
+                    Expires = DateTime.UtcNow.AddDays(7)
                 };
-
 
                 context.Response.Cookies.Append("JwtToken", tokens.JwtToken, jwtCookieOptions);
                 context.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, refreshTokenCookieOptions);
 
-                // JWT'den ClaimsPrincipal oluştur
                 var handler = new JwtSecurityTokenHandler();
                 var jwtToken = handler.ReadToken(tokens.JwtToken) as JwtSecurityToken;
                 var identity = new ClaimsIdentity(jwtToken?.Claims, "jwt");
-                context.User = new ClaimsPrincipal(identity); // Kullanıcı bilgilerini ayarla
+                context.User = new ClaimsPrincipal(identity);
             }
             else
             {
                 context.Response.Redirect("/Auth/Login");
+                await context.Response.CompleteAsync();
                 return;
             }
         }
        catch (Exception)
         {
             context.Response.Redirect("/Auth/Login");
+            await context.Response.CompleteAsync();
             return;
         }
     }
-
     private async Task RenewTokensAllow(HttpContext context, IAuthService authService, string refreshToken)
     {
         try
@@ -242,26 +240,24 @@ public class MvcJwtMiddleware
                 {
                     HttpOnly = true,
                     Secure = true,
-                    Expires = DateTime.UtcNow.AddMinutes(10) // JWT ile aynı süre
+                    Expires = DateTime.UtcNow.AddMinutes(10)
                 };
 
-                // Refresh token için de süre ayarlanabilir
                 CookieOptions refreshTokenCookieOptions = new CookieOptions
                 {
                     HttpOnly = true,
                     Secure = true,
-                    Expires = DateTime.UtcNow.AddDays(7) // Refresh token süresi
+                    Expires = DateTime.UtcNow.AddDays(7)
                 };
 
 
                 context.Response.Cookies.Append("JwtToken", tokens.JwtToken, jwtCookieOptions);
                 context.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, refreshTokenCookieOptions);
 
-                // JWT'den ClaimsPrincipal oluştur
                 var handler = new JwtSecurityTokenHandler();
                 var jwtToken = handler.ReadToken(tokens.JwtToken) as JwtSecurityToken;
                 var identity = new ClaimsIdentity(jwtToken?.Claims, "jwt");
-                context.User = new ClaimsPrincipal(identity); // Kullanıcı bilgilerini ayarla
+                context.User = new ClaimsPrincipal(identity);
             }
             else
             {
@@ -284,7 +280,7 @@ public class MvcJwtMiddleware
 
             if (jwtToken == null)
             {
-                return true; // Geçersiz token formatı, bu durumda expired olarak işaretlenir.
+                return true;
             }
 
             var expirationDate = jwtToken.ValidTo;
@@ -292,7 +288,7 @@ public class MvcJwtMiddleware
         }
         catch (Exception)
         {
-            return true; // Token geçersiz formatta olduğunda, expired olarak değerlendir.
+            return true;
         }
     }
 }

@@ -37,7 +37,7 @@ public class CommentController(ICommentPortfolioService commentService) : Contro
         return Redirect($"/blog-post-{model.BlogPostId}");
     }
 
-    [PostComment]
+    [CommonArea]
     [HttpPost]
     public async Task<IActionResult> AddSignedComment([FromForm] SignedAddCommentViewModel model)
     {
