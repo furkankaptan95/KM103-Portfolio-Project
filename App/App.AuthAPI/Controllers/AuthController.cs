@@ -128,14 +128,26 @@ public class AuthController : ControllerBase
     [HttpPost("/verify-email")]
     public async Task<IActionResult> VerifEmailAsync([FromBody] VerifyEmailDto dto)
     {
-        var result = await _authService.VerifyEmailAsync(dto);
-
-        if (!result.IsSuccess)
+        try
         {
-            return BadRequest(result);
-        }
+            var result = await _authService.VerifyEmailAsync(dto);
 
-        return Ok(result);
+            if (!result.IsSuccess)
+            {
+                if(result.Status == ResultStatus.Invalid)
+                {
+                    return BadRequest(result);
+                }
+
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Bir hata oluştu: {ex.Message}"));
+        }
     }
 
     [HttpPost("/validate-token")]
