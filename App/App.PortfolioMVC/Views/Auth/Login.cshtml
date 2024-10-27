@@ -2,7 +2,7 @@
 
 @{
     Layout = null;
-}
+} 
 
 <!doctype html>
 <html lang="tr">
@@ -46,7 +46,7 @@
         }
 
         .text-danger {
-            color: black !important; /* text-danger sınıfının rengini siyah yap */
+            color: wheat !important; /* text-danger sınıfının rengini siyah yap */
         }
     </style>
 
@@ -54,10 +54,10 @@
 <body class="img js-fullheight" style="background-image: url(/login/images/bg.jpg);">
 
     @{
-        if (TempData["Message"] is not null)
+        if (TempData["SuccessMessage"] is not null)
         {
             <div class="alert custom-alert-success mt-5">
-                @TempData["Message"]
+                @TempData["SuccessMessage"]
             </div>
         }
 
@@ -68,10 +68,10 @@
             </div>
         }
 
-        if (ViewData["Message"] is not null)
+        if (ViewData["SuccessMessage"] is not null)
         {
             <div class="alert custom-alert-success mt-5">
-                @ViewData["Message"]
+                @ViewData["SuccessMessage"]
             </div>
         }
 
@@ -87,6 +87,7 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-6 text-center mb-5">
+                    <a href="/"> <h3 style="color: wheat;">Anasayfaya Dön</h3></a>
                     <h2 class="heading-section">Giriş Yap</h2>
                 </div>
             </div>
@@ -111,10 +112,10 @@
                                 <button type="submit" class="form-control btn btn-primary submit px-3">Giriş Yap</button>
                             </div>
 
-                            <p class="w-100 text-center">Hesabınız Yok Mu? <a asp-action="Register" style="color: #fff"> Kayıt Olun</a></p>
+                            <p class="w-100 text-center">Hesabınız Yok Mu? <a asp-action="Register" style="color: #fff"> Kayıt Olun </a></p>
 
                             <div class="text-center">
-                                <a href="#" style="color: #fff">Şifremi Unuttum</a>
+                                <a asp-action="ForgotPassword" style="color: #fff">Şifremi Unuttum</a>
                             </div>
 
 

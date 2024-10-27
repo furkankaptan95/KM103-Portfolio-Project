@@ -3,7 +3,6 @@ using App.Services.AuthService.Abstract;
 using Ardalis.Result;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace App.AuthAPI.Controllers;
 
@@ -53,8 +52,6 @@ public class AuthController : ControllerBase
                 }
 
                 return BadRequest(result);
-
-                //return StatusCode(500, result);
             }
 
             return Ok(result);
@@ -64,7 +61,6 @@ public class AuthController : ControllerBase
         {
             return StatusCode(500, Result.Error($"Bir hata oluştu: {ex.Message}"));
         }
-
     }
 
     [HttpPost("/refresh-token")]

@@ -141,9 +141,7 @@ public class AuthService : IAuthService
         {
             return Result<TokensDto>.Error($"Bir hata oluştu: {ex.Message}");
         }
-
     }
-
     public async Task<Result<TokensDto>> RefreshTokenAsync(string token)
     {
         try

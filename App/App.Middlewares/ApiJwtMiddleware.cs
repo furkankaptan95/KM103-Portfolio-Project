@@ -33,74 +33,71 @@ public class ApiJwtMiddleware
             return;
         }
 
-        var postComment = endpoint?.Metadata.GetMetadata<PostCommentAttribute>() != null;
+        //var commonArea = endpoint?.Metadata.GetMetadata<CommonAreaAttribute>() != null;
 
-        if (postComment)
-        {
-            if (string.IsNullOrEmpty(jwtToken) && string.IsNullOrEmpty(refreshToken))
-            {
-                await _next(context);
-                return;
-            }
+        //if (commonArea)
+        //{
+        //    if (string.IsNullOrEmpty(jwtToken) && string.IsNullOrEmpty(refreshToken))
+        //    {
+        //        await _next(context);
+        //        return;
+        //    }
 
-            if (string.IsNullOrEmpty(jwtToken) && !string.IsNullOrEmpty(refreshToken))
-            {
-                await RenewTokensAllow(context, authService, refreshToken);
-            }
+        //    if (string.IsNullOrEmpty(jwtToken) && !string.IsNullOrEmpty(refreshToken))
+        //    {
+        //        await RenewTokensAllow(context, authService, refreshToken);
+        //    }
 
-            if (!string.IsNullOrEmpty(jwtToken))
-            {
-                if (TokenExpired(jwtToken))
-                {
+        //    if (!string.IsNullOrEmpty(jwtToken))
+        //    {
+        //        if (TokenExpired(jwtToken))
+        //        {
 
-                    if (!string.IsNullOrEmpty(refreshToken))
-                    {
-                        await RenewTokensAllow(context, authService, refreshToken);
-                    }
-                    else
-                    {
-                        await _next(context);
-                        return;
-                    }
-                }
-                else
-                {
-                    var isValidToken = await authService.ValidateTokenAsync(jwtToken);
+        //            if (!string.IsNullOrEmpty(refreshToken))
+        //            {
+        //                await RenewTokensAllow(context, authService, refreshToken);
+        //            }
+        //            else
+        //            {
+        //                await _next(context);
+        //                return;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            var isValidToken = await authService.ValidateTokenAsync(jwtToken);
 
-                    if (isValidToken.IsSuccess)
-                    {
+        //            if (isValidToken.IsSuccess)
+        //            {
+        //                var handler = new JwtSecurityTokenHandler();
+        //                var jwtTokenObject = handler.ReadToken(jwtToken) as JwtSecurityToken;
 
-                        // JWT'den ClaimsPrincipal oluştur
-                        var handler = new JwtSecurityTokenHandler();
-                        var jwtTokenObject = handler.ReadToken(jwtToken) as JwtSecurityToken;
+        //                if (jwtTokenObject != null)
+        //                {
+        //                    var identity = new ClaimsIdentity(jwtTokenObject.Claims, "jwt");
+        //                    context.User = new ClaimsPrincipal(identity);
+        //                }
+        //            }
+        //            else
+        //            {
 
-                        if (jwtTokenObject != null)
-                        {
-                            var identity = new ClaimsIdentity(jwtTokenObject.Claims, "jwt");
-                            context.User = new ClaimsPrincipal(identity); // Kullanıcı bilgilerini ayarla
-                        }
-                    }
-                    else
-                    {
+        //                if (!string.IsNullOrEmpty(refreshToken))
+        //                {
+        //                    await RenewTokensAllow(context, authService, refreshToken);
+        //                }
+        //                else
+        //                {
+        //                    await _next(context);
+        //                    return;
+        //                }
+        //            }
 
-                        if (!string.IsNullOrEmpty(refreshToken))
-                        {
-                            await RenewTokensAllow(context, authService, refreshToken);
-                        }
-                        else
-                        {
-                            await _next(context);
-                            return;
-                        }
-                    }
+        //        }
+        //    }
 
-                }
-            }
-
-            await _next(context);
-            return;
-        }
-
+        //    await _next(context);
+        //    return;
+        //}
 
         if (string.IsNullOrEmpty(jwtToken) && string.IsNullOrEmpty(refreshToken))
         {
@@ -134,20 +131,17 @@ public class ApiJwtMiddleware
 
                 if (isValidToken.IsSuccess)
                 {
-
-                    // JWT'den ClaimsPrincipal oluştur
                     var handler = new JwtSecurityTokenHandler();
                     var jwtTokenObject = handler.ReadToken(jwtToken) as JwtSecurityToken;
 
                     if (jwtTokenObject != null)
                     {
                         var identity = new ClaimsIdentity(jwtTokenObject.Claims, "jwt");
-                        context.User = new ClaimsPrincipal(identity); // Kullanıcı bilgilerini ayarla
+                        context.User = new ClaimsPrincipal(identity);
                     }
                 }
                 else
                 {
-
                     if (!string.IsNullOrEmpty(refreshToken))
                     {
                         await RenewTokens(context, authService, refreshToken);
@@ -186,26 +180,23 @@ public class ApiJwtMiddleware
                 {
                     HttpOnly = true,
                     Secure = true,
-                    Expires = DateTime.UtcNow.AddMinutes(10) // JWT ile aynı süre
+                    Expires = DateTime.UtcNow.AddMinutes(10)
                 };
 
-                // Refresh token için de süre ayarlanabilir
                 CookieOptions refreshTokenCookieOptions = new CookieOptions
                 {
                     HttpOnly = true,
                     Secure = true,
-                    Expires = DateTime.UtcNow.AddDays(7) // Refresh token süresi
+                    Expires = DateTime.UtcNow.AddDays(7)
                 };
-
 
                 context.Response.Cookies.Append("JwtToken", tokens.JwtToken, jwtCookieOptions);
                 context.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, refreshTokenCookieOptions);
 
-                // JWT'den ClaimsPrincipal oluştur
                 var handler = new JwtSecurityTokenHandler();
                 var jwtToken = handler.ReadToken(tokens.JwtToken) as JwtSecurityToken;
                 var identity = new ClaimsIdentity(jwtToken?.Claims, "jwt");
-                context.User = new ClaimsPrincipal(identity); // Kullanıcı bilgilerini ayarla
+                context.User = new ClaimsPrincipal(identity);
             }
             else
             {
@@ -220,60 +211,57 @@ public class ApiJwtMiddleware
         }
     }
 
-    private async Task RenewTokensAllow(HttpContext context, IAuthService authService, string refreshToken)
-    {
-        try
-        {
-            var tokensResponse = await authService.RefreshTokenAsync(refreshToken);
+    //private async Task RenewTokensAllow(HttpContext context, IAuthService authService, string refreshToken)
+    //{
+    //    try
+    //    {
+    //        var tokensResponse = await authService.RefreshTokenAsync(refreshToken);
 
-            if (!tokensResponse.IsSuccess)
-            {
-                await _next(context);
-                return;
-            }
+    //        if (!tokensResponse.IsSuccess)
+    //        {
+    //            await _next(context);
+    //            return;
+    //        }
 
-            var tokens = tokensResponse.Value;
+    //        var tokens = tokensResponse.Value;
 
-            if (tokens != null && !string.IsNullOrEmpty(tokens.JwtToken) && !string.IsNullOrEmpty(tokens.RefreshToken))
-            {
+    //        if (tokens != null && !string.IsNullOrEmpty(tokens.JwtToken) && !string.IsNullOrEmpty(tokens.RefreshToken))
+    //        {
 
-                CookieOptions jwtCookieOptions = new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    Expires = DateTime.UtcNow.AddMinutes(10) // JWT ile aynı süre
-                };
+    //            CookieOptions jwtCookieOptions = new CookieOptions
+    //            {
+    //                HttpOnly = true,
+    //                Secure = true,
+    //                Expires = DateTime.UtcNow.AddMinutes(10)
+    //            };
 
-                // Refresh token için de süre ayarlanabilir
-                CookieOptions refreshTokenCookieOptions = new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    Expires = DateTime.UtcNow.AddDays(7) // Refresh token süresi
-                };
+    //            CookieOptions refreshTokenCookieOptions = new CookieOptions
+    //            {
+    //                HttpOnly = true,
+    //                Secure = true,
+    //                Expires = DateTime.UtcNow.AddDays(7)
+    //            };
 
+    //            context.Response.Cookies.Append("JwtToken", tokens.JwtToken, jwtCookieOptions);
+    //            context.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, refreshTokenCookieOptions);
 
-                context.Response.Cookies.Append("JwtToken", tokens.JwtToken, jwtCookieOptions);
-                context.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, refreshTokenCookieOptions);
-
-                // JWT'den ClaimsPrincipal oluştur
-                var handler = new JwtSecurityTokenHandler();
-                var jwtToken = handler.ReadToken(tokens.JwtToken) as JwtSecurityToken;
-                var identity = new ClaimsIdentity(jwtToken?.Claims, "jwt");
-                context.User = new ClaimsPrincipal(identity); // Kullanıcı bilgilerini ayarla
-            }
-            else
-            {
-                await _next(context);
-                return;
-            }
-        }
-        catch (Exception)
-        {
-            await _next(context);
-            return;
-        }
-    }
+    //            var handler = new JwtSecurityTokenHandler();
+    //            var jwtToken = handler.ReadToken(tokens.JwtToken) as JwtSecurityToken;
+    //            var identity = new ClaimsIdentity(jwtToken?.Claims, "jwt");
+    //            context.User = new ClaimsPrincipal(identity);
+    //        }
+    //        else
+    //        {
+    //            await _next(context);
+    //            return;
+    //        }
+    //    }
+    //    catch (Exception)
+    //    {
+    //        await _next(context);
+    //        return;
+    //    }
+    //}
     private bool TokenExpired(string token)
     {
         var handler = new JwtSecurityTokenHandler();
@@ -283,7 +271,7 @@ public class ApiJwtMiddleware
 
             if (jwtToken == null)
             {
-                return true; // Geçersiz token formatı, bu durumda expired olarak işaretlenir.
+                return true;
             }
 
             var expirationDate = jwtToken.ValidTo;
@@ -291,7 +279,7 @@ public class ApiJwtMiddleware
         }
         catch (Exception)
         {
-            return true; // Token geçersiz formatta olduğunda, expired olarak değerlendir.
+            return true;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace App.PortfolioMVC.Controllers;
 public class BlogPostController(IBlogPostPortfolioService blogPostService) : Controller
 {
 	[HttpGet]
-	[PostComment]
+	[CommonArea]
 	[Route("blog-post-{id:int}")]
 	public async Task<IActionResult> BlogPost([FromRoute] int id)
     {

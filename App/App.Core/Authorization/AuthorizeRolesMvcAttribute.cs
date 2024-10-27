@@ -25,12 +25,10 @@ public class AuthorizeRolesMvcAttribute : Attribute, IAuthorizationFilter
 
             if (statusCode == StatusCodes.Status401Unauthorized)
             {
-                // Kullanıcı yetkilendirilmediğinde, oturum açma sayfasına yönlendir
                 context.Result = new RedirectToActionResult("Login", "Auth", null);
             }
             else if (statusCode == StatusCodes.Status403Forbidden)
             {
-                // Kullanıcı yetkilendirilmiş ancak gerekli role sahip değilse, erişim yasak sayfasına yönlendir
                 context.Result = new RedirectToActionResult("AccessDenied", "Auth", null);
             }
         }

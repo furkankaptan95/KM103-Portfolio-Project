@@ -80,6 +80,7 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
             return Result<TokensDto>.Error("Giriş işlemi sırasında bir hata oluştu!..");
         }
     }
+
     public async Task<Result> NewPasswordAsync(NewPasswordDto dto)
     {
         try

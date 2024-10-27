@@ -13,7 +13,7 @@ namespace App.AdminMVC.Controllers;
 public class AuthController(IAuthService authService) : Controller
 {
     [HttpGet]
-    public async Task<IActionResult> Login()
+    public IActionResult Login()
     {
         return View();
     }
@@ -28,7 +28,6 @@ public class AuthController(IAuthService authService) : Controller
 
         try
         {
-
             var dto = new LoginDto(model.Email, model.Password,true);
 
             var result = await authService.LoginAsync(dto);
@@ -54,34 +53,30 @@ public class AuthController(IAuthService authService) : Controller
             {
                 HttpOnly = true,
                 Secure = true,
-                Expires = DateTime.UtcNow.AddMinutes(10) // JWT ile aynı süre
+                Expires = DateTime.UtcNow.AddMinutes(10)
             };
 
-            // Refresh token için de süre ayarlanabilir
             CookieOptions refreshTokenCookieOptions = new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
-                Expires = DateTime.UtcNow.AddDays(7) // Refresh token süresi
+                Expires = DateTime.UtcNow.AddDays(7)
             };
 
             HttpContext.Response.Cookies.Append("JwtToken", tokens.JwtToken, jwtCookieOptions);
             HttpContext.Response.Cookies.Append("RefreshToken", tokens.RefreshToken, refreshTokenCookieOptions);
 
-            // JWT'den ClaimsPrincipal oluştur
             var handler = new JwtSecurityTokenHandler();
             var jwtToken = handler.ReadToken(tokens.JwtToken) as JwtSecurityToken;
-            var identity = new ClaimsIdentity(jwtToken?.Claims, "jwt"); // veya "Bearer"
-            HttpContext.User = new ClaimsPrincipal(identity); // Kullanıcı bilgilerini ayarla
+            var identity = new ClaimsIdentity(jwtToken?.Claims, "jwt");
+            HttpContext.User = new ClaimsPrincipal(identity);
 
             TempData["SuccessMessage"] = result.SuccessMessage;
             return Redirect("/");
         }
-
         catch (Exception)
         {
             ViewData["ErrorMessage"] = "Giriş işlemi sırasında bir hata oluştu!..";
-
             return View(model);
         }
     }
