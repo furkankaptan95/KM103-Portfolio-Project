@@ -135,34 +135,41 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
 
     public async Task<RegistrationResult> RegisterAsync(RegisterDto registerDto)
     {
-        var response = await AuthApiClient.PostAsJsonAsync("register", registerDto);
-
-        if (!response.IsSuccessStatusCode)
+        try
         {
-            var result = await response.Content.ReadFromJsonAsync<RegistrationResult>();
+            var response = await AuthApiClient.PostAsJsonAsync("register", registerDto);
 
-            if (result is null)
+            if (!response.IsSuccessStatusCode)
             {
-                return new RegistrationResult(false, null, RegistrationError.None);
-            }
-            else
-            {
-                if (result.Error == RegistrationError.UsernameTaken)
+                var result = await response.Content.ReadFromJsonAsync<RegistrationResult>();
+
+                if (result is null)
                 {
-                    return new RegistrationResult(false, "Bu Kullanıcı Adı zaten alınmış!..", RegistrationError.UsernameTaken);
-                }
-                else if (result.Error == RegistrationError.EmailTaken)
-                {
-                    return new RegistrationResult(false, "Bu Email zaten alınmış!..", RegistrationError.EmailTaken);
+                    return new RegistrationResult(false, "Kayıt işlemi sırasında beklenmeyen bir hata oluştu!..", RegistrationError.None);
                 }
                 else
                 {
-                    return new RegistrationResult(false, "Bu Email ve Kullanıcı Adı zaten alınmış!..", RegistrationError.BothTaken);
+                    if (result.Error == RegistrationError.UsernameTaken)
+                    {
+                        return new RegistrationResult(false, "Bu Kullanıcı Adı zaten alınmış!..", RegistrationError.UsernameTaken);
+                    }
+                    else if (result.Error == RegistrationError.EmailTaken)
+                    {
+                        return new RegistrationResult(false, "Bu Email zaten alınmış!..", RegistrationError.EmailTaken);
+                    }
+                    else
+                    {
+                        return new RegistrationResult(false, "Bu Email ve Kullanıcı Adı zaten alınmış!..", RegistrationError.BothTaken);
+                    }
                 }
             }
-        }
 
-        return new RegistrationResult(true, "Kullanıcı kaydı başarıyla gerçekleşti. Lütfen hesabınızı aktive etmek için Email adresinizi kontrol ediniz.", RegistrationError.None);
+            return new RegistrationResult(true, "Kullanıcı kaydı başarıyla gerçekleşti. Lütfen hesabınızı aktive etmek için Email adresinizi kontrol ediniz.", RegistrationError.None);
+        }
+        catch (Exception)
+        {
+            return new RegistrationResult(false, "Kayıt işlemi sırasında beklenmeyen bir hata oluştu!..", RegistrationError.None);
+        }
     }
 
     public async Task<Result> RenewPasswordEmailAsync(RenewPasswordDto dto)

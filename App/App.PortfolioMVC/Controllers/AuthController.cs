@@ -5,6 +5,7 @@ using App.ViewModels.AuthViewModels;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Security.Claims;
 
 namespace App.PortfolioMVC.Controllers;
@@ -100,24 +101,34 @@ public class AuthController(IAuthService authService) : Controller
             return View(registerModel);
         }
 
-        var dto = new RegisterDto
+        try
         {
-            Email = registerModel.Email,
-            Password = registerModel.Password,
-            Username = registerModel.Username,
-        };
+            var dto = new RegisterDto
+            {
+                Email = registerModel.Email,
+                Password = registerModel.Password,
+                Username = registerModel.Username,
+            };
 
-        var result = await authService.RegisterAsync(dto);
+            var result = await authService.RegisterAsync(dto);
 
-        if (!result.IsSuccess)
-        {
-            ViewData["ErrorMessage"] = result.Message;
-            return View(registerModel);
+            if (!result.IsSuccess)
+            {
+                ViewData["ErrorMessage"] = result.Message;
+                return View(registerModel);
+            }
+
+            TempData["SuccessMessage"] = result.Message;
+
+            return RedirectToAction(nameof(Login));
         }
 
-        TempData["SuccessMessage"] = result.Message;
+        catch (Exception)
+        {
+            ViewData["ErrorMessage"] = "Şifre sıfırlama linki gönderilirken bir hata oluştu!..";
 
-        return RedirectToAction(nameof(Login));
+            return View(registerModel);
+        }
     }
 
     [AllowAnonymousManuel]
