@@ -81,7 +81,33 @@ public static class PortfolioMvcServicesRegistration
         services.AddHttpClient("authApi", c =>
         {
             c.BaseAddress = new Uri(authApiUrl);
-        });
+        })
+             .ConfigurePrimaryHttpMessageHandler(() =>
+             {
+                 var handler = new HttpClientHandler();
+
+                 // CookieContainer oluştur
+                 var cookieContainer = new CookieContainer();
+
+                 // HttpContext'ten cookie'leri al
+                 var httpContextAccessor = services.BuildServiceProvider().GetRequiredService<IHttpContextAccessor>();
+                 var jwtToken = httpContextAccessor.HttpContext?.Request.Cookies["JwtToken"];
+                 var refreshToken = httpContextAccessor.HttpContext?.Request.Cookies["RefreshToken"];
+
+                 // Cookie'leri ekle
+                 if (!string.IsNullOrEmpty(jwtToken))
+                 {
+                     cookieContainer.Add(new Uri(dataApiUrl), new Cookie("JwtToken", jwtToken));
+                 }
+
+                 if (!string.IsNullOrEmpty(refreshToken))
+                 {
+                     cookieContainer.Add(new Uri(dataApiUrl), new Cookie("RefreshToken", refreshToken));
+                 }
+
+                 handler.CookieContainer = cookieContainer; // CookieContainer'ı handler'a ekle
+                 return handler;
+             });
     }
 
     private static void RegisterScopedServices(IServiceCollection services)
@@ -96,5 +122,6 @@ public static class PortfolioMvcServicesRegistration
         services.AddScoped<IHomePortfolioService, HomePortfolioService>();
         services.AddScoped<IContactMessagePortfolioService, ContactMessagePortfolioService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserPortfolioService, UserPortfolioService>();
     }
 }

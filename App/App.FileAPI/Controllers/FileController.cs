@@ -10,7 +10,6 @@ namespace App.FileAPI.Controllers;
 public class FileController : ControllerBase
 {
     private readonly string _uploadsFolder;
-
     public FileController()
     {
         try
@@ -21,11 +20,14 @@ public class FileController : ControllerBase
             {
                 Directory.CreateDirectory(_uploadsFolder);
             }
+
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Dizin oluşturulurken hata oluştu: {ex.Message}");
         }
+
+        
     }
     [HttpPost("/upload-files")]
     public async Task<IActionResult> UploadFilesAsync([FromForm] IFormFile? imageFile1, IFormFile? imageFile2)
@@ -51,14 +53,15 @@ public class FileController : ControllerBase
                 }
 
                 // İlk dosyayı kaydet
-                var fileName1 = Path.GetFileName(imageFile1.FileName);
-                var filePath1 = Path.Combine(_uploadsFolder, fileName1);
+                var fileExtension1 = Path.GetExtension(imageFile1.FileName);
+                var uniqueFileName1 = $"{Guid.NewGuid()}{fileExtension1}";
+                var filePath1 = Path.Combine(_uploadsFolder, uniqueFileName1);
                 using (var stream = new FileStream(filePath1, FileMode.Create))
                 {
                     await imageFile1.CopyToAsync(stream);
                 }
 
-                urlDto.ImageUrl1 = fileName1;
+                urlDto.ImageUrl1 = uniqueFileName1;
             }
 
             // İkinci dosya kontrolü
@@ -69,15 +72,16 @@ public class FileController : ControllerBase
                     return BadRequest("Yalnızca resim dosyaları (.jpg, .jpeg, .png, .gif) yüklenebilir.");
                 }
 
-                // İkinci dosyayı kaydet
-                var fileName2 = Path.GetFileName(imageFile2.FileName);
-                var filePath2 = Path.Combine(_uploadsFolder, fileName2);
+                // İlk dosyayı kaydet
+                var fileExtension2 = Path.GetExtension(imageFile2.FileName);
+                var uniqueFileName2 = $"{Guid.NewGuid()}{fileExtension2}";
+                var filePath2 = Path.Combine(_uploadsFolder, uniqueFileName2);
                 using (var stream = new FileStream(filePath2, FileMode.Create))
                 {
                     await imageFile2.CopyToAsync(stream);
                 }
 
-                urlDto.ImageUrl2 = fileName2;
+                urlDto.ImageUrl2 = uniqueFileName2;
             }
 
             return Ok(urlDto);
@@ -94,4 +98,36 @@ public class FileController : ControllerBase
         }
     }
 
+
+    [HttpDelete("/delete-file/{fileName}")]
+    public IActionResult DeleteFileAsync([FromRoute] string fileName)
+    {
+        try
+        {
+            // Klasör yolunu belirle (örneğin, wwwroot/uploads)
+            var uploadsFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+            var filePath = Path.Combine(uploadsFolderPath, fileName);
+
+            // Dosyanın var olup olmadığını kontrol et
+            if (System.IO.File.Exists(filePath))
+            {
+                // Dosyayı sil
+                System.IO.File.Delete(filePath);
+                return Ok(new { message = "Dosya başarıyla silindi." });
+            }
+            else
+            {
+                return NotFound(new { message = "Dosya bulunamadı." });
+            }
+        }
+        catch (IOException ex)
+        {
+            return StatusCode(500, $"Dosya yükleme sırasında bir hata oluştu: {ex.Message}");
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
+        }
+    }
 }

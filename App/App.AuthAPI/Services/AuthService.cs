@@ -21,11 +21,13 @@ public class AuthService : IAuthService
     private readonly AuthApiDbContext _authApiDb;
     private readonly IConfiguration _configuration;
     private readonly IEmailService _emailService;
-    public AuthService(AuthApiDbContext authApiDb, IConfiguration configuration, IEmailService emailService)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public AuthService(AuthApiDbContext authApiDb, IConfiguration configuration, IEmailService emailService, IHttpContextAccessor httpContextAccessor)
     {
         _authApiDb = authApiDb;
         _configuration = configuration;
         _emailService = emailService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<Result> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
@@ -67,7 +69,12 @@ public class AuthService : IAuthService
             var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Şifrenizi sıfırlamak için tıklayınız.</a>";
             var emailResult = await _emailService.SendEmailAsync(emailToRenewPassword.Email, "Lütfen email adresinizi doğrulayın.", htmlMailBody);
 
-            return Result.Success();
+            if (emailResult.IsSuccess)
+            {
+                return Result.Success();
+            }
+
+            return Result.Error("Email gönderilirken bir hata oluştu.");
         }
 
         catch (Exception ex)
@@ -82,7 +89,7 @@ public class AuthService : IAuthService
         {
             UserEntity? user;
 
-            if (loginDto.IsAdmin)
+            if (loginDto.IsAdmin == true)
             {
                 user = await _authApiDb.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(u => u.Email == loginDto.Email && u.Role == "admin");
             }
@@ -381,7 +388,9 @@ public class AuthService : IAuthService
            {
                 new Claim(JwtClaimTypes.Subject,user.Id.ToString()),
                 new Claim(JwtClaimTypes.Email,user.Email),
-                new Claim(JwtClaimTypes.Role, user.Role)
+                new Claim(JwtClaimTypes.Role, user.Role),
+                new Claim(JwtClaimTypes.Name,user.Username),
+                new Claim("user-img", user.ImageUrl ?? "default.png"),
             };
 
         var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));

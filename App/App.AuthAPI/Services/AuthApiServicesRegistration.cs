@@ -4,6 +4,7 @@ using App.DTOs.AuthDtos;
 using App.Services;
 using App.Services.AdminServices.Abstract;
 using App.Services.AuthService.Abstract;
+using App.Services.PortfolioServices.Abstract;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,7 @@ namespace App.AuthAPI.Services
             // CORS yapılandırması
             ConfigureCors(services);
 
+            services.AddHttpContextAccessor();
             // Temel yapılandırmalar
             services.AddControllers();
             services.AddEndpointsApiExplorer();
@@ -77,6 +79,7 @@ namespace App.AuthAPI.Services
             services.AddSingleton<IEmailService, SmtpEmailService>();
             services.AddScoped<IUserAdminService, AdminUserService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUserPortfolioService, PorfolioUserService>();
         }
 
         private static void ConfigureValidators(IServiceCollection services)

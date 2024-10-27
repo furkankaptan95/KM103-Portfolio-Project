@@ -31,7 +31,7 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 		{
 			model.Experiences = Experiences(experienceResult.Value);
 	    }
-		if (experienceResult.IsSuccess)
+		if (projectResult.IsSuccess)
 		{
 			model.Projects = Projects(projectResult.Value);
 		}

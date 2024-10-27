@@ -124,8 +124,8 @@ public class BlogPostsController : ControllerBase
             return StatusCode(500,$"Beklenmedik bir hata oluştu: {ex.Message}");
         }
     }
-    [AllowAnonymousManuel]
-	[HttpGet("/portfolio-blog-post-{id:int}")]
+    [PostComment]
+    [HttpGet("/portfolio-blog-post-{id:int}")]
 	public async Task<IActionResult> GetByIdPortfolioAsync([FromRoute] int id)
 	{
 		if (id <= 0)

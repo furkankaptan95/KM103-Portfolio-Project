@@ -6,10 +6,11 @@ using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.PortfolioMVC.Controllers;
-[AllowAnonymousManuel]
+
 public class BlogPostController(IBlogPostPortfolioService blogPostService) : Controller
 {
 	[HttpGet]
+	[PostComment]
 	[Route("blog-post-{id:int}")]
 	public async Task<IActionResult> BlogPost([FromRoute] int id)
     {
@@ -56,7 +57,7 @@ public class BlogPostController(IBlogPostPortfolioService blogPostService) : Con
 
         return View(blogPostPageModel);
     }
-
+    [AllowAnonymousManuel]
     [HttpGet]
     [Route("all-blog-posts")]
     public async Task<IActionResult> AllBlogPosts()
