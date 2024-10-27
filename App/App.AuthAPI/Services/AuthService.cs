@@ -188,58 +188,65 @@ public class AuthService : IAuthService
 
     public async Task<RegistrationResult> RegisterAsync(RegisterDto registerDto)
     {
-        var isEmailAlreadyTaken = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == registerDto.Email);
-        var isUsernameAlreadyTaken = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Username == registerDto.Username);
-
-        if(isEmailAlreadyTaken is not null&& isUsernameAlreadyTaken is not null)
+        try
         {
-            return new RegistrationResult(false,null,RegistrationError.BothTaken);
+            var isEmailAlreadyTaken = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == registerDto.Email);
+            var isUsernameAlreadyTaken = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Username == registerDto.Username);
+
+            if (isEmailAlreadyTaken is not null && isUsernameAlreadyTaken is not null)
+            {
+                return new RegistrationResult(false, null, RegistrationError.BothTaken);
+            }
+
+            else if (isEmailAlreadyTaken is null && isUsernameAlreadyTaken is not null)
+            {
+                return new RegistrationResult(false, null, RegistrationError.UsernameTaken);
+            }
+
+            else if (isEmailAlreadyTaken is not null && isUsernameAlreadyTaken is null)
+            {
+                return new RegistrationResult(false, null, RegistrationError.EmailTaken);
+            }
+
+            byte[] passwordHash, passwordSalt;
+
+            HashingHelper.CreatePasswordHash(registerDto.Password, out passwordHash, out passwordSalt);
+
+            var user = new UserEntity
+            {
+                Username = registerDto.Username,
+                Email = registerDto.Email,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt
+            };
+
+            await _authApiDb.Users.AddAsync(user);
+            await _authApiDb.SaveChangesAsync();
+
+            var token = Guid.NewGuid().ToString().Substring(0, 6);
+
+            var userVerification = new UserVerificationEntity
+            {
+                UserId = user.Id,
+                Token = token,
+                Expiration = DateTime.UtcNow.AddHours(24),
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _authApiDb.UserVerifications.AddAsync(userVerification);
+            await _authApiDb.SaveChangesAsync();
+
+            var verificationLink = $"https://localhost:7167/verify-email?email={user.Email}&token={token}";
+
+            var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Email Doğrulama için tıklayınız.</a>";
+            var emailResult = await _emailService.SendEmailAsync(user.Email, "Kayıt başarılı. Lütfen email adresinizi doğrulayın.", htmlMailBody);
+
+            return new RegistrationResult(true, null, RegistrationError.None);
         }
-
-        else if (isEmailAlreadyTaken is null && isUsernameAlreadyTaken is not null)
+        catch (Exception ex)
         {
-            return new RegistrationResult(false, null, RegistrationError.UsernameTaken);
+            return new RegistrationResult(false,$"Bir hata oluştu: {ex.Message}",RegistrationError.None);
         }
-
-        else if (isEmailAlreadyTaken is not null && isUsernameAlreadyTaken is null)
-        {
-            return new RegistrationResult(false, null, RegistrationError.EmailTaken);
-        }
-
-        byte[] passwordHash, passwordSalt;
-
-        HashingHelper.CreatePasswordHash(registerDto.Password, out passwordHash, out passwordSalt);
-
-        var user = new UserEntity
-        {
-            Username = registerDto.Username,
-            Email = registerDto.Email,
-            PasswordHash = passwordHash,
-            PasswordSalt = passwordSalt
-        };
-
-        await _authApiDb.Users.AddAsync(user);
-        await _authApiDb.SaveChangesAsync();
-
-        var token = Guid.NewGuid().ToString().Substring(0, 6);
-
-        var userVerification = new UserVerificationEntity
-        {
-            UserId = user.Id,
-            Token = token,
-            Expiration = DateTime.UtcNow.AddHours(24),
-            CreatedAt = DateTime.UtcNow
-        };
-
-        await _authApiDb.UserVerifications.AddAsync(userVerification);
-        await _authApiDb.SaveChangesAsync();
-
-        var verificationLink = $"https://localhost:7167/verify-email?email={user.Email}&token={token}";
-
-        var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Email Doğrulama için tıklayınız.</a>";
-        var emailResult = await _emailService.SendEmailAsync(user.Email, "Kayıt başarılı. Lütfen email adresinizi doğrulayın.", htmlMailBody);
-
-        return new RegistrationResult(true,null,RegistrationError.None);
     }
 
     public async Task<Result> RenewPasswordEmailAsync(RenewPasswordDto dto)
