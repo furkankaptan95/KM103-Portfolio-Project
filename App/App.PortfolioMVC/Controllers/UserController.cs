@@ -17,8 +17,8 @@ public class UserController(IUserPortfolioService userServive) : Controller
     }
 
     [AuthorizeRolesMvc("admin", "commenter")]
-    [HttpGet]
-    public async Task<IActionResult> EditUsername([FromForm] EditUsernameViewModel model)
+    [HttpPost]
+    public async Task<IActionResult> EditUsername([FromForm] EditUserViewModel model)
     {
         if (!ModelState.IsValid)
         {
