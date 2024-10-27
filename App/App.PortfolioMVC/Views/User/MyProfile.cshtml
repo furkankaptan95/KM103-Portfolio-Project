@@ -7,7 +7,7 @@
     var userId = int.Parse(User.Claims.First(claim => claim.Type == "sub").Value);
     var email = User.Claims.First(claim => claim.Type == "email").Value;
     var username = User.Claims.First(claim => claim.Type == "name").Value;
-    var profileImageUrl = User.FindFirst("user-img")?.Value ?? "default-user-img.png";
+    var profileImageUrl = User.Claims.First(claim => claim.Type == "user-img").Value;
 }
 
 <!DOCTYPE html>
@@ -124,7 +124,7 @@
                     <span asp-validation-for="ImageFile" style="color:wheat;"></span>
                 </div>
 
-                @if (User.FindFirst("user-img")?.Value is null)
+                @if (profileImageUrl is "default.png")
                 {
                     <button type="submit" class="btn btn-primary">Ekle</button>
                 }
@@ -134,7 +134,7 @@
                 }
             </form>
 
-            @if (User.FindFirst("user-img")?.Value is not null)
+            @if (profileImageUrl is not "default.png")
             {
                 <a href="/delete-user-img-@profileImageUrl" class="btn btn-sm btn-warning mt-2">Sil</a>
             }

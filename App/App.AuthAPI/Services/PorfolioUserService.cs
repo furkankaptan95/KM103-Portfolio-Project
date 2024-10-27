@@ -204,7 +204,7 @@ public class PorfolioUserService(AuthApiDbContext authApiDb,IAuthService authSer
                 new Claim(JwtClaimTypes.Email,user.Email),
                 new Claim(JwtClaimTypes.Role, user.Role),
                 new Claim(JwtClaimTypes.Name,user.Username),
-                new Claim("user-img", user.ImageUrl ?? "default-image-url"),
+                new Claim("user-img", user.ImageUrl ?? "default.png"),
             };
 
         var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
