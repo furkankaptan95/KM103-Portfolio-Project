@@ -1,5 +1,17 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model List<HomeBlogPostsPortfolioViewModel>
+
+
+@foreach(var post in Model)
+{
+    <div class="block-21 mb-4 d-flex">
+        <a class="blog-img mr-4" style="background-image: url('images/blog-post-img.jpg');"></a>
+        <div class="text">
+            <h3 class="heading"><a href="#">@post.Title</a></h3>
+            <div class="meta">
+                <div><a href="#"><span class="icon-calendar"></span>@post.PublishDate.ToString("dd MMMM yyyy")</a></div>
+                <div><a href="#"><span class="icon-chat"></span>@post.CommentsCount</a></div>
+            </div>
+        </div>
+    </div>
 }
+
