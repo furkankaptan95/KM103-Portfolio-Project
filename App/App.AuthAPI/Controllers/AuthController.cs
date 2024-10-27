@@ -166,7 +166,6 @@ public class AuthController : ControllerBase
         {
             return StatusCode(500, Result.Error($"Bir hata oluştu: {ex.Message}"));
         }
-
     }
 
     [HttpPost("/renew-password")]

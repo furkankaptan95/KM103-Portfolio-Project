@@ -29,7 +29,6 @@ public class AuthService : IAuthService
         _emailService = emailService;
         _httpContextAccessor = httpContextAccessor;
     }
-
     public async Task<Result> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
     {
         try
@@ -62,7 +61,6 @@ public class AuthService : IAuthService
 
             await _authApiDb.UserVerifications.AddAsync(forgotPassword);
             await _authApiDb.SaveChangesAsync();
-
 
             var verificationLink = $"{forgotPasswordDto.Url}/renew-password?email={forgotPasswordDto.Email}&token={token}";
 
@@ -316,8 +314,6 @@ public class AuthService : IAuthService
                 return Result.Error("JWT formatı hatalı");
             }
 
-
-            // Geçerlilik ve imza kontrolü için JWT işleyici
             var handler = new JwtSecurityTokenHandler();
             if (!handler.CanReadToken(token))
             {
@@ -341,12 +337,11 @@ public class AuthService : IAuthService
         {
             return Result.Error();
         }
-
     }
-
     private static string CreateSignature(string header, string payload, string secret)
     {
         var key = Encoding.UTF8.GetBytes(secret);
+
         using (var algorithm = new HMACSHA256(key))
         {
             var data = Encoding.UTF8.GetBytes(header + "." + payload);
@@ -354,12 +349,10 @@ public class AuthService : IAuthService
             return Base64UrlEncode(hash);
         }
     }
-
     private static string Base64UrlEncode(byte[] input)
     {
         return Convert.ToBase64String(input).TrimEnd('=').Replace('+', '-').Replace('/', '_');
     }
-
     public async Task<Result> VerifyEmailAsync(VerifyEmailDto dto)
     {
         var userVerification = await _authApiDb.UserVerifications.Where(uv => uv.User.Email == dto.Email && uv.Token == dto.Token).Include(uv=>uv.User).FirstOrDefaultAsync();

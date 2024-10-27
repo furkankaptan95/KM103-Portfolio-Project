@@ -129,7 +129,7 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
 
         catch (Exception)
         {
-            return Result.Error();
+            return Result<TokensDto>.Error();
         }
     }
 

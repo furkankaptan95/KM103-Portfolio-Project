@@ -82,7 +82,7 @@ public class AuthController(IAuthService authService) : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> ForgotPassword()
+    public IActionResult ForgotPassword()
     {
         return View();
     }
@@ -110,7 +110,7 @@ public class AuthController(IAuthService authService) : Controller
                 return View(model);
             }
 
-            ViewData["SuccessMessage"] = result.SuccessMessage;
+            ViewData["Message"] = result.SuccessMessage;
 
             return View();
         }
@@ -119,7 +119,6 @@ public class AuthController(IAuthService authService) : Controller
             ViewData["ErrorMessage"] = "Şifre sıfırlama linki gönderilirken bir hata oluştu!..";
             return View(model);
         }
-
     }
 
     [HttpGet("renew-password")]

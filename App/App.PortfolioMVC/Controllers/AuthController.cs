@@ -119,6 +119,7 @@ public class AuthController(IAuthService authService) : Controller
 
         return RedirectToAction(nameof(Login));
     }
+
     [AllowAnonymousManuel]
     [HttpGet("verify-email")]
     public async Task<IActionResult> VerifyEmail([FromQuery] string email, string token)
@@ -138,7 +139,7 @@ public class AuthController(IAuthService authService) : Controller
     }
     [AllowAnonymousManuel]
     [HttpGet]
-    public async Task<IActionResult> ForgotPassword()
+    public IActionResult ForgotPassword()
     {
         return View();
     }
@@ -176,7 +177,6 @@ public class AuthController(IAuthService authService) : Controller
 
             return View(model);
         }
-
     }
     [AllowAnonymousManuel]
     [HttpGet("renew-password")]
