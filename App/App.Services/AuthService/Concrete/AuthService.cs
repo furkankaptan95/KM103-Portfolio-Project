@@ -237,13 +237,20 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
 
     public async Task<Result> VerifyEmailAsync(VerifyEmailDto dto)
     {
-        var response = await AuthApiClient.PostAsJsonAsync("verify-email", dto);
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            return Result.SuccessWithMessage("Email başarıyla doğrulandı ve hesabınız aktif edildi. Hesabınıza giriş yapabilirsiniz.");
-        }
+            var response = await AuthApiClient.PostAsJsonAsync("verify-email", dto);
 
-        return Result.Error("Email doğrulama başarısız!..Tekrar doğrulama maili almak için tıklayınız.");
+            if (response.IsSuccessStatusCode)
+            {
+                return Result.SuccessWithMessage("Email başarıyla doğrulandı ve hesabınız aktif edildi. Hesabınıza giriş yapabilirsiniz.");
+            }
+
+            return Result.Error("Email doğrulama başarısız!..Tekrar doğrulama maili almak için tıklayınız.");
+        }
+        catch (Exception)
+        {
+            return Result.Error("Email doğrulama başarısız!..Tekrar doğrulama maili almak için tıklayınız.");
+        }
     }
 }

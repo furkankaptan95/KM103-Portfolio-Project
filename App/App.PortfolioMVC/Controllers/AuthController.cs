@@ -135,18 +135,26 @@ public class AuthController(IAuthService authService) : Controller
     [HttpGet("verify-email")]
     public async Task<IActionResult> VerifyEmail([FromQuery] string email, string token)
     {
-        var dto = new VerifyEmailDto(email, token);
-
-        var result = await authService.VerifyEmailAsync(dto);
-
-        if (!result.IsSuccess)
+        try
         {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            var dto = new VerifyEmailDto(email, token);
+
+            var result = await authService.VerifyEmailAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            }
+
+            TempData["SuccessMessage"] = result.SuccessMessage;
+
+            return RedirectToAction(nameof(Login));
         }
-
-        TempData["SuccessMessage"] = result.SuccessMessage;
-
-        return RedirectToAction(nameof(Login));
+        catch (Exception)
+        {
+            ViewData["ErrorMessage"] = "Email doğrulama başarısız!..Tekrar doğrulama maili almak için tıklayınız.";
+            return RedirectToAction(nameof(Login));
+        }
     }
     [AllowAnonymousManuel]
     [HttpGet]
