@@ -112,9 +112,11 @@
 <body>
     <div class="profile-container">
         <div class="text-center">
-            <img src="~/images/@profileImageUrl" alt="Profil Resmi" class="profile-pic" id="profilePicture">
 
-            <form action="/add-about-me" method="post" enctype="multipart/form-data">
+            <img src="@($"https://localhost:7085/uploads/{profileImageUrl}")" alt="Profil Resmi" class="profile-pic" id="profilePicture">
+
+            <form asp-action="EditUserImage" method="post" enctype="multipart/form-data">
+
                 <input asp-for="Email" type="hidden" value="@email" />
 
                 <div class="mb-3">

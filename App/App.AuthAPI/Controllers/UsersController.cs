@@ -152,4 +152,30 @@ public class UsersController : ControllerBase
         }
     }
 
+    [HttpPost("/edit-user-image")]
+    public async Task<IActionResult> EditUserImageAsync([FromBody] EditUserImageApiDto dto)
+    {
+        try
+        {
+            var result = await _userPortfolioService.ChangeUserImageAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    return NotFound(result);
+                }
+
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
+    }
+
 }
