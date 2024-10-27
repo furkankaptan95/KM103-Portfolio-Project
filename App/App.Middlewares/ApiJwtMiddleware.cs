@@ -102,6 +102,7 @@ public class ApiJwtMiddleware
         if (string.IsNullOrEmpty(jwtToken) && string.IsNullOrEmpty(refreshToken))
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await context.Response.CompleteAsync();
             return;
         }
 
@@ -122,6 +123,7 @@ public class ApiJwtMiddleware
                 else
                 {
                     context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    await context.Response.CompleteAsync();
                     return;
                 }
             }
@@ -149,6 +151,7 @@ public class ApiJwtMiddleware
                     else
                     {
                         context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        await context.Response.CompleteAsync();
                         return;
                     }
                 }
@@ -168,6 +171,7 @@ public class ApiJwtMiddleware
             if (!tokensResponse.IsSuccess)
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.CompleteAsync();
                 return;
             }
 
@@ -201,12 +205,14 @@ public class ApiJwtMiddleware
             else
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.CompleteAsync();
                 return;
             }
         }
         catch (Exception)
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await context.Response.CompleteAsync();
             return;
         }
     }

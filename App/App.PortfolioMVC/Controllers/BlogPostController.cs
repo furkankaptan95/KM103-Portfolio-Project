@@ -57,7 +57,7 @@ public class BlogPostController(IBlogPostPortfolioService blogPostService) : Con
 
         return View(blogPostPageModel);
     }
-    [AllowAnonymousManuel]
+    
     [HttpGet]
     [Route("all-blog-posts")]
     public async Task<IActionResult> AllBlogPosts()

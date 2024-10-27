@@ -103,12 +103,14 @@ public class MvcJwtMiddleware
         if (string.IsNullOrEmpty(jwtToken) && string.IsNullOrEmpty(refreshToken))
         {
              context.Response.Redirect("/Auth/Login");
-             return;
+            await context.Response.CompleteAsync();
+            return;
         }
 
         if (string.IsNullOrEmpty(jwtToken) && !string.IsNullOrEmpty(refreshToken))
         {
             await RenewTokens(context, authService, refreshToken);
+
         }
 
         if (!string.IsNullOrEmpty(jwtToken))
@@ -123,6 +125,7 @@ public class MvcJwtMiddleware
                 else
                 {
                     context.Response.Redirect("/Auth/Login");
+                    await context.Response.CompleteAsync();
                     return;
                 }
             }
@@ -151,6 +154,7 @@ public class MvcJwtMiddleware
                     else
                     {
                         context.Response.Redirect("/Auth/Login");
+                        await context.Response.CompleteAsync();
                         return;
                     }
                 }
@@ -170,6 +174,7 @@ public class MvcJwtMiddleware
             if(!tokensResponse.IsSuccess)
             {
                 context.Response.Redirect("/Auth/Login");
+                await context.Response.CompleteAsync();
                 return;
             }
 
@@ -203,12 +208,14 @@ public class MvcJwtMiddleware
             else
             {
                 context.Response.Redirect("/Auth/Login");
+                await context.Response.CompleteAsync();
                 return;
             }
         }
        catch (Exception)
         {
             context.Response.Redirect("/Auth/Login");
+            await context.Response.CompleteAsync();
             return;
         }
     }
