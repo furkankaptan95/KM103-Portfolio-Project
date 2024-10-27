@@ -77,6 +77,62 @@ public class PorfolioUserService(AuthApiDbContext authApiDb,IAuthService authSer
         }
     }
 
+    public async Task<Result<TokensDto>> DeleteUserImageAsync(string imgUrl)
+    {
+        try
+        {
+
+            var user = await authApiDb.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(x => x.ImageUrl == imgUrl);
+
+            if (user is null)
+            {
+                return Result<TokensDto>.NotFound();
+            }
+
+            user.ImageUrl = null;
+
+            authApiDb.Users.Update(user);
+            await authApiDb.SaveChangesAsync();
+
+            user.RefreshTokens.ToList().ForEach(t => t.IsRevoked = DateTime.UtcNow);
+
+            string jwt = GenerateJwtToken(user);
+
+            string refreshTokenString = GenerateRefreshToken();
+
+            var refreshToken = new RefreshTokenEntity
+            {
+                Token = refreshTokenString,
+                UserId = user.Id,
+                ExpireDate = DateTime.UtcNow.AddDays(7),
+            };
+
+            await authApiDb.RefreshTokens.AddAsync(refreshToken);
+            await authApiDb.SaveChangesAsync();
+
+            var tokensDto = new TokensDto
+            {
+                JwtToken = jwt,
+                RefreshToken = refreshTokenString
+            };
+
+
+            return Result<TokensDto>.Success(tokensDto);
+        }
+        catch (DbUpdateException dbUpdateEx)
+        {
+            return Result<TokensDto>.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result<TokensDto>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result<TokensDto>.Error("Bir hata oluştu: " + ex.Message);
+        }
+    }
+
     public async Task<Result<TokensDto>> EditUsernameAsync(EditUsernameDto dto)
     {
         try

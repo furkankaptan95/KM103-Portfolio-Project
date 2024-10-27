@@ -134,7 +134,11 @@
                 }
             </form>
 
-            <a href="/delete-user-image-@userId" class="btn btn-sm btn-warning mt-2">Sil</a>
+            @if (User.FindFirst("user-img")?.Value is not null)
+            {
+                <a href="/delete-user-img-@profileImageUrl" class="btn btn-sm btn-warning mt-2">Sil</a>
+            }
+            
         </div>
 
         <div class="info-container mt-4">

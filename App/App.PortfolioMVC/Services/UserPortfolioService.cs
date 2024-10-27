@@ -73,6 +73,45 @@ public class UserPortfolioService(IHttpClientFactory factory) : IUserPortfolioSe
         throw new NotImplementedException();
     }
 
+    public async Task<Result<TokensDto>> DeleteUserImageAsync(string imageUrl)
+    {
+        try
+        {
+            var fileResponse = await FileApiClient.DeleteAsync($"delete-file/{imageUrl}");
+
+            if (!fileResponse.IsSuccessStatusCode)
+            {
+                return Result<TokensDto>.Error("Profil Fotoğrafı silinirken bir hata oluştu!..");
+            }
+
+            var authApiResponse = await AuthApiClient.DeleteAsync($"delete-user-img/{imageUrl}");
+
+            if (!authApiResponse.IsSuccessStatusCode)
+            {
+                if (authApiResponse.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return Result<TokensDto>.Error("Kullanıcı bulunamadı!..");
+                }
+
+                return Result<TokensDto>.Error("Profil Fotoğrafı silinirken bir hata oluştu!..");
+            }
+
+            var result = await authApiResponse.Content.ReadFromJsonAsync<Result<TokensDto>>();
+
+            if (result is null)
+            {
+                return Result<TokensDto>.Error("Profil Fotoğrafı silinirken bir hata oluştu!..");
+            }
+
+            return Result<TokensDto>.Success(result.Value, "Profil Fotoğrafı başarıyla güncellendi.");
+
+        }
+        catch (Exception)
+        {
+            return Result<TokensDto>.Error("Profil Fotoğrafı silinirken bir hata oluştu!..");
+        }
+    }
+
     public async Task<Result<TokensDto>> EditUsernameAsync(EditUsernameDto dto)
     {
         try

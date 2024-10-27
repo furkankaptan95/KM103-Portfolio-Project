@@ -178,4 +178,31 @@ public class UsersController : ControllerBase
         }
     }
 
+
+    [HttpDelete("/delete-user-img/{imgUrl}")]
+    public async Task<IActionResult> DeleteUserImageAsync([FromRoute] string imgUrl)
+    {
+        try
+        {
+            var result = await _userPortfolioService.DeleteUserImageAsync(imgUrl);
+
+            if (!result.IsSuccess)
+            {
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    return NotFound(result);
+                }
+
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
+    }
+
 }
