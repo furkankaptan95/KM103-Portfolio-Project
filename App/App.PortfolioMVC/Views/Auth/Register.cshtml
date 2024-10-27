@@ -24,8 +24,8 @@
         left: 50%; /* Ekranın ortasına hizalama */
         transform: translateX(-50%); /* Ortalamak için translate */
         z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-        background-color: #dff0d8;
-        color: #3c763d;
+        background-color: black;
+        color: wheat;
         padding: 10px 20px;
         border-radius: 5px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -37,8 +37,8 @@
         left: 50%; /* Ekranın ortasına hizalama */
         transform: translateX(-50%); /* Ortalamak için translate */
         z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-        background-color: #f8d7da;
-        color: #721c24;
+        background-color: darkred;
+        color: wheat;
         padding: 10px 20px;
         border-radius: 5px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -808,10 +808,10 @@ input.checkbox:checked:after {
 <body>
 
     @{
-        if (TempData["Message"] is not null)
+        if (TempData["SuccessMessage"] is not null)
         {
                 <div class="alert custom-alert-success mt-5">
-                @TempData["Message"]
+                @TempData["SuccessMessage"]
                 </div>
         }
 
@@ -822,10 +822,10 @@ input.checkbox:checked:after {
                 </div>
         }
 
-        if (ViewData["Message"] is not null)
+        if (ViewData["SuccessMessage"] is not null)
         {
                 <div class="alert custom-alert-success mt-5">
-                @ViewData["Message"]
+                @ViewData["SuccessMessage"]
                 </div>
         }
 
@@ -844,7 +844,7 @@ input.checkbox:checked:after {
             <div class="agileits-top">
                 <form id="signupForm" asp-action="Register" method="post">
                     <div style="margin-bottom: 15px;">
-                        <input id="Username" asp-for="Username" style="margin-bottom: 15px;" placeholder="Kullanıcı İsmi">
+                        <input id="Username" asp-for="Username" style="margin-bottom: 15px;" placeholder="Kullanıcı Adı">
                         <span id="usernameError" style="color: wheat;" class="text-danger"></span>
                     </div>
 
@@ -859,7 +859,7 @@ input.checkbox:checked:after {
                     </div>
 
                     <div style="margin-bottom: 15px;">
-                        <input id="ConfirmPassword" asp-for="ConfirmPassword" style="margin-bottom: 15px;" type="password" placeholder="Şifreyi Onayla">
+                        <input id="ConfirmPassword" asp-for="ConfirmPassword" style="margin-bottom: 15px;" type="password" placeholder="Şifre Tekrar">
                         <span id="confirmPasswordError" style="color: wheat;" class="text-danger"></span>
                     </div>
 
@@ -917,16 +917,12 @@ input.checkbox:checked:after {
 
             let hasError = false;
 
-            // Kullanıcı ismi validasyonu (zorunlu, maksimum 50 karakter, boşluk içeremez, sadece harf ve rakamlardan oluşmalı)
-            const usernameRegex = /^[a-zA-Z0-9]+$/;
+            /// Kullanıcı ismi validasyonu (zorunlu, maksimum 50 karakter)
             if (!username) {
                 document.getElementById('usernameError').innerText = 'Kullanıcı ismi boş olamaz.';
                 hasError = true;
             } else if (username.length > 50) {
                 document.getElementById('usernameError').innerText = 'Kullanıcı ismi maksimum 50 karakter olabilir.';
-                hasError = true;
-            } else if (!usernameRegex.test(username)) {
-                document.getElementById('usernameError').innerText = 'Kullanıcı ismi sadece harf ve rakamlardan oluşmalıdır ve boşluk içeremez.';
                 hasError = true;
             }
 
