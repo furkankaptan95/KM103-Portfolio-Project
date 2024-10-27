@@ -17,7 +17,8 @@ public class AuthController : ControllerBase
     private readonly IValidator<RenewPasswordDto> _renewPasswordValidator;
     private readonly IValidator<NewPasswordDto> _newPasswordValidator;
     private readonly IValidator<RegisterDto> _registerValidator;
-    public AuthController(IAuthService authService, IValidator<LoginDto> loginValidator, IValidator<ForgotPasswordDto> forgotPasswordValidator, IValidator<RenewPasswordDto> renewPasswordValidator, IValidator<NewPasswordDto> newPasswordValidator, IValidator<RegisterDto> registerValidator)
+    private readonly IValidator<VerifyEmailDto> _verifyEmailValidator;
+    public AuthController(IAuthService authService, IValidator<LoginDto> loginValidator, IValidator<ForgotPasswordDto> forgotPasswordValidator, IValidator<RenewPasswordDto> renewPasswordValidator, IValidator<NewPasswordDto> newPasswordValidator, IValidator<RegisterDto> registerValidator, IValidator<VerifyEmailDto> verifyEmailValidator)
     {
         _authService = authService;
         _loginValidator = loginValidator;
@@ -25,6 +26,7 @@ public class AuthController : ControllerBase
         _renewPasswordValidator = renewPasswordValidator;
         _newPasswordValidator = newPasswordValidator;
         _registerValidator = registerValidator;
+        _verifyEmailValidator = verifyEmailValidator;
     }
 
     [HttpPost("/login")]
@@ -130,6 +132,14 @@ public class AuthController : ControllerBase
     {
         try
         {
+            var validationResult = await _verifyEmailValidator.ValidateAsync(dto);
+
+            if (!validationResult.IsValid)
+            {
+                string errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(new RegistrationResult(false, errorMessage, Core.Enums.RegistrationError.None));
+            }
+
             var result = await _authService.VerifyEmailAsync(dto);
 
             if (!result.IsSuccess)

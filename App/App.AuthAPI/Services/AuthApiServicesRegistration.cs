@@ -87,5 +87,6 @@ public static class AuthApiServicesRegistration
         services.AddTransient<IValidator<RenewPasswordDto>, RenewPasswordDtoValidator>();
         services.AddTransient<IValidator<NewPasswordDto>, NewPasswordDtoValidator>();
         services.AddTransient<IValidator<RegisterDto>, RegisterDtoValidator>();
+        services.AddTransient<IValidator<VerifyEmailDto>, VerifyEmailDtoValidator>();
     }
 }
