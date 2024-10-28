@@ -44,13 +44,15 @@
             document.getElementById('contentError').innerText = '';
 
             // Değerleri al
-            const title = document.getElementById('Title').value.trim();
-            const content = document.getElementById('Content').value.trim();
+            const title = document.getElementById('Title').value;
+            const titleTrim = document.getElementById('Title').value.trim();
+            const content = document.getElementById('Content').value;
+            const contentTrim = document.getElementById('Content').value.trim();
 
             let hasError = false;
 
             // Başlık validasyonu
-            if (!title) {
+            if (!titleTrim) {
                 document.getElementById('titleError').innerText = 'Başlık kısmı boş olamaz.';
                 hasError = true;
             } else if (title.length > 100) {
@@ -59,7 +61,7 @@
             }
 
             // İçerik validasyonu
-            if (!content) {
+            if (!contentTrim) {
                 document.getElementById('contentError').innerText = 'İçerik kısmı boş olamaz.';
                 hasError = true;
             }
