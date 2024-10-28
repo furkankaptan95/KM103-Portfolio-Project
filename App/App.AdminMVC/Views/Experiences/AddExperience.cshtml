@@ -63,16 +63,19 @@
             document.getElementById('EndDateError').innerText = '';
 
             // Değerleri al
-            const title = document.querySelector('input[name="Title"]').value.trim();
-            const company = document.querySelector('input[name="Company"]').value.trim();
-            const description = document.querySelector('textarea[name="Description"]').value.trim();
+            const title = document.querySelector('input[name="Title"]').value;
+            const titleTrim = document.querySelector('input[name="Title"]').value.trim();
+            const company = document.querySelector('input[name="Company"]').value;
+            const companyTrim = document.querySelector('input[name="Company"]').value.trim();
+            const description = document.querySelector('textarea[name="Description"]').value;
+            const descriptionTrim = document.querySelector('textarea[name="Description"]').value.trim();
             const startDate = document.querySelector('input[name="StartDate"]').value;
             const endDate = document.querySelector('input[name="EndDate"]').value;
 
             let hasError = false;
 
             // Başlık validasyonu
-            if (!title) {
+            if (!titleTrim) {
                 document.getElementById('TitleError').innerText = 'Başlık kısmı zorunludur.';
                 hasError = true;
             } else if (title.length > 100) {
@@ -81,7 +84,7 @@
             }
 
             // Firma validasyonu
-            if (!company) {
+            if (!companyTrim) {
                 document.getElementById('CompanyError').innerText = 'Firma kısmı zorunludur.';
                 hasError = true;
             } else if (company.length > 100) {
@@ -90,7 +93,7 @@
             }
 
             // Açıklama validasyonu
-            if (!description) {
+            if (!descriptionTrim) {
                 document.getElementById('DescriptionError').innerText = 'Açıklama kısmı zorunludur.';
                 hasError = true;
             }

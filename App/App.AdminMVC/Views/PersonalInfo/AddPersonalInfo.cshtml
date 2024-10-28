@@ -73,18 +73,26 @@
             document.getElementById('BirthDateError').innerText = '';
 
             // Değerleri al
-            const name = document.querySelector('input[name="Name"]').value.trim();
-            const surname = document.querySelector('input[name="Surname"]').value.trim();
-            const email = document.querySelector('input[name="Email"]').value.trim();
-            const link = document.querySelector('input[name="Link"]').value.trim();
-            const adress = document.querySelector('input[name="Adress"]').value.trim();
-            const about = document.querySelector('textarea[name="About"]').value.trim();
+            const name = document.querySelector('input[name="Name"]').value;
+            const surname = document.querySelector('input[name="Surname"]').value;
+            const email = document.querySelector('input[name="Email"]').value;
+            const link = document.querySelector('input[name="Link"]').value;
+            const adress = document.querySelector('input[name="Adress"]').value;
+            const about = document.querySelector('textarea[name="About"]').value;
+
+            const nameTrim = document.querySelector('input[name="Name"]').value.trim();
+            const surnameTrim = document.querySelector('input[name="Surname"]').value.trim();
+            const emailTrim = document.querySelector('input[name="Email"]').value.trim();
+            const linkTrim = document.querySelector('input[name="Link"]').value.trim();
+            const adressTrim = document.querySelector('input[name="Adress"]').value.trim();
+            const aboutTrim = document.querySelector('textarea[name="About"]').value.trim();
+
             const birthDate = document.querySelector('input[name="BirthDate"]').value;
 
             let hasError = false;
 
             // İsim validasyonu
-            if (!name) {
+            if (!nameTrim) {
                 document.getElementById('NameError').innerText = 'İsim kısmı zorunludur.';
                 hasError = true;
             } else if (name.length > 50) {
@@ -93,7 +101,7 @@
             }
 
             // Soyisim validasyonu
-            if (!surname) {
+            if (!surnameTrim) {
                 document.getElementById('SurnameError').innerText = 'Soyisim kısmı zorunludur.';
                 hasError = true;
             } else if (surname.length > 50) {
@@ -102,7 +110,7 @@
             }
 
             // Email validasyonu
-            if (!email) {
+            if (!emailTrim) {
                 document.getElementById('EmailError').innerText = 'Email kısmı boş olamaz.';
                 hasError = true;
             } else if (email.length > 100) {
@@ -114,7 +122,7 @@
             }
 
             // Link validasyonu
-            if (!link) {
+            if (!linkTrim) {
                 document.getElementById('LinkError').innerText = 'Link kısmı boş olamaz.';
                 hasError = true;
             } else if (link.length > 255) {
@@ -123,7 +131,7 @@
             }
 
             // Adres validasyonu
-            if (!adress) {
+            if (!adressTrim) {
                 document.getElementById('AdressError').innerText = 'Adres kısmı boş olamaz.';
                 hasError = true;
             } else if (adress.length > 50) {
@@ -132,7 +140,7 @@
             }
 
             // Hakkımda validasyonu
-            if (!about) {
+            if (!aboutTrim) {
                 document.getElementById('AboutError').innerText = 'Hakkımda kısmı zorunludur.';
                 hasError = true;
             } else if (about.length > 300) {
