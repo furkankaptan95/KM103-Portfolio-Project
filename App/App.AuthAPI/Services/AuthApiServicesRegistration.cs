@@ -9,6 +9,7 @@ using App.Services.AuthService.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace App.AuthAPI.Services;
 public static class AuthApiServicesRegistration
@@ -64,6 +65,31 @@ public static class AuthApiServicesRegistration
         services.AddHttpClient("dataApi", c =>
         {
             c.BaseAddress = new Uri(dataApiUrl);
+        }).ConfigurePrimaryHttpMessageHandler(() =>
+        {
+            var handler = new HttpClientHandler();
+
+            // CookieContainer oluştur
+            var cookieContainer = new CookieContainer();
+
+            // HttpContext'ten cookie'leri al
+            var httpContextAccessor = services.BuildServiceProvider().GetRequiredService<IHttpContextAccessor>();
+            var jwtToken = httpContextAccessor.HttpContext?.Request.Cookies["JwtToken"];
+            var refreshToken = httpContextAccessor.HttpContext?.Request.Cookies["RefreshToken"];
+
+            // Cookie'leri ekle
+            if (!string.IsNullOrEmpty(jwtToken))
+            {
+                cookieContainer.Add(new Uri(dataApiUrl), new Cookie("JwtToken", jwtToken));
+            }
+
+            if (!string.IsNullOrEmpty(refreshToken))
+            {
+                cookieContainer.Add(new Uri(dataApiUrl), new Cookie("RefreshToken", refreshToken));
+            }
+
+            handler.CookieContainer = cookieContainer; // CookieContainer'ı handler'a ekle
+            return handler;
         });
     }
 

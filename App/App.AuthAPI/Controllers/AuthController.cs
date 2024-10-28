@@ -1,4 +1,5 @@
-﻿using App.Core.Results;
+﻿using App.Core.Authorization;
+using App.Core.Results;
 using App.DTOs.AuthDtos;
 using App.Services.AuthService.Abstract;
 using Ardalis.Result;
@@ -9,6 +10,7 @@ namespace App.AuthAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[AllowAnonymousManuel]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;

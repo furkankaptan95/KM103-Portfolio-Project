@@ -1,4 +1,4 @@
-﻿using App.Core.Results;
+﻿using App.Core.Authorization;
 using App.DTOs.UserDtos;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
@@ -25,6 +25,7 @@ public class UsersController : ControllerBase
         _editUserImageValidator = editUserImageValidator;
     }
 
+    [AuthorizeRolesApi("admin")]
     [HttpGet("/get-users-count")]
     public async Task<IActionResult> GetCountAsync()
     {
@@ -45,7 +46,7 @@ public class UsersController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-
+    [AllowAnonymousManuel]
     [HttpGet("/get-commenter-username-{id:int}")]
     public async Task<IActionResult> GetCommentsUserNameAsync([FromRoute] int id)
     {
@@ -76,7 +77,7 @@ public class UsersController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-
+    [AuthorizeRolesApi("admin")]
     [HttpGet("/all-users")]
     public async Task<IActionResult> GetAllAsync()
     {
@@ -97,7 +98,7 @@ public class UsersController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-
+    [AuthorizeRolesApi("admin")]
     [HttpGet("/change-user-activeness-{id:int}")]
     public async Task<IActionResult> ChangeActivenessOfUserAsync([FromRoute] int id)
     {
@@ -230,5 +231,4 @@ public class UsersController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-
 }

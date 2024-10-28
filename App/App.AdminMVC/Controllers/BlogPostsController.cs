@@ -6,6 +6,7 @@ using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
+
 [AuthorizeRolesMvc("admin")]
 public class BlogPostsController(IBlogPostAdminService blogPostService) : Controller
 {

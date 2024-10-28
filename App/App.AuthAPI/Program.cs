@@ -1,5 +1,6 @@
 using App.AuthAPI.Services;
 using App.Data.DbContexts;
+using App.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("AllowSpecificOrigin");
+
+app.UseMiddleware<ApiJwtMiddleware>();
 
 app.UseAuthorization();
 
