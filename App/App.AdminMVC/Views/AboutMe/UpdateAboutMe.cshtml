@@ -77,8 +77,9 @@
                 let isValid = true;
 
                 // Giriş validasyonu
-                const introduction = $('#Introduction').val().trim();
-                if (introduction.length === 0) {
+                const introduction = $('#Introduction').val();
+                const introductionTrim = $('#Introduction').val().trim();
+                if (introductionTrim.length === 0) {
                     $('#introductionError').text('Giriş kısmı boş olamaz.');
                     isValid = false;
                 } else if (introduction.length > 100) {
@@ -89,8 +90,9 @@
                 }
 
                 // Tam isim validasyonu
-                const fullName = $('#FullName').val().trim();
-                if (fullName.length === 0) {
+                const fullName = $('#FullName').val();
+                const fullNameTrim = $('#FullName').val().trim();
+                if (fullNameTrim.length === 0) {
                     $('#fullNameError').text('Tam isim kısmı boş olamaz.');
                     isValid = false;
                 } else if (fullName.length > 50) {
@@ -101,8 +103,9 @@
                 }
 
                 // Alan validasyonu
-                const field = $('#Field').val().trim();
-                if (field.length === 0) {
+                const field = $('#Field').val();
+                const fieldTrim = $('#Field').val().trim();
+                if (fieldTrim.length === 0) {
                     $('#fieldError').text('Alan kısmı boş olamaz.');
                     isValid = false;
                 } else if (field.length > 50) {

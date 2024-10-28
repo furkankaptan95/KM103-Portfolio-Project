@@ -58,16 +58,19 @@
             document.getElementById('Image2Error').innerText = '';
 
             // Değerleri al
-            const introduction = document.querySelector('textarea[name="Introduction"]').value.trim();
-            const fullName = document.querySelector('input[name="FullName"]').value.trim();
-            const field = document.querySelector('input[name="Field"]').value.trim();
+            const introduction = document.querySelector('textarea[name="Introduction"]').value;
+            const introductionTrim = document.querySelector('textarea[name="Introduction"]').value.trim();
+            const fullName = document.querySelector('input[name="FullName"]').value;
+            const fullNameTrim = document.querySelector('input[name="FullName"]').value.trim();
+            const field = document.querySelector('input[name="Field"]').value;
+            const fieldTrim = document.querySelector('input[name="Field"]').value.trim();
             const image1 = document.querySelector('input[name="Image1"]').files[0];
             const image2 = document.querySelector('input[name="Image2"]').files[0];
 
             let hasError = false;
 
             // Giriş validasyonu
-            if (!introduction) {
+            if (!introductionTrim) {
                 document.getElementById('IntroductionError').innerText = 'Giriş kısmı boş olamaz.';
                 hasError = true;
             } else if (introduction.length > 100) {
@@ -76,7 +79,7 @@
             }
 
             // Tam isim validasyonu
-            if (!fullName) {
+            if (!fullNameTrim) {
                 document.getElementById('FullNameError').innerText = 'Tam isim kısmı boş olamaz.';
                 hasError = true;
             } else if (fullName.length > 50) {
@@ -85,7 +88,7 @@
             }
 
             // Alan validasyonu
-            if (!field) {
+            if (!fieldTrim) {
                 document.getElementById('FieldError').innerText = 'Alan kısmı boş olamaz.';
                 hasError = true;
             } else if (field.length > 50) {
