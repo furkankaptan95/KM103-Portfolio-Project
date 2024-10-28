@@ -203,7 +203,7 @@ public class UsersController : ControllerBase
     [HttpDelete("/delete-user-img/{imgUrl}")]
     public async Task<IActionResult> DeleteUserImageAsync([FromRoute] string imgUrl)
     {
-        if (!string.IsNullOrEmpty(imgUrl))
+        if (string.IsNullOrEmpty(imgUrl))
         {
             return BadRequest(Result.Invalid());
         }
