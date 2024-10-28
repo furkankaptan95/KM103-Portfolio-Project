@@ -8,6 +8,7 @@ public class EditUsernameViewModelValidator : AbstractValidator<EditUsernameView
     {
         RuleFor(x => x.Username)
          .NotEmpty().WithMessage("Kullanıcı adı alanı boş bırakılamaz.")
-         .MaximumLength(50).WithMessage("Kullanıcı adı 50 karakterden uzun olamaz.");
+         .MaximumLength(50).WithMessage("Kullanıcı adı 50 karakterden uzun olamaz.")
+         .Matches(@"^\S*$").WithMessage("Kullanıcı adı boşluk içeremez.");
     }
 }

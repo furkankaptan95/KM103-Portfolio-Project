@@ -810,30 +810,30 @@ input.checkbox:checked:after {
     @{
         if (TempData["SuccessMessage"] is not null)
         {
-                <div class="alert custom-alert-success mt-5">
-                @TempData["SuccessMessage"]
-                </div>
+                    <div class="alert custom-alert-success mt-5">
+                    @TempData["SuccessMessage"]
+                    </div>
         }
 
         if (TempData["ErrorMessage"] is not null)
         {
-                <div class="alert custom-alert-error mt-5">
-                @TempData["ErrorMessage"]
-                </div>
+                    <div class="alert custom-alert-error mt-5">
+                    @TempData["ErrorMessage"]
+                    </div>
         }
 
         if (ViewData["SuccessMessage"] is not null)
         {
-                <div class="alert custom-alert-success mt-5">
-                @ViewData["SuccessMessage"]
-                </div>
+                    <div class="alert custom-alert-success mt-5">
+                    @ViewData["SuccessMessage"]
+                    </div>
         }
 
         if (ViewData["ErrorMessage"] is not null)
         {
-                <div class="alert custom-alert-error mt-5">
-                @ViewData["ErrorMessage"]
-                </div>
+                    <div class="alert custom-alert-error mt-5">
+                    @ViewData["ErrorMessage"]
+                    </div>
         }
     }
 
@@ -910,25 +910,30 @@ input.checkbox:checked:after {
             document.getElementById('confirmPasswordError').innerText = '';
 
             // Değerleri al
-            const username = document.getElementById('Username').value.trim();
-            const email = document.getElementById('Email').value.trim();
-            const password = document.getElementById('Password').value.trim();
-            const confirmPassword = document.getElementById('ConfirmPassword').value.trim();
+            const username = document.getElementById('Username').value;
+            const usernameTrim = document.getElementById('Username').value.trim();
+            const email = document.getElementById('Email').value;
+            const emailTrim = document.getElementById('Email').value.trim();
+            const password = document.getElementById('Password').value;
+            const confirmPassword = document.getElementById('ConfirmPassword').value;
 
             let hasError = false;
 
             /// Kullanıcı ismi validasyonu (zorunlu, maksimum 50 karakter)
-            if (!username) {
+            if (!usernameTrim) {
                 document.getElementById('usernameError').innerText = 'Kullanıcı ismi boş olamaz.';
                 hasError = true;
             } else if (username.length > 50) {
                 document.getElementById('usernameError').innerText = 'Kullanıcı ismi maksimum 50 karakter olabilir.';
                 hasError = true;
+            } else if (/\s/.test(username)) {
+                document.getElementById('usernameError').innerText = 'Kullanıcı ismi boşluk içeremez.';
+                hasError = true;
             }
 
             // Email validasyonu (zorunlu, email formatı, maksimum 100 karakter)
             const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
-            if (!email) {
+            if (!emailTrim) {
                 document.getElementById('emailError').innerText = 'Email boş olamaz.';
                 hasError = true;
             } else if (email.length > 100) {
