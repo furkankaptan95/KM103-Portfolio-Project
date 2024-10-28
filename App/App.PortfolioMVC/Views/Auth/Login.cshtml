@@ -150,14 +150,15 @@
             document.getElementById('passwordError').innerText = '';
 
             // Değerleri al
-            const email = document.getElementById('Email').value.trim();
-            const password = document.getElementById('password-field').value.trim();
+            const email = document.getElementById('Email').value;
+            const emailTrim = document.getElementById('Email').value.trim();
+            const password = document.getElementById('password-field').value();
 
             let hasError = false;
 
             // Email validasyonu
             const emailPattern = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
-            if (!email) {
+            if (!emailTrim) {
                 document.getElementById('emailError').innerText = 'Email alanı boş olamaz.';
                 hasError = true;
             } else if (email.length > 100) {

@@ -1,8 +1,8 @@
 ﻿@model BlogPostPagePortfolioViewModel
+@using System.Security.Claims
 
 @{
     ViewData["BlogPostId"] = Model.BlogPost.Id;
-    ViewData["UserId"] = 1;
 }
 
 <section class="ftco-section">
@@ -17,10 +17,12 @@
                         <span class="mr-2"><a href="/#blog-section">Blog Post <i class="ion-ios-arrow-forward"></i></a></span>
                         <span>@Model.BlogPost.Title <i class="ion-ios-arrow-forward"></i></span>
                     </p>
-                    <h2 class="mb-3 d-flex justify-content-between align-items-center">
+                    <h2 class="mb-1">
                         @Model.BlogPost.Title
-                        <span class="text-muted" style="color:wheat; font-size:16px;">@Model.BlogPost.PublishDate.ToString("MMMM dd, yyyy")</span>
                     </h2>
+                    <div class="text-muted mb-2" style="color: wheat; font-size: 16px;">
+                        @Model.BlogPost.PublishDate.ToString("MMMM dd, yyyy")
+                    </div>
 
                     <p>
                         @Model.BlogPost.Content
@@ -28,15 +30,17 @@
                     <div class="tag-widget post-tag-container mb-5 mt-5">
                     </div>
 
-                    <div class="about-author d-flex p-4 bg-dark">
-                        <div class="bio mr-5">
-                            <img src="images/person_1.jpg" alt="Image placeholder" class="img-fluid mb-4">
+                    <div class="about-author d-flex p-4 bg-dark position-relative" style="width:400px;">
+                        <div class="bio mr-2">
+                            <img src="https://localhost:7085/uploads/furkan-kaptan.png" alt="Image placeholder" style="height:100px; border-radius:50%;" class="img-fluid mb-4">
                         </div>
                         <div class="desc">
-                            <h3>George Washington</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia</p>
+                            <h3>Furkan Kaptan</h3>
+                            <p>Backend Yazılım Geliştirici</p>
                         </div>
+                        <span class="author-label">Yazar</span>
                     </div>
+
 
 
                     <div class="pt-5 mt-5">
@@ -56,7 +60,8 @@
                         {
                         <partial name="Partials/SignedCommentForm.cshtml" model="Model.SignedComment" />
                         }
-                        else {
+                        else
+                        {
                         <partial name="Partials/UnsignedCommentForm.cshtml" model="Model.UnsignedComment" />
                         }
                       
@@ -114,9 +119,16 @@
 
 <style>
 
-    @@media (max-width: 495px) {
-       .bio{
-            display: none;
-       }
+    .about-author {
+        position: relative;
+    }
+
+    .author-label {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        color: wheat;
+        font-weight: bold;
+        font-size: 1.1em;
     }
 </style>
