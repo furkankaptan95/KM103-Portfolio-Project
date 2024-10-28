@@ -9,21 +9,21 @@ using Microsoft.EntityFrameworkCore;
 namespace App.DataAPI.Services.PortfolioServices;
 public class BlogPostPortfolioService(DataApiDbContext dataApiDb,ICommentPortfolioService commentPortfolioService) : IBlogPostPortfolioService
 {
-	public async Task<Result<List<HomeBlogPostsPortfolioDto>>> GetHomeBlogPostsAsync()
+	public async Task<Result<List<BlogPostsPortfolioDto>>> GetHomeBlogPostsAsync()
 	{
 		try
         {
-            var dtos = new List<HomeBlogPostsPortfolioDto>();
+            var dtos = new List<BlogPostsPortfolioDto>();
 
             var entities = await dataApiDb.BlogPosts.Where(bp=>bp.IsVisible == true).Include(b=>b.Comments).ToListAsync();
 
             if (entities is null)
             {
-                return Result<List<HomeBlogPostsPortfolioDto>>.Success(dtos);
+                return Result<List<BlogPostsPortfolioDto>>.Success(dtos);
             }
 
             dtos = entities
-           .Select(item => new HomeBlogPostsPortfolioDto
+           .Select(item => new BlogPostsPortfolioDto
            {
                Id = item.Id,
                Title = item.Title,
@@ -33,15 +33,15 @@ public class BlogPostPortfolioService(DataApiDbContext dataApiDb,ICommentPortfol
            })
            .ToList();
 
-            return Result<List<HomeBlogPostsPortfolioDto>>.Success(dtos);
+            return Result<List<BlogPostsPortfolioDto>>.Success(dtos);
         }
         catch (SqlException sqlEx)
         {
-            return Result<List<HomeBlogPostsPortfolioDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+            return Result<List<BlogPostsPortfolioDto>>.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            return Result<List<HomeBlogPostsPortfolioDto>>.Error("Bir hata oluştu: " + ex.Message);
+            return Result<List<BlogPostsPortfolioDto>>.Error("Bir hata oluştu: " + ex.Message);
         }
 	}
 
@@ -58,7 +58,7 @@ public class BlogPostPortfolioService(DataApiDbContext dataApiDb,ICommentPortfol
 
 			var commentsResult = await commentPortfolioService.GetBlogPostCommentsAsync(id);
 
-			List<BlogPostCommentsPortfolioDto> commentDtos = null;
+			List<BlogPostCommentsPortfolioDto> commentDtos = new();
 
 			if (commentsResult.IsSuccess)
 			{

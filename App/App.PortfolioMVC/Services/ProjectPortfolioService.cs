@@ -10,7 +10,7 @@ public class ProjectPortfolioService(IHttpClientFactory factory) : IProjectPortf
     {
         try
         {
-            var apiResponse = await DataApiClient.GetAsync("all-projects");
+            var apiResponse = await DataApiClient.GetAsync("porfolio-all-projects");
 
             if (!apiResponse.IsSuccessStatusCode)
             {

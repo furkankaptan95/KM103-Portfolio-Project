@@ -15,6 +15,7 @@ public class ExperiencePortfolioService(IHttpClientFactory factory) : IExperienc
 			{
 				return Result<List<AllExperiencesPortfolioDto>>.Error();
 			}
+
 			var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<AllExperiencesPortfolioDto>>>();
 
 			if (result is null)

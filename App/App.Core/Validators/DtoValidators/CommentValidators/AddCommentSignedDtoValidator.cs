@@ -7,8 +7,8 @@ public class AddCommentSignedDtoValidator : AbstractValidator<AddCommentSignedDt
     public AddCommentSignedDtoValidator()
     {
         RuleFor(comment => comment.Content)
-            .NotEmpty().WithMessage("İçerik kısmı zorunludur.")
-            .Must(content => !string.IsNullOrWhiteSpace(content)).WithMessage("İçerik boş olamaz.");
+            .NotEmpty().WithMessage("İçerik kısmı boş olamaz.")
+            .MaximumLength(300).WithMessage("İçerik maksimum 300 karakter olabilir.");
 
         RuleFor(comment => comment.UserId)
             .GreaterThan(0).WithMessage("0'dan büyük bir UserId gerekli.");

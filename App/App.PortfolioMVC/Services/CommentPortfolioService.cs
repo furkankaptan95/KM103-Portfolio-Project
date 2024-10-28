@@ -14,7 +14,7 @@ public class CommentPortfolioService(IHttpClientFactory factory) : ICommentPortf
 
             if (!apiResponse.IsSuccessStatusCode)
             {
-                return Result.Error("Yorumunuz alınırken beklenmedik bir problem oluştu..");
+                return Result.Error("Yorumunuz alınırken beklenmedik bir hata oluştu..");
             }
 
             return Result.SuccessWithMessage("Yorumunuz başarıyla alınıp yönetici onayına sunuldu.");
@@ -22,7 +22,7 @@ public class CommentPortfolioService(IHttpClientFactory factory) : ICommentPortf
 
         catch (Exception)
         {
-            return Result.Error("Yorumunuz alınırken beklenmedik bir problem oluştu..");
+            return Result.Error("Yorumunuz alınırken beklenmedik bir hata oluştu..");
         }
     }
 
@@ -34,7 +34,7 @@ public class CommentPortfolioService(IHttpClientFactory factory) : ICommentPortf
 
             if (!apiResponse.IsSuccessStatusCode)
             {
-                return Result.Error("Yorumunuz alınırken beklenmedik bir problem oluştu..");
+                return Result.Error("Yorumunuz alınırken beklenmedik bir hata oluştu..");
             }
 
             return Result.SuccessWithMessage("Yorumunuz başarıyla alınıp yönetici onayına sunuldu.");
@@ -42,7 +42,7 @@ public class CommentPortfolioService(IHttpClientFactory factory) : ICommentPortf
 
         catch (Exception)
         {
-            return Result.Error("Yorumunuz alınırken beklenmedik bir problem oluştu..");
+            return Result.Error("Yorumunuz alınırken beklenmedik bir hata oluştu..");
         }
     }
 

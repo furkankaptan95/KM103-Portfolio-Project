@@ -14,7 +14,7 @@ public class ExperiencePortfolioService(DataApiDbContext dataApiDb) : IExperienc
 		{
 			var dtos = new List<AllExperiencesPortfolioDto>();
 
-			var entities = await dataApiDb.Experiences.Where(bp => bp.IsVisible == true).ToListAsync();
+			var entities = await dataApiDb.Experiences.Where(e => e.IsVisible == true).ToListAsync();
 
 			if (entities is null)
 			{

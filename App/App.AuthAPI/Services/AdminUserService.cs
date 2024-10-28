@@ -112,7 +112,7 @@ public class AdminUserService : IUserAdminService
 
             if (user == null)
             {
-                return Result.NotFound();
+                return Result<string>.NotFound();
             }
 
             return Result<string>.Success(user.Username);
