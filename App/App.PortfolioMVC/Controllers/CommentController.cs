@@ -16,28 +16,35 @@ public class CommentController(ICommentPortfolioService commentService) : Contro
             return Redirect($"/blog-post-{model.BlogPostId}");
         }
 
-        var dto = new AddCommentUnsignedDto
+        try
         {
-            BlogPostId = model.BlogPostId,
-            UnsignedCommenterName = model.UnsignedCommenterName,
-            Content = model.Content,
-        };
+            var dto = new AddCommentUnsignedDto
+            {
+                BlogPostId = model.BlogPostId,
+                UnsignedCommenterName = model.UnsignedCommenterName,
+                Content = model.Content,
+            };
 
-        var result = await commentService.AddCommentUnsignedAsync(dto);
+            var result = await commentService.AddCommentUnsignedAsync(dto);
 
-        if (result.IsSuccess)
-        {
-            TempData["Message"] = result.SuccessMessage;
+            if (result.IsSuccess)
+            {
+                TempData["SuccessMessage"] = result.SuccessMessage;
+            }
+            else
+            {
+                TempData["ErrorMessage"] = result.Errors.First();
+            }
+
+            return Redirect($"/blog-post-{model.BlogPostId}");
         }
-        else
+        catch (Exception)
         {
-            TempData["ErrorMessage"] = result.Errors.First();
+            TempData["ErrorMessage"] = "Yorumunuz alınırken beklenmedik bir hata oluştu..";
+            return Redirect($"/blog-post-{model.BlogPostId}");
         }
-
-        return Redirect($"/blog-post-{model.BlogPostId}");
     }
 
-    [CommonArea]
     [HttpPost]
     public async Task<IActionResult> AddSignedComment([FromForm] SignedAddCommentViewModel model)
     {
@@ -46,24 +53,33 @@ public class CommentController(ICommentPortfolioService commentService) : Contro
             return Redirect($"/blog-post-{model.BlogPostId}");
         }
 
-        var dto = new AddCommentSignedDto
+        try
         {
-            BlogPostId = model.BlogPostId,
-            UserId = model.UserId,
-            Content = model.Content,
-        };
+            var dto = new AddCommentSignedDto
+            {
+                BlogPostId = model.BlogPostId,
+                UserId = model.UserId,
+                Content = model.Content,
+            };
 
-        var result = await commentService.AddCommentSignedAsync(dto);
+            var result = await commentService.AddCommentSignedAsync(dto);
 
-        if (result.IsSuccess)
-        {
-            TempData["Message"] = result.SuccessMessage;
+            if (result.IsSuccess)
+            {
+                TempData["SuccessMessage"] = result.SuccessMessage;
+            }
+            else
+            {
+                TempData["ErrorMessage"] = result.Errors.First();
+            }
+
+            return Redirect($"/blog-post-{model.BlogPostId}");
         }
-        else
-        {
-            TempData["ErrorMessage"] = result.Errors.First();
-        }
 
-        return Redirect($"/blog-post-{model.BlogPostId}");
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Yorumunuz alınırken beklenmedik bir hata oluştu..";
+            return Redirect($"/blog-post-{model.BlogPostId}");
+        }
     }
 }
