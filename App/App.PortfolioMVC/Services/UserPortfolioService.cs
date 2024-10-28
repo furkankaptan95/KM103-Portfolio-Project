@@ -41,7 +41,7 @@ public class UserPortfolioService(IHttpClientFactory factory) : IUserPortfolioSe
                 ImageUrl = urlDto.ImageUrl1
             };
 
-            var response = await AuthApiClient.PostAsJsonAsync("edit-user-image", apiDto);
+            var response = await AuthApiClient.PutAsJsonAsync("change-user-image", apiDto);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -103,7 +103,7 @@ public class UserPortfolioService(IHttpClientFactory factory) : IUserPortfolioSe
                 return Result<TokensDto>.Error("Profil Fotoğrafı silinirken bir hata oluştu!..");
             }
 
-            return Result<TokensDto>.Success(result.Value, "Profil Fotoğrafı başarıyla güncellendi.");
+            return Result<TokensDto>.Success(result.Value, "Profil Fotoğrafı başarıyla silindi.");
 
         }
         catch (Exception)
@@ -116,7 +116,7 @@ public class UserPortfolioService(IHttpClientFactory factory) : IUserPortfolioSe
     {
         try
         {
-            var response = await AuthApiClient.PostAsJsonAsync("edit-username", dto);
+            var response = await AuthApiClient.PutAsJsonAsync("edit-username", dto);
 
             if (!response.IsSuccessStatusCode)
             {

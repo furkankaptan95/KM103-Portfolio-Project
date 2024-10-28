@@ -63,9 +63,8 @@ public class UserController(IUserPortfolioService userServive) : Controller
 
         catch (Exception)
         {
-            ViewData["ErrorMessage"] = "Giriş işlemi sırasında bir hata oluştu!..";
-
-            return View();
+            TempData["ErrorMessage"] = "Kullanıcı ismi değiştirilirken bir hata oluştu!..";
+            return RedirectToAction(nameof(MyProfile));
         }
     }
 
@@ -110,15 +109,20 @@ public class UserController(IUserPortfolioService userServive) : Controller
        
          catch (Exception)
         {
-            ViewData["ErrorMessage"] = "Giriş işlemi sırasında bir hata oluştu!..";
+            TempData["ErrorMessage"] = "Profil resmi güncellenirken bir hata oluştu!..";
 
-            return View();
+            return RedirectToAction(nameof(MyProfile));
         }
     }
 
     [HttpGet("delete-user-img-{userImageUrl}")]
     public async Task<IActionResult> DeleteUserImage([FromRoute] string userImageUrl)
     {
+        if (string.IsNullOrEmpty(userImageUrl))
+        {
+            return RedirectToAction(nameof(MyProfile));
+        }
+
         try
         {
             var result = await userServive.DeleteUserImageAsync(userImageUrl);
@@ -145,11 +149,12 @@ public class UserController(IUserPortfolioService userServive) : Controller
         }
           catch (Exception)
         {
-            ViewData["ErrorMessage"] = "Giriş işlemi sırasında bir hata oluştu!..";
+            TempData["ErrorMessage"] = "Profil resminiz silinirken bir hata oluştu!..";
 
-            return View();
+            return RedirectToAction(nameof(MyProfile));
         }
     }
+
     private void SetCookies(TokensDto tokens)
     {
         CookieOptions jwtCookieOptions = new CookieOptions
