@@ -2,7 +2,6 @@
 using App.Data.Entities;
 using App.DTOs.AuthDtos;
 using App.DTOs.UserDtos;
-using App.Services.AuthService.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using IdentityModel;
@@ -14,7 +13,7 @@ using System.Security.Claims;
 using System.Text;
 
 namespace App.AuthAPI.Services;
-public class PorfolioUserService(AuthApiDbContext authApiDb,IAuthService authService, IConfiguration configuration) : IUserPortfolioService
+public class PorfolioUserService(AuthApiDbContext authApiDb, IConfiguration configuration) : IUserPortfolioService
 {
     public Task<Result<TokensDto>> ChangeUserImageAsync(EditUserImageMvcDto dto)
     {
