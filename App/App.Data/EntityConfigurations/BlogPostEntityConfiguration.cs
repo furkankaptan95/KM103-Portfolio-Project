@@ -10,8 +10,8 @@ public class BlogPostEntityConfiguration : IEntityTypeConfiguration<BlogPostEnti
         builder.HasKey(bp => bp.Id);
         builder.Property(bp => bp.Id).ValueGeneratedOnAdd();
 
-        builder.Property(bp=>bp.Title).IsRequired().HasColumnType("varchar(100)");
-        builder.Property(bp => bp.Content).IsRequired();
+        builder.Property(bp=>bp.Title).IsRequired().HasColumnType("nvarchar(100)");
+        builder.Property(bp => bp.Content).IsRequired().HasColumnType("nvarchar(max)");
         builder.Property(bp => bp.PublishDate).IsRequired().HasColumnType("datetime");
         builder.Property(bp => bp.UpdatedAt).HasColumnType("datetime");
         builder.Property(bp=>bp.IsVisible).IsRequired().HasColumnType("bit");
