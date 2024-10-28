@@ -1,6 +1,8 @@
 ﻿using App.Core.Validators.DtoValidators.AuthValidators;
+using App.Core.Validators.DtoValidators.UserValidators;
 using App.Data.DbContexts;
 using App.DTOs.AuthDtos;
+using App.DTOs.UserDtos;
 using App.Services;
 using App.Services.AdminServices.Abstract;
 using App.Services.AuthService.Abstract;
@@ -88,5 +90,7 @@ public static class AuthApiServicesRegistration
         services.AddTransient<IValidator<NewPasswordDto>, NewPasswordDtoValidator>();
         services.AddTransient<IValidator<RegisterDto>, RegisterDtoValidator>();
         services.AddTransient<IValidator<VerifyEmailDto>, VerifyEmailDtoValidator>();
+        services.AddTransient<IValidator<EditUserImageApiDto>, EditUserImageApiDtoValidator>();
+        services.AddTransient<IValidator<EditUsernameDto>, EditUsernameDtoValidator>();
     }
 }

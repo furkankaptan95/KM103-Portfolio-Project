@@ -1,7 +1,9 @@
-﻿using App.DTOs.UserDtos;
+﻿using App.Core.Results;
+using App.DTOs.UserDtos;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AuthAPI.Controllers;
@@ -12,11 +14,15 @@ public class UsersController : ControllerBase
 {
     private readonly IUserAdminService _userAdminService;
     private readonly IUserPortfolioService _userPortfolioService;
+    private readonly IValidator<EditUsernameDto> _editUsernameValidator; 
+    private readonly IValidator<EditUserImageApiDto> _editUserImageValidator;
 
-    public UsersController(IUserAdminService userAdminService, IUserPortfolioService userPortfolioService)
+    public UsersController(IUserAdminService userAdminService, IUserPortfolioService userPortfolioService, IValidator<EditUsernameDto> editUsernameValidator, IValidator<EditUserImageApiDto> editUserImageValidator)
     {
         _userAdminService = userAdminService;
         _userPortfolioService = userPortfolioService;
+        _editUsernameValidator = editUsernameValidator;
+        _editUserImageValidator = editUserImageValidator;
     }
 
     [HttpGet("/get-users-count")]
@@ -126,6 +132,14 @@ public class UsersController : ControllerBase
     {
         try
         {
+            var validationResult = await _editUsernameValidator.ValidateAsync(dto);
+
+            if (!validationResult.IsValid)
+            {
+                var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            }
+
             var result = await _userPortfolioService.EditUsernameAsync(dto);
 
             if (!result.IsSuccess)
@@ -157,6 +171,14 @@ public class UsersController : ControllerBase
     {
         try
         {
+            var validationResult = await _editUserImageValidator.ValidateAsync(dto);
+
+            if (!validationResult.IsValid)
+            {
+                var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            }
+
             var result = await _userPortfolioService.ChangeUserImageAsync(dto);
 
             if (!result.IsSuccess)
