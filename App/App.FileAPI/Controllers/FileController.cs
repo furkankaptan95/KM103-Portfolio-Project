@@ -1,4 +1,5 @@
-﻿using App.DTOs.FileApiDtos;
+﻿using App.Core.Authorization;
+using App.DTOs.FileApiDtos;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -100,6 +101,7 @@ public class FileController : ControllerBase
 
 
     [HttpDelete("/delete-file/{fileName}")]
+    [AuthorizeRolesApi("admin")]
     public IActionResult DeleteFileAsync([FromRoute] string fileName)
     {
         try

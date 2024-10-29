@@ -75,7 +75,34 @@ public static class PortfolioMvcServicesRegistration
         services.AddHttpClient("fileApi", c =>
         {
             c.BaseAddress = new Uri(fileApiUrl);
-        });
+        })
+
+             .ConfigurePrimaryHttpMessageHandler(() =>
+             {
+                 var handler = new HttpClientHandler();
+
+                 // CookieContainer oluştur
+                 var cookieContainer = new CookieContainer();
+
+                 // HttpContext'ten cookie'leri al
+                 var httpContextAccessor = services.BuildServiceProvider().GetRequiredService<IHttpContextAccessor>();
+                 var jwtToken = httpContextAccessor.HttpContext?.Request.Cookies["JwtToken"];
+                 var refreshToken = httpContextAccessor.HttpContext?.Request.Cookies["RefreshToken"];
+
+                 // Cookie'leri ekle
+                 if (!string.IsNullOrEmpty(jwtToken))
+                 {
+                     cookieContainer.Add(new Uri(fileApiUrl), new Cookie("JwtToken", jwtToken));
+                 }
+
+                 if (!string.IsNullOrEmpty(refreshToken))
+                 {
+                     cookieContainer.Add(new Uri(fileApiUrl), new Cookie("RefreshToken", refreshToken));
+                 }
+
+                 handler.CookieContainer = cookieContainer; // CookieContainer'ı handler'a ekle
+                 return handler;
+             });
 
         var authApiUrl = configuration.GetValue<string>("AuthApiUrl");
         if (string.IsNullOrWhiteSpace(authApiUrl))
@@ -102,12 +129,12 @@ public static class PortfolioMvcServicesRegistration
                  // Cookie'leri ekle
                  if (!string.IsNullOrEmpty(jwtToken))
                  {
-                     cookieContainer.Add(new Uri(dataApiUrl), new Cookie("JwtToken", jwtToken));
+                     cookieContainer.Add(new Uri(authApiUrl), new Cookie("JwtToken", jwtToken));
                  }
 
                  if (!string.IsNullOrEmpty(refreshToken))
                  {
-                     cookieContainer.Add(new Uri(dataApiUrl), new Cookie("RefreshToken", refreshToken));
+                     cookieContainer.Add(new Uri(authApiUrl), new Cookie("RefreshToken", refreshToken));
                  }
 
                  handler.CookieContainer = cookieContainer; // CookieContainer'ı handler'a ekle
