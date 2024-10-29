@@ -46,7 +46,7 @@ public static class AuthApiServicesRegistration
         {
             options.AddPolicy("AllowSpecificOrigin", builder =>
             {
-                builder.WithOrigins("https://localhost:7071")
+                builder.WithOrigins("https://localhost:7071", "https://localhost:7241", "https://localhost:7167", "https://localhost:7085")
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             });

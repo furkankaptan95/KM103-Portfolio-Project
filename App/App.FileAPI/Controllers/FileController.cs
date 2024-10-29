@@ -30,6 +30,7 @@ public class FileController : ControllerBase
 
         
     }
+
     [HttpPost("/upload-files")]
     public async Task<IActionResult> UploadFilesAsync([FromForm] IFormFile? imageFile1, IFormFile? imageFile2)
     {
@@ -101,7 +102,6 @@ public class FileController : ControllerBase
 
 
     [HttpDelete("/delete-file/{fileName}")]
-    [AuthorizeRolesApi("admin")]
     public IActionResult DeleteFileAsync([FromRoute] string fileName)
     {
         try
