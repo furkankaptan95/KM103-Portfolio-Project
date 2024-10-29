@@ -1,5 +1,6 @@
 using App.Middlewares;
 using App.PortfolioMVC.Services;
+using Microsoft.AspNetCore.Antiforgery;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,20 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseMiddleware<MvcJwtMiddleware>();
+
+var antiforgery = app.Services.GetRequiredService<IAntiforgery>();
+app.Use(async (context, next) =>
+{
+    // CSRF token yalnýzca POST, PUT, DELETE gibi hassas isteklerde doðrulanýr
+    if (HttpMethods.IsPost(context.Request.Method) ||
+        HttpMethods.IsPut(context.Request.Method) ||
+        HttpMethods.IsDelete(context.Request.Method))
+    {
+        // Token doðrulamasýný yapýyoruz
+        await antiforgery.ValidateRequestAsync(context);
+    }
+    await next();
+});
 
 app.UseAuthorization();
 
