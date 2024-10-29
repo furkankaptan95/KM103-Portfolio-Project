@@ -8,7 +8,7 @@
 <div class="comment-form-wrap pt-5">
     <h3 class="mb-5">Yorum Yapın</h3>
     <form asp-controller="Comment" asp-action="AddSignedComment" method="post" class="p-5 bg-dark">
-        <!-- BlogPostId hidden olarak gönderiliyor -->
+        @Html.AntiForgeryToken()
         <input asp-for="BlogPostId" type="hidden" value="@blogPostId" />
         <input asp-for="UserId" type="hidden" value="@userId" />
         <div class="form-group">

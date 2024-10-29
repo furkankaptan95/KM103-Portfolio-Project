@@ -42,6 +42,8 @@
 
                 <form asp-controller="ContactMessage" asp-action="Add" method="post" class="bg-light p-4 p-md-5 contact-form">
 
+                    @Html.AntiForgeryToken()
+
                     <div class="form-group">
                         <label asp-for="Name" class="control-label">İsim</label>
                         <input asp-for="Name" class="form-control" placeholder="İsminiz" />

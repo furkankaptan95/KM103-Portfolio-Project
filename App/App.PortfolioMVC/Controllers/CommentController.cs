@@ -9,6 +9,7 @@ public class CommentController(ICommentPortfolioService commentService) : Contro
 {
     [AllowAnonymousManuel]
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddUnsignedComment([FromForm]UnSignedAddCommentViewModel model)
     {
         if (!ModelState.IsValid)
@@ -46,6 +47,7 @@ public class CommentController(ICommentPortfolioService commentService) : Contro
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddSignedComment([FromForm] SignedAddCommentViewModel model)
     {
         if (!ModelState.IsValid)

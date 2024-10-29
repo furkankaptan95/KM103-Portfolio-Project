@@ -59,6 +59,7 @@ public class EducationsController(IEducationAdminService educationService) : Con
 
     [HttpPost]
     [Route("add-education")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddEducation([FromForm] AddEducationViewModel model)
     {
         if (!ModelState.IsValid)
@@ -133,6 +134,7 @@ public class EducationsController(IEducationAdminService educationService) : Con
 
     [HttpPost]
     [Route("update-education")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateEducation([FromForm] UpdateEducationViewModel model)
     {
         if (!ModelState.IsValid)

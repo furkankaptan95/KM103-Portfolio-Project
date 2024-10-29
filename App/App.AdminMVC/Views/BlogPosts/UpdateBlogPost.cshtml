@@ -14,6 +14,9 @@
             <div class="card-body">
 
                 <form id="updateBlogPostForm" action="/update-blog-post" method="post">
+
+                    @Html.AntiForgeryToken()
+
                     <input type="hidden" asp-for="Id" />
 
                     <div class="mb-3 mt-3">

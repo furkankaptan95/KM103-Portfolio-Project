@@ -18,6 +18,7 @@ public class UserController(IUserPortfolioService userServive) : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> EditUsername([FromForm] EditUsernameViewModel model)
     {
         if (!ModelState.IsValid)
@@ -69,6 +70,7 @@ public class UserController(IUserPortfolioService userServive) : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> EditUserImage([FromForm] EditUserImageViewModel model)
     {
         if (!ModelState.IsValid)

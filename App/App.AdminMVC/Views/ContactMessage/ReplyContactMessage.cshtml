@@ -28,6 +28,9 @@
         </div>
 
         <form action="/reply-message" method="post">
+
+            @Html.AntiForgeryToken()
+
             <input type="hidden" asp-for="@Model.GetModel.Name" />
             <input type="hidden" asp-for="@Model.GetModel.Email" />
             <input type="hidden" asp-for="@Model.GetModel.Subject" />

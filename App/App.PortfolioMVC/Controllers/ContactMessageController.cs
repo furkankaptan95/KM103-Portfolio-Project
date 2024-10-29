@@ -9,6 +9,7 @@ namespace App.PortfolioMVC.Controllers;
 public class ContactMessageController(IContactMessagePortfolioService contactMessageService) : Controller
 {
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Add([FromForm] AddContactMessageViewModel model)
     {
         if (!ModelState.IsValid)

@@ -57,6 +57,7 @@ public class ProjectsController(IProjectAdminService projectService) : Controlle
 
     [HttpPost]
     [Route("add-project")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddProject([FromForm] AddProjectViewModel model)
     {
         if (!ModelState.IsValid)
@@ -128,6 +129,7 @@ public class ProjectsController(IProjectAdminService projectService) : Controlle
 
     [HttpPost]
     [Route("update-project")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateProject([FromForm] UpdateProjectViewModel model)
     {
         if (!ModelState.IsValid)

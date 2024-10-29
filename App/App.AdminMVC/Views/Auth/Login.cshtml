@@ -96,6 +96,8 @@
                         <p class="mb-4 text-center">Email adresiniz ve şifreniz ile giriş yapabilirsiniz.</p>
                         <form id="loginForm" asp-action="Login" class="signin-form">
 
+                            @Html.AntiForgeryToken()
+
                             <div class="form-group">
                                 <input asp-for="Email" class="form-control" placeholder="Email">
                                 <span id="emailError" class="text-danger"></span> 

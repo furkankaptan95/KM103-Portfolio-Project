@@ -846,6 +846,7 @@ input.checkbox:checked:after {
         <div class="main-agileinfo">
             <div class="agileits-top">
                 <form id="signupForm" asp-action="Register" method="post">
+                    @Html.AntiForgeryToken()
                     <div style="margin-bottom: 15px;">
                         <input id="Username" asp-for="Username" style="margin-bottom: 15px;" placeholder="Kullanıcı Adı">
                         <span id="usernameError" style="color: wheat;" class="text-danger"></span>

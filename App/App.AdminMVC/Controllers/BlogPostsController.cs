@@ -57,6 +57,7 @@ public class BlogPostsController(IBlogPostAdminService blogPostService) : Contro
 
     [HttpPost]
     [Route("add-blog-post")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddBlogPost([FromForm] AddBlogPostViewModel model)
     {
         if (!ModelState.IsValid)
@@ -124,6 +125,7 @@ public class BlogPostsController(IBlogPostAdminService blogPostService) : Contro
 
     [HttpPost]
     [Route("update-blog-post")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateBlogPost([FromForm] UpdateBlogPostViewModel model)
     {
         if (!ModelState.IsValid)

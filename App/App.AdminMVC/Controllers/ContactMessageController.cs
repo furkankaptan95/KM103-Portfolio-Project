@@ -90,6 +90,7 @@ public class ContactMessageController(IContactMessageAdminService contactMessage
 
     [HttpPost]
     [Route("reply-message")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> ReplyContactMessage([FromForm] ReplyViewModel model)
     {
         if (!ModelState.IsValid)

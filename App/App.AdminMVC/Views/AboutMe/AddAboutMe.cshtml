@@ -13,6 +13,9 @@
             </div>
             <div class="card-body">
                 <form action="/add-about-me" method="post" enctype="multipart/form-data">
+
+                    @Html.AntiForgeryToken()
+
                     <div class="mb-3 mt-3">
                         <label asp-for="Introduction" class="form-label mb-1">Giriş</label>
                         <textarea asp-for="Introduction" rows="6" class="form-control"></textarea>

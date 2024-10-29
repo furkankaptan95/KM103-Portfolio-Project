@@ -92,6 +92,7 @@ public class PersonalInfoController(IPersonalInfoAdminService personalInfoServic
 
     [HttpPost]
     [Route("add-personal-info")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddPersonalInfo([FromForm] AddPersonalInfoViewModel model)
     {
         if (!ModelState.IsValid)
@@ -177,6 +178,7 @@ public class PersonalInfoController(IPersonalInfoAdminService personalInfoServic
 
     [HttpPost]
     [Route("update-personal-info")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdatePersonalInfo([FromForm] UpdatePersonalInfoViewModel model)
     {
         if (!ModelState.IsValid)

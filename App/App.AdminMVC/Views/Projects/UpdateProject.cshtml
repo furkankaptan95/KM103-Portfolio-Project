@@ -10,6 +10,8 @@
         <div class="form-title">Projeyi Güncelle</div>
         <form id="updateProjectForm" action="/update-project" method="post" enctype="multipart/form-data">
 
+            @Html.AntiForgeryToken()
+
             <input type="hidden" asp-for="Id" />
 
             <div class="mb-3 mt-3">
