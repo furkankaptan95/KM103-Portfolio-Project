@@ -61,15 +61,17 @@
             document.getElementById('EndDateError').innerText = '';
 
             // Değerleri al
-            const school = document.querySelector('input[name="School"]').value.trim();
-            const degree = document.querySelector('input[name="Degree"]').value.trim();
+            const school = document.querySelector('input[name="School"]').value;
+            const schoolTrim = document.querySelector('input[name="School"]').value.trim();
+            const degree = document.querySelector('input[name="Degree"]').value;
+            const degreeTrim = document.querySelector('input[name="Degree"]').value.trim();
             const startDate = document.querySelector('input[name="StartDate"]').value;
             const endDate = document.querySelector('input[name="EndDate"]').value;
 
             let hasError = false;
 
             // Okul validasyonu
-            if (!school) {
+            if (!schoolTrim) {
                 document.getElementById('SchoolError').innerText = 'Okul kısmı zorunludur.';
                 hasError = true;
             } else if (school.length > 100) {
@@ -78,7 +80,7 @@
             }
 
             // Derece validasyonu
-            if (!degree) {
+            if (!degreeTrim) {
                 document.getElementById('DegreeError').innerText = 'Derece kısmı zorunludur.';
                 hasError = true;
             } else if (degree.length > 50) {

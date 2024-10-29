@@ -94,7 +94,7 @@
             <div class="row justify-content-center">
                 <div class="col-md-6 col-lg-4">
                     <div class="login-wrap p-0">
-                        <p class="mb-4 text-center">Email adresiniz ve şifreniz ile giriş yapabilirsiniz.</p>
+                        <p class="mb-4 text-center"> <b>Üyelere özel </b> işlemlere devam edebilmek için <br> <b>Email adresiniz</b> ve <b>Şifreniz</b> ile giriş yapabilirsiniz.</p>
                         <form id="loginForm" asp-action="Login" class="signin-form">
 
                             <div class="form-group">
@@ -112,12 +112,11 @@
                                 <button type="submit" class="form-control btn btn-primary submit px-3">Giriş Yap</button>
                             </div>
 
-                            <p class="w-100 text-center">Hesabınız Yok Mu? <a asp-action="Register" style="color: #fff"> Kayıt Olun </a></p>
+                            <p class="w-100 text-center">Hesabınız Yok Mu? <a asp-action="Register" style="color: #fff"> <b style="color:antiquewhite;">Kayıt Olun</b> </a></p>
 
                             <div class="text-center">
-                                <a asp-action="ForgotPassword" style="color: #fff">Şifremi Unuttum</a>
+                                <a asp-action="ForgotPassword" style="color: #fff"> <b>Şifremi Unuttum</b></a>
                             </div>
-
 
                         </form>
                     </div>
@@ -151,14 +150,15 @@
             document.getElementById('passwordError').innerText = '';
 
             // Değerleri al
-            const email = document.getElementById('Email').value.trim();
-            const password = document.getElementById('password-field').value.trim();
+            const email = document.getElementById('Email').value;
+            const emailTrim = document.getElementById('Email').value.trim();
+            const password = document.getElementById('password-field').value();
 
             let hasError = false;
 
             // Email validasyonu
             const emailPattern = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
-            if (!email) {
+            if (!emailTrim) {
                 document.getElementById('emailError').innerText = 'Email alanı boş olamaz.';
                 hasError = true;
             } else if (email.length > 100) {

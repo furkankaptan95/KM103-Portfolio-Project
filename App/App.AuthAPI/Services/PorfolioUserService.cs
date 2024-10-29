@@ -2,7 +2,6 @@
 using App.Data.Entities;
 using App.DTOs.AuthDtos;
 using App.DTOs.UserDtos;
-using App.Services.AuthService.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using IdentityModel;
@@ -14,7 +13,7 @@ using System.Security.Claims;
 using System.Text;
 
 namespace App.AuthAPI.Services;
-public class PorfolioUserService(AuthApiDbContext authApiDb,IAuthService authService, IConfiguration configuration) : IUserPortfolioService
+public class PorfolioUserService(AuthApiDbContext authApiDb, IConfiguration configuration) : IUserPortfolioService
 {
     public Task<Result<TokensDto>> ChangeUserImageAsync(EditUserImageMvcDto dto)
     {
@@ -37,29 +36,7 @@ public class PorfolioUserService(AuthApiDbContext authApiDb,IAuthService authSer
             authApiDb.Users.Update(user);
             await authApiDb.SaveChangesAsync();
 
-
-            user.RefreshTokens.ToList().ForEach(t => t.IsRevoked = DateTime.UtcNow);
-
-            string jwt = GenerateJwtToken(user);
-
-            string refreshTokenString = GenerateRefreshToken();
-
-            var refreshToken = new RefreshTokenEntity
-            {
-                Token = refreshTokenString,
-                UserId = user.Id,
-                ExpireDate = DateTime.UtcNow.AddDays(7),
-            };
-
-            await authApiDb.RefreshTokens.AddAsync(refreshToken);
-            await authApiDb.SaveChangesAsync();
-
-            var tokensDto = new TokensDto
-            {
-                JwtToken = jwt,
-                RefreshToken = refreshTokenString
-            };
-
+            var tokensDto = await GetTokens(user);
 
             return Result<TokensDto>.Success(tokensDto);
         }
@@ -81,7 +58,6 @@ public class PorfolioUserService(AuthApiDbContext authApiDb,IAuthService authSer
     {
         try
         {
-
             var user = await authApiDb.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(x => x.ImageUrl == imgUrl);
 
             if (user is null)
@@ -94,28 +70,7 @@ public class PorfolioUserService(AuthApiDbContext authApiDb,IAuthService authSer
             authApiDb.Users.Update(user);
             await authApiDb.SaveChangesAsync();
 
-            user.RefreshTokens.ToList().ForEach(t => t.IsRevoked = DateTime.UtcNow);
-
-            string jwt = GenerateJwtToken(user);
-
-            string refreshTokenString = GenerateRefreshToken();
-
-            var refreshToken = new RefreshTokenEntity
-            {
-                Token = refreshTokenString,
-                UserId = user.Id,
-                ExpireDate = DateTime.UtcNow.AddDays(7),
-            };
-
-            await authApiDb.RefreshTokens.AddAsync(refreshToken);
-            await authApiDb.SaveChangesAsync();
-
-            var tokensDto = new TokensDto
-            {
-                JwtToken = jwt,
-                RefreshToken = refreshTokenString
-            };
-
+            var tokensDto = await GetTokens(user);
 
             return Result<TokensDto>.Success(tokensDto);
         }
@@ -156,29 +111,7 @@ public class PorfolioUserService(AuthApiDbContext authApiDb,IAuthService authSer
             authApiDb.Users.Update(user);
             await authApiDb.SaveChangesAsync();
 
-
-            user.RefreshTokens.ToList().ForEach(t => t.IsRevoked = DateTime.UtcNow);
-
-            string jwt = GenerateJwtToken(user);
-
-            string refreshTokenString = GenerateRefreshToken();
-
-            var refreshToken = new RefreshTokenEntity
-            {
-                Token = refreshTokenString,
-                UserId = user.Id,
-                ExpireDate = DateTime.UtcNow.AddDays(7),
-            };
-
-            await authApiDb.RefreshTokens.AddAsync(refreshToken);
-            await authApiDb.SaveChangesAsync();
-
-            var tokensDto = new TokensDto
-            {
-                JwtToken = jwt,
-                RefreshToken = refreshTokenString
-            };
-
+            var tokensDto = await GetTokens(user);
 
             return Result<TokensDto>.Success(tokensDto);
         }
@@ -226,5 +159,32 @@ public class PorfolioUserService(AuthApiDbContext authApiDb,IAuthService authSer
     private string GenerateRefreshToken()
     {
         return Guid.NewGuid().ToString();
+    }
+
+    private async Task<TokensDto> GetTokens(UserEntity user)
+    {
+        user.RefreshTokens.ToList().ForEach(t => t.IsRevoked = DateTime.UtcNow);
+
+        string jwt = GenerateJwtToken(user);
+
+        string refreshTokenString = GenerateRefreshToken();
+
+        var refreshToken = new RefreshTokenEntity
+        {
+            Token = refreshTokenString,
+            UserId = user.Id,
+            ExpireDate = DateTime.UtcNow.AddDays(7),
+        };
+
+        await authApiDb.RefreshTokens.AddAsync(refreshToken);
+        await authApiDb.SaveChangesAsync();
+
+        var tokensDto = new TokensDto
+        {
+            JwtToken = jwt,
+            RefreshToken = refreshTokenString
+        };
+
+        return tokensDto;
     }
 }

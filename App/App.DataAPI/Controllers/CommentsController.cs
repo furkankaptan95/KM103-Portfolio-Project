@@ -162,7 +162,7 @@ public class CommentsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [CommonArea]
+    
     [HttpPost("/add-comment-signed")]
     public async Task<IActionResult> AddSignedAsync([FromBody] AddCommentSignedDto dto)
     {

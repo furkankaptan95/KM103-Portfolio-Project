@@ -69,6 +69,7 @@ public class AboutMeController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
+
     [AllowAnonymousManuel]
     [HttpGet("/portfolio-get-about-me")]
     public async Task<IActionResult> GetAboutMePortfolioAsync()
@@ -93,6 +94,7 @@ public class AboutMeController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpPost("/add-about-me")]
     public async Task<IActionResult> AddAboutMeAsync([FromBody] AddAboutMeApiDto dto)

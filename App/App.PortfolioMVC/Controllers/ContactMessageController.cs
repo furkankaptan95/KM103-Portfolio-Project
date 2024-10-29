@@ -16,23 +16,32 @@ public class ContactMessageController(IContactMessagePortfolioService contactMes
             return Redirect("/#contact-section");
         }
 
-        var dto = new AddContactMessageDto
+        try
         {
-            Email = model.Email,
-            Subject = model.Subject,
-            Name = model.Name,
-            Message = model.Message,
-        };
+            var dto = new AddContactMessageDto
+            {
+                Email = model.Email,
+                Subject = model.Subject,
+                Name = model.Name,
+                Message = model.Message,
+            };
 
-        var result = await contactMessageService.AddContactMessageAsync(dto);
+            var result = await contactMessageService.AddContactMessageAsync(dto);
 
-        if (!result.IsSuccess)
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return Redirect("/#contact-section");
+            }
+
+            TempData["SuccessMessage"] = result.SuccessMessage;
+            return Redirect("/#contact-section");
+        }
+        catch (Exception)
         {
-            TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            TempData["ErrorMessage"] = "İletişim Formu gönderilirken bir problem oluştu!..";
             return Redirect("/#contact-section");
         }
 
-        TempData["Message"] = result.SuccessMessage;
-        return Redirect("/#contact-section");
     }
 }

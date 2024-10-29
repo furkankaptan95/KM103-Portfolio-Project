@@ -18,13 +18,12 @@
     <title>Kullanıcı Profili</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-
         .custom-alert-success {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 50%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
+            position: fixed;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
             background-color: #dff0d8;
             color: #3c763d;
             padding: 10px 20px;
@@ -33,11 +32,11 @@
         }
 
         .custom-alert-error {
-            position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
-            left: 50%; /* Ekranın ortasına hizalama */
-            transform: translateX(-50%); /* Ortalamak için translate */
-            z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
+            position: fixed;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
             background-color: #f8d7da;
             color: #721c24;
             padding: 10px 20px;
@@ -46,25 +45,25 @@
         }
 
         body {
-            background-color: #0d0d0d;
-            color: #f8f9fa;
+            background-color: #ffffff; /* Arka plan rengi beyaz */
+            color: #343a40; /* Metin rengi koyu gri */
             display: flex;
             flex-direction: column;
-            align-items: center; /* Ortalamak için */
+            align-items: center;
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
         }
 
         .profile-container {
-            background-color: #1c1c1e;
+            background-color: #f8f9fa; /* Profil kutusu rengi açık gri */
             border-radius: 10px;
             padding: 2rem;
             width: 100%;
             max-width: 450px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-            border: 1px solid #333;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
         }
 
         .profile-pic {
@@ -72,14 +71,14 @@
             width: 120px;
             height: 120px;
             object-fit: cover;
-            border: 3px solid #f8f9fa;
+            border: 3px solid #343a40; /* Profil resmi sınırı koyu gri */
             margin-bottom: 1.5rem;
             transition: transform 0.3s ease;
         }
 
             .profile-pic:hover {
                 transform: scale(1.05);
-                border-color: #ffc107;
+                border-color: #ffc107; /* Hover durumunda sınır rengi sarı */
             }
 
         .btn-secondary {
@@ -87,46 +86,46 @@
             margin-bottom: 2rem;
             font-size: 0.9rem;
             color: #f8f9fa;
-            background-color: #6c757d;
+            background-color: #007bff; /* Buton rengi mavi */
             border: none;
             transition: background-color 0.3s ease;
-            padding: 0.5rem 1rem; /* Buton için iç boşluk */
-            text-decoration: none; /* Linkin altını kaldır */
-            border-radius: 5px; /* Kenarları yuvarlaştır */
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 5px;
         }
 
         .btn-secondary {
-                background-color: #ffc107;
-                color: #343a40;
-            }
+            background-color: #ffc107; /* İkincil buton rengi sarı */
+            color: #343a40;
+        }
 
         .info-container {
             margin-top: 1rem;
-            background-color: #2a2a2c;
+            background-color: #e9ecef; /* Bilgi kutusu rengi açık gri */
             padding: 1rem;
             border-radius: 8px;
-            border: 1px solid #333;
+            border: 1px solid #ddd;
         }
 
         .form-label {
-            color: #adb5bd;
+            color: #6c757d; /* Etiket rengi gri */
             font-weight: bold;
         }
 
         .form-control {
-            background-color: #343a40;
-            color: #f8f9fa;
-            border: 1px solid #444;
+            background-color: #ffffff; /* Giriş alanı rengi beyaz */
+            color: #343a40; /* Giriş alanı metin rengi koyu gri */
+            border: 1px solid #ced4da; /* Giriş alanı sınırı açık gri */
             border-radius: 5px;
         }
 
             .form-control:focus {
-                box-shadow: 0 0 5px #ffc107;
-                border-color: #ffc107;
+                box-shadow: 0 0 5px #ffc107; /* Odaklanma durumunda sarı gölge */
+                border-color: #ffc107; /* Odaklandığında sınır rengi sarı */
             }
 
         .email-info, .label {
-            color: #bdbdbd;
+            color: #6c757d; /* Bilgi rengi gri */
             font-weight: bold;
             text-align: left;
             margin-top: 0.5rem;
@@ -166,7 +165,7 @@
     }
 
     <div class="text-center mb-2">
-        <a href="/" class="btn btn-secondary">Anasayfaya Dön</a> <!-- Buton stili uygulandı -->
+        <a href="/" class="btn btn-secondary">Anasayfaya Dön</a>
     </div>
 
     <div class="text-center mb-4">
@@ -201,11 +200,11 @@
             {
                 <a href="/delete-user-img-@profileImageUrl" class="btn btn-sm btn-danger mt-3">Fotoğrafı Sil</a>
             }
-            
+
         </div>
 
         <div class="info-container mt-4">
-            <form id="editUsernameForm" asp-controller="User" asp-action="EditUsername" method="post" onsubmit="return validateEditUsernameForm()">
+            <form id="editUsernameForm" asp-action="EditUsername" method="post" onsubmit="return validateEditUsernameForm()">
                 <input asp-for="Email" type="hidden" value="@email" />
 
                 <div class="form-group">

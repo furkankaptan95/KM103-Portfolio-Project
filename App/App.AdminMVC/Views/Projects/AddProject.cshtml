@@ -77,14 +77,19 @@
             document.getElementById('validationSummary').innerText = '';
 
             // Değerleri al
-            const title = document.querySelector('input[name="Title"]').value.trim();
-            const description = document.querySelector('textarea[name="Description"]').value.trim();
+            const title = document.querySelector('input[name="Title"]').value;
+            const description = document.querySelector('textarea[name="Description"]').value;
+
+            // Değerleri al
+            const titleTrim = document.querySelector('input[name="Title"]').value.trim();
+            const descriptionTrim = document.querySelector('textarea[name="Description"]').value.trim();
+
             const imageFile = document.querySelector('input[name="ImageFile"]').files[0];
 
             let hasError = false;
 
             // Başlık validasyonu
-            if (!title) {
+            if (!titleTrim) {
                 document.getElementById('TitleError').innerText = 'Başlık kısmı zorunludur.';
                 hasError = true;
             } else if (title.length > 100) {
@@ -93,7 +98,7 @@
             }
 
             // Açıklama validasyonu
-            if (!description) {
+            if (!descriptionTrim) {
                 document.getElementById('DescriptionError').innerText = 'Açıklama kısmı zorunludur.';
                 hasError = true;
             }

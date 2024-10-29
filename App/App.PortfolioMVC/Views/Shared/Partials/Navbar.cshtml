@@ -14,13 +14,34 @@
 				<li class="nav-item"><a href="/#projects-section" class="nav-link"><span>Projeler</span></a></li>
 				<li class="nav-item"><a href="/#blog-section" class="nav-link"><span>Blog Post</span></a></li>
 				<li class="nav-item"><a href="/#contact-section" class="nav-link"><span>İletişim</span></a></li>
-				<li class="nav-item"><a href="/Auth/Register" class="nav-link"><span>Üyel Ol</span></a></li>
-				<li class="nav-item">
-					<a href="/User/MyProfile" class="nav-link">
+				<li class="nav-item dropdown">
+					<a href="#" class="nav-link dropdown-toggle" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 						<i class="fa fa-user" style="font-size: 1.2em; color: #fff;"></i>
 					</a>
+					<ul class="dropdown-menu dropdown-menu-end custom-dropdown" aria-labelledby="userDropdown">
+						<li><a href="/User/MyProfile" class="dropdown-item">Profilim</a></li>
+						<li><a href="/Auth/Login" class="dropdown-item">Giriş Yap</a></li>
+						<li><a href="/Auth/Register" class="dropdown-item">Üye Ol</a></li>
+						<li><a href="/Auth/Logout" class="dropdown-item">Çıkış Yap</a></li>
+					</ul>
 				</li>
+
 			</ul>
 		</div>
 	</div>
 </nav>
+
+<style>
+	.custom-dropdown {
+		background-color: #333; /* Koyu gri arka plan */
+	}
+
+		.custom-dropdown .dropdown-item {
+			color: #bbb; /* Normal durumdaki gri yazı rengi */
+		}
+
+			.custom-dropdown .dropdown-item:hover {
+				background-color: #444; /* Daha koyu gri hover arka plan */
+				color: #fff; /* Beyaz yazı rengi */
+			}
+</style>

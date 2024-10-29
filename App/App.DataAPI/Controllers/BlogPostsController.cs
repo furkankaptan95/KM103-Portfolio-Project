@@ -1,5 +1,4 @@
-﻿using App.Core;
-using App.DTOs.BlogPostDtos.Admin;
+﻿using App.DTOs.BlogPostDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
@@ -84,7 +83,7 @@ public class BlogPostsController : ControllerBase
 
             if (!result.IsSuccess)
             {
-                return BadRequest(result);
+                return StatusCode(500, result);
             }
 
             return Ok(result);
@@ -124,7 +123,7 @@ public class BlogPostsController : ControllerBase
             return StatusCode(500,$"Beklenmedik bir hata oluştu: {ex.Message}");
         }
     }
-    [CommonArea]
+    [AllowAnonymousManuel]
     [HttpGet("/portfolio-blog-post-{id:int}")]
 	public async Task<IActionResult> GetByIdPortfolioAsync([FromRoute] int id)
 	{
@@ -154,6 +153,7 @@ public class BlogPostsController : ControllerBase
 			return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
 		}
 	}
+
     [AuthorizeRolesApi("admin")]
     [HttpPut("/update-blog-post")]
     public async Task<IActionResult> UpdateBlogPostAsync([FromBody] UpdateBlogPostDto dto)

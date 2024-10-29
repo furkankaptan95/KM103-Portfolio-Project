@@ -16,6 +16,7 @@ public class PersonalInfoPortfolioService(IHttpClientFactory factory) : IPersona
 			if (apiResponse.IsSuccessStatusCode)
 			{
 				var result = await apiResponse.Content.ReadFromJsonAsync<Result<PersonalInfoPortfolioDto>>();
+
 				if (result is null)
 				{
 					return Result<PersonalInfoPortfolioDto>.Error();

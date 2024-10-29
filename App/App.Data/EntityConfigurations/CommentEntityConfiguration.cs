@@ -10,10 +10,10 @@ public class CommentEntityConfiguration : IEntityTypeConfiguration<CommentEntity
         builder.HasKey(c => c.Id);
         builder.Property(c => c.Id).ValueGeneratedOnAdd();
 
-        builder.Property(c=>c.Content).IsRequired();
+        builder.Property(c=>c.Content).IsRequired().HasColumnType("nvarchar(300)");
         builder.Property(c=>c.CreatedAt).IsRequired().HasColumnType("datetime");
         builder.Property(c => c.IsApproved).IsRequired().HasColumnType("bit");
-        builder.Property(c => c.UnsignedCommenterName).HasMaxLength(50);
+        builder.Property(c => c.UnsignedCommenterName).HasColumnType("nvarchar(50)");
 
         builder.HasOne(c => c.BlogPost)
             .WithMany(bp => bp.Comments)

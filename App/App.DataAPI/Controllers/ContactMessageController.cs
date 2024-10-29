@@ -25,6 +25,7 @@ public class ContactMessageController : ControllerBase
         _contactMessageAdminService = contactMessageAdminService;
         _replyValidator = replyValidator;
     }
+
     [AllowAnonymousManuel]
     [HttpPost("/add-contact-message")]
     public async Task<IActionResult> AddAsync([FromBody] AddContactMessageDto dto)
@@ -32,11 +33,10 @@ public class ContactMessageController : ControllerBase
         try
         {
             var validationResult = await _addValidator.ValidateAsync(dto);
-            string errorMessage;
 
             if (!validationResult.IsValid)
             {
-                errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                var errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
                 return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
             }
 

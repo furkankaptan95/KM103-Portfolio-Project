@@ -1,5 +1,5 @@
 ﻿namespace App.DTOs.BlogPostDtos.Porfolio;
-public class HomeBlogPostsPortfolioDto
+public class BlogPostsPortfolioDto
 {
     public int Id { get; set; }
     public string Title { get; set; }

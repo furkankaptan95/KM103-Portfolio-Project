@@ -8,6 +8,7 @@ namespace App.PortfolioMVC.Controllers;
 [AllowAnonymousManuel]
 public class HomeController(IHomePortfolioService homeService) : Controller
 {
+    [HttpGet]
     public async Task<IActionResult> Index()
     {
        var model = new HomeIndexViewModel();
@@ -22,5 +23,4 @@ public class HomeController(IHomePortfolioService homeService) : Controller
 
 		return View(model);
 	}
-
 }

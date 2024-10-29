@@ -7,12 +7,12 @@ public class AddCommentUnsignedDtoValidator : AbstractValidator<AddCommentUnsign
     public AddCommentUnsignedDtoValidator()
     {
         RuleFor(comment => comment.Content)
-            .NotEmpty().WithMessage("İçerik kısmı zorunludur.")
-            .Must(content => !string.IsNullOrWhiteSpace(content)).WithMessage("İçerik boş olamaz.");
+            .NotEmpty().WithMessage("İçerik kısmı boş olamaz.")
+             .MaximumLength(300).WithMessage("İçerik maksimum 300 karakter olabilir.");
 
         RuleFor(comment => comment.UnsignedCommenterName)
-            .NotEmpty().WithMessage("İsim zorunludur.")
-            .Must(content => !string.IsNullOrWhiteSpace(content)).WithMessage("İsim boş olamaz.");
+            .NotEmpty().WithMessage("İsim kısmı boş olamaz.")
+             .MaximumLength(50).WithMessage("İsim maksimum 50 karakter olabilir.");
 
         RuleFor(comment => comment.BlogPostId)
             .GreaterThan(0).WithMessage("0'dan büyük bir BlogPostId gerekli.");

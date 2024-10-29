@@ -4,6 +4,6 @@ using Ardalis.Result;
 namespace App.Services.PortfolioServices.Abstract;
 public interface IBlogPostPortfolioService
 {
-    Task<Result<List<HomeBlogPostsPortfolioDto>>> GetHomeBlogPostsAsync();
+    Task<Result<List<BlogPostsPortfolioDto>>> GetHomeBlogPostsAsync();
 	Task<Result<SingleBlogPostDto>> GetBlogPostById(int id);
 }

@@ -12,7 +12,6 @@ public class HomeController(IHomeAdminService homeService) : Controller
     [HttpGet]
     public IActionResult AccessDenied()
     {
-
         return View();
     }
 

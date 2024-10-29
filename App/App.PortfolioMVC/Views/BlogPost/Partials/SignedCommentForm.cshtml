@@ -2,7 +2,7 @@
 
 @{
     var blogPostId = ViewData["BlogPostId"] as int?;
-    var userId = ViewData["UserId"] as int?;
+    var userId = int.Parse(User.Claims.First(claim => claim.Type == "sub").Value);
 }
 
 <div class="comment-form-wrap pt-5">

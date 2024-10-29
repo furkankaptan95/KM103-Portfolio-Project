@@ -137,7 +137,7 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
     
 		return model;
 	}
-	private static List<HomeBlogPostsPortfolioViewModel> BlogPosts(List<HomeBlogPostsPortfolioDto> dtos)
+	private static List<HomeBlogPostsPortfolioViewModel> BlogPosts(List<BlogPostsPortfolioDto> dtos)
 	{
 		var models =new List<HomeBlogPostsPortfolioViewModel>();
 
@@ -157,5 +157,4 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
         }
         return models;
     }
-
 }

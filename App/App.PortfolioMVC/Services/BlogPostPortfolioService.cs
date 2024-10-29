@@ -7,7 +7,7 @@ namespace App.PortfolioMVC.Services;
 public class BlogPostPortfolioService(IHttpClientFactory factory) : IBlogPostPortfolioService
 {
 	private HttpClient DataApiClient => factory.CreateClient("dataApi");
-	public async Task<Result<List<HomeBlogPostsPortfolioDto>>> GetHomeBlogPostsAsync()
+	public async Task<Result<List<BlogPostsPortfolioDto>>> GetHomeBlogPostsAsync()
 	{
         try
         {
@@ -15,21 +15,22 @@ public class BlogPostPortfolioService(IHttpClientFactory factory) : IBlogPostPor
 
             if (apiResponse.IsSuccessStatusCode)
             {
-                var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<HomeBlogPostsPortfolioDto>>>();
+                var result = await apiResponse.Content.ReadFromJsonAsync<Result<List<BlogPostsPortfolioDto>>>();
 
                 if (result is null)
                 {
-                    return Result<List<HomeBlogPostsPortfolioDto>>.Error();
+                    return Result<List<BlogPostsPortfolioDto>>.Error();
                 }
 
                 return result;
             }
-            return Result<List<HomeBlogPostsPortfolioDto>>.Error();
+
+            return Result<List<BlogPostsPortfolioDto>>.Error();
         }
 
         catch (Exception)
         {
-            return Result<List<HomeBlogPostsPortfolioDto>>.Error();
+            return Result<List<BlogPostsPortfolioDto>>.Error();
         }
     }
 
@@ -50,8 +51,6 @@ public class BlogPostPortfolioService(IHttpClientFactory factory) : IBlogPostPor
 
 				return result;
 			}
-
-			string errorMessage;
 
 			if (apiResponse.StatusCode == HttpStatusCode.NotFound)
 			{

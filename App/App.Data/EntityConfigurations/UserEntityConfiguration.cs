@@ -10,12 +10,12 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
         builder.HasKey(u => u.Id);
         builder.Property(u => u.Id).ValueGeneratedOnAdd();
 
-        builder.Property(u => u.Username).IsRequired().HasColumnType("varchar(50)");
-        builder.Property(u => u.Email).IsRequired().HasColumnType("varchar(100)");
-        builder.Property(u => u.PasswordHash).IsRequired().HasColumnType("varchar(255)");
-        builder.Property(u => u.PasswordSalt).IsRequired().HasColumnType("varchar(255)");
-        builder.Property(u => u.Role).IsRequired().HasColumnType("varchar(50)");
-        builder.Property(u => u.ImageUrl).HasColumnType("varchar(255)");
+        builder.Property(u => u.Username).IsRequired().HasColumnType("nvarchar(50)");
+        builder.Property(u => u.Email).IsRequired().HasColumnType("nvarchar(100)");
+        builder.Property(u => u.PasswordHash).IsRequired().HasColumnType("nvarchar(255)");
+        builder.Property(u => u.PasswordSalt).IsRequired().HasColumnType("nvarchar(255)");
+        builder.Property(u => u.Role).IsRequired().HasColumnType("nvarchar(50)");
+        builder.Property(u => u.ImageUrl).HasColumnType("nvarchar(255)");
         builder.Property(u => u.IsActive).IsRequired().HasColumnType("bit");
 
     }
