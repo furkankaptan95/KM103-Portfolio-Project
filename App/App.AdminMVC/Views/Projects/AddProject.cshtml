@@ -8,6 +8,9 @@
     <div class="form-container">
         <div class="form-title">Proje Ekle</div>
         <form id="addProjectForm" action="/add-project" method="post" enctype="multipart/form-data">
+
+            @Html.AntiForgeryToken()
+
             <div id="validationSummary" class="text-danger"></div>
 
             <div class="mb-3 mt-3">

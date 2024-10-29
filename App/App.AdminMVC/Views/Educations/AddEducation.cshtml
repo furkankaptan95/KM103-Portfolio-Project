@@ -14,6 +14,9 @@
             <div class="card-body">
 
                 <form action="/add-education" method="post">
+
+                    @Html.AntiForgeryToken()
+
                     <div class="mb-3 mt-3">
                         <label asp-for="School" class="form-label mb-1">Okul</label>
                         <input asp-for="School" class="form-control" placeholder="Okul bilgisini buraya yazınız" />

@@ -90,6 +90,7 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
 
     [HttpPost]
     [Route("add-about-me")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddAboutMe([FromForm] AddAboutMeViewModel model)
     {
         if (!ModelState.IsValid)
@@ -130,6 +131,7 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
 
     [HttpGet]
     [Route("update-about-me")]
+   
     public async Task<IActionResult> UpdateAboutMe()
     {
         try
@@ -172,6 +174,7 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
 
     [HttpPost]
     [Route("update-about-me")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateAboutMe([FromForm] UpdateAboutMeViewModel model)
     {
         if (!ModelState.IsValid)

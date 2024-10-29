@@ -178,6 +178,8 @@
             <img src="@($"https://localhost:7085/uploads/{profileImageUrl}")" alt="Profil Resmi" class="profile-pic" id="profilePicture">
 
             <form id="editUserImageForm" asp-action="EditUserImage" method="post" enctype="multipart/form-data" onsubmit="return validateImageFile()">
+                
+                @Html.AntiForgeryToken()
 
                 <input asp-for="Email" type="hidden" value="@email" />
 
@@ -205,6 +207,9 @@
 
         <div class="info-container mt-4">
             <form id="editUsernameForm" asp-action="EditUsername" method="post" onsubmit="return validateEditUsernameForm()">
+
+                @Html.AntiForgeryToken()
+
                 <input asp-for="Email" type="hidden" value="@email" />
 
                 <div class="form-group">

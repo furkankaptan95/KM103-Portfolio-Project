@@ -59,6 +59,7 @@ public class ExperiencesController(IExperienceAdminService experienceService) : 
 
     [HttpPost]
     [Route("add-experience")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddExperience([FromForm] AddExperienceViewModel model)
     {
         if (!ModelState.IsValid)
@@ -134,6 +135,7 @@ public class ExperiencesController(IExperienceAdminService experienceService) : 
 
     [HttpPost]
     [Route("update-experience")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateExperience([FromForm] UpdateExperienceViewModel model)
     {
         if (!ModelState.IsValid)

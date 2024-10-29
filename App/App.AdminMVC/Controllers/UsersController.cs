@@ -95,6 +95,7 @@ public class UsersController(IUserAdminService userService) : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> EditUsername([FromForm] EditUsernameViewModel model)
     {
         if (!ModelState.IsValid)
@@ -146,6 +147,7 @@ public class UsersController(IUserAdminService userService) : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> EditUserImage([FromForm] EditUserImageViewModel model)
     {
         if (!ModelState.IsValid)

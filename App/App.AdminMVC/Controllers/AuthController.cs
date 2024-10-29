@@ -20,6 +20,7 @@ public class AuthController(IAuthService authService) : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login([FromForm] LoginViewModel model)
     {
         if (!ModelState.IsValid)
@@ -91,6 +92,7 @@ public class AuthController(IAuthService authService) : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> ForgotPassword([FromForm] ForgotPasswordViewModel model)
     {
         if (!ModelState.IsValid)
@@ -162,6 +164,7 @@ public class AuthController(IAuthService authService) : Controller
     }
 
     [HttpPost("renew-password")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> RenewPassword([FromForm] NewPasswordViewModel model)
     {
         if (!ModelState.IsValid)

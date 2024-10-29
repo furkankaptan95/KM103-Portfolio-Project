@@ -15,6 +15,12 @@ public static class AdminMvcServicesRegistration
         services.AddValidatorsFromAssemblyContaining<AddAboutMeViewModel>();
         services.AddHttpContextAccessor();
 
+        services.AddAntiforgery(options =>
+        {
+            options.HeaderName = "X-CSRF-TOKEN"; // İsteğe bağlı olarak header adı
+        });
+
+
         services.AddScoped<AuthorizationService>();
 
         ConfigureHttpClients(services, configuration);
