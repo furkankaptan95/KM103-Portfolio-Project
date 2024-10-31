@@ -122,6 +122,10 @@ public class ContactMessageService(IHttpClientFactory factory) : IContactMessage
                 {
                     return Result.Error("Yanıt vermek istediğiniz Mesaj bulunamadı.");
                 }
+                else if (apiResponse.StatusCode == HttpStatusCode.Conflict)
+                {
+                    return Result.Error("Mesajı daha önce zaten yanıtladınız!..");
+                }
 
                 return Result.Error("Yanıt verme işlemi sırasında beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
             }

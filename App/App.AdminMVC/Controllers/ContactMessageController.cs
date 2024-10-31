@@ -21,7 +21,7 @@ public class ContactMessageController(IContactMessageAdminService contactMessage
             if (!result.IsSuccess)
             {
                 TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-                return Redirect("/home/index");
+                return Redirect("/");
             }
 
             var dtos = result.Value;
@@ -46,7 +46,7 @@ public class ContactMessageController(IContactMessageAdminService contactMessage
         catch (Exception)
         {
             TempData["ErrorMessage"] = "Mesajlar getirilirken beklenmedik bir hata oluştu..";
-            return Redirect("/home/index");
+            return Redirect("/");
         }
     }
 
@@ -54,6 +54,12 @@ public class ContactMessageController(IContactMessageAdminService contactMessage
     [Route("reply-contact-message-{id:int}")]
     public async Task<IActionResult> ReplyContactMessage([FromRoute] int id)
     {
+        if (id < 1)
+        {
+            TempData["ErrorMessage"] = "Geçersiz Mesaj ID Bilgisi";
+            return Redirect("/all-contact-messages");
+        }
+
         try
         {
             var result = await contactMessageService.GetContactMessageByIdAsync(id);
@@ -67,6 +73,7 @@ public class ContactMessageController(IContactMessageAdminService contactMessage
             var dto = result.Value;
 
             var model = new ReplyViewModel();
+
             var modelGet = new GetContactMessageViewModel
             {
                 Id = id,
@@ -93,8 +100,9 @@ public class ContactMessageController(IContactMessageAdminService contactMessage
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ReplyContactMessage([FromForm] ReplyViewModel model)
     {
-        if (!ModelState.IsValid)
+        if (string.IsNullOrEmpty(model.ReplyModel.ReplyMessage))
         {
+            ViewData["ErrorMessage"] = "Yanıt Mesajı boş olamaz!..";
             return View(model);
         }
 
@@ -112,7 +120,7 @@ public class ContactMessageController(IContactMessageAdminService contactMessage
             {
                 var errorMessage = result.Errors.FirstOrDefault();
 
-                if (result.Status == ResultStatus.NotFound)
+                if (result.Status == ResultStatus.NotFound|| result.Status == ResultStatus.Conflict)
                 {
                     TempData["ErrorMessage"] = errorMessage;
                     return Redirect("/all-contact-messages");
@@ -130,7 +138,6 @@ public class ContactMessageController(IContactMessageAdminService contactMessage
             ViewData["ErrorMessage"] = "Yanıt verme işlemi sırasında beklenmedik bir hata oluştu!..Tekrar deneyebilirsiniz.";
             return View(model);
         }
-
     }
 
     [HttpGet]

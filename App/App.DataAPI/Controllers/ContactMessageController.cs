@@ -76,6 +76,7 @@ public class ContactMessageController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpGet("/get-contact-message-{id:int}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
@@ -95,6 +96,7 @@ public class ContactMessageController : ControllerBase
                 {
                     return NotFound(result);
                 }
+
                 else if(result.Status == ResultStatus.Conflict)
                 {
                     return Conflict(result);
@@ -131,6 +133,11 @@ public class ContactMessageController : ControllerBase
                 if (result.Status == ResultStatus.NotFound)
                 {
                     return NotFound(result);
+                }
+
+                if(result.Status == ResultStatus.Conflict)
+                {
+                    return Conflict(result);
                 }
 
                 return StatusCode(500, result);

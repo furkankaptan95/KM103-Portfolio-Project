@@ -30,6 +30,8 @@ using App.Services.AuthService.Concrete;
 using App.DataAPI.Services.PortfolioServices;
 using App.Core.Authorization;
 using System.Net;
+using App.Services;
+using App.DataAPI.Services;
 
 namespace App.DataApi.Services;
 public static class DataApiServicesRegistration
@@ -60,6 +62,7 @@ public static class DataApiServicesRegistration
 
         ConfigureHttpClients(services, configuration);
 
+        services.AddSingleton<IEmailService, SmtpEmailService>();
         // Scoped hizmetler
         RegisterScopedServices(services);
 

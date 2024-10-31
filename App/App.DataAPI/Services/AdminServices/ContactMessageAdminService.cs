@@ -1,12 +1,13 @@
 ﻿using App.Data.DbContexts;
 using App.DTOs.ContactMessageDtos.Admin;
+using App.Services;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAPI.Services.AdminServices;
-public class ContactMessageAdminService(DataApiDbContext dataApiDb) : IContactMessageAdminService
+public class ContactMessageAdminService(DataApiDbContext dataApiDb,IEmailService emailService) : IContactMessageAdminService
 {
     public async Task<Result> ChangeIsReadAsync(int id)
     {
@@ -129,13 +130,27 @@ public class ContactMessageAdminService(DataApiDbContext dataApiDb) : IContactMe
                 return Result.NotFound();
             }
 
+            if(entity.ReplyDate is not null)
+            {
+                return Result.Conflict();
+            }
+
+            entity.IsRead = true;
             entity.Reply = dto.ReplyMessage;
             entity.ReplyDate = DateTime.Now;
 
             dataApiDb.ContactMessages.Update(entity);
             await dataApiDb.SaveChangesAsync();
 
-            return Result.Success();
+            var htmlMailBody = $"<h1>Merhaba, Ben Furkan!</h1><p>{entity.Reply}</p>";
+            var emailResult = await emailService.SendEmailAsync(entity.Email, "Benimle iletişime geçtiğiniz için teşekür ederim. İşte yanıtım!", htmlMailBody);
+
+            if (emailResult.IsSuccess)
+            {
+                return Result.Success();
+            }
+
+            return Result.Error();
         }
         catch (DbUpdateException dbUpdateEx)
         {
