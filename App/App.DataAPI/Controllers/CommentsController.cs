@@ -25,7 +25,6 @@ public class CommentsController : ControllerBase
     }
 
     [AuthorizeRolesApi("admin")]
-
     [HttpGet("/all-comments")]
     public async Task<IActionResult> GetAllAsync()
     {
@@ -97,6 +96,7 @@ public class CommentsController : ControllerBase
                 {
                     return NotFound(result);
                 }
+
                 return StatusCode(500, result);
             }
             return Ok(result);
@@ -107,6 +107,7 @@ public class CommentsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpGet("/get-users-comments-{id:int}")]
     public async Task<IActionResult> GetUsersCommentsAsync([FromRoute] int id)
