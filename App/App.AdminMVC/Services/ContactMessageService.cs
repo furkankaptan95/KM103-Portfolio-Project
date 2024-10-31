@@ -1,12 +1,9 @@
-﻿namespace App.AdminMVC.Services;
-
-using App.DTOs.ContactMessageDtos.Admin;
+﻿using App.DTOs.ContactMessageDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
-using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
 
+namespace App.AdminMVC.Services;
 public class ContactMessageService(IHttpClientFactory factory) : IContactMessageAdminService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");
@@ -121,6 +118,10 @@ public class ContactMessageService(IHttpClientFactory factory) : IContactMessage
                 if (apiResponse.StatusCode == HttpStatusCode.NotFound)
                 {
                     return Result.Error("Yanıt vermek istediğiniz Mesaj bulunamadı.");
+                }
+                else if (apiResponse.StatusCode == HttpStatusCode.Conflict)
+                {
+                    return Result.Error("Mesajı daha önce zaten yanıtladınız!..");
                 }
 
                 return Result.Error("Yanıt verme işlemi sırasında beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");

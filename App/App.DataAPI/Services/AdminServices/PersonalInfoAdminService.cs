@@ -14,6 +14,13 @@ public class PersonalInfoAdminService(DataApiDbContext dataApiDb) : IPersonalInf
     {
         try
         {
+            var entityCheck = await dataApiDb.PersonalInfos.FirstOrDefaultAsync();
+
+            if(entityCheck is not null)
+            {
+                return Result.Conflict();
+            }
+
             var entity = new PersonalInfoEntity()
             {
                 About = dto.About,
@@ -106,6 +113,7 @@ public class PersonalInfoAdminService(DataApiDbContext dataApiDb) : IPersonalInf
             return Result<PersonalInfoAdminDto>.Error(errorMessage);
         }
     }
+
     public async Task<Result> UpdatePersonalInfoAsync(UpdatePersonalInfoDto dto)
     {
         try

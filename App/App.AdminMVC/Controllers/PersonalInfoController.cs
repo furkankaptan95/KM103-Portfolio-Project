@@ -31,7 +31,7 @@ public class PersonalInfoController(IPersonalInfoAdminService personalInfoServic
 
                 TempData["ErrorMessage"] = errorMessage;
 
-                return Redirect("/home/index");
+                return Redirect("/");
             }
 
             var dto = result.Value;
@@ -53,7 +53,7 @@ public class PersonalInfoController(IPersonalInfoAdminService personalInfoServic
         {
             TempData["ErrorMessage"] = "Kişisel bilgiler getirilirken beklenmeyen bir hata oluştu.";
 
-            return Redirect("/home/index");
+            return Redirect("/");
         }
     }
 
@@ -69,7 +69,7 @@ public class PersonalInfoController(IPersonalInfoAdminService personalInfoServic
             {
                 TempData["ErrorMessage"] = "Ekleme ekranı getirilirken beklenmedik bir hata oluştu..";
 
-                return Redirect("/home/index");
+                return Redirect("/");
             }
 
             if (result.Value == false)
@@ -86,7 +86,7 @@ public class PersonalInfoController(IPersonalInfoAdminService personalInfoServic
 
             TempData["ErrorMessage"] = "Ekleme ekranı getirilirken beklenmedik bir hata oluştu..";
 
-            return Redirect("/home/index");
+            return Redirect("/");
         }
     }
 
@@ -116,6 +116,12 @@ public class PersonalInfoController(IPersonalInfoAdminService personalInfoServic
 
             if (!result.IsSuccess)
             {
+                if(result.Status == ResultStatus.Conflict)
+                {
+                    TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                    return Redirect("/personal-info");
+                }
+
                 ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
                 return View(model);
             }

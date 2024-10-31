@@ -23,7 +23,7 @@ public class BlogPostsController(IBlogPostAdminService blogPostService) : Contro
             if (!result.IsSuccess)
             {
                 TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-                return Redirect("/home/index");
+                return Redirect("/");
             }
 
             var dtos = result.Value;
@@ -44,7 +44,7 @@ public class BlogPostsController(IBlogPostAdminService blogPostService) : Contro
         catch (Exception)
         {
             TempData["ErrorMessage"] = "Blog Postlar getirilirken beklenmedik bir hata oluştu.";
-            return Redirect("/home/index");
+            return Redirect("/");
         }
     }
 
@@ -95,6 +95,12 @@ public class BlogPostsController(IBlogPostAdminService blogPostService) : Contro
     [Route("update-blog-post-{id:int}")]
     public async Task<IActionResult> UpdateBlogPost([FromRoute] int id)
     {
+        if (id < 1)
+        {
+            TempData["ErrorMessage"] = "Geçersiz Blog Post ID'si.";
+            return Redirect("/all-blog-posts");
+        }
+
         try
         {
             var result = await blogPostService.GetBlogPostById(id);
@@ -153,6 +159,7 @@ public class BlogPostsController(IBlogPostAdminService blogPostService) : Contro
                     TempData["ErrorMessage"] = errorMessage;
                     return Redirect("/all-blog-posts");
                 }
+
                 ViewData["ErrorMessage"] = errorMessage;
                 return View(model);
             }
@@ -171,6 +178,12 @@ public class BlogPostsController(IBlogPostAdminService blogPostService) : Contro
     [Route("delete-blog-post-{id:int}")]
     public async Task<IActionResult> DeleteBlogPost([FromRoute] int id)
     {
+        if (id < 1)
+        {
+            TempData["ErrorMessage"] = "Geçersiz Blog Post ID'si.";
+            return Redirect("/all-blog-posts");
+        }
+
         try
         {
             var result = await blogPostService.DeleteBlogPostAsync(id);
@@ -199,6 +212,12 @@ public class BlogPostsController(IBlogPostAdminService blogPostService) : Contro
     [Route("change-blog-post-visibility-{id:int}")]
     public async Task<IActionResult> MakeBlogPostVisible([FromRoute] int id)
     {
+        if (id < 1)
+        {
+            TempData["ErrorMessage"] = "Geçersiz Blog Post ID'si.";
+            return Redirect("/all-blog-posts");
+        }
+
         try
         {
             var result = await blogPostService.ChangeBlogPostVisibilityAsync(id);

@@ -24,14 +24,11 @@ public class AdminUserService : IUserAdminService
         _factory = factory;
         _configuration = configuration;
     }
-
     private HttpClient DataApiClient => _factory.CreateClient("dataApi");
-
     public Task<Result<TokensDto>> ChangeUserImageAsync(EditUserImageMvcDto dto)
     {
         throw new NotImplementedException();
     }
-
     public async Task<Result<TokensDto>> ChangeUserImageAsync(EditUserImageApiDto dto)
     {
         try
@@ -65,7 +62,6 @@ public class AdminUserService : IUserAdminService
             return Result<TokensDto>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
     public async Task<Result<TokensDto>> DeleteUserImageAsync(string imgUrl)
     {
         try
@@ -99,7 +95,6 @@ public class AdminUserService : IUserAdminService
             return Result<TokensDto>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
     public async Task<Result<TokensDto>> EditUsernameAsync(EditUsernameDto dto)
     {
         try
@@ -140,7 +135,6 @@ public class AdminUserService : IUserAdminService
             return Result<TokensDto>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
     private string GenerateJwtToken(UserEntity user)
     {
         var claims = new List<Claim>
@@ -167,12 +161,10 @@ public class AdminUserService : IUserAdminService
 
         return tokenString;
     }
-
     private string GenerateRefreshToken()
     {
         return Guid.NewGuid().ToString();
     }
-
     private async Task<TokensDto> GetTokens(UserEntity user)
     {
         user.RefreshTokens.ToList().ForEach(t => t.IsRevoked = DateTime.UtcNow);
@@ -230,7 +222,6 @@ public class AdminUserService : IUserAdminService
             return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
     public async Task<Result<List<AllUsersDto>>> GetAllUsersAsync()
     {   
         try
@@ -284,7 +275,6 @@ public class AdminUserService : IUserAdminService
             return Result<List<AllUsersDto>>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
     public async Task<Result<string>> GetCommentsUserName(int id)
     {
         try
@@ -308,7 +298,6 @@ public class AdminUserService : IUserAdminService
             return Result<string>.Error("Bir hata oluştu: " + ex.Message);
         }
     }
-
     public async Task<Result<int>> GetUsersCount()
     {
         try

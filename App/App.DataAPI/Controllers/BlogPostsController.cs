@@ -53,6 +53,7 @@ public class BlogPostsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpGet("/all-blog-posts")]
     public async Task<IActionResult> GetAllBlogPosts()
@@ -63,7 +64,7 @@ public class BlogPostsController : ControllerBase
 
             if (!result.IsSuccess)
             {
-                return BadRequest(result);
+                return StatusCode(500,result);
             }
 
             return Ok(result);
@@ -93,6 +94,7 @@ public class BlogPostsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpGet("/blog-post-{id:int}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
@@ -188,6 +190,7 @@ public class BlogPostsController : ControllerBase
         }
 
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpDelete("/delete-blog-post-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)

@@ -59,6 +59,11 @@ public class AboutMeService : IAboutMeAdminService
                 return Result.SuccessWithMessage(" - Hakkımda - bilgileri başarıyla eklendi. ");
             }
 
+            if(apiResponse.StatusCode == HttpStatusCode.Conflict)
+            {
+                return Result.Conflict(" - Hakkımda - kısmına daha önceden zaten ekleme yapılmış!..");
+            }
+
             return Result.Error("Hakkımda bilgileri eklenirken beklenmeyen bir hata oluştu..Tekrar deneyebilirsiniz.");
         }
         catch (Exception)
@@ -70,7 +75,6 @@ public class AboutMeService : IAboutMeAdminService
     {
         throw new NotImplementedException();
     }
-
     public async Task<Result<bool>> CheckAboutMeAsync()
     {
         try
@@ -96,7 +100,6 @@ public class AboutMeService : IAboutMeAdminService
             return Result<bool>.Error();
         }
     }
-
     public async Task<Result<AboutMeAdminDto>> GetAboutMeAsync()
     {
         try

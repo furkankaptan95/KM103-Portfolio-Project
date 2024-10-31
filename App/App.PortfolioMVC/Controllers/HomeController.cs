@@ -23,4 +23,10 @@ public class HomeController(IHomePortfolioService homeService) : Controller
 
 		return View(model);
 	}
+
+    [HttpGet]
+    public IActionResult Error()
+    {
+        return View();
+    }
 }

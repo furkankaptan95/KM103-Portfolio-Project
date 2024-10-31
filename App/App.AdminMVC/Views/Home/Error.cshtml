@@ -1,0 +1,73 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hata</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .error-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            color: #333;
+        }
+        .error-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .error-title {
+            font-size: 8rem;
+            font-weight: bold;
+            color: #d9534f;
+            margin-bottom: 0;
+        }
+        .error-subtitle {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #6c757d;
+        }
+        .error-message {
+            font-size: 1.2rem;
+            color: #555;
+            margin: 20px 0;
+        }
+        .back-btn {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            padding: 10px 30px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 25px;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            background-color: #0056b3;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-content">
+            <h1 class="error-title">Hata</h1>
+            <h2 class="error-subtitle">Üzgünüz! Bir sorun oluştu.</h2>
+            <p class="error-message">Üzgünüz, ancak bir hata oluştu. Lütfen daha sonra tekrar deneyin veya sorun devam ederse destek ile iletişime geçin.</p>
+            <a href="/" class="back-btn">Anasayfaya Dön</a>
+        </div>
+    </div>
+</body>
+</html>

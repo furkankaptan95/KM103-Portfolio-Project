@@ -25,6 +25,7 @@ public class ExperiencesController : ControllerBase
         _updateValidator = updateValidator;
         _experiencesPortfolioService = experiencesPortfolioService;
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpPost("/add-experience")]
     public async Task<IActionResult> AddAsync([FromBody] AddExperienceDto dto)
@@ -54,6 +55,7 @@ public class ExperiencesController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpGet("/all-experiences")]
     public async Task<IActionResult> GetAllAsync()
@@ -75,6 +77,7 @@ public class ExperiencesController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
+
     [AllowAnonymousManuel]
 	[HttpGet("/portfolio-all-experiences")]
 	public async Task<IActionResult> GetAllPortfolioAsync()
@@ -96,6 +99,7 @@ public class ExperiencesController : ControllerBase
 			return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
 		}
 	}
+
     [AuthorizeRolesApi("admin")]
     [HttpPut("/update-experience")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateExperienceDto dto)
@@ -130,6 +134,7 @@ public class ExperiencesController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpGet("/get-experience-{id:int}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
@@ -161,6 +166,7 @@ public class ExperiencesController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpDelete("/delete-experience-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
@@ -192,6 +198,7 @@ public class ExperiencesController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpGet("/change-experience-visibility-{id:int}")]
     public async Task<IActionResult> ChangeVisibilityAsync([FromRoute] int id)

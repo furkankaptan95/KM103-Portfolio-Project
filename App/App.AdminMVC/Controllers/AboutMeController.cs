@@ -31,7 +31,7 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
 
                 TempData["ErrorMessage"] = errorMessage;
 
-                return Redirect("/home/index");
+                return Redirect("/");
             }
 
             var dto = result.Value;
@@ -51,7 +51,7 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
         {
             TempData["ErrorMessage"] = "Hakkımda kısmındaki bilgiler getirilirken beklenmeyen bir hata oluştu.";
 
-            return Redirect("/home/index");
+            return Redirect("/");
         }
     }
 
@@ -67,7 +67,7 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
             {
                 TempData["ErrorMessage"] = "Ekleme ekranı getirilirken beklenmedik bir hata oluştu..";
 
-                return Redirect("/home/index");
+                return Redirect("/");
             }
 
             if (result.Value == false)
@@ -84,7 +84,7 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
 
             TempData["ErrorMessage"] = "Ekleme ekranı getirilirken beklenmedik bir hata oluştu..";
 
-            return Redirect("/home/index");
+            return Redirect("/");
         }
     }
 
@@ -113,6 +113,12 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
 
             if (!result.IsSuccess)
             {
+                if(result.Status == ResultStatus.Conflict)
+                {
+                    TempData["Message"] = result.Errors.FirstOrDefault();
+                    return Redirect("/about-me");
+                }
+
                 ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
                 return View(model);
             }

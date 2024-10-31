@@ -45,6 +45,7 @@ public class ProjectsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluþtu: {ex.Message}"));
         }
     }
+
     [AllowAnonymousManuel]
     [HttpGet("/porfolio-all-projects")]
     public async Task<IActionResult> GetAllPortfolioAsync()
@@ -66,6 +67,7 @@ public class ProjectsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluþtu: {ex.Message}"));
         }
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpPost("/add-project")]
     public async Task<IActionResult> AddAsync([FromBody] AddProjectApiDto dto)
@@ -95,7 +97,6 @@ public class ProjectsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluþtu: {ex.Message}"));
         }
     }
-
 
     [AuthorizeRolesApi("admin")]
     [HttpDelete("/delete-project-{id:int}")]
@@ -162,6 +163,7 @@ public class ProjectsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluþtu: {ex.Message}"));
         }
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpGet("/get-project-{id:int}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
@@ -193,6 +195,7 @@ public class ProjectsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluþtu: {ex.Message}"));
         }
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpGet("/change-project-visibility-{id:int}")]
     public async Task<IActionResult> ChangeVisibilityAsync([FromRoute] int id)

@@ -19,7 +19,7 @@ public class CommentsController(ICommentAdminService commentService) : Controlle
             if (!result.IsSuccess)
             {
                 TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-                return Redirect("/home/index");
+                return Redirect("/");
             }
 
             var dtos = result.Value;
@@ -41,7 +41,7 @@ public class CommentsController(ICommentAdminService commentService) : Controlle
         catch (Exception)
         {
             TempData["ErrorMessage"] = "Yorumlar getirilirken beklenmedik bir hata oluştu..";
-            return Redirect("/home/index");
+            return Redirect("/");
         }
     }
 
@@ -49,6 +49,12 @@ public class CommentsController(ICommentAdminService commentService) : Controlle
     [Route("delete-comment-{id:int}")]
     public async Task<IActionResult> DeleteComment([FromRoute] int id)
     {
+        if (id < 1)
+        {
+            TempData["ErrorMessage"] = "Geçersiz Yorum ID Bilgisi!..";
+            return Redirect("/all-comments");
+        }
+
         try
         {
             var result = await commentService.DeleteCommentAsync(id);
@@ -77,6 +83,12 @@ public class CommentsController(ICommentAdminService commentService) : Controlle
     [Route("(not)-approve-comment-{id:int}")]
     public async Task<IActionResult> ApproveNotApproveComment([FromRoute] int id)
     {
+        if (id < 1)
+        {
+            TempData["ErrorMessage"] = "Geçersiz Yorum ID Bilgisi!..";
+            return Redirect("/all-comments");
+        }
+
         try
         {
             var result = await commentService.ApproveOrNotApproveCommentAsync(id);

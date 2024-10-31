@@ -95,6 +95,7 @@ public class EducationsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpPut("/update-education")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateEducationDto dto)

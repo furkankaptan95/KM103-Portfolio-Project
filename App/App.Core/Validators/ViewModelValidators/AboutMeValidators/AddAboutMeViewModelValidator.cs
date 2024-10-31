@@ -7,35 +7,29 @@ public class AddAboutMeViewModelValidator : AbstractValidator<AddAboutMeViewMode
 {
     public AddAboutMeViewModelValidator()
     {
-        // Giriş validasyonu
         RuleFor(x => x.Introduction)
-            .MaximumLength(100).WithMessage("Giriş maksimum 100 karakter olabilir.")
-            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Giriş kısmı boş olamaz.");
+            .NotEmpty().WithMessage("Giriş kısmı boş olamaz.")
+            .MaximumLength(100).WithMessage("Giriş maksimum 100 karakter olabilir.");
 
-        // Tam isim validasyonu
         RuleFor(x => x.FullName)
-            .MaximumLength(50).WithMessage("Tam isim maksimum 50 karakter olabilir.")
-            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Tam isim kısmı boş olamaz.");
+            .NotEmpty().WithMessage("Tam isim kısmı boş olamaz.")
+            .MaximumLength(50).WithMessage("Tam isim maksimum 50 karakter olabilir.");
 
-        // Alan validasyonu
         RuleFor(x => x.Field)
-            .MaximumLength(50).WithMessage("Alan maksimum 50 karakter olabilir.")
-            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Alan kısmı boş olamaz.");
+            .NotEmpty().WithMessage("Alan kısmı boş olamaz.")
+            .MaximumLength(50).WithMessage("Alan maksimum 50 karakter olabilir.");
 
-        // Image1 validasyonu
         RuleFor(x => x.Image1)
-            .NotNull().WithMessage("Image1 kısmı boş olamaz.")
-            .Must(BeAValidImage).WithMessage("Image1 geçerli bir resim dosyası olmalıdır.");
+            .NotNull().WithMessage("1. Fotoğraf kısmı boş olamaz.")
+            .Must(BeAValidImage).WithMessage("1. Fotoğraf geçerli bir resim dosyası olmalıdır.");
 
-        // Image2 validasyonu
         RuleFor(x => x.Image2)
-            .NotNull().WithMessage("Image2 kısmı boş olamaz.")
-            .Must(BeAValidImage).WithMessage("Image2 geçerli bir resim dosyası olmalıdır.");
+            .NotNull().WithMessage("2. Fotoğraf kısmı boş olamaz.")
+            .Must(BeAValidImage).WithMessage("2. Fotoğraf geçerli bir resim dosyası olmalıdır.");
     }
 
     private bool BeAValidImage(IFormFile file)
     {
-        // Resim dosyası uzantılarını kontrol ediyoruz
         if (file == null || file.Length == 0)
             return false;
 

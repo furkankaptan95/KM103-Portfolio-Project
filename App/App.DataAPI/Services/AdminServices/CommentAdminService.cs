@@ -109,7 +109,7 @@ public class CommentAdminService : ICommentAdminService
 
                         if (!authApiResponse.IsSuccessStatusCode)
                         {
-                            commenter = "Unknown User";
+                            commenter = "Bilinmeyen Kullanıcı";
                         }
 
                         else
@@ -118,7 +118,7 @@ public class CommentAdminService : ICommentAdminService
 
                             if (result is null)
                             {
-                                commenter = "Unknown User";
+                                commenter = "Bilinmeyen Kullanıcı";
                             }
                             else
                             {
@@ -128,7 +128,7 @@ public class CommentAdminService : ICommentAdminService
                     }
                     else
                     {
-                        commenter = "Anonymous";
+                        commenter = "Anonim";
                     }
                 }
 

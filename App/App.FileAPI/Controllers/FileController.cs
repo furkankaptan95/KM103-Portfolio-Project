@@ -1,11 +1,8 @@
-﻿using App.Core.Authorization;
-using App.DTOs.FileApiDtos;
-using Microsoft.AspNetCore.Cors;
+﻿using App.DTOs.FileApiDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.FileAPI.Controllers;
 
-[EnableCors("AllowMvcClient")]
 [Route("api/[controller]")]
 [ApiController]
 public class FileController : ControllerBase
@@ -27,8 +24,6 @@ public class FileController : ControllerBase
         {
             Console.WriteLine($"Dizin oluşturulurken hata oluştu: {ex.Message}");
         }
-
-        
     }
 
     [HttpPost("/upload-files")]
@@ -43,10 +38,8 @@ public class FileController : ControllerBase
 
         try
         {
-            // Geçerli resim uzantıları
             var validImageExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
 
-            // İlk dosya kontrolü
             if (imageFile1 is not null)
             {
                 if (!validImageExtensions.Contains(Path.GetExtension(imageFile1.FileName).ToLower()))
@@ -54,7 +47,6 @@ public class FileController : ControllerBase
                     return BadRequest("Yalnızca resim dosyaları (.jpg, .jpeg, .png, .gif) yüklenebilir.");
                 }
 
-                // İlk dosyayı kaydet
                 var fileExtension1 = Path.GetExtension(imageFile1.FileName);
                 var uniqueFileName1 = $"{Guid.NewGuid()}{fileExtension1}";
                 var filePath1 = Path.Combine(_uploadsFolder, uniqueFileName1);
@@ -66,7 +58,6 @@ public class FileController : ControllerBase
                 urlDto.ImageUrl1 = uniqueFileName1;
             }
 
-            // İkinci dosya kontrolü
             if (imageFile2 is not null)
             {
                 if (!validImageExtensions.Contains(Path.GetExtension(imageFile2.FileName).ToLower()))
@@ -74,7 +65,6 @@ public class FileController : ControllerBase
                     return BadRequest("Yalnızca resim dosyaları (.jpg, .jpeg, .png, .gif) yüklenebilir.");
                 }
 
-                // İlk dosyayı kaydet
                 var fileExtension2 = Path.GetExtension(imageFile2.FileName);
                 var uniqueFileName2 = $"{Guid.NewGuid()}{fileExtension2}";
                 var filePath2 = Path.Combine(_uploadsFolder, uniqueFileName2);

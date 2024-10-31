@@ -14,6 +14,13 @@ public class AboutMeAdminService(DataApiDbContext dataApiDb) : IAboutMeAdminServ
     {
         try
         {
+            var checkEntity = await dataApiDb.AboutMes.FirstOrDefaultAsync();
+
+            if (checkEntity != null)
+            {
+                return Result.Conflict();
+            }
+
             var entity = new AboutMeEntity()
             {
                 FullName = dto.FullName,

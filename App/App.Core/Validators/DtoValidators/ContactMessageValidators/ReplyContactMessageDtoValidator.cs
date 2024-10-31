@@ -11,6 +11,6 @@ public class ReplyContactMessageDtoValidator : AbstractValidator<ReplyContactMes
             .GreaterThan(0).WithMessage("Id 0'dan büyük olmalıdır.");
 
         RuleFor(x => x.ReplyMessage)
-           .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Mesaj kısmı boş olamaz.");
+            .NotEmpty().WithMessage("Mesaj kısmı boş olamaz.");
     }
 }
