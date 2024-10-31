@@ -8,10 +8,10 @@ public class UpdateBlogPostViewModelValidator : AbstractValidator<UpdateBlogPost
 	{
 
         RuleFor(x => x.Title)
-           .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Başlık kısmı boş olamaz.")
-            .MaximumLength(100).WithMessage("Başlık maksimum 100 karakter olabilir.");
+          .NotEmpty().WithMessage("Başlık kısmı boş olamaz.")
+           .MaximumLength(100).WithMessage("Başlık maksimum 100 karakter olabilir.");
 
         RuleFor(x => x.Content)
-           .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("İçerik kısmı boş olamaz.");
+          .NotEmpty().WithMessage("İçerik kısmı boş olamaz.");
     }
 }
