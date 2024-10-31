@@ -7,30 +7,25 @@ public class UpdateAboutMeViewModelValidator : AbstractValidator<UpdateAboutMeVi
 {
     public UpdateAboutMeViewModelValidator()
     {
-        // Image1 validasyonu
         RuleFor(x => x.ImageFile1)
             .Must(BeAValidImage).WithMessage("Lütfen geçerli bir resim dosyası yükleyiniz.");
 
-        // Image2 validasyonu
         RuleFor(x => x.ImageFile2)
             .Must(BeAValidImage).WithMessage("Lütfen geçerli bir resim dosyası yükleyiniz.");
 
-        // Giriş validasyonu
         RuleFor(x => x.Introduction)
-            .MaximumLength(100).WithMessage("Giriş maksimum 100 karakter olabilir.")
-            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Giriş kısmı boş olamaz.");
+            .NotEmpty().WithMessage("Giriş kısmı boş olamaz.")
+            .MaximumLength(100).WithMessage("Giriş maksimum 100 karakter olabilir.");
 
-        // Tam isim validasyonu
         RuleFor(x => x.FullName)
-            .MaximumLength(50).WithMessage("Tam isim maksimum 50 karakter olabilir.")
-            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Tam isim kısmı boş olamaz.");
+            .NotEmpty().WithMessage("Tam isim kısmı boş olamaz.")
+            .MaximumLength(50).WithMessage("Tam isim maksimum 50 karakter olabilir.");
 
-        // Alan validasyonu
         RuleFor(x => x.Field)
-            .MaximumLength(50).WithMessage("Alan maksimum 50 karakter olabilir.")
-            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Alan kısmı boş olamaz.");
+            .NotEmpty().WithMessage("Alan kısmı boş olamaz.")
+            .MaximumLength(50).WithMessage("Alan maksimum 50 karakter olabilir.");
     }
-    private bool BeAValidImage(IFormFile file)
+    private bool BeAValidImage(IFormFile? file)
     {
         // Eğer dosya yoksa geçerli kabul et
         if (file == null || file.Length == 0)

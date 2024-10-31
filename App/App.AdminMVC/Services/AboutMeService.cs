@@ -70,7 +70,6 @@ public class AboutMeService : IAboutMeAdminService
     {
         throw new NotImplementedException();
     }
-
     public async Task<Result<bool>> CheckAboutMeAsync()
     {
         try
@@ -96,7 +95,6 @@ public class AboutMeService : IAboutMeAdminService
             return Result<bool>.Error();
         }
     }
-
     public async Task<Result<AboutMeAdminDto>> GetAboutMeAsync()
     {
         try

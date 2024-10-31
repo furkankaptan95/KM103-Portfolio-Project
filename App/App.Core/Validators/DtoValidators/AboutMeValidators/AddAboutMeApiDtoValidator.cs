@@ -7,21 +7,21 @@ public class AddAboutMeApiDtoValidator : AbstractValidator<AddAboutMeApiDto>
     public AddAboutMeApiDtoValidator()
     {
         RuleFor(x => x.ImageUrl1)
-             .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Image1Url kısmı boş olamaz.");
+             .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("ImageUrl1 kısmı boş olamaz.");
 
         RuleFor(x => x.ImageUrl2)
-             .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Image2Url kısmı boş olamaz.");
+             .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("ImageUrl2 kısmı boş olamaz.");
 
         RuleFor(x => x.Introduction)
-            .MaximumLength(100).WithMessage("Giriş maksimum 100 karakter olabilir.")
-            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Giriş kısmı boş olamaz.");
+            .NotEmpty().WithMessage("Giriş kısmı boş olamaz.")
+            .MaximumLength(100).WithMessage("Giriş maksimum 100 karakter olabilir.");
 
         RuleFor(x => x.FullName)
-            .MaximumLength(50).WithMessage("Tam isim maksimum 50 karakter olabilir.")
-            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Tam isim kısmı boş olamaz.");
+            .NotEmpty().WithMessage("Tam isim kısmı boş olamaz.")
+            .MaximumLength(50).WithMessage("Tam isim maksimum 50 karakter olabilir.");
 
         RuleFor(x => x.Field)
-            .MaximumLength(50).WithMessage("Alan maksimum 50 karakter olabilir.")
-            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Alan kısmı boş olamaz.");
+            .NotEmpty().WithMessage("Alan kısmı boş olamaz.")
+            .MaximumLength(50).WithMessage("Alan maksimum 50 karakter olabilir.");
     }
 }

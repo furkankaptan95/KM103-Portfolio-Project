@@ -17,6 +17,10 @@
 
                     @Html.AntiForgeryToken()
 
+                    <input type="hidden" asp-for="ImageUrl1" />
+
+                    <input type="hidden" asp-for="ImageUrl2" />
+
                     <div class="mb-3 mt-3">
                         <label asp-for="Introduction" class="form-label mb-1">Giriş</label>
                         <textarea asp-for="Introduction" rows="6" class="form-control" id="Introduction"></textarea>
