@@ -1,5 +1,4 @@
-﻿using App.AdminMVC.Services;
-using App.Core.Authorization;
+﻿using App.Core.Authorization;
 using App.DTOs.AuthDtos;
 using App.DTOs.UserDtos;
 using App.Services.AdminServices.Abstract;
@@ -27,7 +26,7 @@ public class UsersController(IUserAdminService userService) : Controller
             if (!result.IsSuccess)
             {
                 TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-                return Redirect("/home/index");
+                return Redirect("/");
             }
 
             var models = new List<AllUsersViewModel>();
@@ -40,7 +39,7 @@ public class UsersController(IUserAdminService userService) : Controller
                Username = item.Username,
                Email = item.Email,
                IsActive = item.IsActive,
-               ImageUrl = item.ImageUrl,
+               ImageUrl = item.ImageUrl ?? "default.png",
                Comments = item.Comments.Select(c => new UsersCommentsViewModel
                {
                    Content = c.Content,
@@ -56,7 +55,7 @@ public class UsersController(IUserAdminService userService) : Controller
         catch (Exception)
         {
             TempData["ErrorMessage"] = "Kullanıcılar getirilirken beklenmedik bir hata oluştu..";
-            return Redirect("/home/index");
+            return Redirect("/");
         }
     }
 
@@ -64,6 +63,12 @@ public class UsersController(IUserAdminService userService) : Controller
     [Route("change-user-activeness-{id:int}")]
     public async Task<IActionResult> ChangeUserActiveness([FromRoute] int id)
     {
+        if (id < 1)
+        {
+
+            TempData["ErrorMessage"] = "Geçersiz Kullanıcı ID Bilgisi!..";
+            return Redirect("/all-users");
+        }
         try
         {
             var result = await userService.ChangeActivenessOfUserAsync(id);
@@ -86,7 +91,6 @@ public class UsersController(IUserAdminService userService) : Controller
             return Redirect("/all-users");
         }
     }
-
 
     [HttpGet]
     public IActionResult MyProfile()

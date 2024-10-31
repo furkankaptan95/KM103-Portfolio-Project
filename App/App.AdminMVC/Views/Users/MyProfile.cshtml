@@ -17,6 +17,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kullanıcı Profili</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         .custom-alert-success {
             position: fixed;
@@ -185,7 +186,7 @@
 
                 <div class="mb-3">
                     <input asp-for="ImageFile" class="form-control mb-3" type="file" accept="image/*" id="imageFileInput">
-                    <span asp-validation-for="ImageFile" id="imageFileValidation" style="color:wheat;"></span>
+                    <span asp-validation-for="ImageFile" id="imageFileValidation" style="color:black;"></span>
                 </div>
 
                 @if (profileImageUrl == "default.png")
@@ -215,7 +216,7 @@
                 <div class="form-group">
                     <label asp-for="Username" class="form-label">Kullanıcı Adı</label>
                     <input asp-for="Username" value="@username" class="form-control mb-3" id="editUsername" data-original-value="@username" />
-                    <span asp-validation-for="Username" id="editUsernameValidation" style="color:wheat;"></span>
+                    <span asp-validation-for="Username" id="editUsernameValidation" style="color:black;"></span>
                 </div>
 
                 <div class="form-group mt-3">

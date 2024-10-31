@@ -7,7 +7,7 @@ public class AllUsersViewModel
     public string Username { get; set; }
     public string Email { get; set; }
     public bool IsActive { get; set; }
-    public string ImageUrl { get; set; }
+    public string? ImageUrl { get; set; }
     public List<UsersCommentsViewModel> Comments { get; set; }
 
 }

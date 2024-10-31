@@ -1,33 +1,104 @@
-﻿@model List<AllUsersViewModel>
+﻿@using System.Security.Claims
+@{
+    var adminEmail = User.Claims.FirstOrDefault(claim => claim.Type == "email")?.Value;
+}
 
-    <h2 class="text-center my-4" style="font-weight: 600; color: #333;">Kullanıcılar</h2>
+@model List<AllUsersViewModel>
 
-    <div class="table-responsive text-nowrap" style="padding-bottom:100px;">
-        <table class="table card-table">
-            <thead>
+<h2 class="text-center my-4" style="font-weight: 600; color: #333;">Kullanıcılar</h2>
+
+<div class="table-responsive text-nowrap" style="padding-bottom:100px;">
+    <table class="table card-table">
+        <thead>
+            <tr>
+                <th>Resim</th>
+                <th>Kullanıcı adı</th>
+                <th>Email</th>
+                <th>Yorumlar</th>
+                <th>Aktiflik</th>
+                <th>Aktive et/ Deaktive et</th>
+            </tr>
+        </thead>
+        <tbody class="table-border-bottom-0">
+            @if (Model.Any(user => user.Email == adminEmail))
+            {
+                var adminUser = Model.First(user => user.Email == adminEmail);
                 <tr>
-                    <th>Resim</th>
-                    <th>Kullanıcı adı</th>
-                    <th>Email</th>
-                    <th>Yorumlar</th>
-                    <th>Aktiflik</th>
-                    <th>Aktive et/ Deaktive et</th>
+                    <td>
+                        <img src="@($"https://localhost:7085/uploads/{adminUser.ImageUrl}")" class="img-thumbnail" style="max-width: 100px; height: auto; display: block;">
+                    </td>
+                    <td>@adminUser.Username</td>
+                    <td>@adminUser.Email</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal-@adminUser.Id" aria-haspopup="true" aria-expanded="false">Yorumları Görüntüle</button>
+                    </td>
+                    <td><span>Aktif ✅</span></td>
+                    <td><span><b>Yönetici</b></span></td>
                 </tr>
-            </thead>
-            <tbody class="table-border-bottom-0">
-                @foreach (var user in Model)
-                {
-                    <tr>
+
+                <div class="modal fade" id="modal-@adminUser.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabel-@adminUser.Id" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel-@adminUser.Id">@adminUser.Username</h5>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="comments-section">
+                                <h6 class="mb-3" style="margin-left:10px;">Yorumlar:</h6>
+                                <div class="comment-list">
+                                    @if (adminUser.Comments.Count == 0)
+                                    {
+                                        <div class="mt-3 mb-3 ms-2">
+                                            <span>Kullanıcı henüz yorum yapmadı.</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var comment in adminUser.Comments)
+                                        {
+                                            <div class="comment">
+                                                <div class="comment-content">
+                                                    <strong>Blog Post -> " @comment.BlogPostName "</strong>
+                                                    <p class="mt-2">" @comment.Content "</p>
+                                                </div>
+                                                <small class="text-muted">Yorum Tarihi: @comment.CreatedAt.ToString("dd MMMM yyyy HH:mm")</small>
+                                                <p class="comment-status">
+                                                    @if (comment.IsApproved)
+                                                    {
+                                                        <span class="text-success">Onaylı</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-danger">Onaylı Değil</span>
+                                                    }
+                                                </p>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+            @foreach (var user in Model.Where(user => user.Email != adminEmail))
+            {
+                <tr>
                     <td>
                         <img src="@($"https://localhost:7085/uploads/{user.ImageUrl}")" class="img-thumbnail" style="max-width: 100px; height: auto; display: block;">
                     </td>
-                        <td>@user.Username</td>
-                        <td>@user.Email</td>
-
+                    <td>@user.Username</td>
+                    <td>@user.Email</td>
                     <td>
                         <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal-@user.Id" aria-haspopup="true" aria-expanded="false">Yorumları Görüntüle</button>
                     </td>
-
                     <td>
                         @if (user.IsActive)
                         {
@@ -48,8 +119,7 @@
                             <a href="/change-user-activeness-@user.Id" class="btn btn-sm btn-success">Aktif Yap</a>
                         }
                     </td>
-
-                    </tr>
+                </tr>
 
                 <div class="modal fade" id="modal-@user.Id" tabindex="-1" role="dialog" aria-labelledby="modalLabel-@user.Id" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -63,7 +133,6 @@
                             <div class="comments-section">
                                 <h6 class="mb-3" style="margin-left:10px;">Yorumlar:</h6>
                                 <div class="comment-list">
-
                                     @if (user.Comments.Count == 0)
                                     {
                                         <div class="mt-3 mb-3 ms-2">
@@ -93,7 +162,6 @@
                                             </div>
                                         }
                                     }
-
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -102,15 +170,13 @@
                         </div>
                     </div>
                 </div>
-                }
-            </tbody>
-        </table>
-    </div>
-
+            }
+        </tbody>
+    </table>
+</div>
 
 @section Styles {
     <style>
-
         .comments-section {
             margin-top: 20px;
         }
@@ -140,5 +206,3 @@
         }
     </style>
 }
-
-
