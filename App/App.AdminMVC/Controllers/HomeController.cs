@@ -15,6 +15,14 @@ public class HomeController(IHomeAdminService homeService) : Controller
         return View();
     }
 
+    [AllowAnonymousManuel]
+
+    [HttpGet]
+    public IActionResult Error()
+    {
+        return View();
+    }
+
     [AuthorizeRolesMvc("admin")]
     public async Task<IActionResult> Index()
     {
