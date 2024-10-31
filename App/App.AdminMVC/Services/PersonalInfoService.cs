@@ -16,6 +16,11 @@ public class PersonalInfoService(IHttpClientFactory factory) : IPersonalInfoAdmi
 
             if (!apiResponse.IsSuccessStatusCode)
             {
+                if(apiResponse.StatusCode == HttpStatusCode.Conflict)
+                {
+                    return Result.Conflict("Kişisel Bilgiler bölümüne daha önceden zaten ekleme yapılmış!..");
+                }
+
                 return Result.Error("Kişisel Bilgiler eklenirken beklenmedik bir hata oluştu..Tekrar deneyebilirsiniz.");
             }
 

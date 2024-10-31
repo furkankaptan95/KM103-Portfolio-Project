@@ -59,6 +59,11 @@ public class AboutMeService : IAboutMeAdminService
                 return Result.SuccessWithMessage(" - Hakkımda - bilgileri başarıyla eklendi. ");
             }
 
+            if(apiResponse.StatusCode == HttpStatusCode.Conflict)
+            {
+                return Result.Conflict(" - Hakkımda - kısmına daha önceden zaten ekleme yapılmış!..");
+            }
+
             return Result.Error("Hakkımda bilgileri eklenirken beklenmeyen bir hata oluştu..Tekrar deneyebilirsiniz.");
         }
         catch (Exception)

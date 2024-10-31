@@ -117,6 +117,11 @@ public class AboutMeController : ControllerBase
                 return Ok(result);
             }
 
+            if(result.Status == ResultStatus.Conflict)
+            {
+                return Conflict(result);
+            }
+
             return StatusCode(500, result);
         }
       
@@ -125,6 +130,7 @@ public class AboutMeController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpPut("/update-about-me")]
     public async Task<IActionResult> UpdateAboutMeAsync([FromBody] UpdateAboutMeApiDto dto)

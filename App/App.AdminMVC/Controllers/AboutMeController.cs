@@ -113,6 +113,12 @@ public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
 
             if (!result.IsSuccess)
             {
+                if(result.Status == ResultStatus.Conflict)
+                {
+                    TempData["Message"] = result.Errors.FirstOrDefault();
+                    return Redirect("/about-me");
+                }
+
                 ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
                 return View(model);
             }

@@ -67,6 +67,11 @@ public class PersonalInfoController : ControllerBase
                 return Ok(result);
             }
 
+            if(result.Status == ResultStatus.Conflict)
+            {
+                return Conflict(result);
+            }
+
             return StatusCode(500, result);
         }
         
@@ -75,6 +80,7 @@ public class PersonalInfoController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpGet("/get-personal-info")]
     public async Task<IActionResult> GetAsync()
@@ -92,6 +98,7 @@ public class PersonalInfoController : ControllerBase
             {
                 return NotFound(result);
             }
+
             return StatusCode(500, result);
         }
        
@@ -125,6 +132,7 @@ public class PersonalInfoController : ControllerBase
 			return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
 		}
 	}
+
     [AuthorizeRolesApi("admin")]
     [HttpPut("/update-personal-info")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdatePersonalInfoDto dto)
