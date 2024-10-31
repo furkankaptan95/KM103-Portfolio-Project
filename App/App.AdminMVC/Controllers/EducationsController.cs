@@ -22,7 +22,7 @@ public class EducationsController(IEducationAdminService educationService) : Con
             if (!result.IsSuccess)
             {
                 TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-                return Redirect("/home/index");
+                return Redirect("/");
             }
 
             var models = new List<AdminAllEducationsViewModel>();
@@ -46,7 +46,7 @@ public class EducationsController(IEducationAdminService educationService) : Con
         catch (Exception)
         {
             TempData["ErrorMessage"] = "Eğitimler getirilirken beklenmedik bir hata oluştu..";
-            return Redirect("/home/index");
+            return Redirect("/");
         }
     }
 
@@ -100,6 +100,12 @@ public class EducationsController(IEducationAdminService educationService) : Con
     [Route("update-education-{id:int}")]
     public async Task<IActionResult> UpdateEducation([FromRoute] int id)
     {
+        if (id < 1)
+        {
+            TempData["ErrorMessage"] = "Geçersiz Eğitim ID Bilgisi!..";
+            return Redirect("/all-educations");
+        }
+
         try
         {
             var result = await educationService.GetEducationByIdAsync(id);
@@ -123,8 +129,6 @@ public class EducationsController(IEducationAdminService educationService) : Con
 
             return View(educationToUpdate);
         }
-      
-
         catch (Exception)
         {
             TempData["ErrorMessage"] = "Güncellemek istediğiniz Eğitim bilgileri getirilirken beklenmeyen bir hata oluştu.";
@@ -184,6 +188,11 @@ public class EducationsController(IEducationAdminService educationService) : Con
     [Route("delete-education-{id:int}")]
     public async Task<IActionResult> DeleteEducation([FromRoute] int id)
     {
+        if (id < 1)
+        {
+            TempData["ErrorMessage"] = "Geçersiz Eğitim ID Bilgisi!..";
+            return Redirect("/all-educations");
+        }
         try
         {
             var result = await educationService.DeleteEducationAsync(id);
@@ -212,6 +221,11 @@ public class EducationsController(IEducationAdminService educationService) : Con
     [Route("change-education-visibility-{id:int}")]
     public async Task<IActionResult> ChangeVisibility([FromRoute] int id)
     {
+        if (id < 1)
+        {
+            TempData["ErrorMessage"] = "Geçersiz Eğitim ID Bilgisi!..";
+            return Redirect("/all-educations");
+        }
         try
         {
             var result = await educationService.ChangeEducationVisibilityAsync(id);

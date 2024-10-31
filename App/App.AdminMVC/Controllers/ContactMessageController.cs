@@ -144,6 +144,12 @@ public class ContactMessageController(IContactMessageAdminService contactMessage
     [Route("make-message-read-{id:int}")]
     public async Task<IActionResult> MakeMessageRead([FromRoute] int id)
     {
+        if (id < 1)
+        {
+            TempData["ErrorMessage"] = "Geçersiz Mesaj ID Bilgisi!..";
+            return Redirect("/all-contact-messages");
+        }
+
         try
         {
             var result = await contactMessageService.ChangeIsReadAsync(id);

@@ -1,12 +1,9 @@
-﻿namespace App.AdminMVC.Services;
-
-using App.DTOs.ContactMessageDtos.Admin;
+﻿using App.DTOs.ContactMessageDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
-using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
 
+namespace App.AdminMVC.Services;
 public class ContactMessageService(IHttpClientFactory factory) : IContactMessageAdminService
 {
     private HttpClient DataApiClient => factory.CreateClient("dataApi");

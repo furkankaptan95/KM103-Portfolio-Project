@@ -112,6 +112,7 @@ public class ContactMessageController : ControllerBase
             return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
         }
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpPut("/reply-contact-message")]
     public async Task<IActionResult> ReplyAsync([FromBody] ReplyContactMessageDto dto)
@@ -151,6 +152,7 @@ public class ContactMessageController : ControllerBase
         }
 
     }
+
     [AuthorizeRolesApi("admin")]
     [HttpGet("/make-message-read-{id:int}")]
     public async Task<IActionResult> MakeMessageReadAsync([FromRoute] int id)
@@ -171,6 +173,7 @@ public class ContactMessageController : ControllerBase
                 {
                     return NotFound(result);
                 }
+
                 return StatusCode(500, result);
             }
             return Ok(result);

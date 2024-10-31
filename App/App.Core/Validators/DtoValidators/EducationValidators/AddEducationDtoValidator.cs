@@ -7,11 +7,11 @@ public class AddEducationDtoValidator : AbstractValidator<AddEducationDto>
     public AddEducationDtoValidator()
     {
         RuleFor(x => x.Degree)
-           .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Derece kısmı boş olamaz.")
+           .NotEmpty().WithMessage("Derece kısmı boş olamaz.")
            .MaximumLength(50).WithMessage("Derece maksimum 50 karakter olabilir.");
 
         RuleFor(x => x.School)
-            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Okul kısmı boş olamaz.")
+           .NotEmpty().WithMessage("Okul kısmı boş olamaz.")
            .MaximumLength(100).WithMessage("Okul maksimum 100 karakter olabilir.");
 
         RuleFor(x => x.StartDate)
