@@ -11,11 +11,11 @@ public class UpdateProjectViewModelValidator : AbstractValidator<UpdateProjectVi
            .Must(BeAValidImage).WithMessage("Image geçerli bir resim dosyası olmalıdır.");
 
         RuleFor(x => x.Title)
-            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Başlık kısmı boş olamaz.")
+            .NotEmpty().WithMessage("Başlık kısmı boş olamaz.")
             .MaximumLength(100).WithMessage("Başlık en fazla 100 karakter olabilir.");
 
         RuleFor(x => x.Description)
-            .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Açıklama kısmı boş olamaz.");
+           .NotEmpty().WithMessage("Açıklama kısmı boş olamaz.");
     }
     private bool BeAValidImage(IFormFile file)
     {

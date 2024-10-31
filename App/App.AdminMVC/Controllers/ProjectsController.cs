@@ -21,13 +21,12 @@ public class ProjectsController(IProjectAdminService projectService) : Controlle
             if (!result.IsSuccess)
             {
                 TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-                return Redirect("/home/index");
+                return Redirect("/");
             }
 
-            var models = new List<AdminAllProjectsViewModel>();
             var dtos = result.Value;
 
-            models = dtos
+            var models = dtos
            .Select(item => new AdminAllProjectsViewModel
            {
                Id = item.Id,
@@ -44,7 +43,7 @@ public class ProjectsController(IProjectAdminService projectService) : Controlle
         catch (Exception)
         {
             TempData["ErrorMessage"] = "Projeler getirilirken beklenmedik bir hata oluştu..";
-            return Redirect("/home/index");
+            return Redirect("/");
         }
     }
 
@@ -68,6 +67,7 @@ public class ProjectsController(IProjectAdminService projectService) : Controlle
         try
         {
             var dto = new AddProjectMVCDto
+
             {
                 ImageFile = model.ImageFile,
                 Title = model.Title,
@@ -97,6 +97,12 @@ public class ProjectsController(IProjectAdminService projectService) : Controlle
     [Route("update-project-{id:int}")]
     public async Task<IActionResult> UpdateProject([FromRoute] int id)
     {
+        if (id < 1)
+        {
+            TempData["ErrorMessage"] = "Geçersiz Proje ID Bilgisi!..";
+            return Redirect("/all-projects");
+        }
+
         try
         {
             var result = await projectService.GetByIdAsync(id);
@@ -164,7 +170,6 @@ public class ProjectsController(IProjectAdminService projectService) : Controlle
             }
 
             TempData["Message"] = result.SuccessMessage;
-
             return Redirect("/all-projects");
         }
         catch (Exception)
@@ -178,6 +183,11 @@ public class ProjectsController(IProjectAdminService projectService) : Controlle
     [Route("delete-project-{id:int}")]
     public async Task<IActionResult> DeleteProject([FromRoute] int id)
     {
+        if (id < 1)
+        {
+            TempData["ErrorMessage"] = "Geçersiz Proje ID Bilgisi!..";
+            return Redirect("/all-projects");
+        }
         try
         {
             var result = await projectService.DeleteProjectAsync(id);
@@ -207,6 +217,11 @@ public class ProjectsController(IProjectAdminService projectService) : Controlle
     [Route("change-project-visibility-{id:int}")]
     public async Task<IActionResult> ChangeProjectVisibility([FromRoute] int id)
     {
+        if (id < 1)
+        {
+            TempData["ErrorMessage"] = "Geçersiz Proje ID Bilgisi!..";
+            return Redirect("/all-projects");
+        }
         try
         {
             var result = await projectService.ChangeProjectVisibilityAsync(id);
