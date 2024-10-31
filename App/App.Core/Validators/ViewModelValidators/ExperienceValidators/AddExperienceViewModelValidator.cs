@@ -7,15 +7,15 @@ public class AddExperienceViewModelValidator : AbstractValidator<AddExperienceVi
     public AddExperienceViewModelValidator()
     {
         RuleFor(x => x.Title)
-          .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Başlık kısmı boş olamaz.")
+           .NotEmpty().WithMessage("Başlık kısmı boş olamaz.")
            .MaximumLength(100).WithMessage("Başlık maksimum 100 karakter olabilir.");
 
         RuleFor(x => x.Company)
-           .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Şirket kısmı boş olamaz.")
+           .NotEmpty().WithMessage("Şirket kısmı boş olamaz.")
            .MaximumLength(100).WithMessage("Şirket maksimum 100 karakter olabilir.");
 
         RuleFor(x => x.Description)
-           .Must(name => !string.IsNullOrWhiteSpace(name)).WithMessage("Açıklama kısmı boş olamaz.");
+           .NotEmpty().WithMessage("Açıklama kısmı boş olamaz.");
 
         RuleFor(x => x.StartDate)
            .NotEmpty().WithMessage("Başlangıç tarihi gerekli.")  // Boş olamaz

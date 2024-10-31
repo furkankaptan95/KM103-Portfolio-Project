@@ -22,7 +22,7 @@ public class ExperiencesController(IExperienceAdminService experienceService) : 
             if (!result.IsSuccess)
             {
                 TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
-                return Redirect("/home/index");
+                return Redirect("/");
             }
 
             var models = new List<AdminAllExperiencesViewModel>();
@@ -46,7 +46,7 @@ public class ExperiencesController(IExperienceAdminService experienceService) : 
         catch (Exception)
         {
             TempData["ErrorMessage"] = "Deneyimler getirilirken beklenmedik bir hata oluştu..";
-            return Redirect("/home/index");
+            return Redirect("/");
         }
     }
 
@@ -102,6 +102,12 @@ public class ExperiencesController(IExperienceAdminService experienceService) : 
     [Route("update-experience-{id:int}")]
     public async Task<IActionResult> UpdateExperience([FromRoute] int id)
     {
+        if (id < 1)
+        {
+            TempData["ErrorMessage"] = "Geçersiz Deneyim ID Bilgisi!..";
+            return Redirect("/all-experiences");
+        }
+
         try
         {
             var result = await experienceService.GetByIdAsync(id);
@@ -186,6 +192,11 @@ public class ExperiencesController(IExperienceAdminService experienceService) : 
     [Route("delete-experience-{id:int}")]
     public async Task<IActionResult> DeleteExperience([FromRoute] int id)
     {
+        if (id < 1)
+        {
+            TempData["ErrorMessage"] = "Geçersiz Deneyim ID Bilgisi!..";
+            return Redirect("/all-experiences");
+        }
         try
         {
             var result = await experienceService.DeleteExperienceAsync(id);
@@ -214,6 +225,11 @@ public class ExperiencesController(IExperienceAdminService experienceService) : 
     [Route("change-experience-visibility-{id:int}")]
     public async Task<IActionResult> ChangeExperienceVisibility([FromRoute] int id)
     {
+        if (id < 1)
+        {
+            TempData["ErrorMessage"] = "Geçersiz Deneyim ID Bilgisi!..";
+            return Redirect("/all-experiences");
+        }
         try
         {
             var result = await experienceService.ChangeExperienceVisibilityAsync(id);

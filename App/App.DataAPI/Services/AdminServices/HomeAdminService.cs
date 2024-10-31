@@ -28,6 +28,7 @@ public class HomeAdminService : IHomeAdminService
             {
                 dto.UsersCount = 0;
             }
+
             else
             {
                 var result = await apiResponse.Content.ReadFromJsonAsync<Result<int>>();
