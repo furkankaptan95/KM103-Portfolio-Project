@@ -13,6 +13,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\App.DTOs\App.DTOs.csproj" />
+    <ProjectReference Include="..\App.Middlewares\App.Middlewares.csproj" />
+    <ProjectReference Include="..\App.Services\App.Services.csproj" />
   </ItemGroup>
 
 </Project>

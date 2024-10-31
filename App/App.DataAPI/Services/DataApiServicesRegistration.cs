@@ -41,7 +41,7 @@ public static class DataApiServicesRegistration
         {
             options.AddPolicy("AllowSpecificOrigin", builder =>
             {
-                builder.WithOrigins("https://localhost:7163")
+                builder.WithOrigins("https://localhost:7163", "https://localhost:7241", "https://localhost:7167")
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             });

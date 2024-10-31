@@ -1,4 +1,5 @@
-﻿using App.DTOs.FileApiDtos;
+﻿using App.Core.Authorization;
+using App.DTOs.FileApiDtos;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,6 +30,7 @@ public class FileController : ControllerBase
 
         
     }
+
     [HttpPost("/upload-files")]
     public async Task<IActionResult> UploadFilesAsync([FromForm] IFormFile? imageFile1, IFormFile? imageFile2)
     {
