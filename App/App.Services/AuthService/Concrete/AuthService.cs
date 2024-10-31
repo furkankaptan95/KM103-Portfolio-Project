@@ -41,7 +41,7 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
         {
             var response = await AuthApiClient.PostAsJsonAsync("login", loginDto);
 
-            Result<TokensDto> result;
+            Result<TokensDto>? result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -85,7 +85,7 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
     {
         try
         {
-            var response = await AuthApiClient.PostAsJsonAsync("new-password", dto);
+            var response = await AuthApiClient.PutAsJsonAsync("new-password", dto);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -205,7 +205,7 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
 
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
-                return Result.NotFound();
+                return Result.NotFound("Hesabınızdan başarıyla çıkış yapıldı.");
             }
 
             return Result.Error("Hesabınızdan çıkış yapılırken bir problemle karşılaşıldı.");

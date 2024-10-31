@@ -239,13 +239,13 @@ public class AuthController : ControllerBase
             return Ok(result);
         }
 
-         catch (Exception ex)
+        catch (Exception ex)
         {
             return StatusCode(500, Result.Error($"Bir hata oluştu: {ex.Message}"));
         }
     }
 
-    [HttpPost("/new-password")]
+    [HttpPut("/new-password")]
     public async Task<IActionResult> NewPasswordAsync([FromBody] NewPasswordDto dto)
     {
         try

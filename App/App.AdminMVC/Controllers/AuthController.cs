@@ -74,7 +74,7 @@ public class AuthController(IAuthService authService) : Controller
             var identity = new ClaimsIdentity(jwtToken?.Claims, "jwt");
             HttpContext.User = new ClaimsPrincipal(identity);
 
-            TempData["SuccessMessage"] = result.SuccessMessage;
+            TempData["Message"] = result.SuccessMessage;
             return Redirect("/");
         }
 
@@ -115,7 +115,7 @@ public class AuthController(IAuthService authService) : Controller
                 return View(model);
             }
 
-            ViewData["SuccessMessage"] = result.SuccessMessage;
+            ViewData["Message"] = result.SuccessMessage;
 
             return View();
         }
@@ -130,11 +130,12 @@ public class AuthController(IAuthService authService) : Controller
     [HttpGet("renew-password")]
     public async Task<IActionResult> RenewPassword([FromQuery] string email, string token)
     {
-        if (string.IsNullOrEmpty(token))
+        if (string.IsNullOrEmpty(token)|| string.IsNullOrEmpty(email))
         {
             TempData["ErrorMessage"] = "Email adresiniz doğrulanamadı. Tekrar deneyebilirsiniz.";
             return RedirectToAction(nameof(ForgotPassword));
         }
+
         try
         {
             var dto = new RenewPasswordDto(email, token, true);
@@ -147,7 +148,7 @@ public class AuthController(IAuthService authService) : Controller
                 return RedirectToAction(nameof(ForgotPassword));
             }
 
-            ViewData["SuccessMessage"] = result.SuccessMessage;
+            ViewData["Message"] = result.SuccessMessage;
 
             var model = new NewPasswordViewModel
             {
@@ -184,7 +185,7 @@ public class AuthController(IAuthService authService) : Controller
                 return RedirectToAction(nameof(ForgotPassword));
             }
 
-            TempData["SuccessMessage"] = result.SuccessMessage;
+            TempData["Message"] = result.SuccessMessage;
             return RedirectToAction(nameof(Login));
         }
         catch (Exception)
@@ -205,29 +206,20 @@ public class AuthController(IAuthService authService) : Controller
             {
                 Response.Cookies.Delete("JwtToken");
 
-                TempData["SuccessMessage"] = "Hesabınızdan başarıyla çıkış yapıldı.";
-                return Redirect("/");
+                TempData["Message"] = "Hesabınızdan başarıyla çıkış yapıldı.";
+                return Redirect("/Auth/Login");
 
             }
 
             var result = await authService.RevokeTokenAsync(refreshToken);
 
-            if (result.IsSuccess)
+            if (result.IsSuccess|| result.Status == ResultStatus.NotFound)
             {
                 Response.Cookies.Delete("JwtToken");
                 Response.Cookies.Delete("RefreshToken");
 
-                ViewData["SuccessMessage"] = result.SuccessMessage;
-                return Redirect("/");
-            }
-
-            if (result.Status == ResultStatus.NotFound)
-            {
-                Response.Cookies.Delete("JwtToken");
-                Response.Cookies.Delete("RefreshToken");
-
-                TempData["SuccessMessage"] = "Hesabınızdan başarıyla çıkış yapıldı.";
-                return Redirect("/");
+                TempData["Message"] = result.SuccessMessage;
+                return Redirect("/Auth/Login");
             }
 
             TempData["ErrorMessage"] = result.Errors.FirstOrDefault();

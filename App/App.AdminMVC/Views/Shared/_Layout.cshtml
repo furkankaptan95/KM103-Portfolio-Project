@@ -26,6 +26,12 @@
             </div>
         }
 
+        if (ViewData["Message"] is not null)
+        {
+            <div class="alert custom-alert-success mt-5">
+                @ViewData["Message"]
+            </div>
+        }
         if (ViewData["ErrorMessage"] is not null)
         {
             <div class="alert custom-alert-error mt-5">
