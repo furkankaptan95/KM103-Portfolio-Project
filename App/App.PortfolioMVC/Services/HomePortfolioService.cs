@@ -16,48 +16,55 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
 	{
 		var model = new HomeIndexViewModel();
 
-        var educationsResult = await educationService.GetAllEducationsAsync();
-        var experienceResult = await experienceService.GetAllExperiencesAsync();
-		var projectResult = await projectService.GetAllProjectsAsync();
-		var aboutMeResult = await aboutMeService.GetAboutMeAsync();
-		var personalInfoResult = await personalInfoService.GetPersonalInfoAsync();
-		var blogPostResult = await blogPostService.GetHomeBlogPostsAsync();
-    
-		if (educationsResult.IsSuccess)
+		try
 		{
-            model.Educations = Educations(educationsResult.Value);
-		}
-		if (experienceResult.IsSuccess)
-		{
-			model.Experiences = Experiences(experienceResult.Value);
-	    }
-		if (projectResult.IsSuccess)
-		{
-			model.Projects = Projects(projectResult.Value);
-		}
-		if (aboutMeResult.IsSuccess)
-		{
-			model.AboutMe = AboutMe(aboutMeResult.Value);
-	    }
-		else if (aboutMeResult.Status == ResultStatus.NotFound)
-		{
-			model.AboutMe = new();
-		}
-		if (personalInfoResult.IsSuccess)
-		{
-			model.PersonalInfo = PersonalInfo(personalInfoResult.Value);
-		}
-		else if (personalInfoResult.Status == ResultStatus.NotFound)
-		{
-			model.PersonalInfo = new();
-		}
-        if (blogPostResult.IsSuccess)
-        {
-            model.BlogPosts = BlogPosts(blogPostResult.Value);
-        }
+            var educationsResult = await educationService.GetAllEducationsAsync();
+            var experienceResult = await experienceService.GetAllExperiencesAsync();
+            var projectResult = await projectService.GetAllProjectsAsync();
+            var aboutMeResult = await aboutMeService.GetAboutMeAsync();
+            var personalInfoResult = await personalInfoService.GetPersonalInfoAsync();
+            var blogPostResult = await blogPostService.GetHomeBlogPostsAsync();
 
-        return Result<HomeIndexViewModel>.Success(model);
-	}
+            if (educationsResult.IsSuccess)
+            {
+                model.Educations = Educations(educationsResult.Value);
+            }
+            if (experienceResult.IsSuccess)
+            {
+                model.Experiences = Experiences(experienceResult.Value);
+            }
+            if (projectResult.IsSuccess)
+            {
+                model.Projects = Projects(projectResult.Value);
+            }
+            if (aboutMeResult.IsSuccess)
+            {
+                model.AboutMe = AboutMe(aboutMeResult.Value);
+            }
+            else if (aboutMeResult.Status == ResultStatus.NotFound)
+            {
+                model.AboutMe = new();
+            }
+            if (personalInfoResult.IsSuccess)
+            {
+                model.PersonalInfo = PersonalInfo(personalInfoResult.Value);
+            }
+            else if (personalInfoResult.Status == ResultStatus.NotFound)
+            {
+                model.PersonalInfo = new();
+            }
+            if (blogPostResult.IsSuccess)
+            {
+                model.BlogPosts = BlogPosts(blogPostResult.Value);
+            }
+
+            return Result<HomeIndexViewModel>.Success(model);
+        }
+        catch (Exception)
+        {
+            return Result<HomeIndexViewModel>.Error();
+        }
+    }
 
 	private static List<AllEducationsPortfolioViewModel> Educations(List<AllEducationsPortfolioDto> dtos)
 	{

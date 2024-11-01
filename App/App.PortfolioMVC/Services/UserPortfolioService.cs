@@ -120,7 +120,7 @@ public class UserPortfolioService(IHttpClientFactory factory) : IUserPortfolioSe
 
             if (!response.IsSuccessStatusCode)
             {
-                if(response.StatusCode == HttpStatusCode.BadRequest)
+                if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
                     return Result<TokensDto>.Error("Bu Kullanıcı Adı daha önce zaten alınmış!..");
                 }
@@ -135,12 +135,12 @@ public class UserPortfolioService(IHttpClientFactory factory) : IUserPortfolioSe
 
             var result = await response.Content.ReadFromJsonAsync<Result<TokensDto>>();
 
-            if(result is null)
+            if (result is null)
             {
                 return Result<TokensDto>.Error("Kullanıcı isminiz değiştirilirken beklenmedik bir hata oluştu!..");
             }
 
-            return Result<TokensDto>.Success(result.Value,"Kullanıcı isminiz başarıyla güncellendi.");
+            return Result<TokensDto>.Success(result.Value, "Kullanıcı isminiz başarıyla güncellendi.");
         }
         catch (Exception)
         {

@@ -1,4 +1,5 @@
 ﻿using App.Core.Authorization;
+using App.Core.Validators.ViewModelValidators.AboutMeValidators;
 using App.Services.AdminServices.Abstract;
 using App.Services.AuthService.Abstract;
 using App.Services.AuthService.Concrete;
@@ -12,7 +13,7 @@ public static class AdminMvcServicesRegistration
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddControllersWithViews();
-        services.AddValidatorsFromAssemblyContaining<AddAboutMeViewModel>();
+        services.AddValidatorsFromAssembly(typeof(AddAboutMeViewModelValidator).Assembly);
         services.AddHttpContextAccessor();
 
         services.AddAntiforgery(options =>

@@ -40,7 +40,7 @@ public class ContactMessageController(IContactMessagePortfolioService contactMes
         }
         catch (Exception)
         {
-            TempData["ErrorMessage"] = "İletişim Formu gönderilirken bir problem oluştu!..";
+            TempData["ErrorMessage"] = "İletişim Formu gönderilirken bir problem oluştu..";
             return Redirect("/#contact-section");
         }
 
