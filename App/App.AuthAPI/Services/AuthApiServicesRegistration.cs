@@ -118,5 +118,7 @@ public static class AuthApiServicesRegistration
         services.AddTransient<IValidator<VerifyEmailDto>, VerifyEmailDtoValidator>();
         services.AddTransient<IValidator<EditUserImageApiDto>, EditUserImageApiDtoValidator>();
         services.AddTransient<IValidator<EditUsernameDto>, EditUsernameDtoValidator>();
+        services.AddTransient<IValidator<NewVerificationMailDto>, NewVerificationMailDtoValidator>();
+        
     }
 }

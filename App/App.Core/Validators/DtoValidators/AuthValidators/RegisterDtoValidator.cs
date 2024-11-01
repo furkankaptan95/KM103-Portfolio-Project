@@ -20,5 +20,10 @@ public class RegisterDtoValidator : AbstractValidator<RegisterDto>
             .NotEmpty().WithMessage("Şifre alanı boş bırakılamaz.")
             .MinimumLength(8).WithMessage("Şifre en az 8 karakter olmalıdır.")
             .MaximumLength(15).WithMessage("Şifre en fazla 15 karakter olabilir.");
+
+        RuleFor(x => x.Url)
+            .NotEmpty().WithMessage("URL alanı boş bırakılamaz.")
+            .Matches(@"^(http|https)://[^\s/$.?#].[^\s]*$").WithMessage("Geçerli bir URL giriniz (örneğin: http://www.example.com).");
+
     }
 }

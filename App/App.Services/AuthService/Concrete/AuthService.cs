@@ -35,6 +35,31 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
         }
     }
 
+    public async Task<Result> NewVerificationAsync(NewVerificationMailDto dto)
+    {
+        try
+        {
+            var response = await AuthApiClient.PostAsJsonAsync("new-verification", dto);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    return Result.Error("Girmiş olduğunuz Email adresine sahip bir kullanıcı bulunamadı!..");
+                }
+
+                return Result.Error("Aktivasyon linki gönderilirken bir hata oluştu!..");
+            }
+
+            return Result.SuccessWithMessage("Aktivasyon linki Email adresinize gönderildi.");
+        }
+
+        catch (Exception)
+        {
+            return Result.Error("Aktivasyon linki gönderilirken bir hata oluştu!..");
+        }
+    }
+
     public async Task<Result<TokensDto>> LoginAsync(LoginDto loginDto)
     {
         try
@@ -157,9 +182,13 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
                     {
                         return new RegistrationResult(false, "Bu Email zaten alınmış!..", RegistrationError.EmailTaken);
                     }
-                    else
+                    else if(result.Error == RegistrationError.BothTaken)
                     {
                         return new RegistrationResult(false, "Bu Email ve Kullanıcı Adı zaten alınmış!..", RegistrationError.BothTaken);
+                    }
+                    else
+                    {
+                        return new RegistrationResult(false, "Kayıt işlemi sırasında beklenmeyen bir hata oluştu!..", RegistrationError.None);
                     }
                 }
             }
@@ -246,11 +275,12 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
                 return Result.SuccessWithMessage("Email başarıyla doğrulandı ve hesabınız aktif edildi. Hesabınıza giriş yapabilirsiniz.");
             }
 
-            return Result.Error("Email doğrulama başarısız!..Tekrar doğrulama maili almak için tıklayınız.");
+            return Result.Error("Email doğrulama başarısız!..Tekrar doğrulama maili almak için mail adresinizi girebilirsiniz.");
         }
         catch (Exception)
         {
-            return Result.Error("Email doğrulama başarısız!..Tekrar doğrulama maili almak için tıklayınız.");
+            return Result.Error("Email doğrulama başarısız!..Tekrar doğrulama maili almak için mail adresinizi girebilirsiniz.");
         }
     }
+
 }

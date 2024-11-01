@@ -13,6 +13,7 @@ public class ForgotPasswordDtoValidator : AbstractValidator<ForgotPasswordDto>
             .MaximumLength(100).WithMessage("Email 100 karakterden uzun olamaz.");
 
         RuleFor(x => x.Url)
-            .NotEmpty();
+           .NotEmpty().WithMessage("URL alanı boş bırakılamaz.")
+           .Matches(@"^(http|https)://[^\s/$.?#].[^\s]*$").WithMessage("Geçerli bir URL giriniz (örneğin: http://www.example.com).");
     }
 }

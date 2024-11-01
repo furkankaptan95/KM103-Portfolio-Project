@@ -12,7 +12,12 @@ namespace App.PortfolioMVC.Controllers;
 [AllowAnonymousManuel]
 public class AuthController(IAuthService authService) : Controller
 {
-    
+    [HttpGet]
+    public IActionResult AccessDenied()
+    {
+        return View();
+    }
+
     [HttpGet]
     public IActionResult Login()
     {
@@ -102,11 +107,15 @@ public class AuthController(IAuthService authService) : Controller
 
         try
         {
+            var request = HttpContext.Request;
+            string url = $"{request.Scheme}://{request.Host}";
+
             var dto = new RegisterDto
             {
                 Email = registerModel.Email,
                 Password = registerModel.Password,
                 Username = registerModel.Username,
+                Url = url,
             };
 
             var result = await authService.RegisterAsync(dto);
@@ -124,8 +133,7 @@ public class AuthController(IAuthService authService) : Controller
 
         catch (Exception)
         {
-            ViewData["ErrorMessage"] = "Şifre sıfırlama linki gönderilirken bir hata oluştu!..";
-
+            ViewData["ErrorMessage"] = "Kayıt işlemi sırasında beklenmeyen bir hata oluştu!..";
             return View(registerModel);
         }
     }
@@ -133,6 +141,12 @@ public class AuthController(IAuthService authService) : Controller
     [HttpGet("verify-email")]
     public async Task<IActionResult> VerifyEmail([FromQuery] string email, string token)
     {
+        if(string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+        {
+            TempData["ErrorMessage"] = "Email doğrulama başarısız!..Tekrar doğrulama maili almak için mail adresinizi girebilirsiniz.";
+            return RedirectToAction(nameof(NewVerificationMail));
+        }
+
         try
         {
             var dto = new VerifyEmailDto(email, token);
@@ -142,6 +156,7 @@ public class AuthController(IAuthService authService) : Controller
             if (!result.IsSuccess)
             {
                 TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return RedirectToAction(nameof(NewVerificationMail));
             }
 
             TempData["SuccessMessage"] = result.SuccessMessage;
@@ -150,8 +165,54 @@ public class AuthController(IAuthService authService) : Controller
         }
         catch (Exception)
         {
-            ViewData["ErrorMessage"] = "Email doğrulama başarısız!..Mail adresinizdeki linke tekrar tıklayabilirsiniz.";
-            return RedirectToAction(nameof(Login));
+            TempData["ErrorMessage"] = "Email doğrulama başarısız!..Tekrar doğrulama maili almak için mail adresinizi girebilirsiniz.";
+            return RedirectToAction(nameof(NewVerificationMail));
+        }
+    }
+
+    [HttpGet]
+    public IActionResult NewVerificationMail()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> NewVerificationMail([FromForm] NewVerificationMailViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        try
+        {
+            var request = HttpContext.Request;
+            string url = $"{request.Scheme}://{request.Host}";
+
+            var dto = new NewVerificationMailDto
+            {
+                Email = model.Email,
+                Url = url,
+            };
+
+            var result = await authService.NewVerificationAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
+                return View(model);
+            }
+
+            ViewData["SuccessMessage"] = result.SuccessMessage;
+
+            return View();
+        }
+        catch (Exception)
+        {
+            ViewData["ErrorMessage"] = "Aktivasyon linki gönderilirken bir hata oluştu!..";
+
+            return View(model);
         }
     }
 
@@ -160,7 +221,6 @@ public class AuthController(IAuthService authService) : Controller
     {
         return View();
     }
-
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -286,21 +346,12 @@ public class AuthController(IAuthService authService) : Controller
 
             var result = await authService.RevokeTokenAsync(refreshToken);
 
-            if (result.IsSuccess)
+            if (result.IsSuccess || result.Status == ResultStatus.NotFound)
             {
                 Response.Cookies.Delete("JwtToken");
                 Response.Cookies.Delete("RefreshToken");
 
-                ViewData["SuccessMessage"] = result.SuccessMessage;
-                return Redirect("/");
-            }
-
-            if(result.Status == ResultStatus.NotFound)
-            {
-                Response.Cookies.Delete("JwtToken");
-                Response.Cookies.Delete("RefreshToken");
-
-                TempData["SuccessMessage"] = "Hesabınızdan başarıyla çıkış yapıldı.";
+                TempData["Message"] = result.SuccessMessage;
                 return Redirect("/");
             }
 
