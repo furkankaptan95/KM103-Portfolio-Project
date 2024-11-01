@@ -114,7 +114,7 @@ public class ContactMessageController : ControllerBase
     }
 
     [AuthorizeRolesApi("admin")]
-    [HttpPut("/reply-contact-message")]
+    [HttpPost("/reply-contact-message")]
     public async Task<IActionResult> ReplyAsync([FromBody] ReplyContactMessageDto dto)
     {
         try

@@ -159,7 +159,7 @@ public class BlogPostsController : ControllerBase
 	}
 
     [AuthorizeRolesApi("admin")]
-    [HttpPut("/update-blog-post")]
+    [HttpPost("/update-blog-post")]
     public async Task<IActionResult> UpdateBlogPostAsync([FromBody] UpdateBlogPostDto dto)
     {
         try
@@ -194,7 +194,7 @@ public class BlogPostsController : ControllerBase
     }
 
     [AuthorizeRolesApi("admin")]
-    [HttpDelete("/delete-blog-post-{id:int}")]
+    [HttpGet("/delete-blog-post-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
         if (id <= 0)

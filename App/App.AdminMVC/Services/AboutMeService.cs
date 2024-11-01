@@ -186,7 +186,7 @@ public class AboutMeService : IAboutMeAdminService
                 updateApiDto.ImageUrl2 = urlDto.ImageUrl2;
             }
 
-            var dataApiResponse = await DataApiClient.PutAsJsonAsync("update-about-me", updateApiDto);
+            var dataApiResponse = await DataApiClient.PostAsJsonAsync("update-about-me", updateApiDto);
 
             if (!dataApiResponse.IsSuccessStatusCode)
             {

@@ -47,7 +47,7 @@ public class CommentsController : ControllerBase
     }
 
     [AuthorizeRolesApi("admin")]
-    [HttpDelete("/delete-comment-{id:int}")]
+    [HttpGet("/delete-comment-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
         if (id <= 0)

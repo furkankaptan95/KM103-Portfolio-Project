@@ -96,7 +96,7 @@ public class ProjectService(IHttpClientFactory factory) : IProjectAdminService
     {
         try
         {
-            var apiResponse = await DataApiClient.DeleteAsync($"delete-project-{id}");
+            var apiResponse = await DataApiClient.GetAsync($"delete-project-{id}");
 
             if (apiResponse.IsSuccessStatusCode)
             {
@@ -221,7 +221,7 @@ public class ProjectService(IHttpClientFactory factory) : IProjectAdminService
                 apiDto.ImageUrl = urlDto.ImageUrl1;
             }
 
-            var dataApiResponse = await DataApiClient.PutAsJsonAsync("update-project", apiDto);
+            var dataApiResponse = await DataApiClient.PostAsJsonAsync("update-project", apiDto);
 
             if (dataApiResponse.IsSuccessStatusCode)
             {

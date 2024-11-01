@@ -64,7 +64,7 @@ public class BlogPostService : IBlogPostAdminService
     {
         try
         {
-            var apiResponse = await DataApiClient.DeleteAsync($"delete-blog-post-{id}");
+            var apiResponse = await DataApiClient.GetAsync($"delete-blog-post-{id}");
 
             if (apiResponse.IsSuccessStatusCode)
             {
@@ -156,7 +156,7 @@ public class BlogPostService : IBlogPostAdminService
     {
         try
         {
-            var apiResponse = await DataApiClient.PutAsJsonAsync("update-blog-post", dto);
+            var apiResponse = await DataApiClient.PostAsJsonAsync("update-blog-post", dto);
 
             if (!apiResponse.IsSuccessStatusCode)
             {

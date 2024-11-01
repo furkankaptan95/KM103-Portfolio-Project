@@ -101,7 +101,7 @@ public class ExperiencesController : ControllerBase
 	}
 
     [AuthorizeRolesApi("admin")]
-    [HttpPut("/update-experience")]
+    [HttpPost("/update-experience")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateExperienceDto dto)
     {
         try
@@ -168,7 +168,7 @@ public class ExperiencesController : ControllerBase
     }
 
     [AuthorizeRolesApi("admin")]
-    [HttpDelete("/delete-experience-{id:int}")]
+    [HttpGet("/delete-experience-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
         if (id <= 0)

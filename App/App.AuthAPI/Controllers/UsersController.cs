@@ -132,7 +132,7 @@ public class UsersController : ControllerBase
         }
     }
 
-    [HttpPut("/edit-username")]
+    [HttpPost("/edit-username")]
     public async Task<IActionResult> EditUsernameAsync([FromBody] EditUsernameDto dto)
     {
         try
@@ -171,7 +171,7 @@ public class UsersController : ControllerBase
         }
     }
 
-    [HttpPut("/change-user-image")]
+    [HttpPost("/change-user-image")]
     public async Task<IActionResult> EditUserImageAsync([FromBody] EditUserImageApiDto dto)
     {
         try
@@ -205,7 +205,7 @@ public class UsersController : ControllerBase
         }
     }
 
-    [HttpDelete("/delete-user-img/{imgUrl}")]
+    [HttpGet("/delete-user-img/{imgUrl}")]
     public async Task<IActionResult> DeleteUserImageAsync([FromRoute] string imgUrl)
     {
         if (string.IsNullOrEmpty(imgUrl))

@@ -91,7 +91,7 @@ public class FileController : ControllerBase
     }
 
 
-    [HttpDelete("/delete-file/{fileName}")]
+    [HttpGet("/delete-file/{fileName}")]
     public IActionResult DeleteFileAsync([FromRoute] string fileName)
     {
         try

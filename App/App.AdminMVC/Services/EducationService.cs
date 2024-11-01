@@ -63,7 +63,7 @@ public class EducationService(IHttpClientFactory factory) : IEducationAdminServi
     {
         try
         {
-            var apiResponse = await DataApiClient.DeleteAsync($"delete-education-{id}");
+            var apiResponse = await DataApiClient.GetAsync($"delete-education-{id}");
 
             if (apiResponse.IsSuccessStatusCode)
             {
@@ -158,7 +158,7 @@ public class EducationService(IHttpClientFactory factory) : IEducationAdminServi
     {
         try
         {
-            var apiResponse = await DataApiClient.PutAsJsonAsync("update-education", dto);
+            var apiResponse = await DataApiClient.PostAsJsonAsync("update-education", dto);
 
             if (!apiResponse.IsSuccessStatusCode)
             {

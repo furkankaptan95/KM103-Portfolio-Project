@@ -132,7 +132,7 @@ public class AboutMeController : ControllerBase
     }
 
     [AuthorizeRolesApi("admin")]
-    [HttpPut("/update-about-me")]
+    [HttpPost("/update-about-me")]
     public async Task<IActionResult> UpdateAboutMeAsync([FromBody] UpdateAboutMeApiDto dto)
     {
         try
