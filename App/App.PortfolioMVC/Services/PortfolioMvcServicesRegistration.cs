@@ -1,7 +1,10 @@
 ﻿using App.Core.Authorization;
+using App.Core.Validators.ViewModelValidators.AboutMeValidators;
+using App.Core.Validators.ViewModelValidators.UserValidators;
 using App.Services.AuthService.Abstract;
 using App.Services.AuthService.Concrete;
 using App.Services.PortfolioServices.Abstract;
+using FluentValidation;
 using System.Net;
 
 namespace App.PortfolioMVC.Services;
@@ -11,7 +14,7 @@ public static class PortfolioMvcServicesRegistration
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddControllersWithViews();
-
+        services.AddValidatorsFromAssembly(typeof(EditUserImageViewModelValidator).Assembly);
         services.AddHttpContextAccessor();
 
         services.AddAntiforgery(options =>
@@ -34,7 +37,6 @@ public static class PortfolioMvcServicesRegistration
         {
             throw new InvalidOperationException("DataApiUrl is required in appsettings.json");
         }
-
         services.AddHttpClient("dataApi", c =>
         {
             c.BaseAddress = new Uri(dataApiUrl);

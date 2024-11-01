@@ -7,5 +7,5 @@ public class BlogPostEntity : BaseEntity<int>
     public DateTime PublishDate { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public bool IsVisible { get; set; } = true;
-    public virtual ICollection<CommentEntity> Comments { get; set; }
+    public virtual ICollection<CommentEntity> Comments { get; set; } = new List<CommentEntity>();
 }

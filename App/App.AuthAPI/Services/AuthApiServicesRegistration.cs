@@ -44,11 +44,11 @@ public static class AuthApiServicesRegistration
     {
         services.AddCors(options =>
         {
-            options.AddPolicy("AllowSpecificOrigin", builder =>
+            options.AddPolicy("AllowAllOrigins", builder =>
             {
-                builder.WithOrigins("https://localhost:7071", "https://localhost:7241", "https://localhost:7167", "https://localhost:7085")
-                       .AllowAnyMethod()
-                       .AllowAnyHeader();
+                builder.AllowAnyOrigin() // Tüm origin'lere izin verir.
+                       .AllowAnyMethod() // Tüm HTTP yöntemlerine izin verir.
+                       .AllowAnyHeader(); // Tüm başlıklara izin verir.
             });
         });
     }
@@ -118,5 +118,7 @@ public static class AuthApiServicesRegistration
         services.AddTransient<IValidator<VerifyEmailDto>, VerifyEmailDtoValidator>();
         services.AddTransient<IValidator<EditUserImageApiDto>, EditUserImageApiDtoValidator>();
         services.AddTransient<IValidator<EditUsernameDto>, EditUsernameDtoValidator>();
+        services.AddTransient<IValidator<NewVerificationMailDto>, NewVerificationMailDtoValidator>();
+        
     }
 }

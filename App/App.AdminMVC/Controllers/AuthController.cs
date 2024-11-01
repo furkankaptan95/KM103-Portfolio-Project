@@ -12,7 +12,12 @@ namespace App.AdminMVC.Controllers;
 [AllowAnonymousManuel]
 public class AuthController(IAuthService authService) : Controller
 {
-   
+    [HttpGet]
+    public IActionResult AccessDenied()
+    {
+        return View();
+    }
+
     [HttpGet]
     public IActionResult Login()
     {

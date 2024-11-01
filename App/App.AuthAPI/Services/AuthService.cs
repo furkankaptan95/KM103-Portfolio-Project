@@ -236,12 +236,17 @@ public class AuthService : IAuthService
             await _authApiDb.UserVerifications.AddAsync(userVerification);
             await _authApiDb.SaveChangesAsync();
 
-            var verificationLink = $"https://localhost:7167/verify-email?email={user.Email}&token={token}";
+            var verificationLink = $"{registerDto.Url}/verify-email?email={user.Email}&token={token}";
 
             var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Email Doğrulama için tıklayınız.</a>";
             var emailResult = await _emailService.SendEmailAsync(user.Email, "Kayıt başarılı. Lütfen email adresinizi doğrulayın.", htmlMailBody);
 
-            return new RegistrationResult(true, null, RegistrationError.None);
+            if (emailResult.IsSuccess)
+            {
+                return new RegistrationResult(true, null, RegistrationError.None);
+            }
+
+            return new RegistrationResult(false, null, RegistrationError.None);
         }
         catch (Exception ex)
         {
@@ -444,6 +449,51 @@ public class AuthService : IAuthService
             await _authApiDb.SaveChangesAsync();
 
             return Result.Success();
+        }
+
+        catch (Exception ex)
+        {
+            return Result.Error($"Bir hata oluştu: {ex.Message}");
+        }
+    }
+
+    public async Task<Result> NewVerificationAsync(NewVerificationMailDto dto)
+    {
+        try
+        {
+            UserEntity? user;
+
+            user = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == dto.Email);
+            
+            if (user is null)
+            {
+                return Result.NotFound();
+            }
+
+            var token = Guid.NewGuid().ToString().Substring(0, 6);
+
+            var newVerification = new UserVerificationEntity
+            {
+                UserId = user.Id,
+                Token = token,
+                Expiration = DateTime.UtcNow.AddHours(24),
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _authApiDb.UserVerifications.AddAsync(newVerification);
+            await _authApiDb.SaveChangesAsync();
+
+            var verificationLink = $"{dto.Url}/verify-email?email={dto.Email}&token={token}";
+
+            var htmlMailBody = $"<h1>Lütfen Email adresinizi doğrulayın!</h1><a href='{verificationLink}'>Hesabınızı aktive etmek için tıklayınız.</a>";
+            var emailResult = await _emailService.SendEmailAsync(user.Email, "Lütfen email adresinizi doğrulayın.", htmlMailBody);
+
+            if (emailResult.IsSuccess)
+            {
+                return Result.Success();
+            }
+
+            return Result.Error("Email gönderilirken bir hata oluştu.");
         }
 
         catch (Exception ex)

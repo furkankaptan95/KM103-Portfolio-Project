@@ -7,6 +7,6 @@ public class SingleBlogPostViewModel
     public string Title { get; set; }
     public string Content { get; set; }
     public DateTime PublishDate { get; set; }
-    public List<BlogPostCommentsPortfolioViewModel>? Comments { get; set; }
+    public List<BlogPostCommentsPortfolioViewModel>? Comments { get; set; } = new List<BlogPostCommentsPortfolioViewModel>();
    
 }

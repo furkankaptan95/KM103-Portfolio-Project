@@ -2,30 +2,28 @@ using App.Core.Authorization;
 using App.Middlewares;
 using App.Services.AuthService.Abstract;
 using App.Services.AuthService.Concrete;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
-using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin", builder =>
+    options.AddPolicy("AllowAllOrigins", builder =>
     {
-        builder.WithOrigins("https://localhost:7241","https://localhost:7167") // Ýzin verilen köken
-               .AllowAnyMethod() // Ýzin verilen HTTP yöntemleri
-               .AllowAnyHeader(); // Ýzin verilen baþlýklar
+        builder.AllowAnyOrigin() // Tüm origin'lere izin verir.
+               .AllowAnyMethod() // Tüm HTTP yöntemlerine izin verir.
+               .AllowAnyHeader(); // Tüm baþlýklara izin verir.
     });
 });
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<AuthorizationService>();
+
 var authApiUrl = builder.Configuration.GetValue<string>("AuthApiUrl");
 if (string.IsNullOrWhiteSpace(authApiUrl))
 {
@@ -37,16 +35,13 @@ builder.Services.AddHttpClient("authApi", c =>
 });
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+
 var app = builder.Build();
 
-app.UseCors("AllowSpecificOrigin");
+app.UseCors("AllowAllOrigins");
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
 if (!Directory.Exists(uploadsPath))
@@ -68,7 +63,5 @@ app.UseMiddleware<ApiJwtMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
-
-
 
 app.Run();

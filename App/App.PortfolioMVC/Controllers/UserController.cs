@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace App.PortfolioMVC.Controllers;
 
-public class UserController(IUserPortfolioService userServive) : Controller
+public class UserController(IUserPortfolioService userService) : Controller
 {
     [HttpGet]
     public IActionResult MyProfile()
@@ -39,7 +39,7 @@ public class UserController(IUserPortfolioService userServive) : Controller
                 Username = model.Username,
             };
 
-            var result = await userServive.EditUsernameAsync(dto);
+            var result = await userService.EditUsernameAsync(dto);
 
             if (!result.IsSuccess)
             {
@@ -86,7 +86,7 @@ public class UserController(IUserPortfolioService userServive) : Controller
                 ImageFile = model.ImageFile,
             };
 
-            var result = await userServive.ChangeUserImageAsync(dto);
+            var result = await userService.ChangeUserImageAsync(dto);
 
             if (!result.IsSuccess)
             {
@@ -127,7 +127,7 @@ public class UserController(IUserPortfolioService userServive) : Controller
 
         try
         {
-            var result = await userServive.DeleteUserImageAsync(userImageUrl);
+            var result = await userService.DeleteUserImageAsync(userImageUrl);
 
             if (!result.IsSuccess)
             {

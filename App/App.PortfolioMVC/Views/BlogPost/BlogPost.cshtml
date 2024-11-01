@@ -2,7 +2,40 @@
 @using System.Security.Claims
 
 @{
-    ViewData["BlogPostId"] = Model.BlogPost.Id;
+    if(Model.BlogPost is not null)
+    {
+        ViewData["BlogPostId"] = Model.BlogPost.Id;
+    }
+}
+
+@{
+    if (TempData["SuccessMessage"] is not null)
+    {
+        <div class="alert custom-alert-success mt-5">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    if (TempData["ErrorMessage"] is not null)
+    {
+        <div class="alert custom-alert-error mt-5">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    if (ViewData["SuccessMessage"] is not null)
+    {
+        <div class="alert custom-alert-success mt-5">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    if (ViewData["ErrorMessage"] is not null)
+    {
+        <div class="alert custom-alert-error mt-5">
+            @TempData["ErrorMessage"]
+        </div>
+    }
 }
 
 <section class="ftco-section">
@@ -45,16 +78,23 @@
 
                     <div class="pt-5 mt-5">
 
-                        @if (Model.BlogPost.Comments is null || Model.BlogPost.Comments.Count < 1)
+                        @if (Model.BlogPost.Comments is null)
+                        {
+                            <h3 class="mb-5">Şu anda yorumlara ulaşılamıyor</h3>
+                        }
+                        else if (Model.BlogPost.Comments is not null && Model.BlogPost.Comments.Count < 1)
                         {
                             <h3 class="mb-5">Henüz yorum yapılmadı.</h3>
                         }
-                        else
+                        else if (Model.BlogPost.Comments is not null && Model.BlogPost.Comments.Count > 0)
                         {
                             <h3 class="mb-5">@Model.BlogPost.Comments.Count Yorum</h3>
                         }
 
-                        <partial name="Partials/Comments.cshtml" model="Model.BlogPost.Comments" />
+                        @if (Model.BlogPost.Comments is not null && Model.BlogPost.Comments.Count > 0)
+                        {
+                            <partial name="Partials/Comments.cshtml" model="Model.BlogPost.Comments" />
+                        }
 
                         @if (User?.Identity?.IsAuthenticated == true)
                         {
@@ -65,8 +105,6 @@
                         <partial name="Partials/UnsignedCommentForm.cshtml" model="Model.UnsignedComment" />
                         }
                       
-                       
-
                     </div>
                 }
                 else if (Model.BlogPost is not null && Model.BlogPost.Content is null)
@@ -131,4 +169,31 @@
         font-weight: bold;
         font-size: 1.1em;
     }
+
+    .custom-alert-success {
+        position: fixed; /* Sayfada sabit konumlandırma */
+        top: 50px; /* Ekranın üst kısmından 10px boşluk */
+        left: 50%; /* Ekranın ortasına hizalama */
+        transform: translateX(-50%); /* Ortalamak için translate */
+        z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
+        background-color: #dff0d8;
+        color: #3c763d;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-alert-error {
+        position: fixed; /* Sayfada sabit konumlandırma */
+        top: 50px; /* Ekranın üst kısmından 10px boşluk */
+        left: 50%; /* Ekranın ortasına hizalama */
+        transform: translateX(-50%); /* Ortalamak için translate */
+        z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
 </style>

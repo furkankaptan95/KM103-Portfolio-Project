@@ -20,7 +20,8 @@ public class AuthController : ControllerBase
     private readonly IValidator<NewPasswordDto> _newPasswordValidator;
     private readonly IValidator<RegisterDto> _registerValidator;
     private readonly IValidator<VerifyEmailDto> _verifyEmailValidator;
-    public AuthController(IAuthService authService, IValidator<LoginDto> loginValidator, IValidator<ForgotPasswordDto> forgotPasswordValidator, IValidator<RenewPasswordDto> renewPasswordValidator, IValidator<NewPasswordDto> newPasswordValidator, IValidator<RegisterDto> registerValidator, IValidator<VerifyEmailDto> verifyEmailValidator)
+    private readonly IValidator<NewVerificationMailDto> _newEmailValidator;
+    public AuthController(IAuthService authService, IValidator<LoginDto> loginValidator, IValidator<ForgotPasswordDto> forgotPasswordValidator, IValidator<RenewPasswordDto> renewPasswordValidator, IValidator<NewPasswordDto> newPasswordValidator, IValidator<RegisterDto> registerValidator, IValidator<VerifyEmailDto> verifyEmailValidator, IValidator<NewVerificationMailDto> newEmailValidator)
     {
         _authService = authService;
         _loginValidator = loginValidator;
@@ -29,6 +30,7 @@ public class AuthController : ControllerBase
         _newPasswordValidator = newPasswordValidator;
         _registerValidator = registerValidator;
         _verifyEmailValidator = verifyEmailValidator;
+        _newEmailValidator = newEmailValidator;
     }
 
     [HttpPost("/login")]
@@ -215,6 +217,41 @@ public class AuthController : ControllerBase
             return StatusCode(500, Result.Error($"Bir hata oluştu: {ex.Message}"));
         }
     }
+
+    [HttpPost("/new-verification")]
+    public async Task<IActionResult> NewVerificationAsync([FromBody] NewVerificationMailDto dto)
+    {
+        try
+        {
+            var validationResult = await _newEmailValidator.ValidateAsync(dto);
+
+            if (!validationResult.IsValid)
+            {
+                string errorMessage = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(Result.Invalid(new ValidationError(errorMessage)));
+            }
+
+            var result = await _authService.NewVerificationAsync(dto);
+
+            if (!result.IsSuccess)
+            {
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    return NotFound(result);
+                }
+
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Bir hata oluştu: {ex.Message}"));
+        }
+    }
+
 
     [HttpPost("/renew-password")]
     public async Task<IActionResult> RenewPasswordAsync([FromBody] RenewPasswordDto dto)
