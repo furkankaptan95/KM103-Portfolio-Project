@@ -8,6 +8,7 @@
     var email = User.Claims.First(claim => claim.Type == "email").Value;
     var username = User.Claims.First(claim => claim.Type == "name").Value;
     var profileImageUrl = User.Claims.First(claim => claim.Type == "user-img").Value;
+    var fileApiUrl = ViewData["FileApiUrl"];
 }
 
 <!DOCTYPE html>
@@ -176,7 +177,7 @@
     <div class="profile-container">
         <div class="text-center">
 
-            <img src="@($"https://localhost:7085/uploads/{profileImageUrl}")" alt="Profil Resmi" class="profile-pic" id="profilePicture">
+            <img src="@($"{fileApiUrl}/uploads/{profileImageUrl}")" alt="Profil Resmi" class="profile-pic" id="profilePicture">
 
             <form id="editUserImageForm" asp-action="EditUserImage" method="post" enctype="multipart/form-data" onsubmit="return validateImageFile()">
                 

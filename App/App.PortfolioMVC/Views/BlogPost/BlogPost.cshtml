@@ -6,6 +6,7 @@
     {
         ViewData["BlogPostId"] = Model.BlogPost.Id;
     }
+    var fileApiUrl = ViewData["FileApiUrl"];
 }
 
 @{
@@ -65,7 +66,7 @@
 
                     <div class="about-author d-flex p-4 bg-dark position-relative" style="width:400px;">
                         <div class="bio mr-2">
-                            <img src="https://localhost:7085/uploads/furkan-kaptan.png" alt="Image placeholder" style="height:100px; border-radius:50%;" class="img-fluid mb-4">
+                            <img src="@fileApiUrl/uploads/furkan-kaptan.png" alt="Image placeholder" style="height:100px; border-radius:50%;" class="img-fluid mb-4">
                         </div>
                         <div class="desc">
                             <h3>Furkan Kaptan</h3>

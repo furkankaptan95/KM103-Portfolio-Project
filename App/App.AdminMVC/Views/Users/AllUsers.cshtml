@@ -1,6 +1,7 @@
 ﻿@using System.Security.Claims
 @{
     var adminEmail = User.Claims.FirstOrDefault(claim => claim.Type == "email")?.Value;
+    var fileApiUrl = ViewData["FileApiUrl"];
 }
 
 @model List<AllUsersViewModel>
@@ -25,7 +26,7 @@
                 var adminUser = Model.First(user => user.Email == adminEmail);
                 <tr>
                     <td>
-                        <img src="@($"https://localhost:7085/uploads/{adminUser.ImageUrl}")" class="img-thumbnail" style="max-width: 100px; height: auto; display: block;">
+                        <img src="@($"{fileApiUrl}/uploads/{adminUser.ImageUrl}")" class="img-thumbnail" style="max-width: 100px; height: auto; display: block;">
                     </td>
                     <td>@adminUser.Username</td>
                     <td>@adminUser.Email</td>
@@ -92,7 +93,7 @@
             {
                 <tr>
                     <td>
-                        <img src="@($"https://localhost:7085/uploads/{user.ImageUrl}")" class="img-thumbnail" style="max-width: 100px; height: auto; display: block;">
+                        <img src="@($"{fileApiUrl}/uploads/{user.ImageUrl}")" class="img-thumbnail" style="max-width: 100px; height: auto; display: block;">
                     </td>
                     <td>@user.Username</td>
                     <td>@user.Email</td>

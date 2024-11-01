@@ -1,5 +1,9 @@
 ﻿@model List<AllProjectsPortfolioViewModel>
 
+@{
+    var fileApiUrl = ViewData["FileApiUrl"];
+}
+
 <section class="ftco-section ftco-project" id="projects-section">
     <div class="container">
         <div class="row justify-content-center pb-5">
@@ -17,7 +21,7 @@
                 @foreach (var project in Model)
                 {
                     <div class="col-md-6">
-                        <div class="project img ftco-animate d-flex justify-content-center align-items-center" style="background-image: url(@($"https://localhost:7085/uploads/{project.ImageUrl}"));">
+                        <div class="project img ftco-animate d-flex justify-content-center align-items-center" style="background-image: url(@($"{fileApiUrl}/uploads/{project.ImageUrl}"));">
                             <div class="overlay"></div>
                             <div class="text text-center p-4">
                                 <h3><a href="#projects-section" style="pointer-events: none;">@project.Description</a></h3>
