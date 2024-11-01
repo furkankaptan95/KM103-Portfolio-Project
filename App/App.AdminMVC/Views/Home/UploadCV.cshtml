@@ -1,0 +1,68 @@
+﻿@model IFormFile
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+    body {
+        background: linear-gradient(to right, #f0f8ff, #e0f7fa);
+        height: 100vh; /* Sayfanın yüksekliğini tam al */
+        display: flex;
+        align-items: center; /* Dikey ortalama */
+        justify-content: center; /* Yatay ortalama */
+        margin: 0; /* Varsayılan kenar boşluğunu sıfırla */
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        width: 100%; /* Tam genişlik */
+        max-width: 500px; /* Maksimum genişlik belirle */
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        text-align: center;
+        color: #007bff;
+    }
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        width: 100%; /* Butonun tam genişlikte olmasını sağla */
+    }
+
+    .form-text {
+        font-size: 0.9em;
+        color: #6c757d;
+    }
+</style>
+<div class="container mt-5">
+    <h2>CV Yükleme Formu</h2>
+    <form id="cvUploadForm" asp-action="UploadCV" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="cvFile">CV Dosyası (PDF formatında)</label>
+            <input type="file" class="form-control-file" id="cvFile" name="cvFile" accept="application/pdf" required>
+            <small class="form-text text-muted">Lütfen sadece PDF dosyası yükleyin.</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Yükle</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('cvUploadForm').addEventListener('submit', function (e) {
+        const fileInput = document.getElementById('cvFile');
+        const filePath = fileInput.value;
+
+        // Dosya uzantısını kontrol et
+        const allowedExtensions = /(\.pdf)$/i;
+        if (!allowedExtensions.exec(filePath)) {
+            alert('Lütfen sadece PDF dosyası yükleyin.');
+            fileInput.value = ''; // Geçersiz dosya yüklenirse alanı temizle
+            e.preventDefault(); // Formun gönderilmesini engelle
+        }
+    });
+</script>

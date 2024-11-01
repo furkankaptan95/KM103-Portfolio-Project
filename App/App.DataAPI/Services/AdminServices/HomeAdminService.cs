@@ -1,4 +1,5 @@
 ﻿using App.Data.DbContexts;
+using App.Data.Entities;
 using App.DTOs.HomeDtos;
 using App.Services.AdminServices.Abstract;
 using Ardalis.Result;
@@ -58,6 +59,39 @@ public class HomeAdminService : IHomeAdminService
         catch (Exception ex)
         {
             return Result<HomeDto>.Error("Bir hata oluştu: " + ex.Message);
+        }
+    }
+
+    public Task<Result> UploadCvAsync(IFormFile cv)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result> UploadCvAsync(string url)
+    {
+        try
+        {
+            var entity = new CvEntity
+            {
+                Url = url,
+            };
+
+            await _dataApiDb.CVs.AddAsync(entity);
+            await _dataApiDb.SaveChangesAsync();
+
+            return Result.Success();
+        }
+        catch (DbUpdateException dbUpdateEx)
+        {
+            return Result.Error("Veritabanı güncelleme hatası: " + dbUpdateEx.Message);
+        }
+        catch (SqlException sqlEx)
+        {
+            return Result.Error("Veritabanı bağlantı hatası: " + sqlEx.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Error("Bir hata oluştu: " + ex.Message);
         }
     }
 }

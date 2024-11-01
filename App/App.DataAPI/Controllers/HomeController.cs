@@ -30,4 +30,30 @@ public class HomeController(IHomeAdminService homeService) : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
+
+    [HttpPost("/add-cv")]
+    public async Task<IActionResult> AddCvAsync([FromBody] string url)
+    {
+        if (string.IsNullOrEmpty(url))
+        {
+            return BadRequest(Result.Invalid());
+        }
+
+        try
+        {
+            var result = await homeService.UploadCvAsync(url);
+
+            if (!result.IsSuccess)
+            {
+                return StatusCode(500, result);
+            }
+
+            return Ok(result);
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
+    }
 }

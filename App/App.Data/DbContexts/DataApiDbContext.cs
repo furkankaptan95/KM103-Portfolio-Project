@@ -17,6 +17,7 @@ public class DataApiDbContext : DbContext
     public DbSet<ContactMessageEntity> ContactMessages { get; set; }
     public DbSet<BlogPostEntity> BlogPosts { get; set; }
     public DbSet<CommentEntity> Comments { get; set; }
+    public DbSet<CvEntity> CVs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
