@@ -1,12 +1,17 @@
 ﻿@model BlogPostPagePortfolioViewModel
+
 @using System.Security.Claims
+@using App.Core.Config
+@using Microsoft.Extensions.Options
+@inject IOptions<FileApiSettings> fileSettings
 
 @{
-    if(Model.BlogPost is not null)
+    ViewData["Title"] = "Blog Post";
+    var fileApiUrl = fileSettings.Value.FileApiUrl;
+    if (Model.BlogPost is not null)
     {
         ViewData["BlogPostId"] = Model.BlogPost.Id;
     }
-    var fileApiUrl = ViewData["FileApiUrl"];
 }
 
 @{

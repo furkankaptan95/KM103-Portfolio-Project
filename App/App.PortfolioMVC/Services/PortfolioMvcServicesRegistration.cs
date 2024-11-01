@@ -1,6 +1,5 @@
 ﻿using App.Core.Authorization;
 using App.Core.Config;
-using App.Core.Validators.ViewModelValidators.AboutMeValidators;
 using App.Core.Validators.ViewModelValidators.UserValidators;
 using App.Services.AuthService.Abstract;
 using App.Services.AuthService.Concrete;

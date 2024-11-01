@@ -1,10 +1,13 @@
 ﻿@model AddContactMessageViewModel
+@using App.Core.Config
+@using Microsoft.Extensions.Options
+@inject IOptions<FileApiSettings> fileSettings
 
 @{
     var imgUrl = ViewData["AboutMeImageUrl"];
     var link = ViewData["Link"];
     var email = ViewData["Email"];
-    var fileApiUrl = ViewData["FileApiUrl"];
+    var fileApiUrl = fileSettings.Value.FileApiUrl;
 }
 
 <section class="ftco-section contact-section ftco-no-pb" id="contact-section">

@@ -1,8 +1,12 @@
 ﻿@model UpdateAboutMeViewModel
 
+@using App.Core.Config
+@using Microsoft.Extensions.Options
+@inject IOptions<FileApiSettings> fileSettings
+
 @{
     ViewData["Title"] = "Hakkmda - Güncelle";
-    var fileApiUrl = ViewData["FileApiUrl"];
+    var fileApiUrl = fileSettings.Value.FileApiUrl;
 }
 
 <div class="row justify-content-center">

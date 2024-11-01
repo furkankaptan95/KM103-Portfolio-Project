@@ -1,8 +1,12 @@
 ﻿@model AdminAboutMeViewModel
 
+@using App.Core.Config
+@using Microsoft.Extensions.Options
+@inject IOptions<FileApiSettings> fileSettings
+
 @{
+    var fileApiUrl = fileSettings.Value.FileApiUrl;
     ViewData["Title"] = "Hakkımda";
-    var fileApiUrl = ViewData["FileApiUrl"];
 }
 
 <div class="container">

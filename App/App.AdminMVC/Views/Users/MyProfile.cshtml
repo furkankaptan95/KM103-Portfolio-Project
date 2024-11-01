@@ -2,13 +2,18 @@
 
 @using System.Security.Claims
 @using App.ViewModels.PortfolioMvc.UserViewModels
+@using App.Core.Config
+@using Microsoft.Extensions.Options
+@inject IOptions<FileApiSettings> fileSettings
+
 @{
     Layout = null;
     var userId = int.Parse(User.Claims.First(claim => claim.Type == "sub").Value);
     var email = User.Claims.First(claim => claim.Type == "email").Value;
     var username = User.Claims.First(claim => claim.Type == "name").Value;
     var profileImageUrl = User.Claims.First(claim => claim.Type == "user-img").Value;
-    var fileApiUrl = ViewData["FileApiUrl"];
+    var fileApiUrl = fileSettings.Value.FileApiUrl;
+    ViewData["Title"] = "Profilim";
 }
 
 <!DOCTYPE html>

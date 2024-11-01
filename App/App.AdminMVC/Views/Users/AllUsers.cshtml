@@ -1,10 +1,14 @@
-﻿@using System.Security.Claims
+﻿@model List<AllUsersViewModel>
+
+@using System.Security.Claims
+@using App.Core.Config
+@using Microsoft.Extensions.Options
+@inject IOptions<FileApiSettings> fileSettings
 @{
     var adminEmail = User.Claims.FirstOrDefault(claim => claim.Type == "email")?.Value;
-    var fileApiUrl = ViewData["FileApiUrl"];
+    var fileApiUrl = fileSettings.Value.FileApiUrl;
+    ViewData["Title"] = "Kullanıcılar";
 }
-
-@model List<AllUsersViewModel>
 
 <h2 class="text-center my-4" style="font-weight: 600; color: #333;">Kullanıcılar</h2>
 

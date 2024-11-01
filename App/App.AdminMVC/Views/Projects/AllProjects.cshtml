@@ -1,9 +1,14 @@
 ﻿@model List<AdminAllProjectsViewModel>
 
+@using App.Core.Config
+@using Microsoft.Extensions.Options
+@inject IOptions<FileApiSettings> fileSettings
+
 @{
+    var fileApiUrl = fileSettings.Value.FileApiUrl;
     ViewData["Title"] = "Projeler";
-    var fileApiUrl = ViewData["FileApiUrl"];
 }
+
 
 @if (Model.Count == 0)
 {

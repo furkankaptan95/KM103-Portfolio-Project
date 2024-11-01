@@ -1,7 +1,11 @@
 ﻿@model List<AllProjectsPortfolioViewModel>
 
+@using App.Core.Config
+@using Microsoft.Extensions.Options
+@inject IOptions<FileApiSettings> fileSettings
+
 @{
-    var fileApiUrl = ViewData["FileApiUrl"];
+    var fileApiUrl = fileSettings.Value.FileApiUrl;
 }
 
 <section class="ftco-section ftco-project" id="projects-section">
