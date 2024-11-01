@@ -13,9 +13,15 @@ public class BlogPostController(IBlogPostPortfolioService blogPostService) : Con
 	[Route("blog-post-{id:int}")]
 	public async Task<IActionResult> BlogPost([FromRoute] int id)
     {
+        if (id < 1)
+        {
+            TempData["ErrorMessage"] = "BlogPost bulunamadı.";
+            return Redirect("/all-blog-posts");
+        }
+
 		BlogPostPagePortfolioViewModel blogPostPageModel = new BlogPostPagePortfolioViewModel();
 
-		SingleBlogPostViewModel model = null;
+		SingleBlogPostViewModel model;
 
         try
         {
@@ -27,15 +33,22 @@ public class BlogPostController(IBlogPostPortfolioService blogPostService) : Con
 
                 model = new();
 
-                var commentsModel = dto.Comments
-              .Select(item => new BlogPostCommentsPortfolioViewModel
-              {
-                  Id = item.Id,
-                  Content = item.Content,
-                  Commenter = item.Commenter,
-                  CreatedAt = item.CreatedAt,
-              })
-              .ToList();
+                List<BlogPostCommentsPortfolioViewModel> commentsModel = null;
+
+                if (dto.Comments is not null)
+                {
+                    commentsModel = new();
+
+                     commentsModel = dto.Comments
+                    .Select(item => new BlogPostCommentsPortfolioViewModel
+                    {
+                        Id = item.Id,
+                        Content = item.Content,
+                        Commenter = item.Commenter,
+                        CreatedAt = item.CreatedAt,
+                    })
+                    .ToList();
+                } 
 
                 model.Id = dto.Id;
                 model.Title = dto.Title;
@@ -44,7 +57,6 @@ public class BlogPostController(IBlogPostPortfolioService blogPostService) : Con
                 model.Comments = commentsModel;
 
                 blogPostPageModel.BlogPost = model;
-
 
                 return View(blogPostPageModel);
             }

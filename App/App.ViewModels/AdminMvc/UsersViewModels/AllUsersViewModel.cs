@@ -8,6 +8,6 @@ public class AllUsersViewModel
     public string Email { get; set; }
     public bool IsActive { get; set; }
     public string? ImageUrl { get; set; }
-    public List<UsersCommentsViewModel> Comments { get; set; }
+    public List<UsersCommentsViewModel> Comments { get; set; } = new List<UsersCommentsViewModel>();
 
 }

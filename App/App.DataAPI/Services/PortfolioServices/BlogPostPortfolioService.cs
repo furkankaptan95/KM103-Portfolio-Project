@@ -15,7 +15,7 @@ public class BlogPostPortfolioService(DataApiDbContext dataApiDb,ICommentPortfol
         {
             var dtos = new List<BlogPostsPortfolioDto>();
 
-            var entities = await dataApiDb.BlogPosts.Where(bp=>bp.IsVisible == true).Include(b=>b.Comments).ToListAsync();
+            var entities = await dataApiDb.BlogPosts.Where(bp=>bp.IsVisible == true).Include(b=>b.Comments.Where(c=>c.IsApproved==true)).ToListAsync();
 
             if (entities is null)
             {
@@ -58,7 +58,7 @@ public class BlogPostPortfolioService(DataApiDbContext dataApiDb,ICommentPortfol
 
 			var commentsResult = await commentPortfolioService.GetBlogPostCommentsAsync(id);
 
-			List<BlogPostCommentsPortfolioDto> commentDtos = new();
+			List<BlogPostCommentsPortfolioDto> commentDtos = null;
 
 			if (commentsResult.IsSuccess)
 			{
