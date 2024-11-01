@@ -7,4 +7,5 @@ public interface ICommentPortfolioService
     Task<Result> AddCommentUnsignedAsync(AddCommentUnsignedDto dto);
     Task<Result> AddCommentSignedAsync(AddCommentSignedDto dto);
     Task<Result<List<BlogPostCommentsPortfolioDto>>> GetBlogPostCommentsAsync(int id);
+    Task<Result> DeleteCommentAsync(int id);
 }

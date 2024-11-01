@@ -45,7 +45,7 @@ public class CommentController(ICommentPortfolioService commentService) : Contro
             return Redirect($"/blog-post-{model.BlogPostId}");
         }
     }
-
+    [AuthorizeRolesMvc("commenter")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddSignedComment([FromForm] SignedAddCommentViewModel model)
@@ -82,6 +82,57 @@ public class CommentController(ICommentPortfolioService commentService) : Contro
         {
             TempData["ErrorMessage"] = "Yorumunuz alınırken beklenmedik bir hata oluştu..";
             return Redirect($"/blog-post-{model.BlogPostId}");
+        }
+    }
+
+    [AuthorizeRolesMvc("commenter")]
+    [HttpGet]
+    public async Task<IActionResult> Delete([FromRoute] int id)
+    {
+        var referer = Request.Headers["Referer"].ToString();
+        
+        if (id<1)
+        {
+           
+            if (!string.IsNullOrEmpty(referer))
+            {
+                return Redirect(referer);
+            }
+
+            return Redirect("/");
+        }
+
+        try
+        {
+            var result = await commentService.DeleteCommentAsync(id);
+
+            if (result.IsSuccess)
+            {
+                TempData["SuccessMessage"] = result.SuccessMessage;
+            }
+            else
+            {
+                TempData["ErrorMessage"] = result.Errors.First();
+            }
+
+            if (!string.IsNullOrEmpty(referer))
+            {
+                return Redirect(referer);
+            }
+
+            return Redirect("/");
+        }
+
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Yorumunuz silinirken beklenmedik bir hata oluştu..";
+
+            if (!string.IsNullOrEmpty(referer))
+            {
+                return Redirect(referer);
+            }
+
+            return Redirect("/");
         }
     }
 }
