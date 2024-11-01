@@ -21,13 +21,13 @@ public class AuthApiDbContext : DbContext
         byte[] passwordHash, passwordSalt;
         
 
-        HashingHelper.CreatePasswordHash("123123123", out passwordHash, out passwordSalt);
+        HashingHelper.CreatePasswordHash("123981.*.*", out passwordHash, out passwordSalt);
 
         modelBuilder.Entity<UserEntity>().HasData(
 
             new UserEntity
             {
-                Id = 4,
+                Id = 1,
                 Username = "FurkanKaptan",
                 Email = "iamfurkan86@gmail.com",
                 PasswordHash = passwordHash,
@@ -36,36 +36,16 @@ public class AuthApiDbContext : DbContext
                 Role = "admin",
 
             },
-             new UserEntity
-             {
-                 Id = 1,
-                 Username = "hasansolmaz",
-                 Email = "hslmz@gmail.com",
-                 IsActive = true,
-                 Role = "commenter",
-                 PasswordHash = passwordHash,
-                 PasswordSalt = passwordSalt,
-             },
-               new UserEntity
-               {
-                   Id = 2,
-                   Username = "ardagüler",
-                   Email = "ardglr@gmail.com",
-                   IsActive = true,
-                   Role = "commenter",
-                   PasswordHash = passwordHash,
-                   PasswordSalt = passwordSalt,
-               },
-               new UserEntity
-               {
-                   Id = 3,
-                   Username = "fabrizioromano",
-                   Email = "fromano@gmail.com",
-                   IsActive = false,
-                   Role = "commenter",
-                   PasswordHash = passwordHash,
-                   PasswordSalt = passwordSalt,
-               }
-            );
+            new UserEntity
+            {
+                Id = 2,
+                Username = "FurkanKaptanC",
+                Email = "Furkan.Kaptan.Work@gmail.com",
+                IsActive = true,
+                Role = "commenter",
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+            }
+        );
     }
 }
