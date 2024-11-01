@@ -1,4 +1,5 @@
 ﻿using App.Core.Authorization;
+using App.Core.Config;
 using App.Core.Validators.ViewModelValidators.AboutMeValidators;
 using App.Core.Validators.ViewModelValidators.UserValidators;
 using App.Services.AuthService.Abstract;
@@ -13,6 +14,7 @@ public static class PortfolioMvcServicesRegistration
 {
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.Configure<FileApiSettings>(configuration.GetSection("FileApiSettings"));
         services.AddControllersWithViews();
         services.AddValidatorsFromAssembly(typeof(EditUserImageViewModelValidator).Assembly);
         services.AddHttpContextAccessor();

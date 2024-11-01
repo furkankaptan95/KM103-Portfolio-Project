@@ -1,4 +1,5 @@
 ﻿using App.Core.Authorization;
+using App.Core.Config;
 using App.Core.Validators.ViewModelValidators.AboutMeValidators;
 using App.Services.AdminServices.Abstract;
 using App.Services.AuthService.Abstract;
@@ -12,6 +13,7 @@ public static class AdminMvcServicesRegistration
 {
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.Configure<FileApiSettings>(configuration.GetSection("FileApiSettings"));
         services.AddControllersWithViews();
         services.AddValidatorsFromAssembly(typeof(AddAboutMeViewModelValidator).Assembly);
         services.AddHttpContextAccessor();

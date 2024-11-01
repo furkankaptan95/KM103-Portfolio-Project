@@ -1,4 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@using App.Core.Config
+@using Microsoft.Extensions.Options
+@inject IOptions<FileApiSettings> fileSettings
+
+@{
+    ViewData["FileApiUrl"] = fileSettings.Value.FileApiUrl;
+}
+
+<!DOCTYPE html>
 <html lang="tr"
       class="light-style layout-menu-fixed"
       dir="ltr"
