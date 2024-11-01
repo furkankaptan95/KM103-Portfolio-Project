@@ -351,7 +351,7 @@ public class AuthController(IAuthService authService) : Controller
                 Response.Cookies.Delete("JwtToken");
                 Response.Cookies.Delete("RefreshToken");
 
-                TempData["Message"] = result.SuccessMessage;
+                TempData["SuccessMessage"] = result.SuccessMessage;
                 return Redirect("/");
             }
 
