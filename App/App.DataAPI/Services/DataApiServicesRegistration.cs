@@ -38,14 +38,13 @@ public static class DataApiServicesRegistration
 {
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // CORS yapılandırması
         services.AddCors(options =>
         {
-            options.AddPolicy("AllowSpecificOrigin", builder =>
+            options.AddPolicy("AllowAllOrigins", builder =>
             {
-                builder.WithOrigins("https://localhost:7163", "https://localhost:7241", "https://localhost:7167")
-                       .AllowAnyMethod()
-                       .AllowAnyHeader();
+                builder.AllowAnyOrigin() // Tüm origin'lere izin verir.
+                       .AllowAnyMethod() // Tüm HTTP yöntemlerine izin verir.
+                       .AllowAnyHeader(); // Tüm başlıklara izin verir.
             });
         });
 

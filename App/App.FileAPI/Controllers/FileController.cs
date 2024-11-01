@@ -114,7 +114,7 @@ public class FileController : ControllerBase
         }
         catch (IOException ex)
         {
-            return StatusCode(500, $"Dosya yükleme sırasında bir hata oluştu: {ex.Message}");
+            return StatusCode(500, $"Dosya silme sırasında bir hata oluştu: {ex.Message}");
         }
 
         catch (Exception ex)

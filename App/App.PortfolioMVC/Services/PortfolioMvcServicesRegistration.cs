@@ -37,7 +37,6 @@ public static class PortfolioMvcServicesRegistration
         {
             throw new InvalidOperationException("DataApiUrl is required in appsettings.json");
         }
-
         services.AddHttpClient("dataApi", c =>
         {
             c.BaseAddress = new Uri(dataApiUrl);
