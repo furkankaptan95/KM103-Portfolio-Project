@@ -1,8 +1,15 @@
 ﻿@model PersonalInfoPortfolioViewModel
 
+@using App.Core.Config
+@using Microsoft.Extensions.Options
+@inject IOptions<FileApiSettings> fileSettings
+
 @{
+	var fileApiUrl = fileSettings.Value.FileApiUrl;
 	var imgUrl = ViewData["AboutMeImageUrl"];
+	int projectsCount = ViewData["ProjectsCount"] as int? ?? 0;
 }
+
 
 <section class="ftco-about img ftco-section ftco-no-pb" id="about-section">
 	<div class="container">
@@ -13,7 +20,7 @@
 				<div class="col-md-6 col-lg-5 d-flex">
 					<div class="img-about img d-flex align-items-stretch">
 						<div class="overlay"></div>
-						<div class="img d-flex align-self-stretch align-items-center" style="background-image:url(@($"https://localhost:7085/uploads/{imgUrl}"));">
+						<div class="img d-flex align-self-stretch align-items-center" style="background-image:url(@($"{fileApiUrl}/uploads/{imgUrl}"));">
 						</div>
 					</div>
 				</div>
@@ -33,13 +40,12 @@
 						<div class="counter-wrap ftco-animate d-flex mt-3">
 							<div class="text d-flex align-items-center">
 								<p class="mb-0 mr-4">
-									<span class="number" data-number="5">0</span>
+									<span class="number" data-number="@projectsCount">0</span>
 									<a href="/#projects-section"><span>Proje</span></a>
 								</p>
 								<p class="mb-0">
-									<a href="#" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 12px;">Özgeçmişim</a>
+									<a href="/Home/DownloadCv" class="btn btn-primary" id="downloadCvBtn" style="padding: 0.5rem 1rem; font-size: 12px;">Özgeçmişim</a>
 								</p>
-
 							</div>
 						</div>
 					</div>
@@ -69,3 +75,4 @@
 		margin-left : 60px;
 	}
 </style>
+

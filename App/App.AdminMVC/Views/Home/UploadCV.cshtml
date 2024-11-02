@@ -1,0 +1,58 @@
+﻿@model IFormFile
+
+<div class="container mt-5 text-center">
+    <h2 class="form-title mb-5">CV Yükleme Formu</h2>
+    <form id="cvUploadForm" asp-action="UploadCV" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="cvFile">CV Dosyası (PDF formatında)</label>
+            <input type="file" class="form-control-file" id="cvFile" name="cvFile" accept="application/pdf" required>
+            <small class="form-text text-muted">Lütfen sadece PDF dosyası yükleyin.</small> <!-- Bu alan altına taşındı -->
+        </div>
+        <button type="submit" class="btn btn-primary">Yükle</button>
+    </form>
+</div>
+
+
+<style>
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 50px; /* Sayfanın üstünden boşluk bırakır */
+    }
+
+    .form-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px; /* Başlık ile form arasında boşluk bırakır */
+    }
+
+    #cvUploadForm {
+        width: 100%;
+        max-width: 400px; /* Form genişliğini sınırlayarak ortalanmış bir görünüm sağlar */
+        padding: 20px;
+        background-color: #f8f9fa; /* Hafif bir arka plan rengi */
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hafif bir gölge */
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column; /* İç bileşenleri dikey sıraya koyar */
+    }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px; /* Label ile input arasında boşluk bırakır */
+        }
+
+    .form-control-file {
+        margin-bottom: 5px; /* Input ile small arasında boşluk bırakır */
+    }
+
+    button[type="submit"] {
+        width: 100%; /* Butonun tam genişlikte olmasını sağlar */
+        margin-top: 15px;
+    }
+
+</style>

@@ -2,12 +2,18 @@
 
 @using System.Security.Claims
 @using App.ViewModels.PortfolioMvc.UserViewModels
+@using App.Core.Config
+@using Microsoft.Extensions.Options
+@inject IOptions<FileApiSettings> fileSettings
+
 @{
     Layout = null;
     var userId = int.Parse(User.Claims.First(claim => claim.Type == "sub").Value);
     var email = User.Claims.First(claim => claim.Type == "email").Value;
     var username = User.Claims.First(claim => claim.Type == "name").Value;
     var profileImageUrl = User.Claims.First(claim => claim.Type == "user-img").Value;
+    var fileApiUrl = fileSettings.Value.FileApiUrl;
+    ViewData["Title"] = "Profilim";
 }
 
 <!DOCTYPE html>
@@ -21,7 +27,7 @@
     <style>
         .custom-alert-success {
             position: fixed;
-            top: 50px;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
@@ -34,7 +40,7 @@
 
         .custom-alert-error {
             position: fixed;
-            top: 50px;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
@@ -176,7 +182,7 @@
     <div class="profile-container">
         <div class="text-center">
 
-            <img src="@($"https://localhost:7085/uploads/{profileImageUrl}")" alt="Profil Resmi" class="profile-pic" id="profilePicture">
+            <img src="@($"{fileApiUrl}/uploads/{profileImageUrl}")" alt="Profil Resmi" class="profile-pic" id="profilePicture">
 
             <form id="editUserImageForm" asp-action="EditUserImage" method="post" enctype="multipart/form-data" onsubmit="return validateImageFile()">
                 

@@ -1,8 +1,14 @@
 ﻿@model List<AdminAllProjectsViewModel>
 
+@using App.Core.Config
+@using Microsoft.Extensions.Options
+@inject IOptions<FileApiSettings> fileSettings
+
 @{
+    var fileApiUrl = fileSettings.Value.FileApiUrl;
     ViewData["Title"] = "Projeler";
 }
+
 
 @if (Model.Count == 0)
 {
@@ -40,7 +46,7 @@ else
                 {
                     <tr>
                         <td style="text-align:center;">
-                            <img src="@($"https://localhost:7085/uploads/{project.ImageUrl}")" alt="@project.Title" class="img-thumbnail" style="max-width: 100px; height: auto; display: block;">
+                            <img src="@($"{fileApiUrl}/uploads/{project.ImageUrl}")" alt="@project.Title" class="img-thumbnail" style="max-width: 100px; height: auto; display: block;">
                         </td>
 
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@project.Title</strong></td>

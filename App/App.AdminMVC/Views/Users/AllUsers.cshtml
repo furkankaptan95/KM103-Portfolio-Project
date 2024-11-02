@@ -1,9 +1,14 @@
-﻿@using System.Security.Claims
+﻿@model List<AllUsersViewModel>
+
+@using System.Security.Claims
+@using App.Core.Config
+@using Microsoft.Extensions.Options
+@inject IOptions<FileApiSettings> fileSettings
 @{
     var adminEmail = User.Claims.FirstOrDefault(claim => claim.Type == "email")?.Value;
+    var fileApiUrl = fileSettings.Value.FileApiUrl;
+    ViewData["Title"] = "Kullanıcılar";
 }
-
-@model List<AllUsersViewModel>
 
 <h2 class="text-center my-4" style="font-weight: 600; color: #333;">Kullanıcılar</h2>
 
@@ -25,7 +30,7 @@
                 var adminUser = Model.First(user => user.Email == adminEmail);
                 <tr>
                     <td>
-                        <img src="@($"https://localhost:7085/uploads/{adminUser.ImageUrl}")" class="img-thumbnail" style="max-width: 100px; height: auto; display: block;">
+                        <img src="@($"{fileApiUrl}/uploads/{adminUser.ImageUrl}")" class="img-thumbnail" style="max-width: 100px; height: auto; display: block;">
                     </td>
                     <td>@adminUser.Username</td>
                     <td>@adminUser.Email</td>
@@ -92,7 +97,7 @@
             {
                 <tr>
                     <td>
-                        <img src="@($"https://localhost:7085/uploads/{user.ImageUrl}")" class="img-thumbnail" style="max-width: 100px; height: auto; display: block;">
+                        <img src="@($"{fileApiUrl}/uploads/{user.ImageUrl}")" class="img-thumbnail" style="max-width: 100px; height: auto; display: block;">
                     </td>
                     <td>@user.Username</td>
                     <td>@user.Email</td>

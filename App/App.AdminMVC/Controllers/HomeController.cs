@@ -1,6 +1,7 @@
 using App.Core.Authorization;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.HomeViewModels;
+using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
@@ -9,7 +10,6 @@ public class HomeController(IHomeAdminService homeService) : Controller
 {
 
     [AllowAnonymousManuel]
-
     [HttpGet]
     public IActionResult Error()
     {
@@ -17,6 +17,7 @@ public class HomeController(IHomeAdminService homeService) : Controller
     }
 
     [AuthorizeRolesMvc("admin")]
+    [HttpGet]
     public async Task<IActionResult> Index()
     {
         try
@@ -49,8 +50,62 @@ public class HomeController(IHomeAdminService homeService) : Controller
     }
 
     [AuthorizeRolesMvc("admin")]
+    [HttpGet]
     public IActionResult Index2()
     {
         return View();
+    }
+
+    [AuthorizeRolesMvc("admin")]
+    [HttpGet]
+    public IActionResult UploadCV()
+    {
+        return View();
+    }
+
+    [AuthorizeRolesMvc("admin")]
+    [HttpPost]
+    public async Task<IActionResult> UploadCV([FromForm] IFormFile cvFile)
+    {
+
+        if (cvFile == null || cvFile.Length == 0)
+        {
+            ViewData["ErrorMessage"] = "Lütfen bir dosya seçin.";
+            return View();
+        }
+
+        // Dosyanýn PDF olup olmadýðýný kontrol et
+        if (cvFile.ContentType != "application/pdf")
+        {
+            ViewData["ErrorMessage"] = "Sadece PDF formatýndaki dosyalarý yükleyebilirsiniz.";
+            return View();
+        }
+
+        // Alternatif olarak, dosya adýnýn .pdf uzantýsý ile bittiðini de kontrol edebilirsiniz:
+        if (!cvFile.FileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+        {
+            ViewData["ErrorMessage"] = "Dosya formatý yalnýzca PDF olabilir.";
+            return View();
+        }
+
+        try
+        {
+            var result = await homeService.UploadCvAsync(cvFile);
+
+            if (result.IsSuccess)
+            {
+                ViewData["Message"] = result.SuccessMessage;
+                return View();
+            }
+
+            ViewData["ErrorMessage"] = result.Errors.FirstOrDefault();
+            return View();
+
+        }
+        catch (Exception)
+        {
+            ViewData["ErrorMessage"] = "CV yüklenirken beklenmeyen bir hata oluþtu.Tekrar deneyebilirsiniz.";
+            return View();
+        }
     }
 }

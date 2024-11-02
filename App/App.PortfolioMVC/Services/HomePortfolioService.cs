@@ -8,10 +8,13 @@ using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc;
 using App.ViewModels.PortfolioMvc.BlogPostsViewModels;
 using Ardalis.Result;
+using Microsoft.AspNetCore.Mvc;
 
 namespace App.PortfolioMVC.Services;
-public class HomePortfolioService(IEducationPortfolioService educationService,IExperiencePortfolioService experienceService,IProjectPortfolioService projectService,IPersonalInfoPortfolioService personalInfoService,IAboutMePortfolioService aboutMeService,IBlogPostPortfolioService blogPostService) : IHomePortfolioService
+public class HomePortfolioService(IEducationPortfolioService educationService,IExperiencePortfolioService experienceService,IProjectPortfolioService projectService,IPersonalInfoPortfolioService personalInfoService,IAboutMePortfolioService aboutMeService,IBlogPostPortfolioService blogPostService, IHttpClientFactory factory) : IHomePortfolioService
 {
+	private HttpClient FileApiClient => factory.CreateClient("fileApi");
+	private HttpClient DataApiClient => factory.CreateClient("dataApi");
 	public async Task<Result<HomeIndexViewModel>> GetHomeInfosAsync()
 	{
 		var model = new HomeIndexViewModel();
@@ -164,4 +167,49 @@ public class HomePortfolioService(IEducationPortfolioService educationService,IE
         }
         return models;
     }
+
+	public Task<Result<string>> GetCvUrlAsync()
+	{
+		throw new NotImplementedException();
+	}
+
+	public async Task<Result<byte[]>> DownloadCvAsync()
+	{
+		try
+		{
+			var urlResponse = await DataApiClient.GetAsync("get-cv-url");
+
+			if (!urlResponse.IsSuccessStatusCode)
+			{
+				return Result<byte[]>.Error();
+			}
+
+			var urlResult = await urlResponse.Content.ReadFromJsonAsync<Result<string>>();
+
+			if (urlResult is null)
+			{
+				return Result<byte[]>.Error();
+			}
+
+			var response = await FileApiClient.GetAsync($"download?fileUrl={urlResult.Value}");
+
+			if (!response.IsSuccessStatusCode)
+			{
+				return Result<byte[]>.Error();
+			}
+
+			var result = await response.Content.ReadAsByteArrayAsync(); // Dosya bytes olarak döndür
+
+			if (result is null)
+			{
+				return Result<byte[]>.Error();
+			}
+
+			return Result<byte[]>.Success(result);
+		}
+		catch (Exception)
+		{
+			return Result<byte[]>.Error();
+		}
+	}
 }

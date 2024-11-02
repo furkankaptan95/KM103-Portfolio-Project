@@ -282,7 +282,7 @@ public class AuthController : ControllerBase
         }
     }
 
-    [HttpPut("/new-password")]
+    [HttpPost("/new-password")]
     public async Task<IActionResult> NewPasswordAsync([FromBody] NewPasswordDto dto)
     {
         try

@@ -63,7 +63,7 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceAdminSer
     {
         try
         {
-            var apiResponse = await DataApiClient.DeleteAsync($"delete-experience-{id}");
+            var apiResponse = await DataApiClient.GetAsync($"delete-experience-{id}");
 
             if (apiResponse.IsSuccessStatusCode)
             {
@@ -158,7 +158,7 @@ public class ExperienceService(IHttpClientFactory factory) : IExperienceAdminSer
     {
         try
         {
-            var apiResponse = await DataApiClient.PutAsJsonAsync("update-experience", dto);
+            var apiResponse = await DataApiClient.PostAsJsonAsync("update-experience", dto);
 
             if (!apiResponse.IsSuccessStatusCode)
             {

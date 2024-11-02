@@ -1,5 +1,8 @@
 ﻿@model EditUserViewModel
 
+@using App.Core.Config
+@using Microsoft.Extensions.Options
+@inject IOptions<FileApiSettings> fileSettings
 @using System.Security.Claims
 @using App.ViewModels.PortfolioMvc.UserViewModels
 @{
@@ -8,6 +11,8 @@
     var email = User.Claims.First(claim => claim.Type == "email").Value;
     var username = User.Claims.First(claim => claim.Type == "name").Value;
     var profileImageUrl = User.Claims.First(claim => claim.Type == "user-img").Value;
+    var fileApiUrl = fileSettings.Value.FileApiUrl;
+    ViewData["Title"] = "Profilim";
 }
 
 <!DOCTYPE html>
@@ -21,20 +26,21 @@
 
         .custom-alert-success {
             position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
+            top: 10px; /* Ekranın üst kısmından 10px boşluk */
             left: 50%; /* Ekranın ortasına hizalama */
             transform: translateX(-50%); /* Ortalamak için translate */
             z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
-            background-color: #dff0d8;
-            color: #3c763d;
+            background-color: wheat; /* Arka plan rengi */
+            color: #6b4f3a; /* Yazı rengi (daha koyu bir ton) */
             padding: 10px 20px;
             border-radius: 5px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
+
         .custom-alert-error {
             position: fixed; /* Sayfada sabit konumlandırma */
-            top: 50px; /* Ekranın üst kısmından 10px boşluk */
+            top: 10px; /* Ekranın üst kısmından 10px boşluk */
             left: 50%; /* Ekranın ortasına hizalama */
             transform: translateX(-50%); /* Ortalamak için translate */
             z-index: 1000; /* Diğer elementlerin üstünde görünmesini sağlar */
@@ -176,7 +182,7 @@
     <div class="profile-container">
         <div class="text-center">
 
-            <img src="@($"https://localhost:7085/uploads/{profileImageUrl}")" alt="Profil Resmi" class="profile-pic" id="profilePicture">
+            <img src="@($"{fileApiUrl}/uploads/{profileImageUrl}")" alt="Profil Resmi" class="profile-pic" id="profilePicture">
 
             <form id="editUserImageForm" asp-action="EditUserImage" method="post" enctype="multipart/form-data" onsubmit="return validateImageFile()">
 

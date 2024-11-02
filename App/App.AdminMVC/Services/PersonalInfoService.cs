@@ -98,7 +98,7 @@ public class PersonalInfoService(IHttpClientFactory factory) : IPersonalInfoAdmi
     {
         try
         {
-            var apiResponse = await DataApiClient.PutAsJsonAsync("update-personal-info", dto);
+            var apiResponse = await DataApiClient.PostAsJsonAsync("update-personal-info", dto);
 
             if (apiResponse.IsSuccessStatusCode)
             {

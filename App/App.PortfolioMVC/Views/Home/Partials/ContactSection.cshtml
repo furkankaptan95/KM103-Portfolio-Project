@@ -1,9 +1,13 @@
 ﻿@model AddContactMessageViewModel
+@using App.Core.Config
+@using Microsoft.Extensions.Options
+@inject IOptions<FileApiSettings> fileSettings
 
 @{
     var imgUrl = ViewData["AboutMeImageUrl"];
     var link = ViewData["Link"];
     var email = ViewData["Email"];
+    var fileApiUrl = fileSettings.Value.FileApiUrl;
 }
 
 <section class="ftco-section contact-section ftco-no-pb" id="contact-section">
@@ -76,7 +80,7 @@
             </div>
 
             <div class="col-md-6 d-flex">
-                <div class="img" style="background-image: url(@($"https://localhost:7085/uploads/{imgUrl}"));"></div>
+                <div class="img" style="background-image: url(@($"{fileApiUrl}/uploads/{imgUrl}"));"></div>
             </div>
         </div>
     </div>

@@ -1,5 +1,7 @@
-﻿using App.DTOs.FileApiDtos;
+﻿using App.Core.Authorization;
+using App.DTOs.FileApiDtos;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
 
 namespace App.FileAPI.Controllers;
 
@@ -89,9 +91,73 @@ public class FileController : ControllerBase
             return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
         }
     }
+    [AuthorizeRolesApi("admin")]
+    [HttpPost("/upload-file-general")]
+    public async Task<IActionResult> UploadFileGeneralAsync([FromForm] IFormFile file)
+    {
+        if (file is null )
+        {
+            return BadRequest("İşleme devam edebilmek için dosya yüklemelisiniz.");
+        }
 
+        try
+        {
+            var fileExtension1 = Path.GetExtension(file.FileName);
+            var uniqueFileName1 = $"{Guid.NewGuid()}{fileExtension1}";
+            var filePath1 = Path.Combine(_uploadsFolder, uniqueFileName1);
+            using (var stream = new FileStream(filePath1, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
 
-    [HttpDelete("/delete-file/{fileName}")]
+            return Ok(uniqueFileName1);
+        }
+
+        catch (IOException ex)
+        {
+            return StatusCode(500, $"Dosya yükleme sırasında bir hata oluştu: {ex.Message}");
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
+        }
+    }
+
+    [AllowAnonymousManuel]
+	[HttpGet("/download")]
+	public async Task<IActionResult> Download([FromQuery] string fileUrl)
+	{
+        try
+        {
+			var filePath = Path.Combine(Directory.GetCurrentDirectory(), "uploads", fileUrl);
+
+			if (!System.IO.File.Exists(filePath))
+			{
+				return BadRequest("Dosya bulunamadı.");
+			}
+
+			// Dosya içeriğini byte dizisi olarak oku
+			var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+
+			// Dosya adını elde et
+			var fileName = Path.GetFileName(filePath) ?? "downloaded_file"; // Varsayılan isim
+
+			// Dosyayı geri döndür
+			return File(fileBytes, "application/octet-stream", fileName);
+		}
+		catch (IOException ex)
+		{
+			return StatusCode(500,ex.Message);
+		}
+
+		catch (Exception ex)
+		{
+			return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
+		}
+	}
+
+	[HttpGet("/delete-file/{fileName}")]
     public IActionResult DeleteFileAsync([FromRoute] string fileName)
     {
         try

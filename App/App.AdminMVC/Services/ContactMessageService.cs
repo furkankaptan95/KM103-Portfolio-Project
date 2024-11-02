@@ -111,7 +111,7 @@ public class ContactMessageService(IHttpClientFactory factory) : IContactMessage
     {
         try
         {
-            var apiResponse = await DataApiClient.PutAsJsonAsync("reply-contact-message", dto);
+            var apiResponse = await DataApiClient.PostAsJsonAsync("reply-contact-message", dto);
 
             if (!apiResponse.IsSuccessStatusCode)
             {

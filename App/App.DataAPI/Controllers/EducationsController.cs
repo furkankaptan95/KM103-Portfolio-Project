@@ -97,7 +97,7 @@ public class EducationsController : ControllerBase
     }
 
     [AuthorizeRolesApi("admin")]
-    [HttpPut("/update-education")]
+    [HttpPost("/update-education")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateEducationDto dto)
     {
         try
@@ -162,7 +162,7 @@ public class EducationsController : ControllerBase
         }
     }
     [AuthorizeRolesApi("admin")]
-    [HttpDelete("/delete-education-{id:int}")]
+    [HttpGet("/delete-education-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
         if (id <= 0)

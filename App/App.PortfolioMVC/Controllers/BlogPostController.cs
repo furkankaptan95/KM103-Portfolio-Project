@@ -43,6 +43,7 @@ public class BlogPostController(IBlogPostPortfolioService blogPostService) : Con
                     .Select(item => new BlogPostCommentsPortfolioViewModel
                     {
                         Id = item.Id,
+                        CommenterId = item.CommenterId,
                         Content = item.Content,
                         Commenter = item.Commenter,
                         CreatedAt = item.CreatedAt,

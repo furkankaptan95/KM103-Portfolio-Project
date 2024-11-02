@@ -41,7 +41,7 @@ public class AuthService : IAuthService
             }
             else
             {
-                emailToRenewPassword = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == forgotPasswordDto.Email);
+                emailToRenewPassword = await _authApiDb.Users.SingleOrDefaultAsync(u => u.Email == forgotPasswordDto.Email && u.Role == "commenter");
             }
 
             if (emailToRenewPassword is null)
@@ -93,7 +93,7 @@ public class AuthService : IAuthService
             }
             else
             {
-                user = await _authApiDb.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+                user = await _authApiDb.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(u => u.Email == loginDto.Email && u.Role == "commenter");
             }
             
             if (user == null)
@@ -266,7 +266,7 @@ public class AuthService : IAuthService
             }
             else
             {
-                userVerification = await _authApiDb.UserVerifications.Include(uv => uv.User).FirstOrDefaultAsync(uv => uv.User.Email == dto.Email && uv.Token == dto.Token);
+                userVerification = await _authApiDb.UserVerifications.Include(uv => uv.User).FirstOrDefaultAsync(uv => uv.User.Email == dto.Email && uv.Token == dto.Token && uv.User.Role == "commenter");
             }
             
             if (userVerification == null || userVerification.Expiration < DateTime.UtcNow)

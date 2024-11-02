@@ -1,6 +1,7 @@
 ﻿using App.DTOs.CommentDtos.Portfolio;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
+using System.Net;
 
 namespace App.PortfolioMVC.Services;
 public class CommentPortfolioService(IHttpClientFactory factory) : ICommentPortfolioService
@@ -43,6 +44,40 @@ public class CommentPortfolioService(IHttpClientFactory factory) : ICommentPortf
         catch (Exception)
         {
             return Result.Error("Yorumunuz alınırken beklenmedik bir hata oluştu..");
+        }
+    }
+
+    public async Task<Result> DeleteCommentAsync(int id)
+    {
+        try
+        {
+            var apiResponse = await DataApiClient.GetAsync($"delete-comment-portfolio-{id}");
+
+            if (apiResponse.IsSuccessStatusCode)
+            {
+                return Result.SuccessWithMessage("Yorumunuz başarıyla silindi.");
+            }
+
+            string errorMessage = "Yorumunuz silinirken beklenmeyen bir hata oluştu..";
+
+            if (apiResponse.StatusCode == HttpStatusCode.NotFound)
+            {
+                errorMessage = "Silmek istediğiniz Yorum bulunamadı!..";
+            }
+            else if (apiResponse.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                errorMessage = "Eğer yorum size aitse silmek için lütfen giriş yapın.";
+            }
+            else if (apiResponse.StatusCode == HttpStatusCode.Forbidden)
+            {
+                errorMessage = "Yorumu silmek için yetkiniz bulunmuyor!..";
+            }
+
+            return Result.Error(errorMessage);
+        }
+        catch (Exception)
+        {
+            return Result.Error("Yorumunuz silinirken beklenmeyen bir hata oluştu..");
         }
     }
 

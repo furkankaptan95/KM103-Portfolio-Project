@@ -1,6 +1,11 @@
 ﻿@model AdminAboutMeViewModel
 
+@using App.Core.Config
+@using Microsoft.Extensions.Options
+@inject IOptions<FileApiSettings> fileSettings
+
 @{
+    var fileApiUrl = fileSettings.Value.FileApiUrl;
     ViewData["Title"] = "Hakkımda";
 }
 
@@ -21,13 +26,13 @@
         <div class="row mb-4">
             <div class="col-md-6 text-center mb-3">
                
-                <img src="@($"https://localhost:7085/uploads/{Model.ImageUrl1}")" 
+                <img src="@($"{fileApiUrl}/uploads/{Model.ImageUrl1}")" 
                      class="img-thumbnail" 
                      alt="Mevcut 1. Fotoğraf" 
                      style="max-width: 100%; max-height: 250px; height: auto;">
             </div>
             <div class="col-md-6 text-center">
-                <img src="@($"https://localhost:7085/uploads/{Model.ImageUrl2}")" 
+                <img src="@($"{fileApiUrl}/uploads/{Model.ImageUrl2}")"
                      class="img-thumbnail" 
                      alt="Mevcut 2. Fotoğraf" 
                      style="max-width: 100%; max-height: 250px; height: auto;">

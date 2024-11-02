@@ -1,9 +1,13 @@
 ﻿@model UpdateProjectViewModel
 
+@using App.Core.Config
+@using Microsoft.Extensions.Options
+@inject IOptions<FileApiSettings> fileSettings
+
 @{
+    var fileApiUrl = fileSettings.Value.FileApiUrl;
     ViewData["Title"] = "Proje - Düzenle";
 }
-
 
 <div class="container">
     <div class="form-container">
@@ -30,7 +34,7 @@
 
             <div class="mb-3">
                 <h4 class="mb-3">Mevcut Fotoğraf</h4>
-                <img src="@($"https://localhost:7085/uploads/{Model.ImageUrl}")" alt="@Model.Title" class="img-thumbnail" style="max-width: 200px; height: auto;">
+                <img src="@($"{fileApiUrl}/uploads/{Model.ImageUrl}")" alt="@Model.Title" class="img-thumbnail" style="max-width: 200px; height: auto;">
             </div>
 
             <div class="mb-3">

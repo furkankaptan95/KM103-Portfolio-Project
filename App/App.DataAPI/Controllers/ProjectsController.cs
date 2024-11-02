@@ -99,7 +99,7 @@ public class ProjectsController : ControllerBase
     }
 
     [AuthorizeRolesApi("admin")]
-    [HttpDelete("/delete-project-{id:int}")]
+    [HttpGet("/delete-project-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
         if (id <= 0)
@@ -130,7 +130,7 @@ public class ProjectsController : ControllerBase
         }
     }
     [AuthorizeRolesApi("admin")]
-    [HttpPut("/update-project")]
+    [HttpPost("/update-project")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateProjectApiDto dto)
     {
         try

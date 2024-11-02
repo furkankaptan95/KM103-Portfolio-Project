@@ -1,4 +1,5 @@
-﻿using App.DTOs.AuthDtos;
+﻿using App.Core.Authorization;
+using App.DTOs.AuthDtos;
 using App.DTOs.UserDtos;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc.UserViewModels;
@@ -9,8 +10,10 @@ using System.Security.Claims;
 
 namespace App.PortfolioMVC.Controllers;
 
+[AuthorizeRolesMvc("commenter")]
 public class UserController(IUserPortfolioService userService) : Controller
 {
+    
     [HttpGet]
     public IActionResult MyProfile()
     {

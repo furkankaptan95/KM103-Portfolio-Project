@@ -140,7 +140,8 @@ public static class DataApiServicesRegistration
         services.AddScoped<IPersonalInfoPortfolioService, PersonalInfoPortfolioService>();
         services.AddScoped<IProjectPortfolioService, ProjectPortfolioService>();
         services.AddScoped<IContactMessagePortfolioService, ContactMessagePortfolioService>();
-    }
+		services.AddScoped<IHomePortfolioService, HomePortfolioService>();
+	}
 
     private static void RegisterValidators(IServiceCollection services)
     {

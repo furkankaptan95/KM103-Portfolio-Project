@@ -47,7 +47,7 @@ public class CommentsController : ControllerBase
     }
 
     [AuthorizeRolesApi("admin")]
-    [HttpDelete("/delete-comment-{id:int}")]
+    [HttpGet("/delete-comment-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
         if (id <= 0)
@@ -77,6 +77,48 @@ public class CommentsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
+
+    [AuthorizeRolesApi("commenter")]
+    [HttpGet("/delete-comment-portfolio-{id:int}")]
+    public async Task<IActionResult> DeleteCommentPortfolioAsync([FromRoute] int id)
+    {
+        if (id <= 0)
+        {
+            return BadRequest(Result.Error("Geçersiz ID bilgisi."));
+        }
+
+        try
+        {
+            var result = await _commentPortfolioService.DeleteCommentAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                if (result.Status == ResultStatus.NotFound)
+                {
+                    return NotFound(result);
+                }
+                else if(result.Status == ResultStatus.Unauthorized)
+                {
+                    return Unauthorized(result);
+                }
+                else if (result.Status == ResultStatus.Forbidden)
+                {
+                    return StatusCode(403, result);
+                }
+
+                return StatusCode(500, result);
+            }
+            
+            return Ok(result);
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
+        }
+    }
+
+
     [AuthorizeRolesApi("admin")]
     [HttpGet("/(not)-approve-comment-{id:int}")]
     public async Task<IActionResult> ApproveNotApproveAsync([FromRoute] int id)
@@ -163,7 +205,7 @@ public class CommentsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    
+    [AuthorizeRolesApi("commenter")]
     [HttpPost("/add-comment-signed")]
     public async Task<IActionResult> AddSignedAsync([FromBody] AddCommentSignedDto dto)
     {

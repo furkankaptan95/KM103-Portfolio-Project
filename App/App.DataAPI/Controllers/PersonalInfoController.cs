@@ -134,7 +134,7 @@ public class PersonalInfoController : ControllerBase
 	}
 
     [AuthorizeRolesApi("admin")]
-    [HttpPut("/update-personal-info")]
+    [HttpPost("/update-personal-info")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdatePersonalInfoDto dto)
     {
         try

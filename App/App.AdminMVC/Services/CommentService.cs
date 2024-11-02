@@ -41,7 +41,7 @@ public class CommentService(IHttpClientFactory factory) : ICommentAdminService
     {
         try
         {
-            var apiResponse = await DataApiClient.DeleteAsync($"delete-comment-{id}");
+            var apiResponse = await DataApiClient.GetAsync($"delete-comment-{id}");
 
             if (apiResponse.IsSuccessStatusCode)
             {

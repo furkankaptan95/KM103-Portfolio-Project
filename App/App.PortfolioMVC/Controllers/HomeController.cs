@@ -2,6 +2,7 @@ using App.Core.Authorization;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 namespace App.PortfolioMVC.Controllers;
 
@@ -29,4 +30,33 @@ public class HomeController(IHomePortfolioService homeService) : Controller
     {
         return View();
     }
+
+	[HttpGet]
+	public async Task<IActionResult> DownloadCv()
+	{
+		try
+        {
+			var result = await homeService.DownloadCvAsync(); // Servisten dosya verisini al
+
+			if (result.IsSuccess)
+			{
+				var fileBytes = result.Value;
+				var downloadedFileName = "FurkanKaptanCV.pdf";
+
+				return File(fileBytes, "application/pdf", downloadedFileName);
+			}
+			else
+			{
+				ViewData["ErrorMessage"] = "CV indirilirken bir problem oluþtu..";
+				return Redirect("/");
+			}
+		}
+
+		catch (Exception)
+		{
+			ViewData["ErrorMessage"] = "CV indirilirken bir problem oluþtu..";
+			return Redirect("/");
+		}
+
+	}
 }

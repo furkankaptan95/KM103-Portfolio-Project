@@ -1,18 +1,43 @@
 ﻿@model List<BlogPostCommentsPortfolioViewModel>
-
+@{
+    var userClaim = User.Claims.FirstOrDefault(claim => claim.Type == "sub");
+    int? userId = userClaim != null ? int.Parse(userClaim.Value) : (int?)null;
+}
 <ul class="comment-list">
 
-    @foreach (var comment in Model)
+  @foreach (var comment in Model)
     {
         <li class="comment">
             <div class="vcard bio">
-                <img src="images/commenter.png" alt="Image placeholder">
+                <img src="images/commenter.png" alt="Image placeholder" class="commenter-img">
             </div>
+
             <div class="comment-body">
-                <h3>@comment.Commenter</h3>
+                <h3>
+                    @comment.Commenter
+                    @if (userId.HasValue && userId == comment.CommenterId)
+                    {
+                        <span>(Siz)</span>
+                    }
+                </h3>
                 <div class="meta">@comment.CreatedAt.ToString("dd MMMM yyyy HH:mm")</div>
                 <p>@comment.Content</p>
+
+                @if (userId.HasValue && userId == comment.CommenterId)
+                {
+                    <a href="/Comment/Delete/@comment.Id" class="delete-comment-btn">Yorumu Sil</a>
+                }
             </div>
         </li>
     }
 </ul>
+
+<style>
+    .commenter-img {
+        width: 50px !important; /* Resmin genişliğini ayarlayın */
+        height: 50px !important; /* Resmin yüksekliğini ayarlayın */
+        border-radius: 50% !important; /* Resmi yuvarlak yapar */
+        object-fit: cover !important; /* Resmin boyutunu koruyarak kesilmesini sağlar */
+    }
+
+</style>
