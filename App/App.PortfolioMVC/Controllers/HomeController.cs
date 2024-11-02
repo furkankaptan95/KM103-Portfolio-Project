@@ -47,14 +47,14 @@ public class HomeController(IHomePortfolioService homeService) : Controller
 			}
 			else
 			{
-				TempData["ErrorMessage"] = result.Errors.FirstOrDefault();
+				ViewData["ErrorMessage"] = "CV indirilirken bir problem oluþtu..";
 				return Redirect("/");
 			}
 		}
 
 		catch (Exception)
 		{
-			TempData["ErrorMessage"] = "CV indirilrken bir problem oluþtu..";
+			ViewData["ErrorMessage"] = "CV indirilirken bir problem oluþtu..";
 			return Redirect("/");
 		}
 

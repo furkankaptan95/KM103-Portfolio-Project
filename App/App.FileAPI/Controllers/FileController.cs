@@ -128,21 +128,33 @@ public class FileController : ControllerBase
 	[HttpGet("/download")]
 	public async Task<IActionResult> Download([FromQuery] string fileUrl)
 	{
-		var filePath = Path.Combine(Directory.GetCurrentDirectory(), "uploads", fileUrl);
+        try
+        {
+			var filePath = Path.Combine(Directory.GetCurrentDirectory(), "uploads", fileUrl);
 
-		if (!System.IO.File.Exists(filePath))
+			if (!System.IO.File.Exists(filePath))
+			{
+				return BadRequest("Dosya bulunamadı.");
+			}
+
+			// Dosya içeriğini byte dizisi olarak oku
+			var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+
+			// Dosya adını elde et
+			var fileName = Path.GetFileName(filePath) ?? "downloaded_file"; // Varsayılan isim
+
+			// Dosyayı geri döndür
+			return File(fileBytes, "application/octet-stream", fileName);
+		}
+		catch (IOException ex)
 		{
-			return BadRequest("Dosya bulunamadı.");
+			return StatusCode(500,ex.Message);
 		}
 
-		// Dosya içeriğini byte dizisi olarak oku
-		var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
-
-		// Dosya adını elde et
-		var fileName = Path.GetFileName(filePath) ?? "downloaded_file"; // Varsayılan isim
-
-		// Dosyayı geri döndür
-		return File(fileBytes, "application/octet-stream", fileName);
+		catch (Exception ex)
+		{
+			return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
+		}
 	}
 
 	[HttpGet("/delete-file/{fileName}")]
