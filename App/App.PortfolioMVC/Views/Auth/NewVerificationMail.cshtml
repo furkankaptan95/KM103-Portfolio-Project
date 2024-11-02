@@ -99,10 +99,10 @@
                 <div class="col-md-6 col-lg-4">
                     <div class="login-wrap p-0">
                         <p class="mb-4 text-center">Lütfen Sisteme Kayıtlı Email Adresinizi Girin</p>
-                        <form id="forgotForm" asp-action="NewVerificationMail" class="signin-form">
+                        <form id="forgotForm" asp-action="NewVerificationMail" class="signin-form" autocomplete="off">
                             @Html.AntiForgeryToken()
                             <div class="form-group">
-                                <input asp-for="Email" class="form-control" placeholder="Email">
+                                <input asp-for="Email" class="form-control" placeholder="Email" autocomplete="off">
                                 <span id="emailError" class="text-danger"></span> <!-- Hata mesajı için span -->
                             </div>
 
