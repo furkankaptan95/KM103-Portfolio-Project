@@ -12,6 +12,9 @@
     ViewData["Email"] = Model.PersonalInfo != null && !string.IsNullOrEmpty(Model.PersonalInfo.Email)
            ? Model.PersonalInfo.Email
            : "iamfurkan86@gmail.com";
+
+    ViewData["ProjectsCount"] = Model.Projects != null ? Model.Projects.Count
+           : 0;
 }
 
 @{
