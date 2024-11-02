@@ -1,6 +1,7 @@
 ﻿using App.Core.Authorization;
 using App.DTOs.FileApiDtos;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
 
 namespace App.FileAPI.Controllers;
 
@@ -123,7 +124,28 @@ public class FileController : ControllerBase
         }
     }
 
-    [HttpGet("/delete-file/{fileName}")]
+    [AllowAnonymousManuel]
+	[HttpGet("/download")]
+	public async Task<IActionResult> Download([FromQuery] string fileUrl)
+	{
+		var filePath = Path.Combine(Directory.GetCurrentDirectory(), "uploads", fileUrl);
+
+		if (!System.IO.File.Exists(filePath))
+		{
+			return BadRequest("Dosya bulunamadı.");
+		}
+
+		// Dosya içeriğini byte dizisi olarak oku
+		var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+
+		// Dosya adını elde et
+		var fileName = Path.GetFileName(filePath) ?? "downloaded_file"; // Varsayılan isim
+
+		// Dosyayı geri döndür
+		return File(fileBytes, "application/octet-stream", fileName);
+	}
+
+	[HttpGet("/delete-file/{fileName}")]
     public IActionResult DeleteFileAsync([FromRoute] string fileName)
     {
         try

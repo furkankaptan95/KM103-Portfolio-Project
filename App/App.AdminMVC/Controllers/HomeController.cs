@@ -10,7 +10,6 @@ public class HomeController(IHomeAdminService homeService) : Controller
 {
 
     [AllowAnonymousManuel]
-
     [HttpGet]
     public IActionResult Error()
     {

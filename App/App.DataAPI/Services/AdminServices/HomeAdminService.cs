@@ -71,6 +71,18 @@ public class HomeAdminService : IHomeAdminService
     {
         try
         {
+            var check = await _dataApiDb.CVs.FirstOrDefaultAsync();
+
+            if (check != null)
+            {
+                check.Url = url;
+
+                _dataApiDb.CVs.Update(check);
+                await _dataApiDb.SaveChangesAsync();
+
+                return Result.Success();
+            }
+
             var entity = new CvEntity
             {
                 Url = url,
