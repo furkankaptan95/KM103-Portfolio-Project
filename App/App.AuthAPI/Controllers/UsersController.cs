@@ -10,7 +10,6 @@ namespace App.AuthAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[AuthorizeRolesApi("admin")]
 public class UsersController : ControllerBase
 {
     private readonly IUserAdminService _userAdminService;
