@@ -52,7 +52,28 @@
                 <p class="breadcrumbs" style="margin-top:110px; color: yellow;">
                     <span class="mr-2"><a href="/" style="color: yellow;">Anasayfa <i class="ion-ios-arrow-forward"></i></a></span>
                     <span class="mr-2"><a href="/all-blog-posts" style="color: yellow;">Blog Postlar <i class="ion-ios-arrow-forward"></i></a></span>
-                    <span style="color: yellow;">@Model.BlogPost.Title <i class="ion-ios-arrow-forward"></i></span>
+                    
+
+                        @if (Model.BlogPost is not null && Model.BlogPost.Content is not null)
+                        {
+                        <span style="color: yellow;">
+                            @Model.BlogPost.Title
+                        </span>
+                        }
+                        else if (Model.BlogPost is not null && Model.BlogPost.Content is null)
+                        {
+                        <span style="color: yellow;">
+                            Bulunamadı
+                        </span>
+                        }
+                        else
+                        {
+                        <span style="color: yellow;">
+                            Ulaşılamıyor
+                            </span>
+                        }
+
+                        <i class="ion-ios-arrow-forward"></i>
       </p>
     </div>
         </div>
@@ -78,7 +99,7 @@
 
                     <div class="about-author d-flex p-4 bg-dark position-relative">
                         <div class="bio mr-4">
-                            <img src="@fileApiUrl/uploads/furkan-kaptan.png" alt="Image placeholder" class="img-fluid mb-4">
+                            <img src="~/images/furkan-kaptan.png" alt="Image placeholder" class="img-fluid mb-4">
                         </div>
                         <div class="desc">
                             <h3>Furkan Kaptan</h3>

@@ -1,10 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\images\furkan-kaptan.png" />
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Models\" />
@@ -19,6 +23,7 @@
     <None Include="wwwroot\fonts\flaticon\font\.DS_Store" />
     <None Include="wwwroot\fonts\ionicons\fonts\.DS_Store" />
     <None Include="wwwroot\images\.DS_Store" />
+    <None Include="wwwroot\images\furkan-kaptan.png" />
     <None Include="wwwroot\js\.DS_Store" />
     <None Include="wwwroot\login\css\.DS_Store" />
     <None Include="wwwroot\login\css\bootstrap\.DS_Store" />
