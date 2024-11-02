@@ -157,6 +157,8 @@ public class AuthService : IAuthService
             }
 
             refreshToken.IsUsed = DateTime.UtcNow;
+            _authApiDb.RefreshTokens.Update(refreshToken);
+            await _authApiDb.SaveChangesAsync();
 
             var newJwt = GenerateJwtToken(refreshToken.User);
             var newRefreshTokenString = GenerateRefreshToken();

@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace App.PortfolioMVC.Controllers;
 public class BlogPostController(IBlogPostPortfolioService blogPostService) : Controller
 {
-	[HttpGet]
-	[CommonArea]
+    [CommonArea]
+    [HttpGet]
 	[Route("blog-post-{id:int}")]
 	public async Task<IActionResult> BlogPost([FromRoute] int id)
     {
