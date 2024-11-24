@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+
+    <partial name="Partials/PageHead.cshtml">
+    @await RenderSectionAsync("Styles", required: false)
+
+</head>
+
+<body class="index-page">
+
+    @RenderBody()
+
+    <partial name="Partials/PageScripts.cshtml" />
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

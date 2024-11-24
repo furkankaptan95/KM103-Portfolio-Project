@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.ViewModels", "App.ViewM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.DTOs", "App.DTOs\App.DTOs.csproj", "{7D3F144F-CAA2-4780-9F3F-EEF75A11FA1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Middlewares", "App.Middlewares\App.Middlewares.csproj", "{4A3AD869-A1A4-4953-A6B5-B9052B9686DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Middlewares", "App.Middlewares\App.Middlewares.csproj", "{4A3AD869-A1A4-4953-A6B5-B9052B9686DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
