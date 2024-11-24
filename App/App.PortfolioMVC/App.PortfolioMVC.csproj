@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\assets\.DS_Store" />
     <None Include="wwwroot\css\.DS_Store" />
     <None Include="wwwroot\css\bootstrap\.DS_Store" />
     <None Include="wwwroot\css\css\.DS_Store" />

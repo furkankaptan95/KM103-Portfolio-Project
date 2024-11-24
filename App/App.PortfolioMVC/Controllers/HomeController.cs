@@ -26,6 +26,22 @@ public class HomeController(IHomePortfolioService homeService) : Controller
 	}
 
     [HttpGet]
+    public async Task<IActionResult> Index2()
+    {
+        var model = new HomeIndexViewModel();
+
+        var result = await homeService.GetHomeInfosAsync();
+
+        if (result.IsSuccess)
+        {
+            model = result.Value;
+            return View(model);
+        }
+
+        return View(model);
+    }
+
+    [HttpGet]
     public IActionResult Error()
     {
         return View();

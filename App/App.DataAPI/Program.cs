@@ -23,5 +23,6 @@ app.MapControllers();
 
 using var scope = app.Services.CreateScope();
 using var context = scope.ServiceProvider.GetRequiredService<DataApiDbContext>();
+context.Database.EnsureCreated();
 
 app.Run();
