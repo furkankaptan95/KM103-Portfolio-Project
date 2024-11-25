@@ -176,6 +176,7 @@ public static class AuthApiServicesRegistration
                         if (result.IsSuccess)
                         {
                             context.HandleResponse();
+                            context.HttpContext.Response.Redirect(context.Request.Path.Value);
                             return;
                         }
                     }

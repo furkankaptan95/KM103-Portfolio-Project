@@ -94,8 +94,8 @@ public static class AdminMvcServicesRegistration
                                 Secure = true,
                                 Expires = DateTime.UtcNow.AddDays(7)
                             });
-
                             context.HandleResponse();
+                            context.HttpContext.Response.Redirect(context.Request.Path.Value);
                             return;
                         }
                     }

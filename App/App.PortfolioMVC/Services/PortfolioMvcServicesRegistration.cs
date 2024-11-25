@@ -95,6 +95,8 @@ public static class PortfolioMvcServicesRegistration
                                 Expires = DateTime.UtcNow.AddDays(7)
                             });
 
+                            context.HandleResponse();
+                            context.HttpContext.Response.Redirect(context.Request.Path.Value);
                             return;
                         }
                     }

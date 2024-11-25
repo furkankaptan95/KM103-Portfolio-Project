@@ -122,6 +122,7 @@ public static class DataApiServicesRegistration
                         if (result.IsSuccess)
                         {
                             context.HandleResponse();
+                            context.HttpContext.Response.Redirect(context.Request.Path.Value);
                             return;
                         }
                     }
