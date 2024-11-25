@@ -1,11 +1,12 @@
-﻿using App.Core.Authorization;
-using App.DTOs.ContactMessageDtos.Portfolio;
+﻿using App.DTOs.ContactMessageDtos.Portfolio;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.PortfolioMVC.Controllers;
-[AllowAnonymousManuel]
+
+[AllowAnonymous]
 public class ContactMessageController(IContactMessagePortfolioService contactMessageService) : Controller
 {
     [HttpPost]

@@ -1,16 +1,16 @@
-﻿using App.Core.Authorization;
-using App.DTOs.AuthDtos;
+﻿using App.DTOs.AuthDtos;
 using App.DTOs.UserDtos;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc.UserViewModels;
 using Ardalis.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace App.PortfolioMVC.Controllers;
 
-[AuthorizeRolesMvc("commenter")]
+[Authorize(Roles = "commenter")]
 public class UserController(IUserPortfolioService userService) : Controller
 {
     

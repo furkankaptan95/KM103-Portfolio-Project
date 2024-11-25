@@ -1,6 +1,5 @@
 using App.AuthAPI.Services;
 using App.Data.DbContexts;
-using App.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +14,7 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowAllOrigins");
 
-app.UseMiddleware<ApiJwtMiddleware>();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

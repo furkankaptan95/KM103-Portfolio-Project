@@ -1,10 +1,10 @@
-﻿using App.Core.Authorization;
-using App.DTOs.AboutMeDtos;
+﻿using App.DTOs.AboutMeDtos;
 using App.DTOs.AboutMeDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.DataAPI.Controllers;
@@ -25,7 +25,7 @@ public class AboutMeController : ControllerBase
         _updateValidator = updateValidator;
         _aboutMePortfolioService = aboutMePortfolioService;
     }
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/check-about-me")]
     public async Task<IActionResult> CheckAboutMeAsync()
     {
@@ -45,7 +45,7 @@ public class AboutMeController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/get-about-me")]
     public async Task<IActionResult> GetAboutMeAsync()
     {
@@ -70,7 +70,7 @@ public class AboutMeController : ControllerBase
         }
     }
 
-    [AllowAnonymousManuel]
+    [AllowAnonymous]
     [HttpGet("/portfolio-get-about-me")]
     public async Task<IActionResult> GetAboutMePortfolioAsync()
     {
@@ -95,7 +95,7 @@ public class AboutMeController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpPost("/add-about-me")]
     public async Task<IActionResult> AddAboutMeAsync([FromBody] AddAboutMeApiDto dto)
     {
@@ -131,7 +131,7 @@ public class AboutMeController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpPost("/update-about-me")]
     public async Task<IActionResult> UpdateAboutMeAsync([FromBody] UpdateAboutMeApiDto dto)
     {

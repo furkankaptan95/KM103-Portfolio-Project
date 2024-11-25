@@ -1,9 +1,9 @@
-﻿using App.Core.Authorization;
-using App.DTOs.CommentDtos.Portfolio;
+﻿using App.DTOs.CommentDtos.Portfolio;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.DataAPI.Controllers;
@@ -24,7 +24,7 @@ public class CommentsController : ControllerBase
         _addCommentUnsignedDtoValidator = addCommentUnsignedDtoValidator;
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/all-comments")]
     public async Task<IActionResult> GetAllAsync()
     {
@@ -46,7 +46,7 @@ public class CommentsController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/delete-comment-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
@@ -78,7 +78,7 @@ public class CommentsController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("commenter")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/delete-comment-portfolio-{id:int}")]
     public async Task<IActionResult> DeleteCommentPortfolioAsync([FromRoute] int id)
     {
@@ -119,7 +119,7 @@ public class CommentsController : ControllerBase
     }
 
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/(not)-approve-comment-{id:int}")]
     public async Task<IActionResult> ApproveNotApproveAsync([FromRoute] int id)
     {
@@ -150,7 +150,7 @@ public class CommentsController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/get-users-comments-{id:int}")]
     public async Task<IActionResult> GetUsersCommentsAsync([FromRoute] int id)
     {
@@ -176,7 +176,7 @@ public class CommentsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AllowAnonymousManuel]
+    [AllowAnonymous]
     [HttpPost("/add-comment-unsigned")]
     public async Task<IActionResult> AddUnsignedAsync([FromBody] AddCommentUnsignedDto dto)
     {
@@ -205,7 +205,7 @@ public class CommentsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRolesApi("commenter")]
+    [Authorize(Roles = "commenter")]
     [HttpPost("/add-comment-signed")]
     public async Task<IActionResult> AddSignedAsync([FromBody] AddCommentSignedDto dto)
     {

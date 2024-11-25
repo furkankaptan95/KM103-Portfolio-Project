@@ -278,4 +278,8 @@ public class AuthService(IHttpClientFactory factory) : IAuthService
         }
     }
 
+    public Task<Result> RefreshTokenApiAsync(string token)
+    {
+        throw new NotImplementedException();
+    }
 }

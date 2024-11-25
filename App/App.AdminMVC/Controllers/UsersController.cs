@@ -1,18 +1,18 @@
-﻿using App.Core.Authorization;
-using App.DTOs.AuthDtos;
+﻿using App.DTOs.AuthDtos;
 using App.DTOs.UserDtos;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.CommentsViewModels;
 using App.ViewModels.AdminMvc.UsersViewModels;
 using App.ViewModels.PortfolioMvc.UserViewModels;
 using Ardalis.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace App.AdminMVC.Controllers;
 
-[AuthorizeRolesMvc("admin")]
+[Authorize(Roles = "admin")]
 public class UsersController(IUserAdminService userService) : Controller
 {
     [HttpGet]

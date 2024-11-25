@@ -1,10 +1,10 @@
-﻿using App.Core.Authorization;
-using App.DTOs.ExperienceDtos;
+﻿using App.DTOs.ExperienceDtos;
 using App.DTOs.ExperienceDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.DataAPI.Controllers;
@@ -26,7 +26,7 @@ public class ExperiencesController : ControllerBase
         _experiencesPortfolioService = experiencesPortfolioService;
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpPost("/add-experience")]
     public async Task<IActionResult> AddAsync([FromBody] AddExperienceDto dto)
     {
@@ -56,7 +56,7 @@ public class ExperiencesController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/all-experiences")]
     public async Task<IActionResult> GetAllAsync()
     {
@@ -78,7 +78,7 @@ public class ExperiencesController : ControllerBase
         }
     }
 
-    [AllowAnonymousManuel]
+    [AllowAnonymous]
 	[HttpGet("/portfolio-all-experiences")]
 	public async Task<IActionResult> GetAllPortfolioAsync()
 	{
@@ -100,7 +100,7 @@ public class ExperiencesController : ControllerBase
 		}
 	}
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpPost("/update-experience")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateExperienceDto dto)
     {
@@ -135,7 +135,7 @@ public class ExperiencesController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/get-experience-{id:int}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
     {
@@ -167,7 +167,7 @@ public class ExperiencesController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/delete-experience-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
@@ -199,7 +199,7 @@ public class ExperiencesController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/change-experience-visibility-{id:int}")]
     public async Task<IActionResult> ChangeVisibilityAsync([FromRoute] int id)
     {

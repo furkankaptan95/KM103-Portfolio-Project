@@ -1,7 +1,6 @@
-using App.Core.Authorization;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.HomeViewModels;
-using Ardalis.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
@@ -9,14 +8,14 @@ namespace App.AdminMVC.Controllers;
 public class HomeController(IHomeAdminService homeService) : Controller
 {
 
-    [AllowAnonymousManuel]
+    [AllowAnonymous]
     [HttpGet]
     public IActionResult Error()
     {
         return View();
     }
 
-    [AuthorizeRolesMvc("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet]
     public async Task<IActionResult> Index()
     {
@@ -49,21 +48,21 @@ public class HomeController(IHomeAdminService homeService) : Controller
         }
     }
 
-    [AuthorizeRolesMvc("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet]
     public IActionResult Index2()
     {
         return View();
     }
 
-    [AuthorizeRolesMvc("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet]
     public IActionResult UploadCV()
     {
         return View();
     }
 
-    [AuthorizeRolesMvc("admin")]
+    [Authorize(Roles = "admin")]
     [HttpPost]
     public async Task<IActionResult> UploadCV([FromForm] IFormFile cvFile)
     {

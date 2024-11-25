@@ -1,7 +1,6 @@
-﻿using App.Core.Authorization;
-using App.DTOs.FileApiDtos;
+﻿using App.DTOs.FileApiDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
 
 namespace App.FileAPI.Controllers;
 
@@ -27,7 +26,7 @@ public class FileController : ControllerBase
             Console.WriteLine($"Dizin oluşturulurken hata oluştu: {ex.Message}");
         }
     }
-
+    [AllowAnonymous]
     [HttpPost("/upload-files")]
     public async Task<IActionResult> UploadFilesAsync([FromForm] IFormFile? imageFile1, IFormFile? imageFile2)
     {
@@ -91,7 +90,7 @@ public class FileController : ControllerBase
             return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
         }
     }
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpPost("/upload-file-general")]
     public async Task<IActionResult> UploadFileGeneralAsync([FromForm] IFormFile file)
     {
@@ -124,7 +123,7 @@ public class FileController : ControllerBase
         }
     }
 
-    [AllowAnonymousManuel]
+    [AllowAnonymous]
 	[HttpGet("/download")]
 	public async Task<IActionResult> Download([FromQuery] string fileUrl)
 	{
@@ -156,7 +155,7 @@ public class FileController : ControllerBase
 			return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
 		}
 	}
-
+    [AllowAnonymous]
 	[HttpGet("/delete-file/{fileName}")]
     public IActionResult DeleteFileAsync([FromRoute] string fileName)
     {

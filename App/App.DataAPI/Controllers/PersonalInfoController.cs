@@ -1,10 +1,10 @@
-﻿using App.Core.Authorization;
-using App.DTOs.PersonalInfoDtos;
+﻿using App.DTOs.PersonalInfoDtos;
 using App.DTOs.PersonalInfoDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.DataAPI.Controllers;
@@ -25,7 +25,7 @@ public class PersonalInfoController : ControllerBase
         _personalInfoPortfolioService = personalInfoPortfolioService;
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/check-personal-info")]
     public async Task<IActionResult> CheckPersonalInfoAsync()
     {
@@ -46,7 +46,7 @@ public class PersonalInfoController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpPost("/add-personal-info")]
     public async Task<IActionResult> AddAsync([FromBody] AddPersonalInfoDto dto)
     {
@@ -81,7 +81,7 @@ public class PersonalInfoController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/get-personal-info")]
     public async Task<IActionResult> GetAsync()
     {
@@ -107,7 +107,7 @@ public class PersonalInfoController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AllowAnonymousManuel]
+    [AllowAnonymous]
     [HttpGet("/portfolio-get-personal-info")]
 	public async Task<IActionResult> GetPortfolioAsync()
 	{
@@ -133,7 +133,7 @@ public class PersonalInfoController : ControllerBase
 		}
 	}
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpPost("/update-personal-info")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdatePersonalInfoDto dto)
     {

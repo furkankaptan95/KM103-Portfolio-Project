@@ -1,5 +1,4 @@
-using App.Core.Authorization;
-using App.Middlewares;
+using App.FileAPI;
 using App.Services.AuthService.Abstract;
 using App.Services.AuthService.Concrete;
 using Microsoft.Extensions.FileProviders;
@@ -22,8 +21,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<AuthorizationService>();
-
 var authApiUrl = builder.Configuration.GetValue<string>("AuthApiUrl");
 if (string.IsNullOrWhiteSpace(authApiUrl))
 {
@@ -35,6 +32,8 @@ builder.Services.AddHttpClient("authApi", c =>
 });
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+JwtAuthMethod.AddJwtAuth(builder.Services, builder.Configuration);
 
 var app = builder.Build();
 
@@ -58,8 +57,7 @@ app.UseStaticFiles(new StaticFileOptions
 
 app.UseHttpsRedirection();
 
-app.UseMiddleware<ApiJwtMiddleware>();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

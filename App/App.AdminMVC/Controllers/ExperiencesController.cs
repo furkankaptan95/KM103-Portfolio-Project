@@ -1,14 +1,14 @@
-﻿using App.Core.Authorization;
-using App.DTOs.ExperienceDtos;
+﻿using App.DTOs.ExperienceDtos;
 using App.DTOs.ExperienceDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.ExperiencesViewModels;
 using Ardalis.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 
-[AuthorizeRolesMvc("admin")]
+[Authorize(Roles = "admin")]
 public class ExperiencesController(IExperienceAdminService experienceService) : Controller
 {
     [HttpGet]

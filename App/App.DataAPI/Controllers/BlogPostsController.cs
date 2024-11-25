@@ -4,7 +4,7 @@ using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using App.Core.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App.DataAPI.Controllers;
 
@@ -25,7 +25,7 @@ public class BlogPostsController : ControllerBase
         _updateValidator = updateValidator;
         _blogPostPortfolioService = blogPostPortfolioService;
     }
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpPost("/add-blog-post")]
     public async Task<IActionResult> AddBlogPostAsync([FromBody] AddBlogPostDto dto)
     {
@@ -54,7 +54,7 @@ public class BlogPostsController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/all-blog-posts")]
     public async Task<IActionResult> GetAllBlogPosts()
     {
@@ -75,7 +75,7 @@ public class BlogPostsController : ControllerBase
         }
     }
 
-    [AllowAnonymousManuel]
+    [AllowAnonymous]
     [HttpGet("/home-blog-posts")]
     public async Task<IActionResult> GetHomeBlogPosts()
     {
@@ -96,7 +96,7 @@ public class BlogPostsController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/blog-post-{id:int}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
     {
@@ -127,7 +127,7 @@ public class BlogPostsController : ControllerBase
         }
     }
 
-    [AllowAnonymousManuel]
+    [AllowAnonymous]
     [HttpGet("/portfolio-blog-post-{id:int}")]
 	public async Task<IActionResult> GetByIdPortfolioAsync([FromRoute] int id)
 	{
@@ -158,7 +158,7 @@ public class BlogPostsController : ControllerBase
 		}
 	}
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpPost("/update-blog-post")]
     public async Task<IActionResult> UpdateBlogPostAsync([FromBody] UpdateBlogPostDto dto)
     {
@@ -193,7 +193,7 @@ public class BlogPostsController : ControllerBase
 
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/delete-blog-post-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
@@ -224,7 +224,7 @@ public class BlogPostsController : ControllerBase
             return StatusCode(500, $"Beklenmedik bir hata oluştu: {ex.Message}");
         }
     }
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/change-blog-post-visibility-{id:int}")]
     public async Task<IActionResult> ChangeVisibilityAsync([FromRoute] int id)
     {

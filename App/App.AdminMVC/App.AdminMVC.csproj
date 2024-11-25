@@ -8,12 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\App.Data\App.Data.csproj" />
-    <ProjectReference Include="..\App.Middlewares\App.Middlewares.csproj" />
     <ProjectReference Include="..\App.Services\App.Services.csproj" />
     <ProjectReference Include="..\App.ViewModels\App.ViewModels.csproj" />
   </ItemGroup>

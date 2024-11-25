@@ -1,13 +1,13 @@
-﻿using App.Core.Authorization;
-using App.DTOs.CommentDtos.Portfolio;
+﻿using App.DTOs.CommentDtos.Portfolio;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc.CommentsViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.PortfolioMVC.Controllers;
 public class CommentController(ICommentPortfolioService commentService) : Controller
 {
-    [AllowAnonymousManuel]
+    [AllowAnonymous]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddUnsignedComment([FromForm]UnSignedAddCommentViewModel model)
@@ -45,7 +45,7 @@ public class CommentController(ICommentPortfolioService commentService) : Contro
             return Redirect($"/blog-post-{model.BlogPostId}");
         }
     }
-    [AuthorizeRolesMvc("commenter")]
+    [Authorize(Roles = "commenter")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddSignedComment([FromForm] SignedAddCommentViewModel model)
@@ -85,7 +85,7 @@ public class CommentController(ICommentPortfolioService commentService) : Contro
         }
     }
 
-    [AuthorizeRolesMvc("commenter")]
+    [Authorize(Roles = "commenter")]
     [HttpGet]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {

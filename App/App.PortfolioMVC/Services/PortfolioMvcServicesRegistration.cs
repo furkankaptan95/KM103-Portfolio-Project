@@ -1,11 +1,14 @@
-﻿using App.Core.Authorization;
-using App.Core.Config;
+﻿using App.Core.Config;
 using App.Core.Validators.ViewModelValidators.UserValidators;
+using App.DTOs;
 using App.Services.AuthService.Abstract;
 using App.Services.AuthService.Concrete;
 using App.Services.PortfolioServices.Abstract;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using System.Net;
+using System.Text;
 
 namespace App.PortfolioMVC.Services;
 
@@ -13,6 +16,8 @@ public static class PortfolioMvcServicesRegistration
 {
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
+        AddJwtAuth(services, configuration);
+
         services.Configure<FileApiSettings>(configuration.GetSection("FileApiSettings"));
         services.AddControllersWithViews();
         services.AddValidatorsFromAssembly(typeof(EditUserImageViewModelValidator).Assembly);
@@ -23,12 +28,89 @@ public static class PortfolioMvcServicesRegistration
             options.HeaderName = "X-CSRF-TOKEN"; // İsteğe bağlı olarak header adı
         });
 
-        services.AddScoped<AuthorizationService>();
-
         ConfigureHttpClients(services, configuration);
         RegisterScopedServices(services);
 
         return services;
+    }
+
+    private static void AddJwtAuth(IServiceCollection services, IConfiguration configuration)
+    {
+        var tokenOptions = configuration.GetSection("Jwt").Get<JwtTokenOptions>();
+
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidIssuer = tokenOptions.Issuer,
+                ValidateIssuer = true,
+                ValidAudience = tokenOptions.Audience,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.Key)),
+                ValidateIssuerSigningKey = true,
+                ClockSkew = TimeSpan.Zero
+            };
+
+            options.MapInboundClaims = true;
+
+            options.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    var accessToken = context.Request.Cookies["JwtToken"];
+
+                    if (!string.IsNullOrEmpty(accessToken))
+                    {
+                        context.Token = accessToken;
+                    }
+
+                    return Task.CompletedTask;
+                },
+
+
+                OnChallenge = async context =>
+                {
+                    var refreshToken = context.Request.Cookies["RefreshToken"];
+
+                    if (!string.IsNullOrEmpty(refreshToken))
+                    {
+                        var authService = context.HttpContext.RequestServices.GetRequiredService<IAuthService>();
+                        var result = await authService.RefreshTokenAsync(refreshToken);
+
+                        if (result.IsSuccess)
+                        {
+                            context.Response.Cookies.Append("JwtToken", result.Value.JwtToken, new CookieOptions
+                            {
+                                HttpOnly = true,
+                                Secure = true,
+                                Expires = DateTime.UtcNow.AddMinutes(10)
+                            });
+
+                            context.Response.Cookies.Append("RefreshToken", result.Value.RefreshToken, new CookieOptions
+                            {
+                                HttpOnly = true,
+                                Secure = true,
+                                Expires = DateTime.UtcNow.AddDays(7)
+                            });
+
+                            return;
+                        }
+                    }
+
+                    context.Response.Redirect("/Auth/Login"); // MVC'de Unauthorized sayfasına yönlendir
+                    context.HandleResponse();
+                },
+
+                OnForbidden = context =>
+                {
+                    // Yetki sorunu varsa, MVC'ye yönlendirme yap
+                    context.Response.Redirect("/Auth/AccessDenied"); // MVC'de Forbidden sayfasına yönlendir
+                    return Task.CompletedTask; // Yönlendirme sonrası işlemi sonlandır
+                }
+            };
+        });
     }
 
     private static void ConfigureHttpClients(IServiceCollection services, IConfiguration configuration)

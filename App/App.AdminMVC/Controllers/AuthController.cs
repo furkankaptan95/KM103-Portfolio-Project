@@ -1,15 +1,15 @@
-﻿using App.Core.Authorization;
-using App.DTOs.AuthDtos;
+﻿using App.DTOs.AuthDtos;
 using App.Services.AuthService.Abstract;
 using App.ViewModels.AuthViewModels;
 using Ardalis.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace App.AdminMVC.Controllers;
 
-[AllowAnonymousManuel]
+[AllowAnonymous]
 public class AuthController(IAuthService authService) : Controller
 {
     [HttpGet]

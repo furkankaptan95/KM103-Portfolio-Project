@@ -1,16 +1,16 @@
-﻿using App.Core.Authorization;
-using App.DTOs.UserDtos;
+﻿using App.DTOs.UserDtos;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AuthAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[AuthorizeRolesApi("admin")]
+[Authorize(Roles = "admin")]
 public class UsersController : ControllerBase
 {
     private readonly IUserAdminService _userAdminService;
@@ -26,7 +26,6 @@ public class UsersController : ControllerBase
         _editUserImageValidator = editUserImageValidator;
     }
 
-    [AuthorizeRolesApi("admin")]
     [HttpGet("/get-users-count")]
     public async Task<IActionResult> GetCountAsync()
     {
@@ -48,7 +47,7 @@ public class UsersController : ControllerBase
         }
     }
 
-    [AllowAnonymousManuel]
+    [AllowAnonymous]
     [HttpGet("/get-commenter-username-{id:int}")]
     public async Task<IActionResult> GetCommentsUserNameAsync([FromRoute] int id)
     {
@@ -80,7 +79,7 @@ public class UsersController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/all-users")]
     public async Task<IActionResult> GetAllAsync()
     {
@@ -102,7 +101,7 @@ public class UsersController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/change-user-activeness-{id:int}")]
     public async Task<IActionResult> ChangeActivenessOfUserAsync([FromRoute] int id)
     {

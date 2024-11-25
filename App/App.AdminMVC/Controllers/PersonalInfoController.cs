@@ -1,14 +1,14 @@
-﻿using App.Core.Authorization;
-using App.DTOs.PersonalInfoDtos;
+﻿using App.DTOs.PersonalInfoDtos;
 using App.DTOs.PersonalInfoDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.PersonalInfoViewModels;
 using Ardalis.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 
-[AuthorizeRolesMvc("admin")]
+[Authorize(Roles = "admin")]
 public class PersonalInfoController(IPersonalInfoAdminService personalInfoService) : Controller
 {
     [HttpGet]

@@ -1,13 +1,13 @@
-﻿using App.Core.Authorization;
-using App.DTOs.ContactMessageDtos.Admin;
+﻿using App.DTOs.ContactMessageDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.ContactMessagesViewModels;
 using Ardalis.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 
-[AuthorizeRolesMvc("admin")]
+[Authorize(Roles = "admin")]
 public class ContactMessageController(IContactMessageAdminService contactMessageService) : Controller
 {
     [HttpGet]

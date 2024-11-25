@@ -1,10 +1,10 @@
-using App.Core.Authorization;
 using App.DTOs.ProjectDtos;
 using App.DTOs.ProjectDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.DataAPI.Controllers;
@@ -24,7 +24,7 @@ public class ProjectsController : ControllerBase
         _projectAdminService = projectAdminService;
         _projectPortfolioService = projectPortfolioService;
     }
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/all-projects")]
     public async Task<IActionResult> GetAllAsync()
     {
@@ -46,7 +46,7 @@ public class ProjectsController : ControllerBase
         }
     }
 
-    [AllowAnonymousManuel]
+    [AllowAnonymous]
     [HttpGet("/porfolio-all-projects")]
     public async Task<IActionResult> GetAllPortfolioAsync()
     {
@@ -68,7 +68,7 @@ public class ProjectsController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpPost("/add-project")]
     public async Task<IActionResult> AddAsync([FromBody] AddProjectApiDto dto)
     {
@@ -98,7 +98,7 @@ public class ProjectsController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/delete-project-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
@@ -129,7 +129,7 @@ public class ProjectsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluþtu: {ex.Message}"));
         }
     }
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpPost("/update-project")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateProjectApiDto dto)
     {
@@ -164,7 +164,7 @@ public class ProjectsController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/get-project-{id:int}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
     {
@@ -196,7 +196,7 @@ public class ProjectsController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/change-project-visibility-{id:int}")]
     public async Task<IActionResult> ChangeVisibilityAsync([FromRoute] int id)
     {
