@@ -1,9 +1,9 @@
-﻿using App.Core.Authorization;
-using App.DTOs.EducationDtos;
+﻿using App.DTOs.EducationDtos;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.DataAPI.Controllers;
@@ -24,7 +24,7 @@ public class EducationsController : ControllerBase
         _updateValidator = updateValidator;
         _educationPortfolioService = educationPortfolioService;
     }
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/all-educations")]
     public async Task<IActionResult> GetAllAsync()
     {
@@ -45,7 +45,7 @@ public class EducationsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AllowAnonymousManuel]
+    [AllowAnonymous]
     [HttpGet("/portfolio-all-educations")]
     public async Task<IActionResult> GetAllPortfolioAsync()
     {
@@ -66,7 +66,7 @@ public class EducationsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpPost("/add-education")]
     public async Task<IActionResult> AddAsync([FromBody] AddEducationDto dto)
     {
@@ -96,7 +96,7 @@ public class EducationsController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpPost("/update-education")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateEducationDto dto)
     {
@@ -130,7 +130,7 @@ public class EducationsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/get-education-{id:int}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
     {
@@ -161,7 +161,7 @@ public class EducationsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/delete-education-{id:int}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
     {
@@ -192,7 +192,7 @@ public class EducationsController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/change-education-visibility-{id:int}")]
     public async Task<IActionResult> ChangeVisibilityAsync([FromRoute] int id)
     {

@@ -23,8 +23,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.ViewModels", "App.ViewM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.DTOs", "App.DTOs\App.DTOs.csproj", "{7D3F144F-CAA2-4780-9F3F-EEF75A11FA1E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Middlewares", "App.Middlewares\App.Middlewares.csproj", "{4A3AD869-A1A4-4953-A6B5-B9052B9686DD}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,10 +69,6 @@ Global
 		{7D3F144F-CAA2-4780-9F3F-EEF75A11FA1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D3F144F-CAA2-4780-9F3F-EEF75A11FA1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D3F144F-CAA2-4780-9F3F-EEF75A11FA1E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4A3AD869-A1A4-4953-A6B5-B9052B9686DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4A3AD869-A1A4-4953-A6B5-B9052B9686DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4A3AD869-A1A4-4953-A6B5-B9052B9686DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4A3AD869-A1A4-4953-A6B5-B9052B9686DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

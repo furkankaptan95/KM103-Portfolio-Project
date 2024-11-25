@@ -1,12 +1,11 @@
-using App.Core.Authorization;
 using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
 
 namespace App.PortfolioMVC.Controllers;
 
-[AllowAnonymousManuel]
+[AllowAnonymous]
 public class HomeController(IHomePortfolioService homeService) : Controller
 {
     [HttpGet]

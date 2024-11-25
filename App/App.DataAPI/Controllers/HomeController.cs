@@ -1,7 +1,7 @@
-﻿using App.Core.Authorization;
-using App.Services.AdminServices.Abstract;
+﻿using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.DataAPI.Controllers;
@@ -10,8 +10,8 @@ namespace App.DataAPI.Controllers;
 [ApiController]
 public class HomeController(IHomeAdminService homeAdminService, IHomePortfolioService homePortfolioService) : ControllerBase
 {
-	[AuthorizeRolesApi("admin")]
-	[HttpGet("/get-home-infos")]
+    [Authorize(Roles = "admin")]
+    [HttpGet("/get-home-infos")]
     public async Task<IActionResult> GetHomeInfosAsync()
     {
         try
@@ -32,7 +32,7 @@ public class HomeController(IHomeAdminService homeAdminService, IHomePortfolioSe
         }
     }
 
-    [AllowAnonymousManuel]
+    [AllowAnonymous]
     [HttpGet("/get-cv-url")]
 	public async Task<IActionResult> GetCvUrl()
 	{
@@ -54,8 +54,8 @@ public class HomeController(IHomeAdminService homeAdminService, IHomePortfolioSe
 		}
 	}
 
-	[AuthorizeRolesApi("admin")]
-	[HttpPost("/add-cv")]
+    [Authorize(Roles = "admin")]
+    [HttpPost("/add-cv")]
     public async Task<IActionResult> AddCvAsync([FromBody] string url)
     {
         if (string.IsNullOrEmpty(url))

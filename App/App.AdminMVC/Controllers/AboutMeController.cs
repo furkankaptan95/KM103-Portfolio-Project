@@ -1,14 +1,14 @@
-﻿using App.Core.Authorization;
-using App.DTOs.AboutMeDtos;
+﻿using App.DTOs.AboutMeDtos;
 using App.DTOs.AboutMeDtos.Admin;
 using App.Services.AdminServices.Abstract;
 using App.ViewModels.AdminMvc.AboutMeViewModels;
 using Ardalis.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AdminMVC.Controllers;
 
-[AuthorizeRolesMvc("admin")]
+[Authorize(Roles = "admin")]
 public class AboutMeController(IAboutMeAdminService aboutMeService) : Controller
 {
     [HttpGet]

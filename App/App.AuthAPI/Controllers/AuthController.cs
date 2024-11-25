@@ -1,16 +1,16 @@
-﻿using App.Core.Authorization;
-using App.Core.Results;
+﻿using App.Core.Results;
 using App.DTOs.AuthDtos;
 using App.Services.AuthService.Abstract;
 using Ardalis.Result;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.AuthAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[AllowAnonymousManuel]
+[AllowAnonymous]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;

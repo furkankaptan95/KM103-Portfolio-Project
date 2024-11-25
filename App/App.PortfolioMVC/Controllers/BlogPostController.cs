@@ -1,15 +1,15 @@
-﻿using App.Core.Authorization;
-using App.Services.PortfolioServices.Abstract;
+﻿using App.Services.PortfolioServices.Abstract;
 using App.ViewModels.PortfolioMvc.BlogPostsViewModels;
 using App.ViewModels.PortfolioMvc.CommentsViewModels;
 using Ardalis.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.PortfolioMVC.Controllers;
+[AllowAnonymous]
 public class BlogPostController(IBlogPostPortfolioService blogPostService) : Controller
 {
 	[HttpGet]
-	[CommonArea]
 	[Route("blog-post-{id:int}")]
 	public async Task<IActionResult> BlogPost([FromRoute] int id)
     {
@@ -78,7 +78,7 @@ public class BlogPostController(IBlogPostPortfolioService blogPostService) : Con
         }
     }
 
-	[AllowAnonymousManuel]
+	
     [HttpGet]
     [Route("all-blog-posts")]
     public async Task<IActionResult> AllBlogPosts()

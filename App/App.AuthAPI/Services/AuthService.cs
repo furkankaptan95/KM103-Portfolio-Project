@@ -141,6 +141,30 @@ public class AuthService : IAuthService
         }
     }
 
+    public async Task<Result> RefreshTokenApiAsync(string token)
+    {
+        try
+        {
+            var refreshToken = await _authApiDb.RefreshTokens.Where(rt =>
+               rt.Token == token &&
+               rt.ExpireDate > DateTime.UtcNow &&
+               rt.IsRevoked == null &&
+               rt.IsUsed == null).Include(rt => rt.User).FirstOrDefaultAsync();
+
+            if (refreshToken is null)
+            {
+                return Result.Error();
+            }
+
+            return Result.Success();
+        }
+
+        catch (Exception ex)
+        {
+            return Result.Error($"Bir hata oluştu: {ex.Message}");
+        }
+    }
+
     public async Task<Result<TokensDto>> RefreshTokenAsync(string token)
     {
         try

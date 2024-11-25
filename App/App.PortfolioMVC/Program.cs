@@ -1,10 +1,10 @@
-using App.Middlewares;
 using App.PortfolioMVC.Services;
 using Microsoft.AspNetCore.Antiforgery;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddServices(builder.Configuration);
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -19,7 +19,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseMiddleware<MvcJwtMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
 
 var antiforgery = app.Services.GetRequiredService<IAntiforgery>();
 app.Use(async (context, next) =>
@@ -34,8 +35,6 @@ app.Use(async (context, next) =>
     }
     await next();
 });
-
-app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

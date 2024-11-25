@@ -1,10 +1,10 @@
-﻿using App.Core.Authorization;
-using App.DTOs.ContactMessageDtos.Admin;
+﻿using App.DTOs.ContactMessageDtos.Admin;
 using App.DTOs.ContactMessageDtos.Portfolio;
 using App.Services.AdminServices.Abstract;
 using App.Services.PortfolioServices.Abstract;
 using Ardalis.Result;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.DataAPI.Controllers;
@@ -26,7 +26,7 @@ public class ContactMessageController : ControllerBase
         _replyValidator = replyValidator;
     }
 
-    [AllowAnonymousManuel]
+    [AllowAnonymous]
     [HttpPost("/add-contact-message")]
     public async Task<IActionResult> AddAsync([FromBody] AddContactMessageDto dto)
     {
@@ -55,7 +55,7 @@ public class ContactMessageController : ControllerBase
             return StatusCode(500, Result.Error($"Beklenmedik bir hata oluştu: {ex.Message}"));
         }
     }
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/all-contact-messages")]
     public async Task<IActionResult> GetAllAsync()
     {
@@ -77,7 +77,7 @@ public class ContactMessageController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/get-contact-message-{id:int}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
     {
@@ -113,7 +113,7 @@ public class ContactMessageController : ControllerBase
         }
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpPost("/reply-contact-message")]
     public async Task<IActionResult> ReplyAsync([FromBody] ReplyContactMessageDto dto)
     {
@@ -153,7 +153,7 @@ public class ContactMessageController : ControllerBase
 
     }
 
-    [AuthorizeRolesApi("admin")]
+    [Authorize(Roles = "admin")]
     [HttpGet("/make-message-read-{id:int}")]
     public async Task<IActionResult> MakeMessageReadAsync([FromRoute] int id)
     {
