@@ -1,5 +1,4 @@
 ﻿using App.DTOs;
-using App.Services.AuthService.Abstract;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -42,29 +41,14 @@ public class JwtAuthMethod
                     return Task.CompletedTask;
                 },
 
-
                 OnChallenge = async context =>
                 {
-                    var refreshToken = context.Request.Cookies["RefreshToken"];
-
-                    if (!string.IsNullOrEmpty(refreshToken))
-                    {
-                        var authService = context.HttpContext.RequestServices.GetRequiredService<IAuthService>();
-                        var result = await authService.RefreshTokenApiAsync(refreshToken);
-
-                        if (result.IsSuccess)
-                        {
-                            context.HandleResponse();
-                            context.HttpContext.Response.Redirect(context.Request.Path.Value);
-                            return;
-                        }
-                    }
-
-                    // Yenileme başarısızsa 401 Unauthorized dön
+                    // Token geçersiz olduğu için 401 döndürüyoruz
                     context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                     context.Response.ContentType = "application/json";
                     await context.Response.WriteAsync("{\"error\": \"Unauthorized. Please login.\"}");
-                    context.HandleResponse();
+
+                    context.HandleResponse(); // Yanıt tamamlandı, isteği durdur
                 },
 
                 OnForbidden = context =>
@@ -77,4 +61,5 @@ public class JwtAuthMethod
             };
         });
     }
+
 }
